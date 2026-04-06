@@ -1,0 +1,30 @@
+name: build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ruby
+        bundler-cache: true
+    - run: |
+        go install github.com/technosophos/dashing@172c69f1c58cf6efe5b1813fa06ce29a684b00e4
+        echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
+    - run: bundle exec rake
+    - uses: actions/upload-artifact@v7
+      with:
+        name: data
+        path: data
+    - id: docset-name
+      run: echo "name=$(echo *.docset.tgz | head -n 1)" >> $GITHUB_OUTPUT
+    - uses: actions/upload-artifact@v7
+      with:
+        name: ${{ steps.docset-name.outputs.name }}
+        path: ${{ steps.docset-name.outputs.name }}
