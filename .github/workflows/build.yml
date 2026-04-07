@@ -4,10 +4,14 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+  schedule:
+    - cron: '40 4 * * 4'
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
     - uses: actions/checkout@v4
     - uses: ruby/setup-ruby@v1
@@ -28,3 +32,24 @@ jobs:
       with:
         name: ${{ steps.docset-name.outputs.name }}
         path: ${{ steps.docset-name.outputs.name }}
+    - if: github.ref == 'refs/heads/main'
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+        branch=gh-pages
+
+        if git fetch --depth=1 origin "$branch"; then
+          git branch "$branch" --track origin/"$branch"
+          git symbolic-ref HEAD refs/heads/"$branch"
+          git reset
+        else
+          git checkout --orphan "$branch"
+          git rm -rf .
+        fi
+
+        git add -f data html
+        if ! git diff --staged --quiet; then
+          git commit -m "$(date)"
+          git push origin "$branch"
+        fi
