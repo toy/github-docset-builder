@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Reviewing deployments</title>
+    <link rel="stylesheet" href="../../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Deploy</a> / <a href="index.html">Configure and manage deployments</a> / </nav><h1>
+<a href="#reviewing-deployments" aria-hidden="true" class="anchor" id="reviewing-deployments"></a>Reviewing deployments</h1>
+<p>You can approve or reject jobs awaiting review.</p>
+<h2 title="Approving or rejecting a job">
+<a href="#approving-or-rejecting-a-job" aria-hidden="true" class="anchor" id="approving-or-rejecting-a-job"></a>Approving or rejecting a job</h2>
+<ol>
+<li>Navigate to the workflow run that requires review. For more information about navigating to a workflow run, see <a href="../../monitor-workflows/view-workflow-run-history.html">Viewing workflow run history</a>.</li>
+<li>If the run requires review, you will see a notification for the review request. On the notification, click <strong>Review deployments</strong>.</li>
+<li>Select the job environment(s) to approve or reject. Optionally, leave a comment.</li>
+<li>Approve or reject:
+<ul>
+<li>To approve the job, click <strong>Approve and deploy</strong>. Once a job is approved (and any other deployment protection rules have passed), the job will proceed. At this point, the job can access any secrets stored in the environment.</li>
+<li>To reject the job, click <strong>Reject</strong>. If a job is rejected, the workflow will fail.</li>
+</ul>
+</li>
+</ol>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>If the targeted environment is configured to prevent self-approvals for deployments, you will not be able to approve a deployment from a workflow run you initiated. For more information, see <a href="manage-environments.html#required-reviewers">Managing environments for deployment</a>.</p>
+</div>
+<h2 title="Bypassing deployment protection rules">
+<a href="#bypassing-deployment-protection-rules" aria-hidden="true" class="anchor" id="bypassing-deployment-protection-rules"></a>Bypassing deployment protection rules</h2>
+<p>If you have configured deployment protection rules that control whether software can be deployed to an environment, you can bypass these rules and force all pending jobs referencing the environment to proceed.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<ul>
+<li>You cannot bypass deployment protection rules if the environment has been configured to prevent admins from bypassing configured protection rules. For more information, see <a href="manage-environments.html#creating-an-environment">Managing environments for deployment</a>.</li>
+<li>You can only bypass deployment protection rules during workflow execution when a job referencing the environment is in a "Pending" state.</li>
+</ul>
+</div>
+<ol>
+<li>Navigate to the workflow run. For more information about navigating to a workflow run, see <a href="../../monitor-workflows/view-workflow-run-history.html">Viewing workflow run history</a>.</li>
+<li>To the right of <strong>Deployment protection rules</strong>, click <strong>Start all waiting jobs</strong>.<br>
+<img src="../../../../..//assets/images/actions-bypass-env-protection-rules.png" alt='Screenshot of the "Deployment protection rules" section with the "Start all waiting jobs" button outlined in orange.'>
+</li>
+<li>In the pop-up window, select the environments for which you want to bypass deployment protection rules.</li>
+<li>Under <strong>Leave a comment</strong>, enter a description for bypassing the deployment protection rules.</li>
+<li>Click <strong>I understand the consequences, start deploying</strong>.</li>
+</ol>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Using GitHub CLI in workflows</title>
+    <link rel="stylesheet" href="../../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Write workflows</a> / <a href="index.html">Choose what workflows do</a> / </nav><h1>
+<a href="#using-github-cli-in-workflows" aria-hidden="true" class="anchor" id="using-github-cli-in-workflows"></a>Using GitHub CLI in workflows</h1>
+<p>You can script with GitHub CLI in GitHub Actions workflows.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>To learn more about GitHub CLI, see <a href="https://docs.github.com/en/github-cli/github-cli/about-github-cli" class="external">About GitHub CLI</a>.</p>
+</div>
+<p>GitHub CLI is preinstalled on all GitHub-hosted runners. For each step that uses GitHub CLI, you must set an environment variable called <code>GH_TOKEN</code> to a token with the required scopes.</p>
+<p>You can execute any GitHub CLI command. For example, this workflow uses the <code>gh issue comment</code> subcommand to add a comment when an issue is opened.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Comment when opened
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">issues</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">opened
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">comment</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">gh issue comment $ISSUE --body "Thank you for opening this issue!"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">GH_TOKEN</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.GITHUB_TOKEN }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">ISSUE</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ github.event.issue.html_url }}
+</span></code></pre>
+<p>You can also execute API calls through GitHub CLI. For example, this workflow first uses the <code>gh api</code> subcommand to query the GraphQL API and parse the result. Then it stores the result in an environment variable that it can access in a later step. In the second step, it uses the <code>gh issue create</code> subcommand to create an issue containing the information from the first step.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Report remaining open issues
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Daily at 8:20 UTC
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">cron</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">20 8 * * *</span><span style="color:#c0c5ce;">'
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">track_pr</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          numOpenIssues="$(gh api graphql -F owner=$OWNER -F name=$REPO -f query='
+</span><span style="color:#a3be8c;">            query($name: String!, $owner: String!) {
+</span><span style="color:#a3be8c;">              repository(owner: $owner, name: $name) {
+</span><span style="color:#a3be8c;">                issues(states:OPEN){
+</span><span style="color:#a3be8c;">                  totalCount
+</span><span style="color:#a3be8c;">                }
+</span><span style="color:#a3be8c;">              }
+</span><span style="color:#a3be8c;">            }
+</span><span style="color:#a3be8c;">          ' --jq '.data.repository.issues.totalCount')"
+</span><span style="color:#a3be8c;">
+</span><span style="color:#a3be8c;">          echo 'NUM_OPEN_ISSUES='$numOpenIssues &gt;&gt; $GITHUB_ENV
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">GH_TOKEN</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.GITHUB_TOKEN }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">OWNER</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ github.repository_owner }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">REPO</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ github.event.repository.name }}
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          gh issue create --title "Issue report" --body "$NUM_OPEN_ISSUES issues remaining" --repo $GITHUB_REPOSITORY
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">GH_TOKEN</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.GITHUB_TOKEN }}
+</span></code></pre>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

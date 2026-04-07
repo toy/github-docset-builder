@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Migrating from Jenkins to GitHub Actions</title>
+    <link rel="stylesheet" href="../../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">Tutorials</a> / <a href="../index.html">Migrate to GitHub Actions</a> / <a href="index.html">Manual migrations</a> / </nav><h1>
+<a href="#migrating-from-jenkins-to-github-actions" aria-hidden="true" class="anchor" id="migrating-from-jenkins-to-github-actions"></a>Migrating from Jenkins to GitHub Actions</h1>
+<p>GitHub Actions and Jenkins share multiple similarities, which makes migration to GitHub Actions relatively straightforward.</p>
+<h2 title="Introduction">
+<a href="#introduction" aria-hidden="true" class="anchor" id="introduction"></a>Introduction</h2>
+<p>Jenkins and GitHub Actions both allow you to create workflows that automatically build, test, publish, release, and deploy code. Jenkins and GitHub Actions share some similarities in workflow configuration:</p>
+<ul>
+<li>Jenkins creates workflows using <em>Declarative Pipelines</em>, which are similar to GitHub Actions workflow files.</li>
+<li>Jenkins uses <em>stages</em> to run a collection of steps, while GitHub Actions uses jobs to group one or more steps or individual commands.</li>
+<li>Jenkins and GitHub Actions support container-based builds. For more information, see <a href="../../use-containerized-services/create-a-docker-container-action.html">Creating a Docker container action</a>.</li>
+<li>Steps or tasks can be reused and shared with the community.</li>
+</ul>
+<p>For more information, see <a href="../../../get-started/understand-github-actions.html">Understanding GitHub Actions</a>.</p>
+<h2 title="Key differences">
+<a href="#key-differences" aria-hidden="true" class="anchor" id="key-differences"></a>Key differences</h2>
+<ul>
+<li>Jenkins has two types of syntax for creating pipelines: Declarative Pipeline and Scripted Pipeline. GitHub Actions uses YAML to create workflows and configuration files. For more information, see <a href="../../../reference/workflows-and-actions/workflow-syntax.html">Workflow syntax for GitHub Actions</a>.</li>
+<li>Jenkins deployments are typically self-hosted, with users maintaining the servers in their own data centers. GitHub Actions offers a hybrid cloud approach by hosting its own runners that you can use to run jobs, while also supporting self-hosted runners. For more information, see <a href="../../../concepts/runners/self-hosted-runners.html">Self-hosted runners</a>.</li>
+</ul>
+<h2 title="Comparing capabilities">
+<a href="#comparing-capabilities" aria-hidden="true" class="anchor" id="comparing-capabilities"></a>Comparing capabilities</h2>
+<h3 title="Comparing capabilities / Distributing your builds">
+<a href="#distributing-your-builds" aria-hidden="true" class="anchor" id="distributing-your-builds"></a>Distributing your builds</h3>
+<p>Jenkins lets you send builds to a single build agent, or you can distribute them across multiple agents. You can also classify these agents according to various attributes, such as operating system types.</p>
+<p>Similarly, GitHub Actions can send jobs to GitHub-hosted or self-hosted runners, and you can use labels to classify runners according to various attributes. For more information, see <a href="../../../get-started/understand-github-actions.html#runners">Understanding GitHub Actions</a> and <a href="../../../concepts/runners/self-hosted-runners.html">Self-hosted runners</a>.</p>
+<h3 title="Comparing capabilities / Using sections to organize pipelines">
+<a href="#using-sections-to-organize-pipelines" aria-hidden="true" class="anchor" id="using-sections-to-organize-pipelines"></a>Using sections to organize pipelines</h3>
+<p>Jenkins splits its Declarative Pipelines into multiple sections. Similarly, GitHub Actions organizes its workflows into separate sections. The table below compares Jenkins sections with the GitHub Actions workflow.</p>
+<table>
+<thead>
+<tr>
+<th>Jenkins Directives</th>
+<th>GitHub Actions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://jenkins.io/doc/book/pipeline/syntax/#agent" class="external"><code class="keyword">agent</code></a></td>
+<td>
+<a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idruns-on"><code>jobs.&lt;job_id&gt;.runs-on</code></a> <br> <a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idcontainer"><code>jobs.&lt;job_id&gt;.container</code></a>
+</td>
+</tr>
+<tr>
+<td><a href="https://jenkins.io/doc/book/pipeline/syntax/#post" class="external"><code class="keyword">post</code></a></td>
+<td>None</td>
+</tr>
+<tr>
+<td><a href="https://jenkins.io/doc/book/pipeline/syntax/#stages" class="external"><code class="keyword">stages</code></a></td>
+<td><a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobs"><code>jobs</code></a></td>
+</tr>
+<tr>
+<td><a href="https://jenkins.io/doc/book/pipeline/syntax/#steps" class="external"><code class="keyword">steps</code></a></td>
+<td><a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idsteps"><code>jobs.&lt;job_id&gt;.steps</code></a></td>
+</tr>
+</tbody>
+</table>
+<h2 title="Using directives">
+<a href="#using-directives" aria-hidden="true" class="anchor" id="using-directives"></a>Using directives</h2>
+<p>Jenkins uses directives to manage <em>Declarative Pipelines</em>. These directives define the characteristics of your workflow and how it will execute. The table below demonstrates how these directives map to concepts within GitHub Actions.</p>
+<table>
+<thead>
+<tr>
+<th>Jenkins Directives</th>
+<th>GitHub Actions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://jenkins.io/doc/book/pipeline/syntax/#environment" class="external"><code>environment</code></a></td>
+<td>
+<a href="../../../reference/workflows-and-actions/workflow-syntax.html#env"><code>jobs.&lt;job_id&gt;.env</code></a> <br> <a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idstepsenv"><code>jobs.&lt;job_id&gt;.steps[*].env</code></a>
+</td>
+</tr>
+<tr>
+<td><a href="https://jenkins.io/doc/book/pipeline/syntax/#options" class="external"><code>options</code></a></td>
+<td>
+<a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idstrategy"><code>jobs.&lt;job_id&gt;.strategy</code></a> <br> <a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idstrategyfail-fast"><code>jobs.&lt;job_id&gt;.strategy.fail-fast</code></a> <br> <a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idtimeout-minutes"><code>jobs.&lt;job_id&gt;.timeout-minutes</code></a>
+</td>
+</tr>
+<tr>
+<td><a href="https://jenkins.io/doc/book/pipeline/syntax/#options" class="external"><code>parameters</code></a></td>
+<td>
+<a href="../../../reference/workflows-and-actions/metadata-syntax.html#inputs"><code>inputs</code></a> <br> <a href="../../../reference/workflows-and-actions/metadata-syntax.html#outputs-for-docker-container-and-javascript-actions"><code>outputs</code></a>
+</td>
+</tr>
+<tr>
+<td><a href="https://jenkins.io/doc/book/pipeline/syntax/#triggers" class="external"><code>triggers</code></a></td>
+<td>
+<a href="../../../reference/workflows-and-actions/workflow-syntax.html#on"><code>on</code></a> <br> <a href="../../../reference/workflows-and-actions/workflow-syntax.html#onevent_nametypes"><code>on.&lt;event_name&gt;.types</code></a> <br> <a href="../../../reference/workflows-and-actions/workflow-syntax.html#onpushbranchestagsbranches-ignoretags-ignore"><code>on.<span data-escaped-char>&lt;</span>push&gt;.<span data-escaped-char>&lt;</span>branches|tags&gt;</code></a> <br> <a href="../../../reference/workflows-and-actions/workflow-syntax.html#onpull_requestpull_request_targetbranchesbranches-ignore"><code>on.<span data-escaped-char>&lt;</span>pull<span data-escaped-char>_</span>request&gt;.<span data-escaped-char>&lt;</span>branches&gt;</code></a> <br> <a href="../../../reference/workflows-and-actions/workflow-syntax.html#onpushpull_requestpull_request_targetpathspaths-ignore"><code>on.<span data-escaped-char>&lt;</span>push|pull<span data-escaped-char>_</span>request&gt;.paths</code></a>
+</td>
+</tr>
+<tr>
+<td><a href="https://jenkins.io/doc/book/pipeline/syntax/#triggers" class="external"><code>triggers { upstreamprojects() }</code></a></td>
+<td><a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idneeds"><code>jobs.&lt;job_id&gt;.needs</code></a></td>
+</tr>
+<tr>
+<td><a href="https://jenkins.io/doc/book/pipeline/syntax/#cron-syntax" class="external">Jenkins cron syntax</a></td>
+<td><a href="../../../reference/workflows-and-actions/workflow-syntax.html#onschedule"><code>on.schedule</code></a></td>
+</tr>
+<tr>
+<td><a href="https://jenkins.io/doc/book/pipeline/syntax/#stage" class="external"><code>stage</code></a></td>
+<td>
+<a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_id"><code>jobs.&lt;job_id&gt;</code></a> <br> <a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idname"><code>jobs.&lt;job_id&gt;.name</code></a>
+</td>
+</tr>
+<tr>
+<td><a href="https://jenkins.io/doc/book/pipeline/syntax/#tools" class="external"><code>tools</code></a></td>
+<td><a href="../../../concepts/runners/github-hosted-runners.html#supported-software">Specifications for GitHub-hosted runners</a></td>
+</tr>
+<tr>
+<td><a href="https://jenkins.io/doc/book/pipeline/syntax/#input" class="external"><code>input</code></a></td>
+<td><a href="../../../reference/workflows-and-actions/metadata-syntax.html#inputs"><code>inputs</code></a></td>
+</tr>
+<tr>
+<td><a href="https://jenkins.io/doc/book/pipeline/syntax/#when" class="external"><code>when</code></a></td>
+<td><a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idif"><code>jobs.&lt;job_id&gt;.if</code></a></td>
+</tr>
+</tbody>
+</table>
+<h2 title="Using sequential stages">
+<a href="#using-sequential-stages" aria-hidden="true" class="anchor" id="using-sequential-stages"></a>Using sequential stages</h2>
+<h3 title="Using sequential stages / Parallel job processing">
+<a href="#parallel-job-processing" aria-hidden="true" class="anchor" id="parallel-job-processing"></a>Parallel job processing</h3>
+<p>Jenkins can run the <code>stages</code> and <code>steps</code> in parallel, while GitHub Actions currently only runs jobs in parallel.</p>
+<table>
+<thead>
+<tr>
+<th>Jenkins Parallel</th>
+<th>GitHub Actions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://jenkins.io/doc/book/pipeline/syntax/#parallel" class="external"><code>parallel</code></a></td>
+<td><a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idstrategymax-parallel"><code>jobs.&lt;job_id&gt;.strategy.max-parallel</code></a></td>
+</tr>
+</tbody>
+</table>
+<h3 title="Using sequential stages / Matrix">
+<a href="#matrix" aria-hidden="true" class="anchor" id="matrix"></a>Matrix</h3>
+<p>Both GitHub Actions and Jenkins let you use a matrix to define various system combinations.</p>
+<table>
+<thead>
+<tr>
+<th>Jenkins</th>
+<th>GitHub Actions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://jenkins.io/doc/book/pipeline/syntax/#matrix-axes" class="external"><code class="keyword">axis</code></a></td>
+<td>
+<a href="../../../concepts/workflows-and-actions/workflows.html#using-a-build-matrix"><code>strategy/matrix</code></a> <br> <a href="../../../reference/workflows-and-actions/contexts.html"><code>context</code></a>
+</td>
+</tr>
+<tr>
+<td><a href="https://jenkins.io/doc/book/pipeline/syntax/#matrix-stages" class="external"><code class="keyword">stages</code></a></td>
+<td><a href="../../../reference/workflows-and-actions/contexts.html#steps-context"><code>steps-context</code></a></td>
+</tr>
+<tr>
+<td><a href="https://jenkins.io/doc/book/pipeline/syntax/#matrix-stages" class="external"><code class="keyword">excludes</code></a></td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Using sequential stages / Using steps to execute tasks">
+<a href="#using-steps-to-execute-tasks" aria-hidden="true" class="anchor" id="using-steps-to-execute-tasks"></a>Using steps to execute tasks</h3>
+<p>Jenkins groups <code>steps</code> together in <code>stages</code>. Each of these steps can be a script, function, or command, among others. Similarly, GitHub Actions uses <code>jobs</code> to execute specific groups of <code>steps</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Jenkins</th>
+<th>GitHub Actions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://jenkins.io/doc/book/pipeline/syntax/#steps" class="external"><code>steps</code></a></td>
+<td><a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idsteps"><code>jobs.&lt;job_id&gt;.steps</code></a></td>
+</tr>
+</tbody>
+</table>
+<h2 title="Examples of common tasks">
+<a href="#examples-of-common-tasks" aria-hidden="true" class="anchor" id="examples-of-common-tasks"></a>Examples of common tasks</h2>
+<h3 title="Examples of common tasks / Scheduling a pipeline to run with cron">
+<a href="#scheduling-a-pipeline-to-run-with-cron" aria-hidden="true" class="anchor" id="scheduling-a-pipeline-to-run-with-cron"></a>Scheduling a pipeline to run with <code>cron</code>
+</h3>
+<h4>
+<a href="#jenkins-pipeline-with-cron" aria-hidden="true" class="anchor" id="jenkins-pipeline-with-cron"></a>Jenkins pipeline with <code>cron</code>
+</h4>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#a3be8c;">pipeline {
+</span><span style="color:#c0c5ce;">  </span><span style="color:#a3be8c;">agent any
+</span><span style="color:#c0c5ce;">  </span><span style="color:#a3be8c;">triggers {
+</span><span style="color:#c0c5ce;">    </span><span style="color:#a3be8c;">cron('H/15 * * * 1-5')
+</span><span style="color:#c0c5ce;">  }
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+<h4>
+<a href="#github-actions-workflow-with-cron" aria-hidden="true" class="anchor" id="github-actions-workflow-with-cron"></a>GitHub Actions workflow with <code>cron</code>
+</h4>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">cron</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">*/15 * * * 1-5</span><span style="color:#c0c5ce;">'
+</span></code></pre>
+<p>For more information about <code>schedule</code> events and accepted cron syntax, see <a href="../../../reference/workflows-and-actions/events-that-trigger-workflows.html#schedule">Events that trigger workflows</a>.</p>
+<h3 title="Examples of common tasks / Configuring environment variables in a pipeline">
+<a href="#configuring-environment-variables-in-a-pipeline" aria-hidden="true" class="anchor" id="configuring-environment-variables-in-a-pipeline"></a>Configuring environment variables in a pipeline</h3>
+<h4>
+<a href="#jenkins-pipeline-with-an-environment-variable" aria-hidden="true" class="anchor" id="jenkins-pipeline-with-an-environment-variable"></a>Jenkins pipeline with an environment variable</h4>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#a3be8c;">pipeline {
+</span><span style="color:#c0c5ce;">  </span><span style="color:#a3be8c;">agent any
+</span><span style="color:#c0c5ce;">  </span><span style="color:#a3be8c;">environment {
+</span><span style="color:#c0c5ce;">    </span><span style="color:#a3be8c;">MAVEN_PATH = '/usr/local/maven'
+</span><span style="color:#c0c5ce;">  }
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+<h4>
+<a href="#github-actions-workflow-with-an-environment-variable" aria-hidden="true" class="anchor" id="github-actions-workflow-with-an-environment-variable"></a>GitHub Actions workflow with an environment variable</h4>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">maven-build</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">MAVEN_PATH</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">/usr/local/maven</span><span style="color:#c0c5ce;">'
+</span></code></pre>
+<h3 title="Examples of common tasks / Building from upstream projects">
+<a href="#building-from-upstream-projects" aria-hidden="true" class="anchor" id="building-from-upstream-projects"></a>Building from upstream projects</h3>
+<h4>
+<a href="#jenkins-pipeline-that-builds-from-an-upstream-project" aria-hidden="true" class="anchor" id="jenkins-pipeline-that-builds-from-an-upstream-project"></a>Jenkins pipeline that builds from an upstream project</h4>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#a3be8c;">pipeline {
+</span><span style="color:#c0c5ce;">  </span><span style="color:#a3be8c;">triggers {
+</span><span style="color:#c0c5ce;">    </span><span style="color:#a3be8c;">upstream(
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">upstreamProjects</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">job1,job2</span><span style="color:#c0c5ce;">',
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">threshold</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">hudson.model.Result.SUCCESS
+</span><span style="color:#c0c5ce;">    </span><span style="color:#a3be8c;">)
+</span><span style="color:#c0c5ce;">  }
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+<h4>
+<a href="#github-actions-workflow-that-builds-from-an-upstream-project" aria-hidden="true" class="anchor" id="github-actions-workflow-that-builds-from-an-upstream-project"></a>GitHub Actions workflow that builds from an upstream project</h4>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">job1</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">job2</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">needs</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">job1
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">job3</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">needs</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">job1</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">job2</span><span style="color:#c0c5ce;">]
+</span></code></pre>
+<h3 title="Examples of common tasks / Building with multiple operating systems">
+<a href="#building-with-multiple-operating-systems" aria-hidden="true" class="anchor" id="building-with-multiple-operating-systems"></a>Building with multiple operating systems</h3>
+<h4>
+<a href="#jenkins-pipeline-that-builds-with-multiple-operating-systems" aria-hidden="true" class="anchor" id="jenkins-pipeline-that-builds-with-multiple-operating-systems"></a>Jenkins pipeline that builds with multiple operating systems</h4>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#a3be8c;">pipeline {
+</span><span style="color:#c0c5ce;">  </span><span style="color:#a3be8c;">agent none
+</span><span style="color:#c0c5ce;">  </span><span style="color:#a3be8c;">stages {
+</span><span style="color:#c0c5ce;">    </span><span style="color:#a3be8c;">stage('Run Tests') {
+</span><span style="color:#c0c5ce;">      </span><span style="color:#a3be8c;">matrix {
+</span><span style="color:#c0c5ce;">        </span><span style="color:#a3be8c;">axes {
+</span><span style="color:#c0c5ce;">          </span><span style="color:#a3be8c;">axis {
+</span><span style="color:#c0c5ce;">            </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">PLATFORM</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">            </span><span style="color:#bf616a;">values</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">macos</span><span style="color:#c0c5ce;">', '</span><span style="color:#a3be8c;">linux</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">          }
+</span><span style="color:#c0c5ce;">        }
+</span><span style="color:#c0c5ce;">        </span><span style="color:#a3be8c;">agent { label "${PLATFORM}" }
+</span><span style="color:#c0c5ce;">        </span><span style="color:#a3be8c;">stages {
+</span><span style="color:#c0c5ce;">          </span><span style="color:#a3be8c;">stage('test') {
+</span><span style="color:#c0c5ce;">            </span><span style="color:#a3be8c;">tools { nodejs "node-20" }
+</span><span style="color:#c0c5ce;">            </span><span style="color:#a3be8c;">steps {
+</span><span style="color:#c0c5ce;">              </span><span style="color:#a3be8c;">dir("scripts/myapp") {
+</span><span style="color:#c0c5ce;">                </span><span style="color:#bf616a;">sh(script</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">npm install -g bats</span><span style="color:#c0c5ce;">"</span><span style="color:#a3be8c;">)
+</span><span style="color:#c0c5ce;">                </span><span style="color:#bf616a;">sh(script</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">bats tests</span><span style="color:#c0c5ce;">"</span><span style="color:#a3be8c;">)
+</span><span style="color:#c0c5ce;">              }
+</span><span style="color:#c0c5ce;">            }
+</span><span style="color:#c0c5ce;">          }
+</span><span style="color:#c0c5ce;">        }
+</span><span style="color:#c0c5ce;">      }
+</span><span style="color:#c0c5ce;">    }
+</span><span style="color:#c0c5ce;">  }
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+<h4>
+<a href="#github-actions-workflow-that-builds-with-multiple-operating-systems" aria-hidden="true" class="anchor" id="github-actions-workflow-that-builds-with-multiple-operating-systems"></a>GitHub Actions workflow that builds with multiple operating systems</h4>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">demo-workflow
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">test</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ matrix.os }}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">strategy</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">fail-fast</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">matrix</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">os</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">macos-latest</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">ubuntu-latest</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-node@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">node-version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">20
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm install -g bats
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bats tests
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">working-directory</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">./scripts/myapp
+</span></code></pre>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Publishing Docker images</title>
+    <link rel="stylesheet" href="../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Publish packages</a> / </nav><h1>
+<a href="#publishing-docker-images" aria-hidden="true" class="anchor" id="publishing-docker-images"></a>Publishing Docker images</h1>
+<p>In this tutorial, you'll learn how to publish Docker images to a registry, such as Docker Hub or GitHub Packages, as part of your continuous integration (CI) workflow.</p>
+<h2 title="Introduction">
+<a href="#introduction" aria-hidden="true" class="anchor" id="introduction"></a>Introduction</h2>
+<p>This guide shows you how to create a workflow that performs a Docker build, and then publishes Docker images to Docker Hub or GitHub Packages. With a single workflow, you can publish images to a single registry or to multiple registries.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>If you want to push to another third-party Docker registry, the example in the <a href="#publishing-images-to-github-packages">Publishing images to GitHub Packages</a> section can serve as a good template.</p>
+</div>
+<h2 title="Prerequisites">
+<a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<p>We recommend that you have a basic understanding of workflow configuration options and how to create a workflow file. For more information, see <a href="../../how-tos/write-workflows/index.html">Writing workflows</a>.</p>
+<p>You might also find it helpful to have a basic understanding of the following:</p>
+<ul>
+<li><a href="../../how-tos/write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a></li>
+<li><a href="../authenticate-with-github_token.html">Use GITHUB<span data-escaped-char>\</span><span data-escaped-char>_</span>TOKEN for authentication in workflows</a></li>
+<li><a href="https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry" class="external">Working with the Container registry</a></li>
+</ul>
+<h2 title="About image configuration">
+<a href="#about-image-configuration" aria-hidden="true" class="anchor" id="about-image-configuration"></a>About image configuration</h2>
+<p>This guide assumes that you have a complete definition for a Docker image stored in a GitHub repository. For example, your repository must contain a <em>Dockerfile</em>, and any other files needed to perform a Docker build to create an image.</p>
+<p>You can use pre-defined annotation keys to add metadata including a description, a license, and a source repository to your container image. For more information, see <a href="https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#labelling-container-images" class="external">Working with the Container registry</a>.</p>
+<p>In this guide, we will use the Docker <code>build-push-action</code> action to build the Docker image and push it to one or more Docker registries. For more information, see <a href="https://github.com/marketplace/actions/build-and-push-docker-images" class="external"><code>build-push-action</code></a>.</p>
+<h2 title="Publishing images to Docker Hub">
+<a href="#publishing-images-to-docker-hub" aria-hidden="true" class="anchor" id="publishing-images-to-docker-hub"></a>Publishing images to Docker Hub</h2>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Docker Hub normally imposes rate limits on both push and pull operations which will affect jobs on self-hosted runners. However, GitHub-hosted runners are not subject to these limits based on an agreement between GitHub and Docker.</p>
+</div>
+<p>Each time you create a new release on GitHub, you can trigger a workflow to publish your image. The workflow in the example below runs when the <code>release</code> event triggers with the <code>published</code> activity type.</p>
+<p>In the example workflow below, we use the Docker <code>login-action</code> and <code>build-push-action</code> actions to build the Docker image and, if the build succeeds, push the built image to Docker Hub.</p>
+<p>To push to Docker Hub, you will need to have a Docker Hub account, and have a Docker Hub repository created. For more information, see <a href="https://docs.docker.com/docker-hub/quickstart/#step-3-build-and-push-an-image-to-docker-hub" class="external">Pushing a Docker container image to Docker Hub</a> in the Docker documentation.</p>
+<p>The <code>login-action</code> options required for Docker Hub are:</p>
+<ul>
+<li>
+<code>username</code> and <code>password</code>: This is your Docker Hub username and password. We recommend storing your Docker Hub username and password as secrets so they aren't exposed in your workflow file. For more information, see <a href="../../how-tos/write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a>.</li>
+</ul>
+<p>The <code>metadata-action</code> option required for Docker Hub is:</p>
+<ul>
+<li>
+<code>images</code>: The namespace and name for the Docker image you are building/pushing to Docker Hub.</li>
+</ul>
+<p>The <code>build-push-action</code> options required for Docker Hub are:</p>
+<ul>
+<li>
+<code>tags</code>: The tag of your new image in the format <code>DOCKER-HUB-NAMESPACE/DOCKER-HUB-REPOSITORY:VERSION</code>. You can set a single tag as shown below, or specify multiple tags in a list.</li>
+<li>
+<code>push</code>: If set to <code>true</code>, the image will be pushed to the registry if it is built successfully.</li>
+</ul>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># This workflow uses actions that are not certified by GitHub.
+</span><span style="color:#65737e;"># They are provided by a third-party and are governed by
+</span><span style="color:#65737e;"># separate terms of service, privacy policy, and support
+</span><span style="color:#65737e;"># documentation.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># GitHub recommends pinning actions to a commit SHA.
+</span><span style="color:#65737e;"># To get a newer version, you will need to update the SHA.
+</span><span style="color:#65737e;"># You can also reference a tag or branch, but the action may change without warning.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Publish Docker image
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">release</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">published</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push_to_registry</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Push Docker image to Docker Hub
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">permissions</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">packages</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">contents</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">attestations</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">id-token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Check out the repo
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Log in to Docker Hub
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.DOCKER_USERNAME }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.DOCKER_PASSWORD }}
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Extract metadata (tags, labels) for Docker
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">meta
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">images</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">my-docker-hub-namespace/my-docker-hub-repository
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Build and push Docker image
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">push
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">context</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">.
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">file</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">./Dockerfile
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">tags</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ steps.meta.outputs.tags }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">labels</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ steps.meta.outputs.labels }}
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Generate artifact attestation
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/attest@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">subject-name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">index.docker.io/my-docker-hub-namespace/my-docker-hub-repository
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">subject-digest</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ steps.push.outputs.digest }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">push-to-registry</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span></code></pre>
+<p>The above workflow checks out the GitHub repository, uses the <code>login-action</code> to log in to the registry, and then uses the <code>build-push-action</code> action to: build a Docker image based on your repository's <code>Dockerfile</code>; push the image to Docker Hub, and apply a tag to the image.</p>
+<p>In the last step, it generates an artifact attestation for the image, which increases supply chain security. For more information, see <a href="../../how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations.html">Using artifact attestations to establish provenance for builds</a>.</p>
+<h2 title="Publishing images to GitHub Packages">
+<a href="#publishing-images-to-github-packages" aria-hidden="true" class="anchor" id="publishing-images-to-github-packages"></a>Publishing images to GitHub Packages</h2>
+<p>Each time you create a new release on GitHub, you can trigger a workflow to publish your image. The workflow in the example below runs when a change is pushed to the <code>release</code> branch.</p>
+<p>In the example workflow below, we use the Docker <code>login-action</code>, <code>metadata-action</code>, and <code>build-push-action</code> actions to build the Docker image, and if the build succeeds, push the built image to GitHub Packages.</p>
+<p>The <code>login-action</code> options required for GitHub Packages are:</p>
+<ul>
+<li>
+<code>registry</code>: Must be set to <code>ghcr.io</code>.</li>
+<li>
+<code>username</code>: You can use the <code>${{ github.actor }}</code> context to automatically use the username of the user that triggered the workflow run. For more information, see <a href="../../reference/workflows-and-actions/contexts.html#github-context">Contexts reference</a>.</li>
+<li>
+<code>password</code>: You can use the automatically-generated <code>GITHUB_TOKEN</code> secret for the password. For more information, see <a href="../authenticate-with-github_token.html">Use GITHUB<span data-escaped-char>\</span><span data-escaped-char>_</span>TOKEN for authentication in workflows</a>.</li>
+</ul>
+<p>The <code>metadata-action</code> option required for GitHub Packages is:</p>
+<ul>
+<li>
+<code>images</code>: The namespace and name for the Docker image you are building.</li>
+</ul>
+<p>The <code>build-push-action</code> options required for GitHub Packages are:</p>
+<ul>
+<li>
+<code>context</code>: Defines the build's context as the set of files located in the specified path.</li>
+<li>
+<code>push</code>: If set to <code>true</code>, the image will be pushed to the registry if it is built successfully.</li>
+<li>
+<code>tags</code> and <code>labels</code>: These are populated by output from <code>metadata-action</code>.</li>
+</ul>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<ul>
+<li>This workflow uses actions that are not certified by GitHub. They are provided by a third-party and are governed by separate terms of service, privacy policy, and support documentation.</li>
+<li>GitHub recommends pinning actions to a commit SHA. To get a newer version, you will need to update the SHA. You can also reference a tag or branch, but the action may change without warning.</li>
+</ul>
+</div>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;">#
+</span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Create and publish a Docker image
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># Configures this workflow to run every time a change is pushed to the branch called `release`.
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">: ['</span><span style="color:#a3be8c;">release</span><span style="color:#c0c5ce;">']
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># Defines two custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker image that this workflow builds.
+</span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">REGISTRY</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ghcr.io
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">IMAGE_NAME</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ github.repository }}
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># There is a single job in this workflow. It's configured to run on the latest available version of Ubuntu.
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build-and-push-image</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">permissions</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">contents</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">packages</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">attestations</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">id-token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;">#
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Checkout repository
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Uses the `docker/login-action` action to log in to the Container registry registry using the account and password that will publish the packages. Once published, the packages are scoped to the account defined here.
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Log in to the Container registry
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">registry</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ env.REGISTRY }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ github.actor }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.GITHUB_TOKEN }}
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># This step uses [docker/metadata-action](https://github.com/docker/metadata-action#about) to extract tags and labels that will be applied to the specified image. The `id` "meta" allows the output of this step to be referenced in a subsequent step. The `images` value provides the base name for the tags and labels.
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Extract metadata (tags, labels) for Docker
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">meta
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">images</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># This step uses the `docker/build-push-action` action to build the image, based on your repository's `Dockerfile`. If the build succeeds, it pushes the image to GitHub Packages.
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># It uses the `context` parameter to define the build's context as the set of files located in the specified path. For more information, see [Usage](https://github.com/docker/build-push-action#usage) in the README of the `docker/build-push-action` repository.
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># It uses the `tags` and `labels` parameters to tag and label the image with the output from the "meta" step.
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Build and push Docker image
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">push
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">context</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">.
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">tags</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ steps.meta.outputs.tags }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">labels</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ steps.meta.outputs.labels }}
+</span><span style="color:#c0c5ce;">      
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># This step generates an artifact attestation for the image, which is an unforgeable statement about where and how it was built. It increases supply chain security for people who consume the image. For more information, see [Using artifact attestations to establish provenance for builds](/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds).
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Generate artifact attestation
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/attest@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">subject-name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">subject-digest</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ steps.push.outputs.digest }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">push-to-registry</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span><span style="color:#c0c5ce;">      
+</span></code></pre>
+<p>The above workflow is triggered by a push to the "release" branch. It checks out the GitHub repository, and uses the <code>login-action</code> to log in to the Container registry. It then extracts labels and tags for the Docker image. Finally, it uses the <code>build-push-action</code> action to build the image and publish it on the Container registry.</p>
+<h2 title="Publishing images to Docker Hub and GitHub Packages">
+<a href="#publishing-images-to-docker-hub-and-github-packages" aria-hidden="true" class="anchor" id="publishing-images-to-docker-hub-and-github-packages"></a>Publishing images to Docker Hub and GitHub Packages</h2>
+<p>In a single workflow, you can publish your Docker image to multiple registries by using the <code>login-action</code> and <code>build-push-action</code> actions for each registry.</p>
+<p>The following example workflow uses the steps from the previous sections (<a href="#publishing-images-to-docker-hub">Publishing images to Docker Hub</a> and <a href="#publishing-images-to-github-packages">Publishing images to GitHub Packages</a>) to create a single workflow that pushes to both registries.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># This workflow uses actions that are not certified by GitHub.
+</span><span style="color:#65737e;"># They are provided by a third-party and are governed by
+</span><span style="color:#65737e;"># separate terms of service, privacy policy, and support
+</span><span style="color:#65737e;"># documentation.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># GitHub recommends pinning actions to a commit SHA.
+</span><span style="color:#65737e;"># To get a newer version, you will need to update the SHA.
+</span><span style="color:#65737e;"># You can also reference a tag or branch, but the action may change without warning.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Publish Docker image
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">release</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">published</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push_to_registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Push Docker image to multiple registries
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">permissions</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">packages</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">contents</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Check out the repo
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Log in to Docker Hub
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.DOCKER_USERNAME }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.DOCKER_PASSWORD }}
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Log in to the Container registry
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">registry</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ghcr.io
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ github.actor }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.GITHUB_TOKEN }}
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Extract metadata (tags, labels) for Docker
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">meta
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">images</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">            my-docker-hub-namespace/my-docker-hub-repository
+</span><span style="color:#a3be8c;">            ghcr.io/${{ github.repository }}
+</span><span style="color:#a3be8c;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Build and push Docker images
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">push
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">context</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">.
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">tags</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ steps.meta.outputs.tags }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">labels</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ steps.meta.outputs.labels }}
+</span></code></pre>
+<p>The above workflow checks out the GitHub repository, uses the <code>login-action</code> twice to log in to both registries and generates tags and labels with the <code>metadata-action</code> action.<br>
+Then the <code>build-push-action</code> action builds and pushes the Docker image to Docker Hub and the Container registry.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>When pushing to multiple registries:</p>
+<ul>
+<li>Image digests may differ between registries, making attestation verification difficult.</li>
+<li>To maintain a consistent digest and allow a single attestation to verify all copies, push to one registry first and use a tool like <a href="https://github.com/google/go-containerregistry/blob/main/cmd/crane/doc/crane_copy.md" class="external"><code>crane copy</code></a> to replicate the image elsewhere.</li>
+<li>If you choose to build and push to each registry separately instead, you must generate a distinct attestation for each one to ensure your artifacts remain verifiable.</li>
+</ul>
+</div>
+<h2 title="Hands-on practice">
+<a href="#hands-on-practice" aria-hidden="true" class="anchor" id="hands-on-practice"></a>Hands-on practice</h2>
+<p>Practice publishing Docker images with the <a href="https://github.com/skills/publish-docker-images" class="external">Publishing Docker images</a> GitHub Skills exercise.</p>
+<p>In this exercise, you will learn how to:</p>
+<ul>
+<li>Authenticate to GitHub Packages using the <code>GITHUB_TOKEN</code>.</li>
+<li>Build and publish container images to the Container registry (<code>ghcr.io</code>).</li>
+<li>Use official Docker actions, such as <code>docker/login-action</code>, <code>docker/build-push-action</code>, and <code>docker/setup-buildx-action</code>.</li>
+<li>Generate tags automatically with <code>docker/metadata-action</code> based on branches, pull requests, and releases.</li>
+<li>Create features, pull requests, and releases with proper container versioning.</li>
+</ul>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

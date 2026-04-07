@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Reusing workflow configurations</title>
+    <link rel="stylesheet" href="../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Workflows and actions</a> / </nav><h1>
+<a href="#reusing-workflow-configurations" aria-hidden="true" class="anchor" id="reusing-workflow-configurations"></a>Reusing workflow configurations</h1>
+<p>Learn how to avoid duplication when creating a workflow.</p>
+<h2 title="Reusable workflows">
+<a href="#reusable-workflows" aria-hidden="true" class="anchor" id="reusable-workflows"></a>Reusable workflows</h2>
+<p>Rather than copying and pasting from one workflow to another, you can make workflows reusable. You and anyone with access to the reusable workflow can then call the reusable workflow from another workflow.</p>
+<p>Reusing workflows avoids duplication. This makes workflows easier to maintain and allows you to create new workflows more quickly by building on the work of others, just as you do with actions. Workflow reuse also promotes best practice by helping you to use workflows that are well designed, have already been tested, and have been proven to be effective. Your organization can build up a library of reusable workflows that can be centrally maintained.</p>
+<p>The diagram below shows an in-progress workflow run that uses a reusable workflow.</p>
+<ul>
+<li>After each of three build jobs on the left of the diagram completes successfully, a dependent job called "Deploy" is run.</li>
+<li>The "Deploy" job calls a reusable workflow that contains three jobs: "Staging", "Review", and "Production."</li>
+<li>The "Production" deployment job only runs after the "Staging" job has completed successfully.</li>
+<li>When a job targets an environment, the workflow run displays a progress bar that shows the number of steps in the job. In the diagram below, the "Production" job contains 8 steps, with step 6 currently being processed.</li>
+<li>Using a reusable workflow to run deployment jobs allows you to run those jobs for each build without duplicating code in workflows.</li>
+</ul>
+<p><img src="../../../..//assets/images/help/actions/reusable-workflows-ci-cd.png" alt="Diagram of a workflow calling a reusable workflow."></p>
+<p>A workflow that uses another workflow is referred to as a "caller" workflow. The reusable workflow is a "called" workflow. One caller workflow can use multiple called workflows. Each called workflow is referenced in a single line. The result is that the caller workflow file may contain just a few lines of YAML, but may perform a large number of tasks when it's run. When you reuse a workflow, the entire called workflow is used, just as if it was part of the caller workflow.</p>
+<p>If you reuse a workflow from a different repository, any actions in the called workflow run as if they were part of the caller workflow. For example, if the called workflow uses <code>actions/checkout</code>, the action checks out the contents of the repository that hosts the caller workflow, not the called workflow.</p>
+<p>You can view the reused workflows referenced in your GitHub Actions workflows as dependencies in the dependency graph of the repository containing your workflows. For more information, see “<a href="https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/about-the-dependency-graph" class="external">About the dependency graph</a>.”</p>
+<h3 title="Reusable workflows versus composite actions">
+<a href="#reusable-workflows-versus-composite-actions" aria-hidden="true" class="anchor" id="reusable-workflows-versus-composite-actions"></a>Reusable workflows versus composite actions</h3>
+<p>Reusable workflows and composite actions both help you avoid duplicating workflow content. Whereas reusable workflows allow you to reuse an entire workflow, with multiple jobs and steps, composite actions combine multiple steps that you can then run within a job step, just like any other action.</p>
+<p>Let's compare some aspects of each solution:</p>
+<ul>
+<li>
+<strong>Workflow jobs</strong> - Composite actions contain a series of steps that are run as a single step within the caller workflow. Unlike reusable workflows, they cannot contain jobs.</li>
+<li>
+<strong>Logging</strong> - When a composite action runs, the log will show just the step in the caller workflow that ran the composite action, not the individual steps within the composite action. With reusable workflows, every job and step is logged separately.</li>
+<li>
+<strong>Specifying runners</strong> - Reusable workflows contain one or more jobs. As with all workflow jobs, the jobs in a reusable workflow specify the type of machine on which the job will run. Therefore, if the steps must be run on a type of machine that might be different from the machine chosen for the calling workflow job, then you should use a reusable workflow, not a composite action.</li>
+<li>
+<strong>Passing output to steps</strong> - A composite action is run as a step within a workflow job, and you can have multiple steps before or after the step that runs the composite action. Reusable workflows are called directly within a job, and not from within a job step. You can't add steps to a job after calling a reusable workflow, so you can't use <code>GITHUB_ENV</code> to pass values to subsequent job steps in the caller workflow.</li>
+</ul>
+<h3 title="Reusable workflows / Key differences between reusable workflows and composite actions">
+<a href="#key-differences-between-reusable-workflows-and-composite-actions" aria-hidden="true" class="anchor" id="key-differences-between-reusable-workflows-and-composite-actions"></a>Key differences between reusable workflows and composite actions</h3>
+<table>
+<thead>
+<tr>
+<th>Reusable workflows</th>
+<th>Composite actions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A YAML file, very similar to any standard workflow file</td>
+<td>An action containing a bundle of workflow steps</td>
+</tr>
+<tr>
+<td>Each reusable workflow is a single file in the <code>.github/workflows</code> directory of a repository</td>
+<td>Each composite action is a separate repository, or a directory, containing an <code>action.yml</code> file and, optionally, other files</td>
+</tr>
+<tr>
+<td>Called by referencing a specific YAML file</td>
+<td>Called by referencing a repository or directory in which the action is defined</td>
+</tr>
+<tr>
+<td>Called directly within a job, not from a step</td>
+<td>Run as a step within a job</td>
+</tr>
+<tr>
+<td>Can contain multiple jobs</td>
+<td>Does not contain jobs</td>
+</tr>
+<tr>
+<td>Each step is logged in real-time</td>
+<td>Logged as one step even if it contains multiple steps</td>
+</tr>
+<tr>
+<td>Can connect a maximum of ten levels of workflows</td>
+<td>Can be nested to have up to 10 composite actions in one workflow</td>
+</tr>
+<tr>
+<td>Can use secrets</td>
+<td>Cannot use secrets</td>
+</tr>
+<tr>
+<td>Cannot be published to the <a href="https://github.com/marketplace?type=actions" class="external">marketplace</a>
+</td>
+<td>Can be published to the <a href="https://github.com/marketplace?type=actions" class="external">marketplace</a>
+</td>
+</tr>
+</tbody>
+</table>
+<h2 title="Workflow templates">
+<a href="#workflow-templates" aria-hidden="true" class="anchor" id="workflow-templates"></a>Workflow templates</h2>
+<p>Workflow templates allow everyone in your organization who has permission to create workflows to do so more quickly and easily. When people create a new workflow, they can choose a workflow template and some or all of the work of writing the workflow will be done for them. Within a workflow template, you can also reference reusable workflows to make it easy for people to benefit from reusing centrally managed workflow code.</p>
+<p>If you use a commit SHA when referencing the reusable workflow, you can ensure that everyone who reuses that workflow will always be using the same YAML code. However, if you reference a reusable workflow by a tag or branch, be sure that you can trust that version of the workflow. For more information, see <a href="../../reference/security/secure-use.html#reusing-third-party-workflows">Secure use reference</a>.</p>
+<p>GitHub offers workflow templates for a variety of languages and tooling. When you set up workflows in your repository, GitHub analyzes the code in your repository and recommends workflows based on the language and framework in your repository. For example, if you use Node.js, GitHub will suggest a workflow template file that installs your Node.js packages and runs your tests. You can search and filter to find relevant workflow templates.</p>
+<p>GitHub provides ready-to-use workflow templates for the following high level categories:</p>
+<ul>
+<li>
+<strong>Deployment (CD)</strong>. For more information, see <a href="../../get-started/continuous-deployment.html">Continuous deployment</a>.</li>
+</ul>
+<ul>
+<li>
+<strong>Security</strong>. For more information, see <a href="https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/configuring-advanced-setup-for-code-scanning#configuring-code-scanning-using-third-party-actions" class="external">Configuring advanced setup for code scanning</a>.</li>
+</ul>
+<ul>
+<li>
+<strong>Continuous Integration (CI)</strong>. For more information, see <a href="../../get-started/continuous-integration.html">Continuous integration</a>.</li>
+<li>
+<strong>Automation</strong>. Automation workflow templates offer solutions for automating workflows, such as triaging pull requests and applying a label based on the paths that are modified in the pull request, or greeting users who are first time contributors to the repository.</li>
+</ul>
+<p>Use these workflows as a starting place to build your custom workflow or use them as-is. You can browse the full list of workflow templates in the <a href="https://github.com/actions/starter-workflows" class="external">actions/starter-workflows</a> repository.</p>
+<p>For more information, see <a href="../../how-tos/reuse-automations/create-workflow-templates.html">Creating workflow templates for your organization</a>.</p>
+<h2 title="YAML anchors and aliases">
+<a href="#yaml-anchors-and-aliases" aria-hidden="true" class="anchor" id="yaml-anchors-and-aliases"></a>YAML anchors and aliases</h2>
+<p>You can use YAML anchors and aliases to reduce repetition in your workflows. An anchor (marked with <code>&amp;</code>) identifies a piece of content that you want to reuse, while an alias (marked with <code>*</code>) repeats that content in another location. Think of an anchor as creating a named template and an alias as using that template. This is particularly useful when you have jobs or steps that share common configurations.</p>
+<p>For reference information and examples, see <a href="../../reference/workflows-and-actions/reusing-workflow-configurations.html#yaml-anchors-and-aliases">Reusing workflow configurations</a>.</p>
+<h2 title="Next steps">
+<a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>To start reusing your workflows, see <a href="../../how-tos/reuse-automations/reuse-workflows.html">Reuse workflows</a>.</p>
+<p>To find information on the intricacies of reusing workflows, see <a href="../../reference/workflows-and-actions/reusing-workflow-configurations.html">Reusing workflow configurations</a>.</p>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

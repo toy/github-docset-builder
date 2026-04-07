@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Migrating from CircleCI to GitHub Actions</title>
+    <link rel="stylesheet" href="../../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">Tutorials</a> / <a href="../index.html">Migrate to GitHub Actions</a> / <a href="index.html">Manual migrations</a> / </nav><h1>
+<a href="#migrating-from-circleci-to-github-actions" aria-hidden="true" class="anchor" id="migrating-from-circleci-to-github-actions"></a>Migrating from CircleCI to GitHub Actions</h1>
+<p>GitHub Actions and CircleCI share several similarities in configuration, which makes migration to GitHub Actions relatively straightforward.</p>
+<h2 title="Introduction">
+<a href="#introduction" aria-hidden="true" class="anchor" id="introduction"></a>Introduction</h2>
+<p>CircleCI and GitHub Actions both allow you to create workflows that automatically build, test, publish, release, and deploy code. CircleCI and GitHub Actions share some similarities in workflow configuration:</p>
+<ul>
+<li>Workflow configuration files are written in YAML and stored in the repository.</li>
+<li>Workflows include one or more jobs.</li>
+<li>Jobs include one or more steps or individual commands.</li>
+<li>Steps or tasks can be reused and shared with the community.</li>
+</ul>
+<p>For more information, see <a href="../../../get-started/understand-github-actions.html">Understanding GitHub Actions</a>.</p>
+<h2 title="Key differences">
+<a href="#key-differences" aria-hidden="true" class="anchor" id="key-differences"></a>Key differences</h2>
+<p>When migrating from CircleCI, consider the following differences:</p>
+<ul>
+<li>CircleCI’s automatic test parallelism automatically groups tests according to user-specified rules or historical timing information. This functionality is not built into GitHub Actions.</li>
+<li>Actions that execute in Docker containers are sensitive to permissions problems since containers have a different mapping of users. You can avoid many of these problems by not using the <code>USER</code> instruction in your <em>Dockerfile</em>. For more information about the Docker filesystem on GitHub-hosted runners, see <a href="../../../concepts/runners/github-hosted-runners.html#docker-container-filesystem">GitHub-hosted runners</a>.</li>
+</ul>
+<h2 title="Migrating workflows and jobs">
+<a href="#migrating-workflows-and-jobs" aria-hidden="true" class="anchor" id="migrating-workflows-and-jobs"></a>Migrating workflows and jobs</h2>
+<p>CircleCI defines <code>workflows</code> in the <em>config.yml</em> file, which allows you to configure more than one workflow. GitHub requires one workflow file per workflow, and as a consequence, does not require you to declare <code>workflows</code>. You'll need to create a new workflow file for each workflow configured in <em>config.yml</em>.</p>
+<p>Both CircleCI and GitHub Actions configure <code>jobs</code> in the configuration file using similar syntax. If you configure any dependencies between jobs using <code>requires</code> in your CircleCI workflow, you can use the equivalent GitHub Actions <code>needs</code> syntax. For more information, see <a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idneeds">Workflow syntax for GitHub Actions</a>.</p>
+<h2 title="Migrating orbs to actions">
+<a href="#migrating-orbs-to-actions" aria-hidden="true" class="anchor" id="migrating-orbs-to-actions"></a>Migrating orbs to actions</h2>
+<p>Both CircleCI and GitHub Actions provide a mechanism to reuse and share tasks in a workflow. CircleCI uses a concept called orbs, written in YAML, to provide tasks that people can reuse in a workflow. GitHub Actions has powerful and flexible reusable components called actions, which you build with either JavaScript files or Docker images. You can create actions by writing custom code that interacts with your repository in any way you'd like, including integrating with GitHub's APIs and any publicly available third-party API. For example, an action can publish npm modules, send SMS alerts when urgent issues are created, or deploy production-ready code. For more information, see <a href="../../../how-tos/reuse-automations/index.html">Reusing automations</a>.</p>
+<p>CircleCI can reuse pieces of workflows with YAML anchors and aliases. GitHub Actions supports YAML anchors and aliases for reusability, and also provides matrices for running jobs with different configurations. For more information about matrices, see <a href="../../../how-tos/write-workflows/choose-what-workflows-do/run-job-variations.html">Running variations of jobs in a workflow</a>.</p>
+<h2 title="Using Docker images">
+<a href="#using-docker-images" aria-hidden="true" class="anchor" id="using-docker-images"></a>Using Docker images</h2>
+<p>Both CircleCI and GitHub Actions support running steps inside of a Docker image.</p>
+<p>CircleCI provides a set of pre-built images with common dependencies. These images have the <code>USER</code> set to <code>circleci</code>, which causes permissions to conflict with GitHub Actions.</p>
+<p>We recommend that you move away from CircleCI's pre-built images when you migrate to GitHub Actions. In many cases, you can use actions to install the additional dependencies you need.</p>
+<p>For more information about the Docker filesystem, see <a href="../../../concepts/runners/github-hosted-runners.html#docker-container-filesystem">GitHub-hosted runners</a>.</p>
+<p>For more information about the tools and packages available on GitHub-hosted runner images, see <a href="../../../concepts/runners/github-hosted-runners.html#supported-software">GitHub-hosted runners</a>.</p>
+<h2 title="Using variables and secrets">
+<a href="#using-variables-and-secrets" aria-hidden="true" class="anchor" id="using-variables-and-secrets"></a>Using variables and secrets</h2>
+<p>CircleCI and GitHub Actions support setting variables in the configuration file and creating secrets using the CircleCI or GitHub UI.</p>
+<p>For more information, see <a href="../../../reference/workflows-and-actions/variables.html#default-environment-variables">Variables reference</a> and <a href="../../../how-tos/write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a>.</p>
+<h2 title="Caching">
+<a href="#caching" aria-hidden="true" class="anchor" id="caching"></a>Caching</h2>
+<p>CircleCI and GitHub Actions provide a method to manually cache files in the configuration file.</p>
+<p>Below is an example of the syntax for each system.</p>
+<h3 title="Caching / CircleCI syntax for caching">
+<a href="#circleci-syntax-for-caching" aria-hidden="true" class="anchor" id="circleci-syntax-for-caching"></a>CircleCI syntax for caching</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">restore_cache</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">keys</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">v1-npm-deps-{{ checksum "package-lock.json" }}
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">v1-npm-deps-
+</span></code></pre>
+<h3 title="Caching / GitHub Actions syntax for caching">
+<a href="#github-actions-syntax-for-caching" aria-hidden="true" class="anchor" id="github-actions-syntax-for-caching"></a>GitHub Actions syntax for caching</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Cache node modules
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/cache@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">~/.npm
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">key</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">v1-npm-deps-${{ hashFiles('**/package-lock.json') }}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">restore-keys</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">v1-npm-deps-
+</span></code></pre>
+<p>GitHub Actions does not have an equivalent of CircleCI’s Docker Layer Caching (or DLC).</p>
+<h2 title="Persisting data between jobs">
+<a href="#persisting-data-between-jobs" aria-hidden="true" class="anchor" id="persisting-data-between-jobs"></a>Persisting data between jobs</h2>
+<p>Both CircleCI and GitHub Actions provide mechanisms to persist data between jobs.</p>
+<p>Below is an example in CircleCI and GitHub Actions configuration syntax.</p>
+<h3 title="Persisting data between jobs / CircleCI syntax for persisting data between jobs">
+<a href="#circleci-syntax-for-persisting-data-between-jobs" aria-hidden="true" class="anchor" id="circleci-syntax-for-persisting-data-between-jobs"></a>CircleCI syntax for persisting data between jobs</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">persist_to_workspace</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">root</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">workspace
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">paths</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">math-homework.txt
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">...
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">attach_workspace</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">at</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">/tmp/workspace
+</span></code></pre>
+<h3 title="Persisting data between jobs / GitHub Actions syntax for persisting data between jobs">
+<a href="#github-actions-syntax-for-persisting-data-between-jobs" aria-hidden="true" class="anchor" id="github-actions-syntax-for-persisting-data-between-jobs"></a>GitHub Actions syntax for persisting data between jobs</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Upload math result for job 1
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/upload-artifact@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">homework
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">math-homework.txt
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">...
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Download math result for job 1
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/download-artifact@v5
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">homework
+</span></code></pre>
+<p>For more information, see <a href="../../store-and-share-data.html">Store and share data with workflow artifacts</a>.</p>
+<h2 title="Using databases and service containers">
+<a href="#using-databases-and-service-containers" aria-hidden="true" class="anchor" id="using-databases-and-service-containers"></a>Using databases and service containers</h2>
+<p>Both systems enable you to include additional containers for databases, caching, or other dependencies.</p>
+<p>In CircleCI, the first image listed in the <em>config.yaml</em> is the primary image used to run commands. GitHub Actions uses explicit sections: use <code>container</code> for the primary container, and list additional containers in <code>services</code>.</p>
+<p>Below is an example in CircleCI and GitHub Actions configuration syntax.</p>
+<h3 title="Using databases and service containers / CircleCI syntax for using databases and service containers">
+<a href="#circleci-syntax-for-using-databases-and-service-containers" aria-hidden="true" class="anchor" id="circleci-syntax-for-using-databases-and-service-containers"></a>CircleCI syntax for using databases and service containers</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">---
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2.1
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">ruby-26</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">docker</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">image</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">circleci/ruby:2.6.3-node-browsers-legacy
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">environment</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">PGHOST</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">localhost
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">PGUSER</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">administrate
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">RAILS_ENV</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">test
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">image</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">postgres:10.1-alpine
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">environment</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">POSTGRES_USER</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">administrate
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">POSTGRES_DB</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ruby26
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">POSTGRES_PASSWORD</span><span style="color:#c0c5ce;">: ""
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">working_directory</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">~/administrate
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">checkout
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Bundle install dependencies
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle install --path vendor/bundle
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Wait for DB
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dockerize -wait tcp://localhost:5432 -timeout 1m
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Setup the environment
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">cp .sample.env .env
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Setup the database
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle exec rake db:setup
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Run the tests
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle exec rake
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">workflows</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">ruby-26
+</span><span style="color:#c0c5ce;">...
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">attach_workspace</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">at</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">/tmp/workspace
+</span></code></pre>
+<h3 title="Using databases and service containers / GitHub Actions syntax for using databases and service containers">
+<a href="#github-actions-syntax-for-using-databases-and-service-containers" aria-hidden="true" class="anchor" id="github-actions-syntax-for-using-databases-and-service-containers"></a>GitHub Actions syntax for using databases and service containers</h3>
+<!-- markdownlint-disable search-replace -->
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Containers
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">push</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">container</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">circleci/ruby:2.6.3-node-browsers-legacy
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">PGHOST</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">postgres
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">PGUSER</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">administrate
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">RAILS_ENV</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">test
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">services</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">postgres</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">image</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">postgres:10.1-alpine
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">POSTGRES_USER</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">administrate
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">POSTGRES_DB</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ruby25
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">POSTGRES_PASSWORD</span><span style="color:#c0c5ce;">: ""
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">ports</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          - </span><span style="color:#a3be8c;">5432:5432
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># Add a health check
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">options</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">--health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># This Docker file changes sets USER to circleci instead of using the default user, so we need to update file permissions for this image to work on GH Actions.
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># See https://docs.github.com/actions/using-github-hosted-runners/about-github-hosted-runners#docker-container-filesystem
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup file system permissions
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">sudo chmod -R 777 $GITHUB_WORKSPACE /github /__w/_temp
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Install dependencies
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle install --path vendor/bundle
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup environment configuration
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">cp .sample.env .env
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup database
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle exec rake db:setup
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Run tests
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle exec rake
+</span></code></pre>
+<!-- markdownlint-enable search-replace -->
+<p>For more information, see <a href="../../use-containerized-services/use-docker-service-containers.html">Communicating with Docker service containers</a>.</p>
+<h2 title="Complete Example">
+<a href="#complete-example" aria-hidden="true" class="anchor" id="complete-example"></a>Complete Example</h2>
+<p>Below is a real-world example. The left shows the actual CircleCI <em>config.yml</em> for the <a href="https://github.com/thoughtbot/administrate" class="external">thoughtbot/administrator</a> repository. The right shows the GitHub Actions equivalent.</p>
+<h3 title="Complete Example / Complete example for CircleCI">
+<a href="#complete-example-for-circleci" aria-hidden="true" class="anchor" id="complete-example-for-circleci"></a>Complete example for CircleCI</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">---
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2.1
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">commands</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">shared_steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">checkout
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Restore Cached Dependencies
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">restore_cache</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Restore bundle cache
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">key</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">administrate-{{ checksum "Gemfile.lock" }}
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Bundle install dependencies
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle install --path vendor/bundle
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Cache Dependencies
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">save_cache</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Store bundle cache
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">key</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">administrate-{{ checksum "Gemfile.lock" }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">paths</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">            - </span><span style="color:#a3be8c;">vendor/bundle
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Wait for DB
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dockerize -wait tcp://localhost:5432 -timeout 1m
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Setup the environment
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">cp .sample.env .env
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Setup the database
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle exec rake db:setup
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Run the tests
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle exec rake
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">default_job</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">&amp;</span><span style="color:#c0c5ce;">default_job
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">working_directory</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">~/administrate
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">shared_steps
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Run the tests against multiple versions of Rails
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle exec appraisal install
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle exec appraisal rake
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">ruby-25</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#d08770;">&lt;&lt;</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">*</span><span style="color:#bf616a;">default_job
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">docker</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">image</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">circleci/ruby:2.5.0-node-browsers
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">environment</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">PGHOST</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">localhost
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">PGUSER</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">administrate
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">RAILS_ENV</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">test
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">image</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">postgres:10.1-alpine
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">environment</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">POSTGRES_USER</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">administrate
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">POSTGRES_DB</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ruby25
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">POSTGRES_PASSWORD</span><span style="color:#c0c5ce;">: ""
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">ruby-26</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#d08770;">&lt;&lt;</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">*</span><span style="color:#bf616a;">default_job
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">docker</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">image</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">circleci/ruby:2.6.3-node-browsers-legacy
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">environment</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">PGHOST</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">localhost
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">PGUSER</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">administrate
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">RAILS_ENV</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">test
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">image</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">postgres:10.1-alpine
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">environment</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">POSTGRES_USER</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">administrate
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">POSTGRES_DB</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ruby26
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">POSTGRES_PASSWORD</span><span style="color:#c0c5ce;">: ""
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">workflows</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">multiple-rubies</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">ruby-26
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">ruby-25
+</span></code></pre>
+<h3 title="Complete Example / Complete example for GitHub Actions">
+<a href="#complete-example-for-github-actions" aria-hidden="true" class="anchor" id="complete-example-for-github-actions"></a>Complete example for GitHub Actions</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># This workflow uses actions that are not certified by GitHub.
+</span><span style="color:#65737e;"># They are provided by a third-party and are governed by
+</span><span style="color:#65737e;"># separate terms of service, privacy policy, and support
+</span><span style="color:#65737e;"># documentation.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># GitHub recommends pinning actions to a commit SHA.
+</span><span style="color:#65737e;"># To get a newer version, you will need to update the SHA.
+</span><span style="color:#65737e;"># You can also reference a tag or branch, but the action may change without warning.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Containers
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">push</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">strategy</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">matrix</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">ruby</span><span style="color:#c0c5ce;">: ['</span><span style="color:#a3be8c;">2.5</span><span style="color:#c0c5ce;">', '</span><span style="color:#a3be8c;">2.6.3</span><span style="color:#c0c5ce;">']
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">PGHOST</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">localhost
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">PGUSER</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">administrate
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">RAILS_ENV</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">test
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">services</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">postgres</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">image</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">postgres:10.1-alpine
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">POSTGRES_USER</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">administrate
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">POSTGRES_DB</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ruby25
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">POSTGRES_PASSWORD</span><span style="color:#c0c5ce;">: ""
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">ports</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          - </span><span style="color:#a3be8c;">5432:5432
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># Add a health check
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">options</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">--health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup Ruby
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">eregon/use-ruby-action@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">ruby-version</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ matrix.ruby }}
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Cache dependencies
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/cache@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">vendor/bundle
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">key</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">administrate-${{ matrix.image }}-${{ hashFiles('Gemfile.lock') }}
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Install postgres headers
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          sudo apt-get update
+</span><span style="color:#a3be8c;">          sudo apt-get install libpq-dev
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Install dependencies
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle install --path vendor/bundle
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup environment configuration
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">cp .sample.env .env
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup database
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle exec rake db:setup
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Run tests
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle exec rake
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Install appraisal
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle exec appraisal install
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Run appraisal
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle exec appraisal rake
+</span></code></pre>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

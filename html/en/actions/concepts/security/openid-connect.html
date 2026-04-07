@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>OpenID Connect</title>
+    <link rel="stylesheet" href="../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Security</a> / </nav><h1>
+<a href="#openid-connect" aria-hidden="true" class="anchor" id="openid-connect"></a>OpenID Connect</h1>
+<p>OpenID Connect allows your workflows to exchange short-lived tokens directly from your cloud provider.</p>
+<h2 title="Overview of OpenID Connect (OIDC)">
+<a href="#overview-of-openid-connect-oidc" aria-hidden="true" class="anchor" id="overview-of-openid-connect-oidc"></a>Overview of OpenID Connect (OIDC)</h2>
+<p>GitHub Actions workflows are often designed to access a cloud provider (such as AWS, Azure, GCP, HashiCorp Vault, and others) in order to deploy software or use the cloud's services. Before the workflow can access these resources, it will supply credentials, such as a password or token, to the cloud provider. These credentials are usually stored as a secret in GitHub, and the workflow presents this secret to the cloud provider every time it runs.</p>
+<p>However, using hardcoded secrets requires you to create credentials in the cloud provider and then duplicate them in GitHub as a secret.</p>
+<p>After you have established a trust connection with a cloud provider that supports OIDC, you can configure your workflow to request a short-lived access token directly from the cloud provider.</p>
+<h2 title="Benefits of using OIDC">
+<a href="#benefits-of-using-oidc" aria-hidden="true" class="anchor" id="benefits-of-using-oidc"></a>Benefits of using OIDC</h2>
+<p>By updating your workflows to use OIDC tokens, you can adopt the following good security practices:</p>
+<ul>
+<li>
+<strong>No cloud secrets:</strong> You won't need to duplicate your cloud credentials as long-lived GitHub secrets. Instead, you can configure the OIDC trust on your cloud provider, and then update your workflows to request a short-lived access token from the cloud provider through OIDC.</li>
+<li>
+<strong>Authentication and authorization management:</strong> You have more granular control over how workflows can use credentials, using your cloud provider's authentication (authN) and authorization (authZ) tools to control access to cloud resources.</li>
+<li>
+<strong>Rotating credentials:</strong> With OIDC, your cloud provider issues a short-lived access token that is only valid for a single job, and then automatically expires.</li>
+</ul>
+<h2 title="How OIDC integrates with GitHub Actions">
+<a href="#how-oidc-integrates-with-github-actions" aria-hidden="true" class="anchor" id="how-oidc-integrates-with-github-actions"></a>How OIDC integrates with GitHub Actions</h2>
+<p>The following diagram gives an overview of how GitHub's OIDC provider integrates with your workflows and cloud provider:</p>
+<p><img src="../../../..//assets/images/help/actions/oidc-architecture.png" alt="Diagram of how a cloud provider integrates with GitHub Actions through access tokens and JSON web token cloud role IDs."></p>
+<ol>
+<li>You establish an OIDC trust relationship in the cloud provider, allowing specific GitHub workflows to request cloud access tokens on behalf of a defined cloud role.</li>
+<li>Every time your job runs, GitHub's OIDC provider auto-generates an OIDC token. This token contains multiple claims to establish a security-hardened and verifiable identity about the specific workflow that is trying to authenticate.</li>
+<li>A step or action in the workflow job can request a token from GitHub’s OIDC provider, which can then be presented to the cloud provider as proof of the workflow’s identity.</li>
+<li>Once the cloud provider successfully validates the claims presented in the token, it then provides a short-lived cloud access token that is available only for the duration of the job.</li>
+</ol>
+<h2 title="Understanding the OIDC token">
+<a href="#understanding-the-oidc-token" aria-hidden="true" class="anchor" id="understanding-the-oidc-token"></a>Understanding the OIDC token</h2>
+<p>Each job requests an OIDC token from GitHub's OIDC provider, which responds with an automatically generated JSON web token (JWT) that is unique for each workflow job where it is generated. When the job runs, the OIDC token is presented to the cloud provider. To validate the token, the cloud provider checks if the OIDC token's subject and other claims are a match for the conditions that were preconfigured on the cloud role's OIDC trust definition.</p>
+<p>The following example OIDC token uses a subject (<code>sub</code>) that references a job environment named <code>prod</code> in the <code>octo-org/octo-repo</code> repository.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">{
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">typ</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">JWT</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">alg</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">RS256</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">x5t</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">example-thumbprint</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">kid</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">example-key-id</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">}
+</span><span style="color:#c0c5ce;">{
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">jti</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">example-id</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">sub</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">repo:octo-org/octo-repo:environment:prod</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">environment</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">prod</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">aud</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">https://github.com/octo-org</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">ref</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">refs/heads/main</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">sha</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">example-sha</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">repository</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">octo-org/octo-repo</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">repository_owner</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">octo-org</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">actor_id</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">12</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">repository_visibility</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">private</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">repository_id</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">74</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">repository_owner_id</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">65</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">run_id</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">example-run-id</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">run_number</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">10</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">run_attempt</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">2</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">runner_environment</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">github-hosted</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">actor</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">octocat</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">workflow</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">example-workflow</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">head_ref</span><span style="color:#c0c5ce;">": "",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">base_ref</span><span style="color:#c0c5ce;">": "",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">event_name</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">workflow_dispatch</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">repo_property_workspace_id</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">ws-abc123</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">ref_type</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">branch</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">job_workflow_ref</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">octo-org/octo-automation/.github/workflows/oidc.yml@refs/heads/main</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">iss</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">https://token.actions.githubusercontent.com</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">nbf</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">1632492967</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">exp</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">1632493867</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">iat</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">1632493567
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+<h2 title="Authenticating custom actions using OIDC">
+<a href="#authenticating-custom-actions-using-oidc" aria-hidden="true" class="anchor" id="authenticating-custom-actions-using-oidc"></a>Authenticating custom actions using OIDC</h2>
+<p>Custom actions use the <code>getIDToken()</code> method from the Actions toolkit or a <code>curl</code> command to authenticate using OIDC.</p>
+<p>For more information, see <a href="../../reference/security/oidc.html#methods-for-requesting-the-oidc-token">OpenID Connect reference</a>.</p>
+<h2 title="Updating your workflows for OIDC">
+<a href="#updating-your-workflows-for-oidc" aria-hidden="true" class="anchor" id="updating-your-workflows-for-oidc"></a>Updating your workflows for OIDC</h2>
+<p>GitHub Actions workflows can use OIDC tokens instead of secrets to authenticate with cloud providers. Many popular cloud providers offer official login actions that simplify the process of using OIDC in your workflows. For more information about updating your workflows with specific cloud providers, see <a href="../../how-tos/secure-your-work/security-harden-deployments/index.html">Security hardening your deployments</a>.</p>
+<h2 title="Using repository custom properties as OIDC claims">
+<a href="#using-repository-custom-properties-as-oidc-claims" aria-hidden="true" class="anchor" id="using-repository-custom-properties-as-oidc-claims"></a>Using repository custom properties as OIDC claims</h2>
+<p>Organization and enterprise admins can include repository custom properties as claims in OIDC tokens. This enables attribute-based access control (ABAC) policies in your cloud provider, artifact registry, or secrets manager that are driven by repository metadata rather than hard-coded allow lists.</p>
+<h3 title="Using repository custom properties as OIDC claims / How custom property claims work">
+<a href="#how-custom-property-claims-work" aria-hidden="true" class="anchor" id="how-custom-property-claims-work"></a>How custom property claims work</h3>
+<p>The end-to-end flow for using custom properties as OIDC claims is as follows:</p>
+<ol>
+<li>
+<strong>Define custom properties.</strong> An organization or enterprise admin creates custom properties (for example, <code>business_unit</code>, <code>data_classification</code>, or <code>environment_tier</code>) and assigns values to repositories. For more information, see <a href="https://docs.github.com/en/organizations/managing-organization-settings/managing-custom-properties-for-repositories-in-your-organization" class="external">Managing custom properties for repositories in your organization</a> and <a href="../../reference/security/oidc.html#including-repository-custom-properties-in-oidc-tokens">OpenID Connect reference</a>.</li>
+<li>
+<strong>Enable properties in OIDC tokens.</strong> An organization or enterprise admin selects which custom properties should be included in OIDC tokens, using the settings UI or the REST API.</li>
+<li>
+<strong>Claims appear automatically.</strong> Every workflow run in a repository that has a value set for an enabled property will include that value in its OIDC token, prefixed with <code>repo_property_</code>. No workflow-level configuration changes are required.</li>
+<li>
+<strong>Update cloud trust policies.</strong> You update your cloud provider's trust conditions to evaluate the new <code>repo_property_*</code> claims, enabling fine-grained, attribute-based access decisions.</li>
+</ol>
+<p>Because this builds on GitHub's existing OIDC short-lived credential model, no long-lived secrets are required, and every token is scoped, auditable, and automatically rotated per workflow run.</p>
+<h3 title="Using repository custom properties as OIDC claims / Prerequisites">
+<a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h3>
+<ul>
+<li>Custom properties must already be defined at the organization or enterprise level. For more information, see <a href="https://docs.github.com/en/organizations/managing-organization-settings/managing-custom-properties-for-repositories-in-your-organization" class="external">Managing custom properties for repositories in your organization</a>.</li>
+<li>You must be an organization admin or enterprise admin.</li>
+</ul>
+<h3 title="Using repository custom properties as OIDC claims / Adding a custom property to OIDC token claims">
+<a href="#adding-a-custom-property-to-oidc-token-claims" aria-hidden="true" class="anchor" id="adding-a-custom-property-to-oidc-token-claims"></a>Adding a custom property to OIDC token claims</h3>
+<p>To include a custom property in OIDC tokens, use the REST API or the settings UI for your organization or enterprise.</p>
+<ul>
+<li>
+<p><strong>Using the settings UI:</strong> Navigate to your organization or enterprise's Actions OIDC settings page to view and manage which custom properties are included in OIDC tokens.</p>
+</li>
+<li>
+<p><strong>Using the REST API:</strong> Send a <code>POST</code> request to the <code>/orgs/{org}/actions/oidc/customization/properties/repo</code> endpoint to add a custom property to the OIDC token claims for your organization. For request parameters and full details, see the REST API documentation for managing OIDC custom properties: <a href="https://docs.github.com/en/rest/actions/oidc" class="external">REST API endpoints for GitHub Actions OIDC</a>.</p>
+</li>
+</ul>
+<h3 title="Using repository custom properties as OIDC claims / Example OIDC token with custom properties">
+<a href="#example-oidc-token-with-custom-properties" aria-hidden="true" class="anchor" id="example-oidc-token-with-custom-properties"></a>Example OIDC token with custom properties</h3>
+<p>The following example shows an OIDC token that includes two custom properties: a single-select property <code>business_unit</code> and a string property <code>workspace_id</code>. Each custom property appears in the token with the <code>repo_property_</code> prefix.</p>
+<pre lang="json" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">{
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">sub</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">repo:my-org/my-repo:ref:refs/heads/main</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">aud</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">https://github.com/my-org</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">repository</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">my-org/my-repo</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">repository_owner</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">my-org</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">ref</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">refs/heads/main</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">repo_property_business_unit</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">payments</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">repo_property_workspace_id</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">ws-abc123</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+<p>You can use the <code>repo_property_*</code> claims in your cloud provider's trust conditions to create flexible, attribute-based access control policies. For more information about the claim format, supported property types, and limits, see <a href="../../reference/security/oidc.html#including-repository-custom-properties-in-oidc-tokens">OpenID Connect reference</a>.</p>
+<h2 title="OIDC support for Dependabot">
+<a href="#oidc-support-for-dependabot" aria-hidden="true" class="anchor" id="oidc-support-for-dependabot"></a>OIDC support for Dependabot</h2>
+<p>Dependabot can use OIDC to authenticate with private registries, eliminating the need to store long-lived credentials as repository secrets. With OIDC-based authentication, Dependabot update jobs can dynamically obtain short-lived credentials from your cloud identity provider.</p>
+<p>Dependabot supports OIDC authentication for any registry type that uses <code>username</code> and <code>password</code> authentication, when the registry is hosted on AWS CodeArtifact, Azure DevOps Artifacts, or JFrog Artifactory.</p>
+<p>The benefits of OIDC authentication for Dependabot are:</p>
+<ul>
+<li>
+<strong>Enhanced security:</strong> Eliminates static, long-lived credentials from your repositories.</li>
+<li>
+<strong>Simpler management:</strong> Enables secure, policy-compliant access to private registries.</li>
+<li>
+<strong>Avoid rate limiting:</strong> Dynamic credentials help you avoid hitting rate limits associated with static tokens.</li>
+</ul>
+<p>For more information, see <a href="https://docs.github.com/en/code-security/dependabot/working-with-dependabot/configuring-access-to-private-registries-for-dependabot#using-oidc-for-authentication" class="external">Configuring access to private registries for Dependabot</a>.</p>
+<h2 title="Next steps">
+<a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>For more information about configuring OIDC, see <a href="../../how-tos/secure-your-work/security-harden-deployments/index.html">Security hardening your deployments</a>.</p>
+<p>For reference information about OIDC, see <a href="../../reference/security/oidc.html">OpenID Connect reference</a>.</p>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

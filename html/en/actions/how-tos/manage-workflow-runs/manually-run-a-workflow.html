@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Manually running a workflow</title>
+    <link rel="stylesheet" href="../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">How-tos</a> / <a href="index.html">Manage workflow runs</a> / </nav><h1>
+<a href="#manually-running-a-workflow" aria-hidden="true" class="anchor" id="manually-running-a-workflow"></a>Manually running a workflow</h1>
+<p>When a workflow is configured to run on the workflow_dispatch event, you can run the workflow using the Actions tab on GitHub, GitHub CLI, or the REST API.</p>
+<h2 title="Configuring a workflow to run manually">
+<a href="#configuring-a-workflow-to-run-manually" aria-hidden="true" class="anchor" id="configuring-a-workflow-to-run-manually"></a>Configuring a workflow to run manually</h2>
+<p>To run a workflow manually, the workflow must be configured to run on the <code>workflow_dispatch</code> event.</p>
+<p>To trigger the <code>workflow_dispatch</code> event, your workflow must be in the default branch. For more information about configuring the <code>workflow_dispatch</code> event, see <a href="../../reference/workflows-and-actions/events-that-trigger-workflows.html#workflow_dispatch">Events that trigger workflows</a>.</p>
+<p>Write access to the repository is required to perform these steps.</p>
+<h2 title="Running a workflow">
+<a href="#running-a-workflow" aria-hidden="true" class="anchor" id="running-a-workflow"></a>Running a workflow</h2>
+<div class="ghd-tool webui">
+<ol>
+<li>
+<p>On GitHub, navigate to the main page of the repository.</p>
+</li>
+<li>
+<p>Under your repository name, click <strong><svg version="1.1" width="16" height="16" viewbox="0 0 16 16" class="octicon octicon-play" aria-label="play" role="img"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm4.879-2.773 4.264 2.559a.25.25 0 0 1 0 .428l-4.264 2.559A.25.25 0 0 1 6 10.559V5.442a.25.25 0 0 1 .379-.215Z"></path></svg> Actions</strong>.</p>
+<p><img src="../../../..//assets/images/help/repository/actions-tab-global-nav-update.png" alt='Screenshot of the tabs for the "github/docs" repository. The "Actions" tab is highlighted with an orange outline.'></p>
+</li>
+<li>
+<p>In the left sidebar, click the name of the workflow you want to run.</p>
+<p><img src="../../../..//assets/images/help/repository/actions-select-workflow-2022.png" alt='Screenshot of the "Actions" page. In the left sidebar, a workflow name is highlighted with an outline in dark orange.'></p>
+</li>
+<li>
+<p>Above the list of workflow runs, click the <strong>Run workflow</strong> button.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>To see the <strong>Run workflow</strong> button, your workflow file must use the <code>workflow_dispatch</code> event trigger. Only workflow files that use the <code>workflow_dispatch</code> event trigger will have the option to run the workflow manually using the <strong>Run workflow</strong> button. For more information about configuring the <code>workflow_dispatch</code> event, see <a href="../../reference/workflows-and-actions/events-that-trigger-workflows.html#workflow_dispatch">Events that trigger workflows</a>.</p>
+</div>
+<p><img src="../../../..//assets/images/help/actions/actions-workflow-dispatch.png" alt='Screenshot of a workflow page. Above the list of workflow runs, a button, labeled "Run workflow", is outlined in dark orange.'></p>
+</li>
+<li>
+<p>Select the <strong>Branch</strong> dropdown menu and click a branch to run the workflow on.</p>
+</li>
+<li>
+<p>If the workflow requires input, fill in the fields.</p>
+</li>
+<li>
+<p>Click <strong>Run workflow</strong>.</p>
+</li>
+</ol>
+</div>
+<div class="ghd-tool cli">
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>To learn more about GitHub CLI, see <a href="https://docs.github.com/en/github-cli/github-cli/about-github-cli" class="external">About GitHub CLI</a>.</p>
+</div>
+<p>To run a workflow, use the <code>workflow run</code> subcommand. Replace the <code>workflow</code> parameter with either the name, ID, or file name of the workflow you want to run. For example, <code>"Link Checker"</code>, <code>1234567</code>, or <code>"link-check-test.yml"</code>. If you don't specify a workflow, GitHub CLI returns an interactive menu for you to choose a workflow.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh workflow run WORKFLOW
+</span></code></pre>
+<p>If your workflow accepts inputs, GitHub CLI will prompt you to enter them. Alternatively, you can use <code>-f</code> or <code>-F</code> to add an input in <code>key=value</code> format. Use <code>-F</code> to read from a file.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh workflow run greet.yml -f name=mona -f greeting=hello -F data=@myfile.txt
+</span></code></pre>
+<p>You can also pass inputs as JSON by using standard input.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">echo '{"name":"mona", "greeting":"hello"}' | gh workflow run greet.yml --json
+</span></code></pre>
+<p>To run a workflow on a branch other than the repository's default branch, use the <code>--ref</code> flag.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh workflow run WORKFLOW --ref BRANCH
+</span></code></pre>
+<p>To view the progress of the workflow run, use the <code>run watch</code> subcommand and select the run from the interactive list.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh run watch
+</span></code></pre>
+</div>
+<h2 title="Running a workflow using the REST API">
+<a href="#running-a-workflow-using-the-rest-api" aria-hidden="true" class="anchor" id="running-a-workflow-using-the-rest-api"></a>Running a workflow using the REST API</h2>
+<p>When using the REST API, you configure the <code>inputs</code> and <code>ref</code> as request body parameters. If the inputs are omitted, the default values defined in the workflow file are used.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>You can define up to 25  <code>inputs</code> for a <code>workflow_dispatch</code> event.</p>
+</div>
+<p>For more information about using the REST API, see <a href="https://docs.github.com/en/rest/actions/workflows#create-a-workflow-dispatch-event" class="external">REST API endpoints for workflows</a>.</p>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

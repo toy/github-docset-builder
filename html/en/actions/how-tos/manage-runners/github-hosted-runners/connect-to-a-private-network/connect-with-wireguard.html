@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Using WireGuard to create a network overlay</title>
+    <link rel="stylesheet" href="../../../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../../../index.html">GitHub Actions</a> / <a href="../../../index.html">How-tos</a> / <a href="../../index.html">Manage runners</a> / <a href="../index.html">GitHub-hosted runners</a> / <a href="index.html">Connect to a private network</a> / </nav><h1>
+<a href="#using-wireguard-to-create-a-network-overlay" aria-hidden="true" class="anchor" id="using-wireguard-to-create-a-network-overlay"></a>Using WireGuard to create a network overlay</h1>
+<p>You can create an overlay network between your runner and a service in your private network.</p>
+<h2 title="Using WireGuard to create a network overlay">
+<a href="#using-wireguard-to-create-a-network-overlay-1" aria-hidden="true" class="anchor" id="using-wireguard-to-create-a-network-overlay-1"></a>Using WireGuard to create a network overlay</h2>
+<p>If you don't want to maintain separate infrastructure for an API Gateway, you can create an overlay network between your runner and a service in your private network, by running WireGuard in both places.</p>
+<p>There are various disadvantages to this approach:</p>
+<ul>
+<li>To reach WireGuard running on your private service, you will need a well-known IP address and port that your workflow can reference: this can either be a public IP address and port, a port mapping on a network gateway, or a service that dynamically updates DNS.</li>
+<li>WireGuard doesn't handle NAT traversal out of the box, so you'll need to identify a way to provide this service.</li>
+<li>This connection is one-to-one, so if you need high availability or high throughput you'll need to build that on top of WireGuard.</li>
+<li>You'll need to generate and securely store keys for both the runner and your private service. WireGuard uses UDP, so your network must support UDP traffic.</li>
+</ul>
+<p>There are some advantages too, as you can run WireGuard on an existing server so you don't have to maintain separate infrastructure, and it's well supported on GitHub-hosted runners.</p>
+<h2 title="Example: Configuring WireGuard">
+<a href="#example-configuring-wireguard" aria-hidden="true" class="anchor" id="example-configuring-wireguard"></a>Example: Configuring WireGuard</h2>
+<p>This example workflow configures WireGuard to connect to a private service.</p>
+<p>For this example, the WireGuard instance running in the private network has this configuration:</p>
+<ul>
+<li>Overlay network IP address of <code>192.168.1.1</code>
+</li>
+<li>Public IP address and port of <code>1.2.3.4:56789</code>
+</li>
+<li>Public key <code>examplepubkey1234...</code>
+</li>
+</ul>
+<p>The WireGuard instance in the GitHub Actions runner has this configuration:</p>
+<ul>
+<li>Overlay network IP address of <code>192.168.1.2</code>
+</li>
+<li>Private key stores as an GitHub Actions secret under <code>WIREGUARD_PRIVATE_KEY</code>
+</li>
+</ul>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">WireGuard example
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">workflow_dispatch</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">wireguard_example</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">sudo apt install wireguard
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "${{ secrets.WIREGUARD_PRIVATE_KEY }}" &gt; privatekey
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">sudo ip link add dev wg0 type wireguard
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">sudo ip address add dev wg0 192.168.1.2 peer 192.168.1.1
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">sudo wg set wg0 listen-port 48123 private-key privatekey peer examplepubkey1234... allowed-ips 0.0.0.0/0 endpoint 1.2.3.4:56789
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">sudo ip link set up dev wg0
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">curl -vvv http://192.168.1.1
+</span></code></pre>
+<p>For more information, see <a href="https://www.wireguard.com/quickstart/" class="external">WireGuard's Quick Start</a>, as well as <a href="../../../write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a> for how to securely store keys.</p>
+<h3 title="Example: Configuring WireGuard / Using Tailscale to create a network overlay">
+<a href="#using-tailscale-to-create-a-network-overlay" aria-hidden="true" class="anchor" id="using-tailscale-to-create-a-network-overlay"></a>Using Tailscale to create a network overlay</h3>
+<p>Tailscale is a commercial product built on top of WireGuard. This option is very similar to WireGuard, except Tailscale is more of a complete product experience instead of an open source component.</p>
+<p>Its disadvantages are similar to WireGuard: The connection is one-to-one, so you might need to do additional work for high availability or high throughput. You still need to generate and securely store keys. The protocol is still UDP, so your network must support UDP traffic.</p>
+<p>However, there are some advantages over WireGuard: NAT traversal is built-in, so you don't need to expose a port to the public internet. It is by far the quickest of these options to get up and running, since Tailscale provides an GitHub Actions workflow with a single step to connect to the overlay network.</p>
+<p>For more information, see the <a href="https://github.com/tailscale/github-action" class="external">Tailscale GitHub Action</a>, as well as <a href="../../../write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a> for how to securely store keys.</p>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

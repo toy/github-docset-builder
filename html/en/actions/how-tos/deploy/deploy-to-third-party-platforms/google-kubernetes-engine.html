@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Deploying to Google Kubernetes Engine</title>
+    <link rel="stylesheet" href="../../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Deploy</a> / <a href="index.html">Deploy to third-party platforms</a> / </nav><h1>
+<a href="#deploying-to-google-kubernetes-engine" aria-hidden="true" class="anchor" id="deploying-to-google-kubernetes-engine"></a>Deploying to Google Kubernetes Engine</h1>
+<p>Learn how to deploy a project to Google Kubernetes Engine (GKE) as part of a continuous deployment (CD) workflow.</p>
+<h2 title="Prerequisites">
+<a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<p>Before you proceed with creating the workflow, you will need to complete the following steps for your Kubernetes project. This guide assumes the root of your project already has a <code>Dockerfile</code> and a Kubernetes Deployment configuration file.</p>
+<h3 title="Prerequisites / Creating a GKE cluster">
+<a href="#creating-a-gke-cluster" aria-hidden="true" class="anchor" id="creating-a-gke-cluster"></a>Creating a GKE cluster</h3>
+<p>To create the GKE cluster, you will first need to authenticate using the <code>gcloud</code> CLI. For more information on this step, see the following articles:</p>
+<ul>
+<li><a href="https://cloud.google.com/sdk/gcloud/reference/auth/login" class="external"><code>gcloud auth login</code></a></li>
+<li><a href="https://cloud.google.com/sdk/gcloud/reference" class="external"><code>gcloud</code> CLI</a></li>
+<li><a href="https://cloud.google.com/sdk/gcloud#the_gcloud_cli_and_cloud_sdk" class="external"><code>gcloud</code> CLI and Cloud SDK</a></li>
+</ul>
+<p>For example:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">$ gcloud container clusters create $GKE_CLUSTER \
+</span><span style="color:#c0c5ce;">	--project=$GKE_PROJECT \
+</span><span style="color:#c0c5ce;">	--zone=$GKE_ZONE
+</span></code></pre>
+<h3 title="Prerequisites / Enabling the APIs">
+<a href="#enabling-the-apis" aria-hidden="true" class="anchor" id="enabling-the-apis"></a>Enabling the APIs</h3>
+<p>Enable the Kubernetes Engine and Container Registry APIs. For example:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">$ gcloud services enable \
+</span><span style="color:#c0c5ce;">	containerregistry.googleapis.com \
+</span><span style="color:#c0c5ce;">	container.googleapis.com
+</span></code></pre>
+<h3 title="Prerequisites / Configuring a service account and storing its credentials">
+<a href="#configuring-a-service-account-and-storing-its-credentials" aria-hidden="true" class="anchor" id="configuring-a-service-account-and-storing-its-credentials"></a>Configuring a service account and storing its credentials</h3>
+<p>This procedure demonstrates how to create the service account for your GKE integration. It explains how to create the account, add roles to it, retrieve its keys, and store them as a base64-encoded encrypted repository secret named <code>GKE_SA_KEY</code>.</p>
+<ol>
+<li>
+<p>Create a new service account:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gcloud iam service-accounts create $SA_NAME
+</span></code></pre>
+</li>
+<li>
+<p>Retrieve the email address of the service account you just created:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gcloud iam service-accounts list
+</span></code></pre>
+</li>
+<li>
+<p>Add roles to the service account.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Apply more restrictive roles to suit your requirements.</p>
+</div>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gcloud projects add-iam-policy-binding $GKE_PROJECT \
+</span><span style="color:#c0c5ce;">  --member=serviceAccount:$SA_EMAIL \
+</span><span style="color:#c0c5ce;">  --role=roles/container.admin
+</span><span style="color:#c0c5ce;">gcloud projects add-iam-policy-binding $GKE_PROJECT \
+</span><span style="color:#c0c5ce;">  --member=serviceAccount:$SA_EMAIL \
+</span><span style="color:#c0c5ce;">  --role=roles/storage.admin
+</span><span style="color:#c0c5ce;">gcloud projects add-iam-policy-binding $GKE_PROJECT \
+</span><span style="color:#c0c5ce;">  --member=serviceAccount:$SA_EMAIL \
+</span><span style="color:#c0c5ce;">  --role=roles/container.clusterViewer
+</span></code></pre>
+</li>
+<li>
+<p>Download the JSON keyfile for the service account:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gcloud iam service-accounts keys create key.json --iam-account=$SA_EMAIL
+</span></code></pre>
+</li>
+<li>
+<p>Store the service account key as a secret named <code>GKE_SA_KEY</code>:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">export GKE_SA_KEY=$(cat key.json | base64)
+</span></code></pre>
+<p>For more information about how to store a secret, see <a href="../../write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a>.</p>
+</li>
+</ol>
+<h3 title="Prerequisites / Storing your project name">
+<a href="#storing-your-project-name" aria-hidden="true" class="anchor" id="storing-your-project-name"></a>Storing your project name</h3>
+<p>Store the name of your project as a secret named <code>GKE_PROJECT</code>. For more information about how to store a secret, see <a href="../../write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a>.</p>
+<h3 title="Prerequisites / (Optional) Configuring kustomize">
+<a href="#optional-configuring-kustomize" aria-hidden="true" class="anchor" id="optional-configuring-kustomize"></a>(Optional) Configuring kustomize</h3>
+<p>Kustomize is an optional tool used for managing YAML specs. After creating a <code>kustomization</code> file, the workflow below can be used to dynamically set fields of the image and pipe in the result to <code>kubectl</code>. For more information, see <a href="https://github.com/kubernetes-sigs/kustomize#usage" class="external">kustomize usage</a>.</p>
+<h3 title="Prerequisites / (Optional) Configure a deployment environment">
+<a href="#optional-configure-a-deployment-environment" aria-hidden="true" class="anchor" id="optional-configure-a-deployment-environment"></a>(Optional) Configure a deployment environment</h3>
+<p>Environments are used to describe a general deployment target like <code>production</code>, <code>staging</code>, or <code>development</code>. When a GitHub Actions workflow deploys to an environment, the environment is displayed on the main page of the repository. You can use environments to require approval for a job to proceed, restrict which branches can trigger a workflow, gate deployments with custom deployment protection rules, or limit access to secrets. For more information about creating environments, see <a href="../configure-and-manage-deployments/manage-environments.html">Managing environments for deployment</a>.</p>
+<h2 title="Creating the workflow">
+<a href="#creating-the-workflow" aria-hidden="true" class="anchor" id="creating-the-workflow"></a>Creating the workflow</h2>
+<p>Once you've completed the prerequisites, you can proceed with creating the workflow.</p>
+<p>The following example workflow demonstrates how to build a container image and push it to GCR. It then uses the Kubernetes tools (such as <code>kubectl</code> and <code>kustomize</code>) to pull the image into the cluster deployment.</p>
+<p>Under the <code>env</code> key, change the value of <code>GKE_CLUSTER</code> to the name of your cluster, <code>GKE_ZONE</code> to your cluster zone, <code>DEPLOYMENT_NAME</code> to the name of your deployment, and <code>IMAGE</code> to the name of your image.</p>
+<p>If you configured a deployment environment, change the value of <code>environment</code> to be the name of your environment. If you did not configure an environment or if your workflow is in a private repository and you do not use GitHub Enterprise Cloud, delete the <code>environment</code> key.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># This workflow uses actions that are not certified by GitHub.
+</span><span style="color:#65737e;"># They are provided by a third-party and are governed by
+</span><span style="color:#65737e;"># separate terms of service, privacy policy, and support
+</span><span style="color:#65737e;"># documentation.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># GitHub recommends pinning actions to a commit SHA.
+</span><span style="color:#65737e;"># To get a newer version, you will need to update the SHA.
+</span><span style="color:#65737e;"># You can also reference a tag or branch, but the action may change without warning.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Build and Deploy to GKE
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">main
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">PROJECT_ID</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.GKE_PROJECT }}
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">GKE_CLUSTER</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">cluster-1    </span><span style="color:#65737e;"># Add your cluster name here.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">GKE_ZONE</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">us-central1-c   </span><span style="color:#65737e;"># Add your cluster zone here.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">DEPLOYMENT_NAME</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">gke-test </span><span style="color:#65737e;"># Add your deployment name here.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">IMAGE</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">static-site
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">setup-build-publish-deploy</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup, Build, Publish, and Deploy
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">environment</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">production
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Checkout
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Setup gcloud CLI
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">google-github-actions/setup-gcloud@1bee7de035d65ec5da40a31f8589e240eba8fde5
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">service_account_key</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.GKE_SA_KEY }}
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">project_id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.GKE_PROJECT }}
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Configure Docker to use the gcloud command-line tool as a credential
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># helper for authentication
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|-
+</span><span style="color:#a3be8c;">        gcloud --quiet auth configure-docker
+</span><span style="color:#a3be8c;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Get the GKE credentials so we can deploy to the cluster
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">google-github-actions/get-gke-credentials@db150f2cc60d1716e61922b832eae71d2a45938f
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">cluster_name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ env.GKE_CLUSTER }}
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">location</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ env.GKE_ZONE }}
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">credentials</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.GKE_SA_KEY }}
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Build the Docker image
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Build
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|-
+</span><span style="color:#a3be8c;">        docker build \
+</span><span style="color:#a3be8c;">          --tag "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA" \
+</span><span style="color:#a3be8c;">          --build-arg GITHUB_SHA="$GITHUB_SHA" \
+</span><span style="color:#a3be8c;">          --build-arg GITHUB_REF="$GITHUB_REF" \
+</span><span style="color:#a3be8c;">          .
+</span><span style="color:#a3be8c;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Push the Docker image to Google Container Registry
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Publish
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|-
+</span><span style="color:#a3be8c;">        docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
+</span><span style="color:#a3be8c;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Set up kustomize
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set up Kustomize
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|-
+</span><span style="color:#a3be8c;">        curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+</span><span style="color:#a3be8c;">        chmod u+x ./kustomize
+</span><span style="color:#a3be8c;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Deploy the Docker image to the GKE cluster
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Deploy
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|-
+</span><span style="color:#a3be8c;">        ./kustomize edit set image gcr.io/PROJECT_ID/IMAGE:TAG=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
+</span><span style="color:#a3be8c;">        ./kustomize build . | kubectl apply -f -
+</span><span style="color:#a3be8c;">        kubectl rollout status deployment/$DEPLOYMENT_NAME
+</span><span style="color:#a3be8c;">        kubectl get services -o wide
+</span></code></pre>
+<h2 title="Further reading">
+<a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<p>For more information on the tools used in these examples, see the following documentation:</p>
+<ul>
+<li>For the full workflow template, see the <a href="https://github.com/actions/starter-workflows/blob/main/deployments/google.yml" class="external">"Build and Deploy to GKE" workflow</a>.</li>
+<li>The Kubernetes YAML customization engine: <a href="https://kustomize.io/" class="external">Kustomize</a>.</li>
+<li>
+<a href="https://cloud.google.com/kubernetes-engine/docs/tutorials/hello-app" class="external">Deploying a containerized web application</a> in the Google Kubernetes Engine documentation.</li>
+</ul>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

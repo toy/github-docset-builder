@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Configuring OpenID Connect in cloud providers</title>
+    <link rel="stylesheet" href="../../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Secure your work</a> / <a href="index.html">Security harden deployments</a> / </nav><h1>
+<a href="#configuring-openid-connect-in-cloud-providers" aria-hidden="true" class="anchor" id="configuring-openid-connect-in-cloud-providers"></a>Configuring OpenID Connect in cloud providers</h1>
+<p>Use OpenID Connect within your workflows to authenticate with cloud providers.</p>
+<h2 title="Overview">
+<a href="#overview" aria-hidden="true" class="anchor" id="overview"></a>Overview</h2>
+<p>OpenID Connect (OIDC) allows your GitHub Actions workflows to access resources in your cloud provider, without having to store any credentials as long-lived GitHub secrets.</p>
+<p>To use OIDC, you will first need to configure your cloud provider to trust GitHub's OIDC as a federated identity, and must then update your workflows to authenticate using tokens.</p>
+<h2 title="Prerequisites">
+<a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<ul>
+<li>
+<p>To learn the basic concepts of how GitHub uses OpenID Connect (OIDC), and its architecture and benefits, see <a href="../../../concepts/security/openid-connect.html">OpenID Connect</a>.</p>
+</li>
+<li>
+<p>Before proceeding, you must plan your security strategy to ensure that access tokens are only allocated in a predictable way. To control how your cloud provider issues access tokens, you <strong>must</strong> define at least one condition, so that untrusted repositories can’t request access tokens for your cloud resources. For more information, see <a href="../../../concepts/security/openid-connect.html#configuring-the-oidc-trust-with-the-cloud">OpenID Connect</a>.</p>
+</li>
+</ul>
+<h2 title="Updating your GitHub Actions workflow">
+<a href="#updating-your-github-actions-workflow" aria-hidden="true" class="anchor" id="updating-your-github-actions-workflow"></a>Updating your GitHub Actions workflow</h2>
+<p>To update your workflows for OIDC, you will need to make two changes to your YAML:</p>
+<ol>
+<li>Add permissions settings for the token.</li>
+<li>Use the official action from your cloud provider to exchange the OIDC token (JWT) for a cloud access token.</li>
+</ol>
+<p>If your cloud provider doesn't yet offer an official action, you can update your workflows to perform these steps manually.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>When environments are used in workflows or in OIDC policies, we recommend adding protection rules to the environment for additional security. For example, you can configure deployment rules on an environment to restrict which branches and tags can deploy to the environment or access environment secrets. For more information, see <a href="../../deploy/configure-and-manage-deployments/manage-environments.html#deployment-protection-rules">Managing environments for deployment</a>.</p>
+</div>
+<h3 title="Updating your GitHub Actions workflow / Adding permissions settings">
+<a href="#adding-permissions-settings" aria-hidden="true" class="anchor" id="adding-permissions-settings"></a>Adding permissions settings</h3>
+<p>The job or workflow run requires a <code>permissions</code> setting with <a href="../../../tutorials/authenticate-with-github_token.html#modifying-the-permissions-for-the-github_token"><code>id-token: write</code></a> to allow GitHub's OIDC provider to create a JSON Web Token for every run.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Setting <code>id-token: write</code> in the workflow’s permissions does not give the workflow permission to modify or write to any resources. Instead, it only allows the workflow to request (fetch) and use (set) an OIDC token for an action or step. This token is then used to authenticate with external services using a short-lived access token.</p>
+</div>
+<p>For detailed information on required permissions, configuration examples, and advanced scenarios, see <a href="../../../reference/security/oidc.html##workflow-permissions-for-the-requesting-the-oidc-token">OpenID Connect reference</a>.</p>
+<h3 title="Updating your GitHub Actions workflow / Using official actions">
+<a href="#using-official-actions" aria-hidden="true" class="anchor" id="using-official-actions"></a>Using official actions</h3>
+<p>If your cloud provider has created an official action for using OIDC with GitHub Actions, it will allow you to easily exchange the OIDC token for an access token. You can then update your workflows to use this token when accessing cloud resources.</p>
+<p>For example, Alibaba Cloud created <a href="https://github.com/aliyun/configure-aliyun-credentials-action" class="external"><code>aliyun/configure-aliyun-credentials-action</code></a> to integrate with using OIDC with GitHub.</p>
+<h2 title="Using custom actions">
+<a href="#using-custom-actions" aria-hidden="true" class="anchor" id="using-custom-actions"></a>Using custom actions</h2>
+<p>If your cloud provider doesn't have an official action, or if you prefer to create custom scripts, you can manually request the JSON Web Token (JWT) from GitHub's OIDC provider.</p>
+<p>If you're not using an official action, then GitHub recommends that you use the Actions core toolkit. Alternatively, you can use the following environment variables to retrieve the token: <code>ACTIONS_ID_TOKEN_REQUEST_TOKEN</code>, <code>ACTIONS_ID_TOKEN_REQUEST_URL</code>.</p>
+<p>To update your workflows using this approach, you will need to make three changes to your YAML:</p>
+<ol>
+<li>Add permissions settings for the token.</li>
+<li>Add code that requests the OIDC token from GitHub's OIDC provider.</li>
+<li>Add code that exchanges the OIDC token with your cloud provider for an access token.</li>
+</ol>
+<h3 title="Using custom actions / Requesting the JWT using the Actions core toolkit">
+<a href="#requesting-the-jwt-using-the-actions-core-toolkit" aria-hidden="true" class="anchor" id="requesting-the-jwt-using-the-actions-core-toolkit"></a>Requesting the JWT using the Actions core toolkit</h3>
+<p>The following example demonstrates how to use <code>actions/github-script</code> with the <code>core</code> toolkit to request the JWT from GitHub's OIDC provider. For more information, see <a href="../../../tutorials/create-actions/create-a-javascript-action.html#adding-actions-toolkit-packages">Creating a JavaScript action</a>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">job</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">environment</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Production
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Install OIDC Client from Core Package
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm install @actions/core@1.6.0 @actions/http-client
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Get Id Token
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/github-script@v8
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">idtoken
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          const coredemo = require('@actions/core')
+</span><span style="color:#a3be8c;">          let id_token = await coredemo.getIDToken()
+</span><span style="color:#a3be8c;">          coredemo.setOutput('id_token', id_token)
+</span></code></pre>
+<h3 title="Using custom actions / Requesting the JWT using environment variables">
+<a href="#requesting-the-jwt-using-environment-variables" aria-hidden="true" class="anchor" id="requesting-the-jwt-using-environment-variables"></a>Requesting the JWT using environment variables</h3>
+<p>The following example demonstrates how to use environment variables to request a JSON Web Token.</p>
+<p>For your deployment job, you will need to define the token settings, using <code>actions/github-script</code> with the <code>core</code> toolkit. For more information, see <a href="../../../tutorials/create-actions/create-a-javascript-action.html#adding-actions-toolkit-packages">Creating a JavaScript action</a>.</p>
+<p>For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">job</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/github-script@v8
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">script
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">timeout-minutes</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">10
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">debug</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          const token = process.env['ACTIONS_ID_TOKEN_REQUEST_TOKEN']
+</span><span style="color:#a3be8c;">          const runtimeUrl = process.env['ACTIONS_ID_TOKEN_REQUEST_URL']
+</span><span style="color:#a3be8c;">          core.setOutput('TOKEN', token.trim())
+</span><span style="color:#a3be8c;">          core.setOutput('IDTOKENURL', runtimeUrl.trim())
+</span></code></pre>
+<p>You can then use <code>curl</code> to retrieve a JWT from the GitHub OIDC provider. For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">        IDTOKEN=$(curl -H "Authorization: Bearer ${{steps.script.outputs.TOKEN}}" ${{steps.script.outputs.IDTOKENURL}}  -H "Accept: application/json; api-version=2.0" -H "Content-Type: application/json" -d "{}" | jq -r '.value')
+</span><span style="color:#a3be8c;">        echo $IDTOKEN
+</span><span style="color:#a3be8c;">        jwtd() {
+</span><span style="color:#a3be8c;">            if [[ -x $(command -v jq) ]]; then
+</span><span style="color:#a3be8c;">                jq -R 'split(".") | .[0],.[1] | @base64d | fromjson' &lt;&lt;&lt; "${1}"
+</span><span style="color:#a3be8c;">                echo "Signature: $(echo "${1}" | awk -F'.' '{print $3}')"
+</span><span style="color:#a3be8c;">            fi
+</span><span style="color:#a3be8c;">        }
+</span><span style="color:#a3be8c;">        jwtd $IDTOKEN
+</span><span style="color:#a3be8c;">        echo "idToken=${IDTOKEN}" &gt;&gt; $GITHUB_OUTPUT
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">tokenid
+</span></code></pre>
+<h3 title="Using custom actions / Getting the access token from the cloud provider">
+<a href="#getting-the-access-token-from-the-cloud-provider" aria-hidden="true" class="anchor" id="getting-the-access-token-from-the-cloud-provider"></a>Getting the access token from the cloud provider</h3>
+<p>You will need to present the OIDC JSON web token to your cloud provider in order to obtain an access token.</p>
+<p>For each deployment, your workflows must use cloud login actions (or custom scripts) that fetch the OIDC token and present it to your cloud provider. The cloud provider then validates the claims in the token; if successful, it provides a cloud access token that is available only to that job run. The provided access token can then be used by subsequent actions in the job to connect to the cloud and deploy to its resources.</p>
+<p>The steps for exchanging the OIDC token for an access token will vary for each cloud provider.</p>
+<h3 title="Using custom actions / Accessing resources in your cloud provider">
+<a href="#accessing-resources-in-your-cloud-provider" aria-hidden="true" class="anchor" id="accessing-resources-in-your-cloud-provider"></a>Accessing resources in your cloud provider</h3>
+<p>Once you've obtained the access token, you can use specific cloud actions or scripts to authenticate to the cloud provider and deploy to its resources. These steps could differ for each cloud provider.</p>
+<p>For example, Alibaba Cloud maintains their own instructions for OIDC authentication. For more information, see <a href="https://www.alibabacloud.com/help/en/ram/user-guide/overview-of-oidc-based-sso" class="external">Overview of OIDC-based SSO</a> in the Alibaba Cloud documentation.</p>
+<p>In addition, the default expiration time of this access token could vary between each cloud and can be configurable at the cloud provider's side.</p>
+<h2 title="Further reading">
+<a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li><a href="oidc-with-reusable-workflows.html">Using OpenID Connect with reusable workflows</a></li>
+<li><a href="../../../reference/runners/self-hosted-runners.html">Self-hosted runners reference</a></li>
+</ul>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

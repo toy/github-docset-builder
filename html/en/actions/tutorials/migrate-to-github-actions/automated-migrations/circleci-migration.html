@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Migrating from CircleCI with GitHub Actions Importer</title>
+    <link rel="stylesheet" href="../../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">Tutorials</a> / <a href="../index.html">Migrate to GitHub Actions</a> / <a href="index.html">Automated migrations</a> / </nav><h1>
+<a href="#migrating-from-circleci-with-github-actions-importer" aria-hidden="true" class="anchor" id="migrating-from-circleci-with-github-actions-importer"></a>Migrating from CircleCI with GitHub Actions Importer</h1>
+<p>Learn how to use GitHub Actions Importer to automate the migration of your CircleCI pipelines to GitHub Actions.</p>
+<h2 title="About migrating from CircleCI with GitHub Actions Importer">
+<a href="#about-migrating-from-circleci-with-github-actions-importer" aria-hidden="true" class="anchor" id="about-migrating-from-circleci-with-github-actions-importer"></a>About migrating from CircleCI with GitHub Actions Importer</h2>
+<p>The instructions below will guide you through configuring your environment to use GitHub Actions Importer to migrate CircleCI pipelines to GitHub Actions.</p>
+<h3 title="About migrating from CircleCI with GitHub Actions Importer / Prerequisites">
+<a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h3>
+<ul>
+<li>A CircleCI account or organization with projects and pipelines that you want to convert to GitHub Actions workflows.</li>
+<li>Access to create a CircleCI personal API token for your account or organization.</li>
+<li>An environment where you can run Linux-based containers, and can install the necessary tools.
+<ul>
+<li>
+<p>Docker is <a href="https://docs.docker.com/get-docker/" class="external">installed</a> and running.</p>
+</li>
+<li>
+<p><a href="https://cli.github.com" class="external">GitHub CLI</a> is installed.</p>
+</li>
+</ul>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The GitHub Actions Importer container and CLI do not need to be installed on the same server as your CI platform.</p>
+</div>
+</li>
+</ul>
+<h3 title="About migrating from CircleCI with GitHub Actions Importer / Limitations">
+<a href="#limitations" aria-hidden="true" class="anchor" id="limitations"></a>Limitations</h3>
+<p>There are some limitations when migrating from CircleCI to GitHub Actions with GitHub Actions Importer:</p>
+<ul>
+<li>Automatic caching in between jobs of different workflows is not supported.</li>
+<li>The <code>audit</code> command is only supported when you use a CircleCI organization account. The <code>dry-run</code> and <code>migrate</code> commands can be used with a CircleCI organization or user account.</li>
+</ul>
+<h4>
+<a href="#manual-tasks" aria-hidden="true" class="anchor" id="manual-tasks"></a>Manual tasks</h4>
+<p>Certain CircleCI constructs must be migrated manually. These include:</p>
+<ul>
+<li>Contexts</li>
+<li>Project-level environment variables</li>
+<li>Unknown job properties</li>
+<li>Unknown orbs</li>
+</ul>
+<h2 title="Installing the GitHub Actions Importer CLI extension">
+<a href="#installing-the-github-actions-importer-cli-extension" aria-hidden="true" class="anchor" id="installing-the-github-actions-importer-cli-extension"></a>Installing the GitHub Actions Importer CLI extension</h2>
+<ol>
+<li>
+<p>Install the GitHub Actions Importer CLI extension:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> extension install github/gh-actions-importer
+</span></code></pre>
+</li>
+<li>
+<p>Verify that the extension is installed:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">$</span><span style="color:#c0c5ce;"> gh actions-importer</span><span style="color:#bf616a;"> -h
+</span><span style="color:#8fa1b3;">Options:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#8fa1b3;">-?,</span><span style="color:#bf616a;"> -h</span><span style="color:#c0c5ce;">,</span><span style="color:#bf616a;"> --help</span><span style="color:#c0c5ce;">  Show help and usage information
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#8fa1b3;">Commands:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#8fa1b3;">update</span><span style="color:#c0c5ce;">     Update to the latest version of GitHub Actions Importer.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#8fa1b3;">version</span><span style="color:#c0c5ce;">    Display the version of GitHub Actions Importer.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#8fa1b3;">configure</span><span style="color:#c0c5ce;">  Start an interactive prompt to configure credentials used to authenticate with your CI server(s)</span><span style="color:#96b5b4;">.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#8fa1b3;">audit</span><span style="color:#c0c5ce;">      Plan your CI/CD migration by analyzing your current CI/CD footprint.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#8fa1b3;">forecast</span><span style="color:#c0c5ce;">   Forecast GitHub Actions usage from historical pipeline utilization.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#8fa1b3;">dry-run</span><span style="color:#c0c5ce;">    Convert a pipeline to a GitHub Actions workflow and output its yaml file.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#8fa1b3;">migrate</span><span style="color:#c0c5ce;">    Convert a pipeline to a GitHub Actions workflow and open a pull request with the changes.
+</span></code></pre>
+</li>
+</ol>
+<h2 title="Configuring credentials">
+<a href="#configuring-credentials" aria-hidden="true" class="anchor" id="configuring-credentials"></a>Configuring credentials</h2>
+<p>The <code>configure</code> CLI command is used to set required credentials and options for GitHub Actions Importer when working with CircleCI and GitHub.</p>
+<ol>
+<li>
+<p>Create a GitHub personal access token (classic). For more information, see <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic" class="external">Managing your personal access tokens</a>.</p>
+<p>Your token must have the <code>repo</code> and <code>workflow</code> scopes.</p>
+<p>After creating the token, copy it and save it in a safe location for later use.</p>
+</li>
+<li>
+<p>Create a CircleCI personal API token. For more information, see <a href="https://circleci.com/docs/managing-api-tokens/#creating-a-personal-api-token" class="external">Managing API Tokens</a> in the CircleCI documentation.</p>
+<p>After creating the token, copy it and save it in a safe location for later use.</p>
+</li>
+<li>
+<p>In your terminal, run the GitHub Actions Importer <code>configure</code> CLI command:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer configure
+</span></code></pre>
+<p>The <code>configure</code> command will prompt you for the following information:</p>
+<ul>
+<li>For "Which CI providers are you configuring?", use the arrow keys to select <code>CircleCI</code>, press <kbd>Space</kbd> to select it, then press <kbd>Enter</kbd>.</li>
+<li>For "Personal access token for GitHub", enter the value of the personal access token (classic) that you created earlier, and press <kbd>Enter</kbd>.</li>
+<li>For "Base url of the GitHub instance", press <kbd>Enter</kbd> to accept the default value (<code>https://github.com</code>).</li>
+<li>For "Personal access token for CircleCI", enter the value for the CircleCI personal API token that you created earlier, and press <kbd>Enter</kbd>.</li>
+<li>For "Base url of the CircleCI instance", press <kbd>Enter</kbd> to accept the default value (<code>https://circleci.com</code>).</li>
+<li>For "CircleCI organization name", enter the name for your CircleCI organization, and press <kbd>Enter</kbd>.</li>
+</ul>
+<p>An example of the <code>configure</code> command is shown below:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">$ gh actions-importer configure
+</span><span style="color:#c0c5ce;">✔ Which CI providers are you configuring?: CircleCI
+</span><span style="color:#c0c5ce;">Enter the following values (leave empty to omit):
+</span><span style="color:#c0c5ce;">✔ Personal access token for GitHub: ***************
+</span><span style="color:#c0c5ce;">✔ Base url of the GitHub instance: https://github.com
+</span><span style="color:#c0c5ce;">✔ Personal access token for CircleCI: ********************
+</span><span style="color:#c0c5ce;">✔ Base url of the CircleCI instance: https://circleci.com
+</span><span style="color:#c0c5ce;">✔ CircleCI organization name: mycircleciorganization
+</span><span style="color:#c0c5ce;">Environment variables successfully updated.
+</span></code></pre>
+</li>
+<li>
+<p>In your terminal, run the GitHub Actions Importer <code>update</code> CLI command to connect to GitHub Packages Container registry and ensure that the container image is updated to the latest version:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer update
+</span></code></pre>
+<p>The output of the command should be similar to below:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Updating ghcr.io/actions-importer/cli:latest...
+</span><span style="color:#c0c5ce;">ghcr.io/actions-importer/cli:latest up-to-date
+</span></code></pre>
+</li>
+</ol>
+<h2 title="Perform an audit of CircleCI">
+<a href="#perform-an-audit-of-circleci" aria-hidden="true" class="anchor" id="perform-an-audit-of-circleci"></a>Perform an audit of CircleCI</h2>
+<p>You can use the <code>audit</code> command to get a high-level view of all projects in a CircleCI organization.</p>
+<p>The <code>audit</code> command performs the following steps:</p>
+<ol>
+<li>Fetches all of the projects defined in a CircleCI organization.</li>
+<li>Converts each pipeline to its equivalent GitHub Actions workflow.</li>
+<li>Generates a report that summarizes how complete and complex of a migration is possible with GitHub Actions Importer.</li>
+</ol>
+<h3 title="Perform an audit of CircleCI / Running the audit command">
+<a href="#running-the-audit-command" aria-hidden="true" class="anchor" id="running-the-audit-command"></a>Running the audit command</h3>
+<p>To perform an audit of a CircleCI organization, run the following command in your terminal:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer audit circle-ci --output-dir tmp/audit
+</span></code></pre>
+<h3 title="Perform an audit of CircleCI / Inspecting the audit results">
+<a href="#inspecting-the-audit-results" aria-hidden="true" class="anchor" id="inspecting-the-audit-results"></a>Inspecting the audit results</h3>
+<p>The files in the specified output directory contain the results of the audit. See the <code>audit_summary.md</code> file for a summary of the audit results.</p>
+<p>The audit summary has the following sections.</p>
+<h4>
+<a href="#pipelines" aria-hidden="true" class="anchor" id="pipelines"></a>Pipelines</h4>
+<p>The "Pipelines" section contains a high-level statistics regarding the conversion rate done by GitHub Actions Importer.</p>
+<p>Listed below are some key terms that can appear in the "Pipelines" section:</p>
+<ul>
+<li>
+<strong>Successful</strong> pipelines had 100% of the pipeline constructs and individual items converted automatically to their GitHub Actions equivalent.</li>
+<li>
+<strong>Partially successful</strong> pipelines had all of the pipeline constructs converted, however, there were some individual items that were not converted automatically to their GitHub Actions equivalent.</li>
+<li>
+<strong>Unsupported</strong> pipelines are definition types that are not supported by GitHub Actions Importer.</li>
+<li>
+<strong>Failed</strong> pipelines encountered a fatal error when being converted. This can occur for one of three reasons:
+<ul>
+<li>The pipeline was originally misconfigured and not valid.</li>
+<li>GitHub Actions Importer encountered an internal error when converting it.</li>
+<li>There was an unsuccessful network response that caused the pipeline to be inaccessible, which is often due to invalid credentials.</li>
+</ul>
+</li>
+</ul>
+<h4>
+<a href="#build-steps" aria-hidden="true" class="anchor" id="build-steps"></a>Build steps</h4>
+<p>The "Build steps" section contains an overview of individual build steps that are used across all pipelines, and how many were automatically converted by GitHub Actions Importer.</p>
+<p>Listed below are some key terms that can appear in the "Build steps" section:</p>
+<ul>
+<li>A <strong>known</strong> build step is a step that was automatically converted to an equivalent action.</li>
+<li>An <strong>unknown</strong> build step is a step that was not automatically converted to an equivalent action.</li>
+<li>An <strong>unsupported</strong> build step is a step that is either:
+<ul>
+<li>Fundamentally not supported by GitHub Actions.</li>
+<li>Configured in a way that is incompatible with GitHub Actions.</li>
+</ul>
+</li>
+<li>An <strong>action</strong> is a list of the actions that were used in the converted workflows. This can be important for:
+<ul>
+<li>If you use GitHub Enterprise Server, gathering the list of actions to sync to your instance.</li>
+<li>Defining an organization-level allowlist of actions that are used. This list of actions is a comprehensive list of actions that your security or compliance teams may need to review.</li>
+</ul>
+</li>
+</ul>
+<h4>
+<a href="#manual-tasks-1" aria-hidden="true" class="anchor" id="manual-tasks-1"></a>Manual tasks</h4>
+<p>The "Manual tasks" section contains an overview of tasks that GitHub Actions Importer is not able to complete automatically, and that you must complete manually.</p>
+<p>Listed below are some key terms that can appear in the "Manual tasks" section:</p>
+<ul>
+<li>A <strong>secret</strong> is a repository or organization-level secret that is used in the converted pipelines. These secrets must be created manually in GitHub Actions for these pipelines to function properly. For more information, see <a href="../../../how-tos/write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a>.</li>
+<li>A <strong>self-hosted runner</strong> refers to a label of a runner that is referenced in a converted pipeline that is not a GitHub-hosted runner. You will need to manually define these runners for these pipelines to function properly.</li>
+</ul>
+<h4>
+<a href="#files" aria-hidden="true" class="anchor" id="files"></a>Files</h4>
+<p>The final section of the audit report provides a manifest of all the files that were written to disk during the audit.</p>
+<p>Each pipeline file has a variety of files included in the audit, including:</p>
+<ul>
+<li>The original pipeline as it was defined in GitHub.</li>
+<li>Any network responses used to convert the pipeline.</li>
+<li>The converted workflow file.</li>
+<li>Stack traces that can be used to troubleshoot a failed pipeline conversion.</li>
+</ul>
+<p>Additionally, the <code>workflow_usage.csv</code> file contains a comma-separated list of all actions, secrets, and runners that are used by each successfully converted pipeline. This can be useful for determining which workflows use which actions, secrets, or runners, and can be useful for performing security reviews.</p>
+<h2 title="Forecast potential GitHub Actions usage">
+<a href="#forecast-potential-github-actions-usage" aria-hidden="true" class="anchor" id="forecast-potential-github-actions-usage"></a>Forecast potential GitHub Actions usage</h2>
+<p>You can use the <code>forecast</code> command to forecast potential GitHub Actions usage by computing metrics from completed pipeline runs in CircleCI.</p>
+<h3 title="Forecast potential GitHub Actions usage / Running the forecast command">
+<a href="#running-the-forecast-command" aria-hidden="true" class="anchor" id="running-the-forecast-command"></a>Running the forecast command</h3>
+<p>To perform a forecast of potential GitHub Actions usage, run the following command in your terminal. By default, GitHub Actions Importer includes the previous seven days in the forecast report.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer forecast circle-ci --output-dir tmp/forecast_reports
+</span></code></pre>
+<h3 title="Forecast potential GitHub Actions usage / Inspecting the forecast report">
+<a href="#inspecting-the-forecast-report" aria-hidden="true" class="anchor" id="inspecting-the-forecast-report"></a>Inspecting the forecast report</h3>
+<p>The <code>forecast_report.md</code> file in the specified output directory contains the results of the forecast.</p>
+<p>Listed below are some key terms that can appear in the forecast report:</p>
+<ul>
+<li>
+<p>The <strong>job count</strong> is the total number of completed jobs.</p>
+</li>
+<li>
+<p>The <strong>pipeline count</strong> is the number of unique pipelines used.</p>
+</li>
+<li>
+<p><strong>Execution time</strong> describes the amount of time a runner spent on a job. This metric can be used to help plan for the cost of GitHub-hosted runners.</p>
+<p>This metric is correlated to how much you should expect to spend in GitHub Actions. This will vary depending on the hardware used for these minutes. You can use the <a href="https://github.com/pricing/calculator" class="external">GitHub Actions pricing calculator</a> to estimate the costs.</p>
+</li>
+<li>
+<p><strong>Queue time</strong> metrics describe the amount of time a job spent waiting for a runner to be available to execute it.</p>
+</li>
+<li>
+<p><strong>Concurrent jobs</strong> metrics describe the amount of jobs running at any given time. This metric can be used to define the number of runners you should configure.</p>
+</li>
+</ul>
+<p>Additionally, these metrics are defined for each queue of runners in CircleCI. This is especially useful if there is a mix of hosted or self-hosted runners, or high or low spec machines, so you can see metrics specific to different types of runners.</p>
+<h2 title="Perform a dry-run migration of a CircleCI pipeline">
+<a href="#perform-a-dry-run-migration-of-a-circleci-pipeline" aria-hidden="true" class="anchor" id="perform-a-dry-run-migration-of-a-circleci-pipeline"></a>Perform a dry-run migration of a CircleCI pipeline</h2>
+<p>You can use the <code>dry-run</code> command to convert a CircleCI pipeline to an equivalent GitHub Actions workflow. A dry-run creates the output files in a specified directory, but does not open a pull request to migrate the pipeline.</p>
+<p>To perform a dry run of migrating your CircleCI project to GitHub Actions, run the following command in your terminal, replacing <code>my-circle-ci-project</code> with the name of your CircleCI project.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer dry-run circle-ci --output-dir tmp/dry-run --circle-ci-project my-circle-ci-project
+</span></code></pre>
+<p>You can view the logs of the dry run and the converted workflow files in the specified output directory.</p>
+<p>If there is anything that GitHub Actions Importer was not able to convert automatically, such as unknown build steps or a partially successful pipeline, you might want to create custom transformers to further customize the conversion process. For more information, see <a href="../../../reference/github-actions-importer/custom-transformers.html">Extending GitHub Actions Importer with custom transformers</a>.</p>
+<h2 title="Perform a production migration of a CircleCI pipeline">
+<a href="#perform-a-production-migration-of-a-circleci-pipeline" aria-hidden="true" class="anchor" id="perform-a-production-migration-of-a-circleci-pipeline"></a>Perform a production migration of a CircleCI pipeline</h2>
+<p>You can use the <code>migrate</code> command to convert a CircleCI pipeline and open a pull request with the equivalent GitHub Actions workflow.</p>
+<h3 title="Perform a production migration of a CircleCI pipeline / Running the migrate command">
+<a href="#running-the-migrate-command" aria-hidden="true" class="anchor" id="running-the-migrate-command"></a>Running the migrate command</h3>
+<p>To migrate a CircleCI pipeline to GitHub Actions, run the following command in your terminal, replacing the <code>target-url</code> value with the URL for your GitHub repository, and <code>my-circle-ci-project</code> with the name of your CircleCI project.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer migrate circle-ci --target-url https://github.com/octo-org/octo-repo --output-dir tmp/migrate --circle-ci-project my-circle-ci-project
+</span></code></pre>
+<p>The command's output includes the URL to the pull request that adds the converted workflow to your repository. An example of a successful output is similar to the following:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">$ gh actions-importer migrate circle-ci --target-url https://github.com/octo-org/octo-repo --output-dir tmp/migrate --circle-ci-project my-circle-ci-project
+</span><span style="color:#c0c5ce;">[2022-08-20 22:08:20] Logs: 'tmp/migrate/log/actions-importer-20220916-014033.log'
+</span><span style="color:#c0c5ce;">[2022-08-20 22:08:20] Pull request: 'https://github.com/octo-org/octo-repo/pull/1'
+</span></code></pre>
+<h3 title="Perform a production migration of a CircleCI pipeline / Inspecting the pull request">
+<a href="#inspecting-the-pull-request" aria-hidden="true" class="anchor" id="inspecting-the-pull-request"></a>Inspecting the pull request</h3>
+<p>The output from a successful run of the <code>migrate</code> command contains a link to the new pull request that adds the converted workflow to your repository.</p>
+<p>Some important elements of the pull request include:</p>
+<ul>
+<li>In the pull request description, a section called <strong>Manual steps</strong>, which lists steps that you must manually complete before you can finish migrating your pipelines to GitHub Actions. For example, this section might tell you to create any secrets used in your workflows.</li>
+<li>The converted workflows file. Select the <strong>Files changed</strong> tab in the pull request to view the workflow file that will be added to your GitHub repository.</li>
+</ul>
+<p>When you are finished inspecting the pull request, you can merge it to add the workflow to your GitHub repository.</p>
+<h2 title="Reference">
+<a href="#reference" aria-hidden="true" class="anchor" id="reference"></a>Reference</h2>
+<p>This section contains reference information on environment variables, optional arguments, and supported syntax when using GitHub Actions Importer to migrate from CircleCI.</p>
+<h3 title="Reference / Using environment variables">
+<a href="#using-environment-variables" aria-hidden="true" class="anchor" id="using-environment-variables"></a>Using environment variables</h3>
+<p>GitHub Actions Importer uses environment variables for its authentication configuration. These variables are set when following the configuration process using the <code>configure</code> command. For more information, see the <a href="#configuring-credentials">Configuring credentials</a> section.</p>
+<p>GitHub Actions Importer uses the following environment variables to connect to your CircleCI instance:</p>
+<ul>
+<li>
+<code>GITHUB_ACCESS_TOKEN</code>: The personal access token (classic) used to create pull requests with a converted workflow (requires <code>repo</code> and <code>workflow</code> scopes).</li>
+<li>
+<code>GITHUB_INSTANCE_URL</code>: The URL to the target GitHub instance (for example, <code>https://github.com</code>).</li>
+<li>
+<code>CIRCLE_CI_ACCESS_TOKEN</code>: The CircleCI personal API token used to authenticate with your CircleCI instance.</li>
+<li>
+<code>CIRCLE_CI_INSTANCE_URL</code>: The URL to the CircleCI instance (for example, <code>https://circleci.com</code>). If the variable is left unset, <code>https://circleci.com</code> is used as the default value.</li>
+<li>
+<code>CIRCLE_CI_ORGANIZATION</code>: The organization name of your CircleCI instance.</li>
+<li>
+<code>CIRCLE_CI_PROVIDER</code>: The location where your pipeline's source file is stored (such as <code>github</code>). Currently, only GitHub is supported.</li>
+<li>
+<code>CIRCLE_CI_SOURCE_GITHUB_ACCESS_TOKEN</code> (Optional): The personal access token (classic) used to authenticate with your source GitHub instance (requires <code>repo</code> scope). If not provided, the value of <code>GITHUB_ACCESS_TOKEN</code> is used instead.</li>
+<li>
+<code>CIRCLE_CI_SOURCE_GITHUB_INSTANCE_URL</code> (Optional): The URL to the source GitHub instance. If not provided, the value of <code>GITHUB_INSTANCE_URL</code> is used instead.</li>
+</ul>
+<p>These environment variables can be specified in a <code>.env.local</code> file that is loaded by GitHub Actions Importer when it is run.</p>
+<h3 title="Reference / Optional arguments">
+<a href="#optional-arguments" aria-hidden="true" class="anchor" id="optional-arguments"></a>Optional arguments</h3>
+<p>There are optional arguments you can use with the GitHub Actions Importer subcommands to customize your migration.</p>
+<h4>
+<a href="#--source-file-path" aria-hidden="true" class="anchor" id="--source-file-path"></a><code>--source-file-path</code>
+</h4>
+<p>You can use the <code>--source-file-path</code> argument with the <code>forecast</code>, <code>dry-run</code>, or <code>migrate</code> subcommands.</p>
+<p>By default, GitHub Actions Importer fetches pipeline contents from source control. The <code>--source-file-path</code> argument tells GitHub Actions Importer to use the specified source file path instead.</p>
+<p>For example:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer dry-run circle-ci --output-dir ./output/ --source-file-path ./path/to/.circleci/config.yml
+</span></code></pre>
+<p>If you would like to supply multiple source files when running the <code>forecast</code> subcommand, you can use pattern matching in the file path value. For example, <code>gh forecast --source-file-path ./tmp/previous_forecast/jobs/*.json</code> supplies GitHub Actions Importer with any source files that match the <code>./tmp/previous_forecast/jobs/*.json</code> file path.</p>
+<h4>
+<a href="#--config-file-path" aria-hidden="true" class="anchor" id="--config-file-path"></a><code>--config-file-path</code>
+</h4>
+<p>You can use the <code>--config-file-path</code> argument with the <code>audit</code>, <code>dry-run</code>, and <code>migrate</code> subcommands.</p>
+<p>By default, GitHub Actions Importer fetches pipeline contents from source control. The <code>--config-file-path</code> argument tells GitHub Actions Importer to use the specified source files instead.</p>
+<p>The <code>--config-file-path</code> argument can also be used to specify which repository a converted composite action should be migrated to.</p>
+<h5>
+<a href="#audit-example" aria-hidden="true" class="anchor" id="audit-example"></a>Audit example</h5>
+<p>In this example, GitHub Actions Importer uses the specified YAML configuration file to perform an audit.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> actions-importer audit circle-ci</span><span style="color:#bf616a;"> --output-dir</span><span style="color:#c0c5ce;"> ./output/</span><span style="color:#bf616a;"> --config-file-path</span><span style="color:#c0c5ce;"> ./path/to/circle-ci/config.yml
+</span></code></pre>
+<p>To audit a CircleCI instance using a config file, the config file must be in the following format, and each <code>repository_slug</code> must be unique:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">source_files</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">repository_slug</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">circle-org-name/circle-project-name
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">path/to/.circleci/config.yml
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">repository_slug</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">circle-org-name/some-other-circle-project-name
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">path/to/.circleci/config.yml
+</span></code></pre>
+<h5>
+<a href="#dry-run-example" aria-hidden="true" class="anchor" id="dry-run-example"></a>Dry run example</h5>
+<p>In this example, GitHub Actions Importer uses the specified YAML configuration file as the source file to perform a dry run.</p>
+<p>The pipeline is selected by matching the <code>repository_slug</code> in the config file to the value of the <code>--circle-ci-organization</code> and <code>--circle-ci-project</code> options. The <code>path</code> is then used to pull the specified source file.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> actions-importer dry-run circle-ci</span><span style="color:#bf616a;"> --circle-ci-project</span><span style="color:#c0c5ce;"> circle-org-name/circle-project-name</span><span style="color:#bf616a;"> --output-dir</span><span style="color:#c0c5ce;"> ./output/</span><span style="color:#bf616a;"> --config-file-path</span><span style="color:#c0c5ce;"> ./path/to/circle-ci/config.yml
+</span></code></pre>
+<h5>
+<a href="#specify-the-repository-of-converted-composite-actions" aria-hidden="true" class="anchor" id="specify-the-repository-of-converted-composite-actions"></a>Specify the repository of converted composite actions</h5>
+<p>GitHub Actions Importer uses the YAML file provided to the <code>--config-file-path</code> argument to determine the repository that converted composite actions are migrated to.</p>
+<p>To begin, you should run an audit without the <code>--config-file-path</code> argument:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> actions-importer audit circle-ci</span><span style="color:#bf616a;"> --output-dir</span><span style="color:#c0c5ce;"> ./output/
+</span></code></pre>
+<p>The output of this command will contain a file named <code>config.yml</code> that contains a list of all the composite actions that were converted by GitHub Actions Importer. For example, the <code>config.yml</code> file may have the following contents:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">composite_actions</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">my-composite-action.yml
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">target_url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://github.com/octo-org/octo-repo
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">ref</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">main
+</span></code></pre>
+<p>You can use this file to specify which repository and ref a reusable workflow or composite action should be added to. You can then use the <code>--config-file-path</code> argument to provide the <code>config.yml</code> file to GitHub Actions Importer. For example, you can use this file when running a <code>migrate</code> command to open a pull request for each unique repository defined in the config file:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> actions-importer migrate circle-ci</span><span style="color:#bf616a;"> --circle-ci-project</span><span style="color:#c0c5ce;"> my-project-name</span><span style="color:#bf616a;"> --output-dir</span><span style="color:#c0c5ce;"> output/</span><span style="color:#bf616a;"> --config-file-path</span><span style="color:#c0c5ce;"> config.yml</span><span style="color:#bf616a;"> --target-url</span><span style="color:#c0c5ce;"> https://github.com/my-org/my-repo
+</span></code></pre>
+<h4>
+<a href="#--include-from" aria-hidden="true" class="anchor" id="--include-from"></a><code>--include-from</code>
+</h4>
+<p>You can use the <code>--include-from</code> argument with the <code>audit</code> subcommand.</p>
+<p>The <code>--include-from</code> argument specifies a file that contains a line-delimited list of repositories to include in the audit of a CircleCI organization. Any repositories that are not included in the file are excluded from the audit.</p>
+<p>For example:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> actions-importer audit circle-ci</span><span style="color:#bf616a;"> --output-dir</span><span style="color:#c0c5ce;"> ./output/</span><span style="color:#bf616a;"> --include-from</span><span style="color:#c0c5ce;"> repositories.txt
+</span></code></pre>
+<p>The file supplied for this parameter must be a line-delimited list of repositories, for example:</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">repository_one
+</span><span style="color:#c0c5ce;">repository_two
+</span><span style="color:#c0c5ce;">repository_three
+</span></code></pre>
+<h3 title="Reference / Supported syntax for CircleCI pipelines">
+<a href="#supported-syntax-for-circleci-pipelines" aria-hidden="true" class="anchor" id="supported-syntax-for-circleci-pipelines"></a>Supported syntax for CircleCI pipelines</h3>
+<p>The following table shows the type of properties that GitHub Actions Importer is currently able to convert.</p>
+<table>
+<thead>
+<tr>
+<th align="left">CircleCI Pipelines</th>
+<th align="left">GitHub Actions</th>
+<th align="left">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">cron triggers</td>
+<td align="left"><ul><li><code>on.schedule</code></li></ul></td>
+<td align="left">Supported</td>
+</tr>
+<tr>
+<td align="left">environment</td>
+<td align="left"><ul>
+<li><code>env</code></li>
+<li><code>jobs.&lt;job_id&gt;.env</code></li>
+<li><code>jobs.&lt;job_id&gt;.steps.env</code></li>
+</ul></td>
+<td align="left">Supported</td>
+</tr>
+<tr>
+<td align="left">executors</td>
+<td align="left"><ul><li><code>runs-on</code></li></ul></td>
+<td align="left">Supported</td>
+</tr>
+<tr>
+<td align="left">jobs</td>
+<td align="left"><ul><li><code>jobs</code></li></ul></td>
+<td align="left">Supported</td>
+</tr>
+<tr>
+<td align="left">job</td>
+<td align="left"><ul>
+<li><code>jobs.&lt;job_id&gt;</code></li>
+<li><code>jobs.&lt;job_id&gt;.name</code></li>
+</ul></td>
+<td align="left">Supported</td>
+</tr>
+<tr>
+<td align="left">matrix</td>
+<td align="left"><ul>
+<li><code>jobs.&lt;job_id&gt;.strategy</code></li>
+<li><code>jobs.&lt;job_id&gt;.strategy.matrix</code></li>
+</ul></td>
+<td align="left">Supported</td>
+</tr>
+<tr>
+<td align="left">parameters</td>
+<td align="left"><ul>
+<li><code>env</code></li>
+<li><code>workflow-dispatch.inputs</code></li>
+</ul></td>
+<td align="left">Supported</td>
+</tr>
+<tr>
+<td align="left">steps</td>
+<td align="left"><ul><li><code>jobs.&lt;job_id&gt;.steps</code></li></ul></td>
+<td align="left">Supported</td>
+</tr>
+<tr>
+<td align="left">when, unless</td>
+<td align="left"><ul><li><code>jobs.&lt;job_id&gt;.if</code></li></ul></td>
+<td align="left">Supported</td>
+</tr>
+<tr>
+<td align="left">triggers</td>
+<td align="left"><ul><li><code>on</code></li></ul></td>
+<td align="left">Supported</td>
+</tr>
+<tr>
+<td align="left">executors</td>
+<td align="left"><ul>
+<li><code>container</code></li>
+<li><code>services</code></li>
+</ul></td>
+<td align="left">Partially Supported</td>
+</tr>
+<tr>
+<td align="left">orbs</td>
+<td align="left"><ul><li><code>actions</code></li></ul></td>
+<td align="left">Partially Supported</td>
+</tr>
+<tr>
+<td align="left">executors</td>
+<td align="left"><ul><li><code>self hosted runners</code></li></ul></td>
+<td align="left">Unsupported</td>
+</tr>
+<tr>
+<td align="left">setup</td>
+<td align="left">Not applicable</td>
+<td align="left">Unsupported</td>
+</tr>
+<tr>
+<td align="left">version</td>
+<td align="left">Not applicable</td>
+<td align="left">Unsupported</td>
+</tr>
+</tbody>
+</table>
+<p>For more information about supported CircleCI concept and orb mappings, see the <a href="https://github.com/github/gh-actions-importer/blob/main/docs/circle_ci/index.md" class="external"><code>github/gh-actions-importer</code> repository</a>.</p>
+<h3 title="Reference / Environment variable mapping">
+<a href="#environment-variable-mapping" aria-hidden="true" class="anchor" id="environment-variable-mapping"></a>Environment variable mapping</h3>
+<p>GitHub Actions Importer uses the mapping in the table below to convert default CircleCI environment variables to the closest equivalent in GitHub Actions.</p>
+<table>
+<thead>
+<tr>
+<th align="left">CircleCI</th>
+<th align="left">GitHub Actions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code class="keyword">CI</code></td>
+<td align="left"><code>$CI</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">CIRCLE_BRANCH</code></td>
+<td align="left"><code>${{ github.ref }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">CIRCLE_JOB</code></td>
+<td align="left"><code>${{ github.job }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">CIRCLE_PR_NUMBER</code></td>
+<td align="left"><code>${{ github.event.number }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">CIRCLE_PR_REPONAME</code></td>
+<td align="left"><code>${{ github.repository }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">CIRCLE_PROJECT_REPONAME</code></td>
+<td align="left"><code>${{ github.repository }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">CIRCLE_SHA1</code></td>
+<td align="left"><code>${{ github.sha }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">CIRCLE_TAG</code></td>
+<td align="left"><code>${{ github.ref }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">CIRCLE_USERNAME</code></td>
+<td align="left"><code>${{ github.actor }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">CIRCLE_WORKFLOW_ID</code></td>
+<td align="left"><code>${{ github.run_number }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">CIRCLE_WORKING_DIRECTORY</code></td>
+<td align="left"><code>${{ github.workspace }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">&lt;&lt; pipeline.id &gt;&gt;</code></td>
+<td align="left"><code>${{ github.workflow }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">&lt;&lt; pipeline.number &gt;&gt;</code></td>
+<td align="left"><code>${{ github.run_number }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">&lt;&lt; pipeline.project.git_url &gt;&gt;</code></td>
+<td align="left"><code>$GITHUB_SERVER_URL/$GITHUB_REPOSITORY</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">&lt;&lt; pipeline.project.type &gt;&gt;</code></td>
+<td align="left"><code>github</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">&lt;&lt; pipeline.git.tag &gt;&gt;</code></td>
+<td align="left"><code>${{ github.ref }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">&lt;&lt; pipeline.git.branch &gt;&gt;</code></td>
+<td align="left"><code>${{ github.ref }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">&lt;&lt; pipeline.git.revision &gt;&gt;</code></td>
+<td align="left"><code>${{ github.event.pull_request.head.sha }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">&lt;&lt; pipeline.git.base_revision &gt;&gt;</code></td>
+<td align="left"><code>${{ github.event.pull_request.base.sha }}</code></td>
+</tr>
+</tbody>
+</table>
+<h2 title="Legal notice">
+<a href="#legal-notice" aria-hidden="true" class="anchor" id="legal-notice"></a>Legal notice</h2>
+<p>Portions have been adapted from <a href="https://github.com/github/gh-actions-importer/" class="external">https://github.com/github/gh-actions-importer/</a> under the MIT license:</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">MIT License
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">Copyright (c) 2022 GitHub
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">Permission is hereby granted, free of charge, to any person obtaining a copy
+</span><span style="color:#c0c5ce;">of this software and associated documentation files (the "Software"), to deal
+</span><span style="color:#c0c5ce;">in the Software without restriction, including without limitation the rights
+</span><span style="color:#c0c5ce;">to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+</span><span style="color:#c0c5ce;">copies of the Software, and to permit persons to whom the Software is
+</span><span style="color:#c0c5ce;">furnished to do so, subject to the following conditions:
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">The above copyright notice and this permission notice shall be included in all
+</span><span style="color:#c0c5ce;">copies or substantial portions of the Software.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+</span><span style="color:#c0c5ce;">IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+</span><span style="color:#c0c5ce;">FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+</span><span style="color:#c0c5ce;">AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+</span><span style="color:#c0c5ce;">LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+</span><span style="color:#c0c5ce;">OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+</span><span style="color:#c0c5ce;">SOFTWARE.
+</span></code></pre>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

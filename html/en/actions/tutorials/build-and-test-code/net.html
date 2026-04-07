@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Building and testing .NET</title>
+    <link rel="stylesheet" href="../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Build and test code</a> / </nav><h1>
+<a href="#building-and-testing-net" aria-hidden="true" class="anchor" id="building-and-testing-net"></a>Building and testing .NET</h1>
+<p>Learn how to create a continuous integration (CI) workflow to build and test your .NET project.</p>
+<h2 title="Introduction">
+<a href="#introduction" aria-hidden="true" class="anchor" id="introduction"></a>Introduction</h2>
+<p>This guide shows you how to build, test, and publish a .NET package.</p>
+<p>GitHub-hosted runners have a tools cache with preinstalled software, which includes the .NET Core SDK. For a full list of up-to-date software and the preinstalled versions of .NET Core SDK, see <a href="../../concepts/runners/github-hosted-runners.html">software installed on GitHub-hosted runners</a>.</p>
+<h2 title="Prerequisites">
+<a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<p>You should already be familiar with YAML syntax and how it's used with GitHub Actions. For more information, see <a href="../../reference/workflows-and-actions/workflow-syntax.html">Workflow syntax for GitHub Actions</a>.</p>
+<p>We recommend that you have a basic understanding of the .NET Core SDK. For more information, see <a href="https://dotnet.microsoft.com/learn" class="external">Getting started with .NET</a>.</p>
+<h2 title="Using a .NET workflow template">
+<a href="#using-a-net-workflow-template" aria-hidden="true" class="anchor" id="using-a-net-workflow-template"></a>Using a .NET workflow template</h2>
+<p>To get started quickly, add a workflow template to the <code>.github/workflows</code> directory of your repository.</p>
+<p>GitHub provides a workflow template for .NET that should work for most .NET projects. The subsequent sections of this guide give examples of how you can customize this workflow template.</p>
+<ol>
+<li>
+<p>On GitHub, navigate to the main page of the repository.</p>
+</li>
+<li>
+<p>Under your repository name, click <strong><svg version="1.1" width="16" height="16" viewbox="0 0 16 16" class="octicon octicon-play" aria-label="play" role="img"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm4.879-2.773 4.264 2.559a.25.25 0 0 1 0 .428l-4.264 2.559A.25.25 0 0 1 6 10.559V5.442a.25.25 0 0 1 .379-.215Z"></path></svg> Actions</strong>.</p>
+<p><img src="../../../..//assets/images/help/repository/actions-tab-global-nav-update.png" alt='Screenshot of the tabs for the "github/docs" repository. The "Actions" tab is highlighted with an orange outline.'></p>
+</li>
+<li>
+<p>If you already have a workflow in your repository, click <strong>New workflow</strong>.</p>
+</li>
+<li>
+<p>The "Choose a workflow" page shows a selection of recommended workflow templates. Search for "dotnet".</p>
+</li>
+<li>
+<p>On the ".NET" workflow, click <strong>Configure</strong>.</p>
+</li>
+<li>
+<p>Edit the workflow as required. For example, change the .NET version.</p>
+</li>
+<li>
+<p>Click <strong>Commit changes</strong>.</p>
+<p>The <code>dotnet.yml</code> workflow file is added to the <code>.github/workflows</code> directory of your repository.</p>
+</li>
+</ol>
+<h2 title="Specifying a .NET version">
+<a href="#specifying-a-net-version" aria-hidden="true" class="anchor" id="specifying-a-net-version"></a>Specifying a .NET version</h2>
+<p>To use a preinstalled version of the .NET Core SDK on a GitHub-hosted runner, use the <code>setup-dotnet</code> action. This action finds a specific version of .NET from the tools cache on each runner, and adds the necessary binaries to <code>PATH</code>. These changes will persist for the remainder of the job.</p>
+<p>The <code>setup-dotnet</code> action is the recommended way of using .NET with GitHub Actions, because it ensures consistent behavior across different runners and different versions of .NET. If you are using a self-hosted runner, you must install .NET and add it to <code>PATH</code>. For more information, see the <a href="https://github.com/marketplace/actions/setup-net-core-sdk" class="external"><code>setup-dotnet</code></a> action.</p>
+<h3 title="Specifying a .NET version / Using multiple .NET versions">
+<a href="#using-multiple-net-versions" aria-hidden="true" class="anchor" id="using-multiple-net-versions"></a>Using multiple .NET versions</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet package
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">push</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">strategy</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">matrix</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">dotnet-version</span><span style="color:#c0c5ce;">: [ '</span><span style="color:#a3be8c;">3.1.x</span><span style="color:#c0c5ce;">', '</span><span style="color:#a3be8c;">6.0.x</span><span style="color:#c0c5ce;">' ]
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup dotnet ${{ matrix.dotnet-version }}
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-dotnet@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">dotnet-version</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ matrix.dotnet-version }}
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># You can test your matrix by printing the current dotnet version
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Display dotnet version
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet --version
+</span></code></pre>
+<h3 title="Specifying a .NET version / Using a specific .NET version">
+<a href="#using-a-specific-net-version" aria-hidden="true" class="anchor" id="using-a-specific-net-version"></a>Using a specific .NET version</h3>
+<p>You can configure your job to use a specific version of .NET, such as <code>6.0.22</code>. Alternatively, you can use semantic version syntax to get the latest minor release. This example uses the latest minor release of .NET 6.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup .NET 6.x
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-dotnet@v4
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># Semantic version range syntax or exact version of a dotnet version
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">dotnet-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">6.x</span><span style="color:#c0c5ce;">'
+</span></code></pre>
+<h2 title="Installing dependencies">
+<a href="#installing-dependencies" aria-hidden="true" class="anchor" id="installing-dependencies"></a>Installing dependencies</h2>
+<p>GitHub-hosted runners have the NuGet package manager installed. You can use the dotnet CLI to install dependencies from the NuGet package registry before building and testing your code. For example, the YAML below installs the <code>Newtonsoft</code> package.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup dotnet
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-dotnet@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">dotnet-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">6.0.x</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Install dependencies
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet add package Newtonsoft.Json --version 12.0.1
+</span></code></pre>
+<h3 title="Installing dependencies / Caching dependencies">
+<a href="#caching-dependencies" aria-hidden="true" class="anchor" id="caching-dependencies"></a>Caching dependencies</h3>
+<p>You can cache NuGet dependencies for future workflows using the optional <code>cache</code> input. For example, the YAML below caches the NuGet <code>global-packages</code> folder, and then installs the <code>Newtonsoft</code> package. A second optional input, <code>cache-dependency-path</code>, can be used to specify the path to a dependency file: <code>packages.lock.json</code>.</p>
+<p>For more information, see <a href="../../reference/workflows-and-actions/dependency-caching.html">Dependency caching reference</a>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup dotnet
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-dotnet@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">dotnet-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">6.x</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">cache</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Install dependencies
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet add package Newtonsoft.Json --version 12.0.1
+</span></code></pre>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Depending on the number of dependencies, it may be faster to use the dependency cache. Projects with many large dependencies should see a performance increase as it cuts down the time required for downloading. Projects with fewer dependencies may not see a significant performance increase and may even see a slight decrease due to how NuGet installs cached dependencies. The performance varies from project to project.</p>
+</div>
+<h2 title="Building and testing your code">
+<a href="#building-and-testing-your-code" aria-hidden="true" class="anchor" id="building-and-testing-your-code"></a>Building and testing your code</h2>
+<p>You can use the same commands that you use locally to build and test your code. This example demonstrates how to use <code>dotnet build</code> and <code>dotnet test</code> in a job:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup dotnet
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-dotnet@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">dotnet-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">6.0.x</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Install dependencies
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet restore
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Build
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet build --no-restore
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Test with the dotnet CLI
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet test --no-build
+</span></code></pre>
+<h2 title="Packaging workflow data as artifacts">
+<a href="#packaging-workflow-data-as-artifacts" aria-hidden="true" class="anchor" id="packaging-workflow-data-as-artifacts"></a>Packaging workflow data as artifacts</h2>
+<p>After a workflow completes, you can upload the resulting artifacts for analysis. For example, you may need to save log files, core dumps, test results, or screenshots. The following example demonstrates how you can use the <code>upload-artifact</code> action to upload test results.</p>
+<p>For more information, see <a href="../store-and-share-data.html">Store and share data with workflow artifacts</a>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet package
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">push</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">strategy</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">matrix</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">dotnet-version</span><span style="color:#c0c5ce;">: [ '</span><span style="color:#a3be8c;">3.1.x</span><span style="color:#c0c5ce;">', '</span><span style="color:#a3be8c;">6.0.x</span><span style="color:#c0c5ce;">' ]
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">        - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup dotnet
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-dotnet@v4
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">            </span><span style="color:#bf616a;">dotnet-version</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ matrix.dotnet-version }}
+</span><span style="color:#c0c5ce;">        - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Install dependencies
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet restore
+</span><span style="color:#c0c5ce;">        - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Test with dotnet
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet test --no-restore --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
+</span><span style="color:#c0c5ce;">        - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Upload dotnet test results
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/upload-artifact@v4
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">            </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet-results-${{ matrix.dotnet-version }}
+</span><span style="color:#c0c5ce;">            </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">TestResults-${{ matrix.dotnet-version }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#65737e;"># Use always() to always run this step to publish test results when there are test failures
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ always() }}
+</span></code></pre>
+<h2 title="Publishing to package registries">
+<a href="#publishing-to-package-registries" aria-hidden="true" class="anchor" id="publishing-to-package-registries"></a>Publishing to package registries</h2>
+<p>You can configure your workflow to publish your .NET package to a package registry when your CI tests pass. You can use repository secrets to store any tokens or credentials needed to publish your binary. The following example creates and publishes a package to GitHub Packages using <code>dotnet core cli</code>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Upload dotnet package
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">release</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">created</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">deploy</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">permissions</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">packages</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">contents</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-dotnet@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">dotnet-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">6.0.x</span><span style="color:#c0c5ce;">' </span><span style="color:#65737e;"># SDK Version to use.
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">source-url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://nuget.pkg.github.com/&lt;owner&gt;/index.json
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">NUGET_AUTH_TOKEN</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.GITHUB_TOKEN}}
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet build --configuration Release &lt;my project&gt;
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Create the package
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet pack --configuration Release &lt;my project&gt;
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Publish the package to GPR
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet nuget push &lt;my project&gt;/bin/Release/*.nupkg
+</span></code></pre>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

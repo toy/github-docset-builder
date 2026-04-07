@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Triggering a workflow</title>
+    <link rel="stylesheet" href="../../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Write workflows</a> / <a href="index.html">Choose when workflows run</a> / </nav><h1>
+<a href="#triggering-a-workflow" aria-hidden="true" class="anchor" id="triggering-a-workflow"></a>Triggering a workflow</h1>
+<p>How to automatically trigger GitHub Actions workflows</p>
+<h2 title="Prerequisites">
+<a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<p>To learn more about workflows and triggering workflows, see <a href="../../../concepts/workflows-and-actions/workflows.html">Workflows</a>.</p>
+<h2 title="Triggering a workflow from a workflow">
+<a href="#triggering-a-workflow-from-a-workflow" aria-hidden="true" class="anchor" id="triggering-a-workflow-from-a-workflow"></a>Triggering a workflow from a workflow</h2>
+<p>When you use the repository's <code>GITHUB_TOKEN</code> to perform tasks, events triggered by the <code>GITHUB_TOKEN</code>, with the exception of <code>workflow_dispatch</code> and <code>repository_dispatch</code>, will not create a new workflow run. This prevents you from accidentally creating recursive workflow runs. For example, if a workflow run pushes code using the repository's <code>GITHUB_TOKEN</code>, a new workflow will not run even when the repository contains a workflow configured to run when <code>push</code> events occur. For more information, see <a href="../../../tutorials/authenticate-with-github_token.html">Use GITHUB<span data-escaped-char>\</span><span data-escaped-char>_</span>TOKEN for authentication in workflows</a>.</p>
+<p>If you do want to trigger a workflow from within a workflow run, you can use a GitHub App installation access token or a personal access token instead of <code>GITHUB_TOKEN</code> to trigger events that require a token.</p>
+<p>If you use a GitHub App, you'll need to create a GitHub App and store the app ID and private key as secrets. For more information, see <a href="https://docs.github.com/en/apps/creating-github-apps/guides/making-authenticated-api-requests-with-a-github-app-in-a-github-actions-workflow" class="external">Making authenticated API requests with a GitHub App in a GitHub Actions workflow</a>. If you use a personal access token, you'll need to create a personal access token and store it as a secret. For more information about creating a personal access token, see <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token" class="external">Managing your personal access tokens</a>. For more information about storing secrets, see <a href="../choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a>.</p>
+<p>To minimize your GitHub Actions usage costs, ensure that you don't create recursive or unintended workflow runs.</p>
+<p>For example, the following workflow uses a personal access token (stored as a secret called <code>MY_TOKEN</code>) to add a label to an issue via GitHub CLI. Any workflows that run when a label is added will run once this step is performed.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">issues</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">opened
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">label_issue</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">GH_TOKEN</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.MY_TOKEN }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">ISSUE_URL</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ github.event.issue.html_url }}
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          gh issue edit $ISSUE_URL --add-label "triage"
+</span></code></pre>
+<p>Conversely, the following workflow uses <code>GITHUB_TOKEN</code> to add a label to an issue. It will not trigger any workflows that run when a label is added.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">issues</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">opened
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">label_issue</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">GH_TOKEN</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.GITHUB_TOKEN }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">ISSUE_URL</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ github.event.issue.html_url }}
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          gh issue edit $ISSUE_URL --add-label "triage"
+</span></code></pre>
+<h2 title="Using events to trigger workflows">
+<a href="#using-events-to-trigger-workflows" aria-hidden="true" class="anchor" id="using-events-to-trigger-workflows"></a>Using events to trigger workflows</h2>
+<p>Use the <code>on</code> key to specify what events trigger your workflow. For more information about events you can use, see <a href="../../../reference/workflows-and-actions/events-that-trigger-workflows.html">Events that trigger workflows</a>.</p>
+<h3 title="Using events to trigger workflows / Using a single event">
+<a href="#using-a-single-event" aria-hidden="true" class="anchor" id="using-a-single-event"></a>Using a single event</h3>
+<p>For example, a workflow with the following <code>on</code> value will run when a push is made to any branch in the workflow's repository:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">push
+</span></code></pre>
+<h3 title="Using events to trigger workflows / Using multiple events">
+<a href="#using-multiple-events" aria-hidden="true" class="anchor" id="using-multiple-events"></a>Using multiple events</h3>
+<p>You can specify a single event or multiple events. For example, a workflow with the following <code>on</code> value will run when a push is made to any branch in the repository or when someone forks the repository:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">push</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">fork</span><span style="color:#c0c5ce;">]
+</span></code></pre>
+<p>If you specify multiple events, only one of those events needs to occur to trigger your workflow. If multiple triggering events for your workflow occur at the same time, multiple workflow runs will be triggered.</p>
+<h3 title="Using events to trigger workflows / Using activity types and filters with multiple events">
+<a href="#using-activity-types-and-filters-with-multiple-events" aria-hidden="true" class="anchor" id="using-activity-types-and-filters-with-multiple-events"></a>Using activity types and filters with multiple events</h3>
+<p>You can use activity types and filters to further control when your workflow will run. For more information, see <a href="#using-event-activity-types">Using event activity types</a> and <a href="#using-filters">Using filters</a>. If you specify activity types or filters for an event and your workflow triggers on multiple events, you must configure each event separately. You must append a colon (<code>:</code>) to all events, including events without configuration.</p>
+<p>For example, a workflow with the following <code>on</code> value will run when:</p>
+<ul>
+<li>A label is created</li>
+<li>A push is made to the <code>main</code> branch in the repository</li>
+<li>A push is made to a GitHub Pages-enabled branch</li>
+</ul>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">label</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">created
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">main
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">page_build</span><span style="color:#c0c5ce;">:
+</span></code></pre>
+<h2 title="Using event activity types">
+<a href="#using-event-activity-types" aria-hidden="true" class="anchor" id="using-event-activity-types"></a>Using event activity types</h2>
+<p>Some events have activity types that give you more control over when your workflow should run. Use <code>on.&lt;event_name&gt;.types</code> to define the type of event activity that will trigger a workflow run.</p>
+<p>For example, the <code>issue_comment</code> event has the <code>created</code>, <code>edited</code>, and <code>deleted</code> activity types. If your workflow triggers on the <code>label</code> event, it will run whenever a label is created, edited, or deleted. If you specify the <code>created</code> activity type for the <code>label</code> event, your workflow will run when a label is created but not when a label is edited or deleted.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">label</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">created
+</span></code></pre>
+<p>If you specify multiple activity types, only one of those event activity types needs to occur to trigger your workflow. If multiple triggering event activity types for your workflow occur at the same time, multiple workflow runs will be triggered. For example, the following workflow triggers when an issue is opened or labeled. If an issue with two labels is opened, three workflow runs will start: one for the issue opened event and two for the two issue labeled events.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">issues</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">opened
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">labeled
+</span></code></pre>
+<p>For more information about each event and their activity types, see <a href="../../../reference/workflows-and-actions/events-that-trigger-workflows.html">Events that trigger workflows</a>.</p>
+<h2 title="Using filters">
+<a href="#using-filters" aria-hidden="true" class="anchor" id="using-filters"></a>Using filters</h2>
+<p>Some events have filters that give you more control over when your workflow should run.</p>
+<p>For example, the <code>push</code> event has a <code>branches</code> filter that causes your workflow to run only when a push to a branch that matches the <code>branches</code> filter occurs, instead of when any push occurs.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">main
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">releases/**</span><span style="color:#c0c5ce;">'
+</span></code></pre>
+<h3 title="Using filters to target specific branches for pull request events">
+<a href="#using-filters-to-target-specific-branches-for-pull-request-events" aria-hidden="true" class="anchor" id="using-filters-to-target-specific-branches-for-pull-request-events"></a>Using filters to target specific branches for pull request events</h3>
+<p>When using the <code>pull_request</code> and <code>pull_request_target</code> events, you can configure a workflow to run only for pull requests that target specific branches.</p>
+<p>Use the <code>branches</code> filter when you want to include branch name patterns or when you want to both include and exclude branch names patterns. Use the <code>branches-ignore</code> filter when you only want to exclude branch name patterns. You cannot use both the <code>branches</code> and <code>branches-ignore</code> filters for the same event in a workflow.</p>
+<p>If you define both <code>branches</code>/<code>branches-ignore</code> and <a href="../../../reference/workflows-and-actions/workflow-syntax.html#onpushpull_requestpull_request_targetpathspaths-ignore"><code>paths</code>/<code>paths-ignore</code></a>, the workflow will only run when both filters are satisfied.</p>
+<p>The <code>branches</code> and <code>branches-ignore</code> keywords accept glob patterns that use characters like <code>*</code>, <code>**</code>, <code>+</code>, <code>?</code>, <code>!</code> and others to match more than one branch name. If a name contains any of these characters and you want a literal match, you need to escape each of these special characters with <code>\</code>. For more information about glob patterns, see the <a href="../../../reference/workflows-and-actions/workflow-syntax.html#filter-pattern-cheat-sheet">Workflow syntax for GitHub Actions</a>.</p>
+<h4>
+<a href="#example-including-branches" aria-hidden="true" class="anchor" id="example-including-branches"></a>Example: Including branches</h4>
+<p>The patterns defined in <code>branches</code> are evaluated against the Git ref's name. For example, the following workflow would run whenever there is a <code>pull_request</code> event for a pull request targeting:</p>
+<ul>
+<li>A branch named <code>main</code> (<code>refs/heads/main</code>)</li>
+<li>A branch named <code>mona/octocat</code> (<code>refs/heads/mona/octocat</code>)</li>
+<li>A branch whose name starts with <code>releases/</code>, like <code>releases/10</code> (<code>refs/heads/releases/10</code>)</li>
+</ul>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">pull_request</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Sequence of patterns matched against refs/heads
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">main
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">mona/octocat</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">releases/**</span><span style="color:#c0c5ce;">'
+</span></code></pre>
+<p>If a workflow is skipped due to branch filtering, <a href="../../../reference/workflows-and-actions/workflow-syntax.html#onpushpull_requestpull_request_targetpathspaths-ignore">path filtering</a>, or a <a href="../../manage-workflow-runs/skip-workflow-runs.html">commit message</a>, then checks associated with that workflow will remain in a "Pending" state. A pull request that requires those checks to be successful will be blocked from merging.</p>
+<h4>
+<a href="#example-excluding-branches" aria-hidden="true" class="anchor" id="example-excluding-branches"></a>Example: Excluding branches</h4>
+<p>When a pattern matches the <code>branches-ignore</code> pattern, the workflow will not run. The patterns defined in <code>branches-ignore</code> are evaluated against the Git ref's name. For example, the following workflow would run whenever there is a <code>pull_request</code> event unless the pull request is targeting:</p>
+<ul>
+<li>A branch named <code>mona/octocat</code> (<code>refs/heads/mona/octocat</code>)</li>
+<li>A branch whose name matches <code>releases/**-alpha</code>, like <code>releases/beta/3-alpha</code> (<code>refs/heads/releases/beta/3-alpha</code>) <!-- markdownlint-disable-line outdated-release-phase-terminology -->
+</li>
+</ul>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">pull_request</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Sequence of patterns matched against refs/heads
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches-ignore</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">mona/octocat</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">releases/**-alpha</span><span style="color:#c0c5ce;">'
+</span></code></pre>
+<h4>
+<a href="#example-including-and-excluding-branches" aria-hidden="true" class="anchor" id="example-including-and-excluding-branches"></a>Example: Including and excluding branches</h4>
+<p>You cannot use <code>branches</code> and <code>branches-ignore</code> to filter the same event in a single workflow. If you want to both include and exclude branch patterns for a single event, use the <code>branches</code> filter along with the <code>!</code> character to indicate which branches should be excluded.</p>
+<p>If you define a branch with the <code>!</code> character, you must also define at least one branch without the <code>!</code> character. If you only want to exclude branches, use <code>branches-ignore</code> instead.</p>
+<p>The order that you define patterns matters.</p>
+<ul>
+<li>A matching negative pattern (prefixed with <code>!</code>) after a positive match will exclude the Git ref.</li>
+<li>A matching positive pattern after a negative match will include the Git ref again.</li>
+</ul>
+<p>The following workflow will run on <code>pull_request</code> events for pull requests that target <code>releases/10</code> or <code>releases/beta/mona</code>, but not for pull requests that target <code>releases/10-alpha</code> or <code>releases/beta/3-alpha</code> because the negative pattern <code>!releases/**-alpha</code> follows the positive pattern. <!-- markdownlint-disable-line outdated-release-phase-terminology --></p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">pull_request</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">releases/**</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">!releases/**-alpha</span><span style="color:#c0c5ce;">'
+</span></code></pre>
+<h3 title="Using filters to target specific branches or tags for push events">
+<a href="#using-filters-to-target-specific-branches-or-tags-for-push-events" aria-hidden="true" class="anchor" id="using-filters-to-target-specific-branches-or-tags-for-push-events"></a>Using filters to target specific branches or tags for push events</h3>
+<p>When using the <code>push</code> event, you can configure a workflow to run on specific branches or tags.</p>
+<p>Use the <code>branches</code> filter when you want to include branch name patterns or when you want to both include and exclude branch names patterns. Use the <code>branches-ignore</code> filter when you only want to exclude branch name patterns. You cannot use both the <code>branches</code> and <code>branches-ignore</code> filters for the same event in a workflow.</p>
+<p>Use the <code>tags</code> filter when you want to include tag name patterns or when you want to both include and exclude tag names patterns. Use the <code>tags-ignore</code> filter when you only want to exclude tag name patterns. You cannot use both the <code>tags</code> and <code>tags-ignore</code> filters for the same event in a workflow.</p>
+<p>If you define only <code>tags</code>/<code>tags-ignore</code> or only <code>branches</code>/<code>branches-ignore</code>, the workflow won't run for events affecting the undefined Git ref. If you define neither <code>tags</code>/<code>tags-ignore</code> or <code>branches</code>/<code>branches-ignore</code>, the workflow will run for events affecting either branches or tags. If you define both <code>branches</code>/<code>branches-ignore</code> and <a href="../../../reference/workflows-and-actions/workflow-syntax.html#onpushpull_requestpull_request_targetpathspaths-ignore"><code>paths</code>/<code>paths-ignore</code></a>, the workflow will only run when both filters are satisfied.</p>
+<p>The <code>branches</code>, <code>branches-ignore</code>, <code>tags</code>, and <code>tags-ignore</code> keywords accept glob patterns that use characters like <code>*</code>, <code>**</code>, <code>+</code>, <code>?</code>, <code>!</code> and others to match more than one branch or tag name. If a name contains any of these characters and you want a literal match, you need to <em>escape</em> each of these special characters with <code>\</code>. For more information about glob patterns, see the <a href="../../../reference/workflows-and-actions/workflow-syntax.html#filter-pattern-cheat-sheet">Workflow syntax for GitHub Actions</a>.</p>
+<h4>
+<a href="#example-including-branches-and-tags" aria-hidden="true" class="anchor" id="example-including-branches-and-tags"></a>Example: Including branches and tags</h4>
+<p>The patterns defined in <code>branches</code> and <code>tags</code> are evaluated against the Git ref's name. For example, the following workflow would run whenever there is a <code>push</code> event to:</p>
+<ul>
+<li>A branch named <code>main</code> (<code>refs/heads/main</code>)</li>
+<li>A branch named <code>mona/octocat</code> (<code>refs/heads/mona/octocat</code>)</li>
+<li>A branch whose name starts with <code>releases/</code>, like <code>releases/10</code> (<code>refs/heads/releases/10</code>)</li>
+<li>A tag named <code>v2</code> (<code>refs/tags/v2</code>)</li>
+<li>A tag whose name starts with <code>v1.</code>, like <code>v1.9.1</code> (<code>refs/tags/v1.9.1</code>)</li>
+</ul>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Sequence of patterns matched against refs/heads
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">main
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">mona/octocat</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">releases/**</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Sequence of patterns matched against refs/tags
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">tags</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">v2
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">v1.*
+</span></code></pre>
+<h4>
+<a href="#example-excluding-branches-and-tags" aria-hidden="true" class="anchor" id="example-excluding-branches-and-tags"></a>Example: Excluding branches and tags</h4>
+<p>When a pattern matches the <code>branches-ignore</code> or <code>tags-ignore</code> pattern, the workflow will not run. The patterns defined in <code>branches</code> and <code>tags</code> are evaluated against the Git ref's name. For example, the following workflow would run whenever there is a <code>push</code> event, unless the <code>push</code> event is to:</p>
+<ul>
+<li>A branch named <code>mona/octocat</code> (<code>refs/heads/mona/octocat</code>)</li>
+<li>A branch whose name matches <code>releases/**-alpha</code>, like <code>releases/beta/3-alpha</code> (<code>refs/heads/releases/beta/3-alpha</code>) <!-- markdownlint-disable-line outdated-release-phase-terminology -->
+</li>
+<li>A tag named <code>v2</code> (<code>refs/tags/v2</code>)</li>
+<li>A tag whose name starts with <code>v1.</code>, like <code>v1.9</code> (<code>refs/tags/v1.9</code>)</li>
+</ul>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Sequence of patterns matched against refs/heads
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches-ignore</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">mona/octocat</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">releases/**-alpha</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Sequence of patterns matched against refs/tags
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">tags-ignore</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">v2
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">v1.*
+</span></code></pre>
+<h4>
+<a href="#example-including-and-excluding-branches-and-tags" aria-hidden="true" class="anchor" id="example-including-and-excluding-branches-and-tags"></a>Example: Including and excluding branches and tags</h4>
+<p>You can't use <code>branches</code> and <code>branches-ignore</code> to filter the same event in a single workflow. Similarly, you can't use <code>tags</code> and <code>tags-ignore</code> to filter the same event in a single workflow. If you want to both include and exclude branch or tag patterns for a single event, use the <code>branches</code> or <code>tags</code> filter along with the <code>!</code> character to indicate which branches or tags should be excluded.</p>
+<p>If you define a branch with the <code>!</code> character, you must also define at least one branch without the <code>!</code> character. If you only want to exclude branches, use <code>branches-ignore</code> instead. Similarly, if you define a tag with the <code>!</code> character, you must also define at least one tag without the <code>!</code> character. If you only want to exclude tags, use <code>tags-ignore</code> instead.</p>
+<p>The order that you define patterns matters.</p>
+<ul>
+<li>A matching negative pattern (prefixed with <code>!</code>) after a positive match will exclude the Git ref.</li>
+<li>A matching positive pattern after a negative match will include the Git ref again.</li>
+</ul>
+<p>The following workflow will run on pushes to <code>releases/10</code> or <code>releases/beta/mona</code>, but not on <code>releases/10-alpha</code> or <code>releases/beta/3-alpha</code> because the negative pattern <code>!releases/**-alpha</code> follows the positive pattern. <!-- markdownlint-disable-line outdated-release-phase-terminology --></p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">releases/**</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">!releases/**-alpha</span><span style="color:#c0c5ce;">'
+</span></code></pre>
+<h3 title="Using filters to target specific paths for pull request or push events">
+<a href="#using-filters-to-target-specific-paths-for-pull-request-or-push-events" aria-hidden="true" class="anchor" id="using-filters-to-target-specific-paths-for-pull-request-or-push-events"></a>Using filters to target specific paths for pull request or push events</h3>
+<p>When using the <code>push</code> and <code>pull_request</code> events, you can configure a workflow to run based on what file paths are changed. Path filters are not evaluated for pushes of tags.</p>
+<p>Use the <code>paths</code> filter when you want to include file path patterns or when you want to both include and exclude file path patterns. Use the <code>paths-ignore</code> filter when you only want to exclude file path patterns. You cannot use both the <code>paths</code> and <code>paths-ignore</code> filters for the same event in a workflow. If you want to both include and exclude path patterns for a single event, use the <code>paths</code> filter prefixed with the <code>!</code> character to indicate which paths should be excluded.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The order that you define <code>paths</code> patterns matters:</p>
+<ul>
+<li>A matching negative pattern (prefixed with <code>!</code>) after a positive match will exclude the path.</li>
+<li>A matching positive pattern after a negative match will include the path again.</li>
+</ul>
+</div>
+<p>If you define both <code>branches</code>/<code>branches-ignore</code> and <code>paths</code>/<code>paths-ignore</code>, the workflow will only run when both filters are satisfied.</p>
+<p>The <code>paths</code> and <code>paths-ignore</code> keywords accept glob patterns that use the <code>*</code> and <code>**</code> wildcard characters to match more than one path name. For more information, see the <a href="../../../reference/workflows-and-actions/workflow-syntax.html#filter-pattern-cheat-sheet">Workflow syntax for GitHub Actions</a>.</p>
+<h4>
+<a href="#example-including-paths" aria-hidden="true" class="anchor" id="example-including-paths"></a>Example: Including paths</h4>
+<p>If at least one path matches a pattern in the <code>paths</code> filter, the workflow runs. For example, the following workflow would run anytime you push a JavaScript file (<code>.js</code>).</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">paths</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">**.js</span><span style="color:#c0c5ce;">'
+</span></code></pre>
+<p>If a workflow is skipped due to path filtering, <a href="../../../reference/workflows-and-actions/workflow-syntax.html#onpull_requestpull_request_targetbranchesbranches-ignore">branch filtering</a>, or a <a href="../../manage-workflow-runs/skip-workflow-runs.html">commit message</a>, then checks associated with that workflow will remain in a "Pending" state. A pull request that requires those checks to be successful will be blocked from merging.</p>
+<h4>
+<a href="#example-excluding-paths" aria-hidden="true" class="anchor" id="example-excluding-paths"></a>Example: Excluding paths</h4>
+<p>When all the path names match patterns in <code>paths-ignore</code>, the workflow will not run. If any path names do not match patterns in <code>paths-ignore</code>, even if some path names match the patterns, the workflow will run.</p>
+<p>A workflow with the following path filter will only run on <code>push</code> events that include at least one file outside the <code>docs</code> directory at the root of the repository.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">paths-ignore</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">docs/**</span><span style="color:#c0c5ce;">'
+</span></code></pre>
+<h4>
+<a href="#example-including-and-excluding-paths" aria-hidden="true" class="anchor" id="example-including-and-excluding-paths"></a>Example: Including and excluding paths</h4>
+<p>You cannot use <code>paths</code> and <code>paths-ignore</code> to filter the same event in a single workflow. If you want to both include and exclude path patterns for a single event, use the <code>paths</code> filter prefixed with the <code>!</code> character to indicate which paths should be excluded.</p>
+<p>If you define a path with the <code>!</code> character, you must also define at least one path without the <code>!</code> character. If you only want to exclude paths, use <code>paths-ignore</code> instead.</p>
+<p>The order that you define <code>paths</code> patterns matters:</p>
+<ul>
+<li>A matching negative pattern (prefixed with <code>!</code>) after a positive match will exclude the path.</li>
+<li>A matching positive pattern after a negative match will include the path again.</li>
+</ul>
+<p>This example runs anytime the <code>push</code> event includes a file in the <code>sub-project</code> directory or its subdirectories, unless the file is in the <code>sub-project/docs</code> directory. For example, a push that changed <code>sub-project/index.js</code> or <code>sub-project/src/index.js</code> will trigger a workflow run, but a push changing only <code>sub-project/docs/readme.md</code> will not.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">paths</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">sub-project/**</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">!sub-project/docs/**</span><span style="color:#c0c5ce;">'
+</span></code></pre>
+<h4>
+<a href="#git-diff-comparisons" aria-hidden="true" class="anchor" id="git-diff-comparisons"></a>Git diff comparisons</h4>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>If you push more than 1,000 commits, or if GitHub does not generate the diff due to a timeout, the workflow will always run.</p>
+</div>
+<p>The filter determines if a workflow should run by evaluating the changed files and running them against the <code>paths-ignore</code> or <code>paths</code> list. If there are no files changed, the workflow will not run.</p>
+<p>GitHub generates the list of changed files using two-dot diffs for pushes and three-dot diffs for pull requests:</p>
+<ul>
+<li>
+<strong>Pull requests:</strong> Three-dot diffs are a comparison between the most recent version of the topic branch and the commit where the topic branch was last synced with the base branch.</li>
+<li>
+<strong>Pushes to existing branches:</strong> A two-dot diff compares the head and base SHAs directly with each other.</li>
+<li>
+<strong>Pushes to new branches:</strong> A two-dot diff against the parent of the ancestor of the deepest commit pushed.</li>
+</ul>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Diffs are limited to 300 files. If there are files changed that aren't matched in the first 300 files returned by the filter, the workflow will not run. You may need to create more specific filters so that the workflow will run automatically.</p>
+</div>
+<p>For more information, see <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-comparing-branches-in-pull-requests" class="external">About comparing branches in pull requests</a>.</p>
+<h3 title="Using filters to target specific branches for workflow run events">
+<a href="#using-filters-to-target-specific-branches-for-workflow-run-events" aria-hidden="true" class="anchor" id="using-filters-to-target-specific-branches-for-workflow-run-events"></a>Using filters to target specific branches for workflow run events</h3>
+<p>When using the <code>workflow_run</code> event, you can specify what branches the triggering workflow must run on in order to trigger your workflow.</p>
+<p>The <code>branches</code> and <code>branches-ignore</code> filters accept glob patterns that use characters like <code>*</code>, <code>**</code>, <code>+</code>, <code>?</code>, <code>!</code> and others to match more than one branch name. If a name contains any of these characters and you want a literal match, you need to <em>escape</em> each of these special characters with <code>\</code>. For more information about glob patterns, see the <a href="../../../reference/workflows-and-actions/workflow-syntax.html#filter-pattern-cheat-sheet">Workflow syntax for GitHub Actions</a>.</p>
+<p>For example, a workflow with the following trigger will only run when the workflow named <code>Build</code> runs on a branch whose name starts with <code>releases/</code>:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">workflow_run</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">workflows</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">Build</span><span style="color:#c0c5ce;">"]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">requested</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">releases/**</span><span style="color:#c0c5ce;">'
+</span></code></pre>
+<p>A workflow with the following trigger will only run when the workflow named <code>Build</code> runs on a branch that is not named <code>canary</code>:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">workflow_run</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">workflows</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">Build</span><span style="color:#c0c5ce;">"]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">requested</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches-ignore</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - "</span><span style="color:#a3be8c;">canary</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<p>You cannot use both the <code>branches</code> and <code>branches-ignore</code> filters for the same event in a workflow. If you want to both include and exclude branch patterns for a single event, use the <code>branches</code> filter along with the <code>!</code> character to indicate which branches should be excluded.</p>
+<p>The order that you define patterns matters.</p>
+<ul>
+<li>A matching negative pattern (prefixed with <code>!</code>) after a positive match will exclude the branch.</li>
+<li>A matching positive pattern after a negative match will include the branch again.</li>
+</ul>
+<p>For example, a workflow with the following trigger will run when the workflow named <code>Build</code> runs on a branch that is named <code>releases/10</code> or <code>releases/beta/mona</code> but will not <code>releases/10-alpha</code>, <code>releases/beta/3-alpha</code>, or <code>main</code>. <!-- markdownlint-disable-line outdated-release-phase-terminology --></p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">workflow_run</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">workflows</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">Build</span><span style="color:#c0c5ce;">"]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">requested</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">releases/**</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">!releases/**-alpha</span><span style="color:#c0c5ce;">'
+</span></code></pre>
+<h2 title="Defining inputs for manually triggered workflows">
+<a href="#defining-inputs-for-manually-triggered-workflows" aria-hidden="true" class="anchor" id="defining-inputs-for-manually-triggered-workflows"></a>Defining inputs for manually triggered workflows</h2>
+<p>When using the <code>workflow_dispatch</code> event, you can optionally specify inputs that are passed to the workflow.</p>
+<p>This trigger only receives events when the workflow file is on the default branch.<br>
+The triggered workflow receives the inputs in the <code>inputs</code> context. For more information, see <a href="../../../reference/workflows-and-actions/contexts.html#inputs-context">Contexts</a>.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<ul>
+<li>The workflow will also receive the inputs in the <code>github.event.inputs</code> context. The information in the <code>inputs</code> context and <code>github.event.inputs</code> context is identical except that the <code>inputs</code> context preserves Boolean values as Booleans instead of converting them to strings. The <code>choice</code> type resolves to a string and is a single selectable option.</li>
+<li>The maximum number of top-level properties for <code>inputs</code> is 25 .</li>
+<li>The maximum payload for <code>inputs</code> is 65,535 characters.</li>
+</ul>
+</div>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">workflow_dispatch</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">inputs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">logLevel</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">description</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">Log level</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">required</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">default</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">warning</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">choice
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">options</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          - </span><span style="color:#a3be8c;">info
+</span><span style="color:#c0c5ce;">          - </span><span style="color:#a3be8c;">warning
+</span><span style="color:#c0c5ce;">          - </span><span style="color:#a3be8c;">debug
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">print_tags</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">description</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">True to print to STDOUT</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">required</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">boolean
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">tags</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">description</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">Test scenario tags</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">required</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">string
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">environment</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">description</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">Environment to run tests against</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">environment
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">required</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">print-tag</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ inputs.print_tags }} 
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Print the input tag to STDOUT
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo  The tags are ${{ inputs.tags }} 
+</span></code></pre>
+<h2 title="Defining inputs, outputs, and secrets for reusable workflows">
+<a href="#defining-inputs-outputs-and-secrets-for-reusable-workflows" aria-hidden="true" class="anchor" id="defining-inputs-outputs-and-secrets-for-reusable-workflows"></a>Defining inputs, outputs, and secrets for reusable workflows</h2>
+<p>You can define inputs and secrets that a reusable workflow should receive from a calling workflow. You can also specify outputs that a reusable workflow will make available to a calling workflow. For more information, see <a href="../../reuse-automations/reuse-workflows.html">Reuse workflows</a>.</p>
+<h2 title="Using event information">
+<a href="#using-event-information" aria-hidden="true" class="anchor" id="using-event-information"></a>Using event information</h2>
+<p>Information about the event that triggered a workflow run is available in the <code>github.event</code> context. The properties in the <code>github.event</code> context depend on the type of event that triggered the workflow. For example, a workflow triggered when an issue is labeled would have information about the issue and label.</p>
+<h3 title="Using event information / Viewing all properties of an event">
+<a href="#viewing-all-properties-of-an-event" aria-hidden="true" class="anchor" id="viewing-all-properties-of-an-event"></a>Viewing all properties of an event</h3>
+<p>Reference the webhook event documentation for common properties and example payloads. For more information, see <a href="https://docs.github.com/en/webhooks-and-events/webhooks/webhook-events-and-payloads" class="external">Webhook events and payloads</a>.</p>
+<p>You can also print the entire <code>github.event</code> context to see what properties are available for the event that triggered your workflow:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">print_context</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">EVENT_CONTEXT</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ toJSON(github.event) }}
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          echo $EVENT_CONTEXT
+</span></code></pre>
+<h3 title="Using event information / Accessing and using event properties">
+<a href="#accessing-and-using-event-properties" aria-hidden="true" class="anchor" id="accessing-and-using-event-properties"></a>Accessing and using event properties</h3>
+<p>You can use the <code>github.event</code> context in your workflow. For example, the following workflow runs when a pull request that changes <code>package*.json</code>, <code>.github/CODEOWNERS</code>, or <code>.github/workflows/**</code> is opened. If the pull request author (<code>github.event.pull_request.user.login</code>) is not <code>octobot</code> or <code>dependabot[bot]</code>, then the workflow uses the GitHub CLI to label and comment on the pull request (<code>github.event.pull_request.number</code>).</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">pull_request</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">opened
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">paths</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">.github/workflows/**</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">.github/CODEOWNERS</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">package*.json</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">triage</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">&gt;-
+</span><span style="color:#a3be8c;">      github.event.pull_request.user.login != 'octobot' &amp;&amp;
+</span><span style="color:#a3be8c;">      github.event.pull_request.user.login != 'dependabot[bot]'
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">Comment about changes we can't accept</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">GH_TOKEN</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.GITHUB_TOKEN }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">PR</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ github.event.pull_request.html_url }}
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          gh pr edit $PR --add-label 'invalid'
+</span><span style="color:#a3be8c;">          gh pr comment $PR --body 'It looks like you edited `package*.json`, `.github/CODEOWNERS`, or `.github/workflows/**`. We do not allow contributions to these files. Please review our [contributing guidelines](https://github.com/octo-org/octo-repo/blob/main/CONTRIBUTING.md) for what contributions are accepted.'
+</span></code></pre>
+<p>For more information about contexts, see <a href="../../../reference/workflows-and-actions/contexts.html">Contexts reference</a>. For more information about event payloads, see <a href="https://docs.github.com/en/webhooks-and-events/webhooks/webhook-events-and-payloads" class="external">Webhook events and payloads</a>.</p>
+<h2 title="Further controlling how your workflow will run">
+<a href="#further-controlling-how-your-workflow-will-run" aria-hidden="true" class="anchor" id="further-controlling-how-your-workflow-will-run"></a>Further controlling how your workflow will run</h2>
+<p>If you want more granular control than events, event activity types, or event filters provide, you can use conditionals and environments to control whether individual jobs or steps in your workflow will run.</p>
+<h3 title="Further controlling how your workflow will run / Using conditionals">
+<a href="#using-conditionals" aria-hidden="true" class="anchor" id="using-conditionals"></a>Using conditionals</h3>
+<p>You can use conditionals to further control whether jobs or steps in your workflow will run.</p>
+<h4>
+<a href="#example-using-a-value-in-the-event-payload" aria-hidden="true" class="anchor" id="example-using-a-value-in-the-event-payload"></a>Example using a value in the event payload</h4>
+<p>For example, if you want the workflow to run when a specific label is added to an issue, you can trigger on the <code>issues labeled</code> event activity type and use a conditional to check what label triggered the workflow. The following workflow will run when any label is added to an issue in the workflow's repository, but the <code>run_if_label_matches</code> job will only execute if the label is named <code>bug</code>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">issues</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">labeled
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">run_if_label_matches</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github.event.label.name == 'bug'
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo 'The label was bug'
+</span></code></pre>
+<h4>
+<a href="#example-using-event-type" aria-hidden="true" class="anchor" id="example-using-event-type"></a>Example using event type</h4>
+<p>For example, if you want to run different jobs or steps depending on what event triggered the workflow, you can use a conditional to check whether a specific event type exists in the event context. The following workflow will run whenever an issue or pull request is closed. If the workflow ran because an issue was closed, the <code>github.event</code> context will contain a value for <code>issue</code> but not for <code>pull_request</code>. Therefore, the <code>if_issue</code> step will run but the <code>if_pr</code> step will not run. Conversely, if the workflow ran because a pull request was closed, the <code>if_pr</code> step will run but the <code>if_issue</code> step will not run.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">issues</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">closed
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">pull_request</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">closed
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">state_event_type</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">if_issue
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github.event.issue
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">        echo An issue was closed
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">if_pr
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github.event.pull_request
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">        echo A pull request was closed
+</span></code></pre>
+<p>For more information about what information is available in the event context, see <a href="#using-event-information">Using event information</a>. For more information about how to use conditionals, see <a href="../../../reference/workflows-and-actions/expressions.html">Evaluate expressions in workflows and actions</a>.</p>
+<h3 title="Further controlling how your workflow will run / Using environments to manually trigger workflow jobs">
+<a href="#using-environments-to-manually-trigger-workflow-jobs" aria-hidden="true" class="anchor" id="using-environments-to-manually-trigger-workflow-jobs"></a>Using environments to manually trigger workflow jobs</h3>
+<p>If you want to manually trigger a specific job in a workflow, you can use an environment that requires approval from a specific team or user. First, configure an environment with required reviewers. For more information, see <a href="../../deploy/configure-and-manage-deployments/manage-environments.html">Managing environments for deployment</a>. Then, reference the environment name in a job in your workflow using the <code>environment:</code> key. Any job referencing the environment will not run until at least one reviewer approves the job.</p>
+<p>For example, the following workflow will run whenever there is a push to main. The <code>build</code> job will always run. The <code>publish</code> job will only run after the <code>build</code> job successfully completes (due to <code>needs: [build]</code>) and after all of the rules (including required reviewers) for the environment called <code>production</code> pass (due to <code>environment: production</code>).</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">main
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">build
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          echo 'building'
+</span><span style="color:#a3be8c;">
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">publish</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">needs</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">build</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">environment</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">production
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">publish
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          echo 'publishing'
+</span></code></pre>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Environments, environment secrets, and deployment protection rules are available in public repositories for all current GitHub plans. They are not available on legacy plans, such as Bronze, Silver, or Gold. For access to environments, environment secrets, and deployment branches in private or internal repositories, you must use GitHub Pro, GitHub Team, or GitHub Enterprise. If you are on a GitHub Free, GitHub Pro, or GitHub Team plan, other deployment protection rules, such as a wait timer or required reviewers, are only available for public repositories.</p>
+</div>
+<h2 title="Available events">
+<a href="#available-events" aria-hidden="true" class="anchor" id="available-events"></a>Available events</h2>
+<p>For a full list of available events, see <a href="../../../reference/workflows-and-actions/events-that-trigger-workflows.html">Events that trigger workflows</a>.</p>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

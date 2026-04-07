@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Building and testing Swift</title>
+    <link rel="stylesheet" href="../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Build and test code</a> / </nav><h1>
+<a href="#building-and-testing-swift" aria-hidden="true" class="anchor" id="building-and-testing-swift"></a>Building and testing Swift</h1>
+<p>Learn how to create a continuous integration (CI) workflow to build and test your Swift project.</p>
+<h2 title="Introduction">
+<a href="#introduction" aria-hidden="true" class="anchor" id="introduction"></a>Introduction</h2>
+<p>This guide shows you how to build and test a Swift package.</p>
+<p>GitHub-hosted runners have a tools cache with preinstalled software, and the Ubuntu and macOS runners include the dependencies for building Swift packages. For a full list of up-to-date software and the preinstalled versions of Swift and Xcode, see <a href="../../concepts/runners/github-hosted-runners.html#supported-software">GitHub-hosted runners</a>.</p>
+<h2 title="Prerequisites">
+<a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<p>You should already be familiar with YAML syntax and how it's used with GitHub Actions. For more information, see <a href="../../reference/workflows-and-actions/workflow-syntax.html">Workflow syntax for GitHub Actions</a>.</p>
+<p>We recommend that you have a basic understanding of Swift packages. For more information, see <a href="https://developer.apple.com/documentation/xcode/swift-packages" class="external">Swift Packages</a> in the Apple developer documentation.</p>
+<h2 title="Using a Swift workflow template">
+<a href="#using-a-swift-workflow-template" aria-hidden="true" class="anchor" id="using-a-swift-workflow-template"></a>Using a Swift workflow template</h2>
+<p>To get started quickly, add a workflow template to the <code>.github/workflows</code> directory of your repository.</p>
+<p>GitHub provides a workflow template for Swift that should work for most Swift projects. The subsequent sections of this guide give examples of how you can customize this workflow template.</p>
+<ol>
+<li>
+<p>On GitHub, navigate to the main page of the repository.</p>
+</li>
+<li>
+<p>Under your repository name, click <strong><svg version="1.1" width="16" height="16" viewbox="0 0 16 16" class="octicon octicon-play" aria-label="play" role="img"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm4.879-2.773 4.264 2.559a.25.25 0 0 1 0 .428l-4.264 2.559A.25.25 0 0 1 6 10.559V5.442a.25.25 0 0 1 .379-.215Z"></path></svg> Actions</strong>.</p>
+<p><img src="../../../..//assets/images/help/repository/actions-tab-global-nav-update.png" alt='Screenshot of the tabs for the "github/docs" repository. The "Actions" tab is highlighted with an orange outline.'></p>
+</li>
+<li>
+<p>If you already have a workflow in your repository, click <strong>New workflow</strong>.</p>
+</li>
+<li>
+<p>The "Choose a workflow" page shows a selection of recommended workflow templates. Search for "swift".</p>
+</li>
+<li>
+<p>Filter the selection of workflows by clicking <strong>Continuous integration</strong>.</p>
+</li>
+<li>
+<p>On the "Swift" workflow, click <strong>Configure</strong>.</p>
+</li>
+<li>
+<p>Edit the workflow as required. For example, change the branch on which the workflow will run.</p>
+</li>
+<li>
+<p>Click <strong>Commit changes</strong>.</p>
+<p>The <code>swift.yml</code> workflow file is added to the <code>.github/workflows</code> directory of your repository.</p>
+</li>
+</ol>
+<h2 title="Specifying a Swift version">
+<a href="#specifying-a-swift-version" aria-hidden="true" class="anchor" id="specifying-a-swift-version"></a>Specifying a Swift version</h2>
+<p>To use a specific preinstalled version of Swift on a GitHub-hosted runner, use the <code>swift-actions/setup-swift</code> action. This action finds a specific version of Swift from the tools cache on the runner and adds the necessary binaries to <code>PATH</code>. These changes will persist for the remainder of a job. For more information, see the <a href="https://github.com/marketplace/actions/setup-swift" class="external"><code>swift-actions/setup-swift</code></a> action.</p>
+<p>If you are using a self-hosted runner, you must install your desired Swift versions and add them to <code>PATH</code>.</p>
+<p>The examples below demonstrate using the <code>swift-actions/setup-swift</code> action.</p>
+<h3 title="Specifying a Swift version / Using multiple Swift versions">
+<a href="#using-multiple-swift-versions" aria-hidden="true" class="anchor" id="using-multiple-swift-versions"></a>Using multiple Swift versions</h3>
+<p>You can configure your job to use multiple versions of Swift in a matrix.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># This workflow uses actions that are not certified by GitHub.
+</span><span style="color:#65737e;"># They are provided by a third-party and are governed by
+</span><span style="color:#65737e;"># separate terms of service, privacy policy, and support
+</span><span style="color:#65737e;"># documentation.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># GitHub recommends pinning actions to a commit SHA.
+</span><span style="color:#65737e;"># To get a newer version, you will need to update the SHA.
+</span><span style="color:#65737e;"># You can also reference a tag or branch, but the action may change without warning.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Swift
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">push</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Swift ${{ matrix.swift }} on ${{ matrix.os }}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">strategy</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">matrix</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">os</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">ubuntu-latest</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">macos-latest</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">swift</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">5.2</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">5.3</span><span style="color:#c0c5ce;">"]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ matrix.os }}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">swift-actions/setup-swift@65540b95f51493d65f5e59e97dcef9629ddf11bf
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">swift-version</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ matrix.swift }}
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Build
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">swift build
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Run tests
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">swift test
+</span></code></pre>
+<h3 title="Specifying a Swift version / Using a single specific Swift version">
+<a href="#using-a-single-specific-swift-version" aria-hidden="true" class="anchor" id="using-a-single-specific-swift-version"></a>Using a single specific Swift version</h3>
+<p>You can configure your job to use a single specific version of Swift, such as <code>5.3.3</code>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># This workflow uses actions that are not certified by GitHub.
+</span><span style="color:#65737e;"># They are provided by a third-party and are governed by
+</span><span style="color:#65737e;"># separate terms of service, privacy policy, and support
+</span><span style="color:#65737e;"># documentation.
+</span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">swift-actions/setup-swift@65540b95f51493d65f5e59e97dcef9629ddf11bf
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">swift-version</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">5.3.3</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Get swift version
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">swift --version </span><span style="color:#65737e;"># Swift 5.3.3
+</span></code></pre>
+<h2 title="Building and testing your code">
+<a href="#building-and-testing-your-code" aria-hidden="true" class="anchor" id="building-and-testing-your-code"></a>Building and testing your code</h2>
+<p>You can use the same commands that you use locally to build and test your code using Swift. This example demonstrates how to use <code>swift build</code> and <code>swift test</code> in a job:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># This workflow uses actions that are not certified by GitHub.
+</span><span style="color:#65737e;"># They are provided by a third-party and are governed by
+</span><span style="color:#65737e;"># separate terms of service, privacy policy, and support
+</span><span style="color:#65737e;"># documentation.
+</span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">swift-actions/setup-swift@65540b95f51493d65f5e59e97dcef9629ddf11bf
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">swift-version</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">5.3.3</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Build
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">swift build
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Run tests
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">swift test
+</span></code></pre>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

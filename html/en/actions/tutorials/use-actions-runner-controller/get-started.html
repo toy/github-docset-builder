@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Get started with Actions Runner Controller</title>
+    <link rel="stylesheet" href="../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Actions Runner Controller</a> / </nav><h1>
+<a href="#get-started-with-actions-runner-controller" aria-hidden="true" class="anchor" id="get-started-with-actions-runner-controller"></a>Get started with Actions Runner Controller</h1>
+<p>In this tutorial, you'll try out the basics of Actions Runner Controller.</p>
+<h2 title="Prerequisites">
+<a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<p>In order to use ARC, ensure you have the following.</p>
+<ul>
+<li>
+<p>A Kubernetes cluster</p>
+<ul>
+<li>For a managed cloud environment, you can use AKS. For more information, see <a href="https://azure.microsoft.com/en-us/products/kubernetes-service" class="external">Azure Kubernetes Service</a> in the Azure documentation.</li>
+<li>For a local setup, you can use minikube or kind. For more information, see <a href="https://minikube.sigs.k8s.io/docs/start/" class="external">minikube start</a> in the minikube documentation and <a href="https://kind.sigs.k8s.io/" class="external">kind</a> in the kind documentation.</li>
+</ul>
+</li>
+<li>
+<p>Helm 3</p>
+<ul>
+<li>For more information, see <a href="https://helm.sh/docs/intro/install/" class="external">Installing Helm</a> in the Helm documentation.</li>
+</ul>
+</li>
+<li>
+<p>While it is not required for ARC to be deployed, we recommend ensuring you have implemented a way to collect and retain logs from the controller, listeners, and ephemeral runners before deploying ARC in production workflows.</p>
+</li>
+</ul>
+<h2 title="Installing Actions Runner Controller">
+<a href="#installing-actions-runner-controller" aria-hidden="true" class="anchor" id="installing-actions-runner-controller"></a>Installing Actions Runner Controller</h2>
+<ol>
+<li>
+<p>To install the operator and the custom resource definitions (CRDs) in your cluster, do the following.</p>
+<ol>
+<li>In your Helm chart, update the <code>NAMESPACE</code> value to the location you want your operator pods to be created. This namespace must allow access to the Kubernetes API server.</li>
+<li>Install the Helm chart.</li>
+</ol>
+<p>The following example installs the latest version of the chart. To install a specific version, you can pass the <code>--version</code> argument along with the version of the chart you wish to install. You can find the list of releases in the <a href="https://github.com/actions/actions-runner-controller/pkgs/container/actions-runner-controller-charts%2Fgha-runner-scale-set-controller" class="external">GitHub Container Registry</a>.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#bf616a;">NAMESPACE</span><span style="color:#c0c5ce;">="</span><span style="color:#a3be8c;">arc-systems</span><span style="color:#c0c5ce;">"
+</span><span style="color:#8fa1b3;">helm</span><span style="color:#c0c5ce;"> install arc \
+</span><span style="color:#bf616a;">    --namespace </span><span style="color:#c0c5ce;">"$</span><span style="color:#a3be8c;">{</span><span style="color:#bf616a;">NAMESPACE</span><span style="color:#a3be8c;">}</span><span style="color:#c0c5ce;">" \
+</span><span style="color:#bf616a;">    --create-namespace </span><span style="color:#c0c5ce;">\
+</span><span style="color:#c0c5ce;">    oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
+</span></code></pre>
+<p>For additional Helm configuration options, see <a href="https://github.com/actions/actions-runner-controller/blob/master/charts/gha-runner-scale-set-controller/values.yaml" class="external"><code>values.yaml</code></a> in the ARC documentation.</p>
+</li>
+<li>
+<p>To enable ARC to authenticate to GitHub, generate a personal access token (classic). For more information, see <a href="../../how-tos/manage-runners/use-actions-runner-controller/authenticate-to-the-api.html#deploying-using-personal-access-token-classic-authentication">Authenticating ARC to the GitHub API</a>.</p>
+</li>
+</ol>
+<h2 title="Configuring a runner scale set">
+<a href="#configuring-a-runner-scale-set" aria-hidden="true" class="anchor" id="configuring-a-runner-scale-set"></a>Configuring a runner scale set</h2>
+<ol>
+<li>
+<p>To configure your runner scale set, run the following command in your terminal, using values from your ARC configuration.</p>
+<p>When you run the command, keep the following in mind.</p>
+<ul>
+<li>
+<p>Update the <code>INSTALLATION_NAME</code> value carefully. You will use the installation name as the value of <code>runs-on</code> in your workflows. For more information, see <a href="../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idruns-on">Workflow syntax for GitHub Actions</a>.</p>
+</li>
+<li>
+<p>Update the <code>NAMESPACE</code> value to the location you want the runner pods to be created.</p>
+</li>
+<li>
+<p>Set <code>GITHUB_CONFIG_URL</code> to the URL of your repository, organization, or enterprise. This is the entity that the runners will belong to.</p>
+</li>
+<li>
+<p>Set <code>GITHUB_PAT</code> to a GitHub personal access token with the <code>repo</code> and <code>admin:org</code> scopes for repository and organization runners.</p>
+</li>
+<li>
+<p>This example command installs the latest version of the Helm chart. To install a specific version, you can pass the <code>--version</code> argument with the version of the chart you wish to install. You can find the list of releases in the <a href="https://github.com/actions/actions-runner-controller/pkgs/container/actions-runner-controller-charts%2Fgha-runner-scale-set" class="external">GitHub Container Registry</a>.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<ul>
+<li>As a security best practice, create your runner pods in a different namespace than the namespace containing your operator pods.</li>
+<li>As a security best practice, create Kubernetes secrets and pass the secret references. Passing your secrets in plain text via the CLI can pose a security risk. For more information, see <a href="../../how-tos/manage-runners/use-actions-runner-controller/deploy-runner-scale-sets.html">Deploying runner scale sets with Actions Runner Controller</a>.</li>
+</ul>
+</div>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#bf616a;">INSTALLATION_NAME</span><span style="color:#c0c5ce;">="</span><span style="color:#a3be8c;">arc-runner-set</span><span style="color:#c0c5ce;">"
+</span><span style="color:#bf616a;">NAMESPACE</span><span style="color:#c0c5ce;">="</span><span style="color:#a3be8c;">arc-runners</span><span style="color:#c0c5ce;">"
+</span><span style="color:#bf616a;">GITHUB_CONFIG_URL</span><span style="color:#c0c5ce;">="</span><span style="color:#a3be8c;">https://github.com/&lt;your_enterprise/org/repo&gt;</span><span style="color:#c0c5ce;">"
+</span><span style="color:#bf616a;">GITHUB_PAT</span><span style="color:#c0c5ce;">="</span><span style="color:#a3be8c;">&lt;PAT&gt;</span><span style="color:#c0c5ce;">"
+</span><span style="color:#8fa1b3;">helm</span><span style="color:#c0c5ce;"> install "$</span><span style="color:#a3be8c;">{</span><span style="color:#bf616a;">INSTALLATION_NAME</span><span style="color:#a3be8c;">}</span><span style="color:#c0c5ce;">" \
+</span><span style="color:#bf616a;">    --namespace </span><span style="color:#c0c5ce;">"$</span><span style="color:#a3be8c;">{</span><span style="color:#bf616a;">NAMESPACE</span><span style="color:#a3be8c;">}</span><span style="color:#c0c5ce;">" \
+</span><span style="color:#bf616a;">    --create-namespace </span><span style="color:#c0c5ce;">\
+</span><span style="color:#bf616a;">    --set</span><span style="color:#c0c5ce;"> githubConfigUrl="$</span><span style="color:#a3be8c;">{</span><span style="color:#bf616a;">GITHUB_CONFIG_URL</span><span style="color:#a3be8c;">}</span><span style="color:#c0c5ce;">" \
+</span><span style="color:#bf616a;">    --set</span><span style="color:#c0c5ce;"> githubConfigSecret.github_token="$</span><span style="color:#a3be8c;">{</span><span style="color:#bf616a;">GITHUB_PAT</span><span style="color:#a3be8c;">}</span><span style="color:#c0c5ce;">" \
+</span><span style="color:#c0c5ce;">    oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
+</span></code></pre>
+<p>For additional Helm configuration options, see <a href="https://github.com/actions/actions-runner-controller/blob/master/charts/gha-runner-scale-set/values.yaml" class="external"><code>values.yaml</code></a> in the ARC documentation.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>From your terminal, run the following command to check your installation.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">helm</span><span style="color:#c0c5ce;"> list</span><span style="color:#bf616a;"> -A
+</span></code></pre>
+<p>You should see an output similar to the following.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">NAME</span><span style="color:#c0c5ce;">            NAMESPACE       REVISION        UPDATED                                 STATUS          CHART                                       APP VERSION
+</span><span style="color:#8fa1b3;">arc</span><span style="color:#c0c5ce;">             arc-systems     1               2023-04-12 11:45:59.152090536 +0000 UTC deployed        gha-runner-scale-set-controller-0.4.0       0.4.0
+</span><span style="color:#8fa1b3;">arc-runner-set</span><span style="color:#c0c5ce;">  arc-runners     1               2023-04-12 11:46:13.451041354 +0000 UTC deployed        gha-runner-scale-set-0.4.0                  0.4.0
+</span></code></pre>
+</li>
+<li>
+<p>To check the manager pod, run the following command in your terminal.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">kubectl</span><span style="color:#c0c5ce;"> get pods</span><span style="color:#bf616a;"> -n</span><span style="color:#c0c5ce;"> arc-systems
+</span></code></pre>
+<p>If everything was installed successfully, the status of the pods shows as <strong>Running</strong>.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">NAME</span><span style="color:#c0c5ce;">                                                   READY   STATUS    RESTARTS   AGE
+</span><span style="color:#8fa1b3;">arc-gha-runner-scale-set-controller-594cdc976f-m7cjs</span><span style="color:#c0c5ce;">   1/1     Running   0          64s
+</span><span style="color:#8fa1b3;">arc-runner-set-754b578d-listener</span><span style="color:#c0c5ce;">                       1/1     Running   0          12s
+</span></code></pre>
+</li>
+</ol>
+<p>If your installation was not successful, see <a href="troubleshoot.html">Troubleshooting Actions Runner Controller errors</a> for troubleshooting information.</p>
+<h2 title="Using runner scale sets">
+<a href="#using-runner-scale-sets" aria-hidden="true" class="anchor" id="using-runner-scale-sets"></a>Using runner scale sets</h2>
+<p>Now you will create and run a simple test workflow that uses the runner scale set runners.</p>
+<ol>
+<li>
+<p>In a repository, create a workflow similar to the following example. The <code>runs-on</code> value should match the Helm installation name you used when you installed the autoscaling runner set.</p>
+<p>For more information on adding workflows to a repository, see <a href="../../get-started/quickstart.html#creating-your-first-workflow">Quickstart for GitHub Actions</a>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Actions Runner Controller Demo
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">workflow_dispatch</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">Explore-GitHub-Actions</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># You need to use the INSTALLATION_NAME from the previous step
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">arc-runner-set
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "🎉 This job uses runner scale set runners!"
+</span></code></pre>
+</li>
+<li>
+<p>Once you've added the workflow to your repository, manually trigger the workflow. For more information, see <a href="../../how-tos/manage-workflow-runs/manually-run-a-workflow.html">Manually running a workflow</a>.</p>
+</li>
+<li>
+<p>To view the runner pods being created while the workflow is running, run the following command from your terminal.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">kubectl</span><span style="color:#c0c5ce;"> get pods</span><span style="color:#bf616a;"> -n</span><span style="color:#c0c5ce;"> arc-runners</span><span style="color:#bf616a;"> -w
+</span></code></pre>
+<p>A successful output will look similar to the following.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">NAMESPACE</span><span style="color:#c0c5ce;">     NAME                                                  READY   STATUS    RESTARTS      AGE
+</span><span style="color:#8fa1b3;">arc-runners</span><span style="color:#c0c5ce;">   arc-runner-set-rmrgw-runner-p9p5n                     1/1     Running   0             21s
+</span></code></pre>
+</li>
+</ol>
+<h2 title="Next steps">
+<a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>Actions Runner Controller can help you efficiently manage your GitHub Actions runners. Ready to get started? Here are some helpful resources for taking your next steps with ARC:</p>
+<ul>
+<li>For detailed authentication information, see <a href="../../how-tos/manage-runners/use-actions-runner-controller/authenticate-to-the-api.html">Authenticating ARC to the GitHub API</a>.</li>
+<li>For help using ARC runners in your workflows, see <a href="../../how-tos/manage-runners/use-actions-runner-controller/use-arc-in-a-workflow.html">Using Actions Runner Controller runners in a workflow</a>.</li>
+<li>For deployment information, see <a href="../../how-tos/manage-runners/use-actions-runner-controller/deploy-runner-scale-sets.html">Deploying runner scale sets with Actions Runner Controller</a>.</li>
+</ul>
+<h2 title="Legal notice">
+<a href="#legal-notice" aria-hidden="true" class="anchor" id="legal-notice"></a>Legal notice</h2>
+<p>Portions have been adapted from <a href="https://github.com/actions/actions-runner-controller/" class="external">https://github.com/actions/actions-runner-controller/</a> under the Apache-2.0 license:</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Copyright 2019 Moto Ishizawa
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">Licensed under the Apache License, Version 2.0 (the "License");
+</span><span style="color:#c0c5ce;">you may not use this file except in compliance with the License.
+</span><span style="color:#c0c5ce;">You may obtain a copy of the License at
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    http://www.apache.org/licenses/LICENSE-2.0
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">Unless required by applicable law or agreed to in writing, software
+</span><span style="color:#c0c5ce;">distributed under the License is distributed on an "AS IS" BASIS,
+</span><span style="color:#c0c5ce;">WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+</span><span style="color:#c0c5ce;">See the License for the specific language governing permissions and
+</span><span style="color:#c0c5ce;">limitations under the License.
+</span></code></pre>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

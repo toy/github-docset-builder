@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Script injections</title>
+    <link rel="stylesheet" href="../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Security</a> / </nav><h1>
+<a href="#script-injections" aria-hidden="true" class="anchor" id="script-injections"></a>Script injections</h1>
+<p>Understand the security risks associated with script injections and GitHub Actions workflows.</p>
+<h2 title="Understanding the risk of script injections">
+<a href="#understanding-the-risk-of-script-injections" aria-hidden="true" class="anchor" id="understanding-the-risk-of-script-injections"></a>Understanding the risk of script injections</h2>
+<p>When creating workflows, <a href="../workflows-and-actions/custom-actions.html">custom actions</a>, and <a href="../../tutorials/create-actions/create-a-composite-action.html">composite actions</a>, you should always consider whether your code might execute untrusted input from attackers. This can occur when an attacker adds malicious commands and scripts to a context. When your workflow runs, those strings might be interpreted as code which is then executed on the runner.</p>
+<p>Attackers can add their own malicious content to the <a href="../../reference/workflows-and-actions/contexts.html#github-context"><code>github</code> context</a>, which should be treated as potentially untrusted input. These contexts typically end with <code>body</code>, <code>default_branch</code>, <code>email</code>, <code>head_ref</code>, <code>label</code>, <code>message</code>, <code>name</code>, <code>page_name</code>,<code>ref</code>, and <code>title</code>. For example: <code>github.event.issue.title</code>, or <code>github.event.pull_request.body</code>.</p>
+<p>You should ensure that these values do not flow directly into workflows, actions, API calls, or anywhere else where they could be interpreted as executable code. By adopting the same defensive programming posture you would use for any other privileged application code, you can help security harden your use of GitHub Actions. For information on some of the steps an attacker could take, see <a href="../../reference/security/secure-use.html#potential-impact-of-a-compromised-runner">Secure use reference</a>.</p>
+<p>In addition, there are other less obvious sources of potentially untrusted input, such as branch names and email addresses, which can be quite flexible in terms of their permitted content. For example, <code>zzz";echo${IFS}"hello";#</code> would be a valid branch name and would be a possible attack vector for a target repository.</p>
+<p>The following sections explain how you can help mitigate the risk of script injection.</p>
+<h3 title="Understanding the risk of script injections / Example of a script injection attack">
+<a href="#example-of-a-script-injection-attack" aria-hidden="true" class="anchor" id="example-of-a-script-injection-attack"></a>Example of a script injection attack</h3>
+<p>A script injection attack can occur directly within a workflow's inline script. In the following example, an action uses an expression to test the validity of a pull request title, but also adds the risk of script injection:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Check PR title
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          title="${{ github.event.pull_request.title }}"
+</span><span style="color:#a3be8c;">          if [[ $title =~ ^octocat ]]; then
+</span><span style="color:#a3be8c;">          echo "PR title starts with 'octocat'"
+</span><span style="color:#a3be8c;">          exit 0
+</span><span style="color:#a3be8c;">          else
+</span><span style="color:#a3be8c;">          echo "PR title did not start with 'octocat'"
+</span><span style="color:#a3be8c;">          exit 1
+</span><span style="color:#a3be8c;">          fi
+</span></code></pre>
+<p>This example is vulnerable to script injection because the <code>run</code> command executes within a temporary shell script on the runner. Before the shell script is run, the expressions inside <code>${{ }}</code> are evaluated and then substituted with the resulting values, which can make it vulnerable to shell command injection.</p>
+<p>To inject commands into this workflow, the attacker could create a pull request with a title of <code>a"; ls $GITHUB_WORKSPACE"</code>:</p>
+<p><img src="../../../..//assets/images/help/actions/example-script-injection-pr-title.png" alt='Screenshot of the title of a pull request in edit mode. A new title has been entered in the field: a"; ls $GITHUB_WORKSPACE".'></p>
+<p>In this example, the <code>"</code> character is used to interrupt the <code>title="${{ github.event.pull_request.title }}"</code> statement, allowing the <code>ls</code> command to be executed on the runner. You can see the output of the <code>ls</code> command in the log:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Run title="a"; ls $GITHUB_WORKSPACE""
+</span><span style="color:#c0c5ce;">README.md
+</span><span style="color:#c0c5ce;">code.yml
+</span><span style="color:#c0c5ce;">example.js
+</span></code></pre>
+<p>For best practices keeping runners secure, see <a href="../../reference/security/secure-use.html#good-practices-for-mitigating-script-injection-attacks">Secure use reference</a>.</p>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

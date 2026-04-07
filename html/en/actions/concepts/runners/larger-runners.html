@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Larger runners</title>
+    <link rel="stylesheet" href="../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Runners</a> / </nav><h1>
+<a href="#larger-runners" aria-hidden="true" class="anchor" id="larger-runners"></a>Larger runners</h1>
+<p>Learn about the types and uses of GitHub-hosted larger runners.</p>
+<h2 title="About larger runners">
+<a href="#about-larger-runners" aria-hidden="true" class="anchor" id="about-larger-runners"></a>About larger runners</h2>
+<p>Customers on GitHub Team and GitHub Enterprise Cloud plans can choose from a range of managed virtual machines that have more resources than the <a href="github-hosted-runners.html#supported-runners-and-hardware-resources">standard GitHub-hosted runners</a>. These machines are referred to as "larger runners." They offer the following advanced features:</p>
+<ul>
+<li>More RAM, CPU, and disk space</li>
+<li>Static IP addresses</li>
+<li>Azure private networking</li>
+<li>The ability to group runners</li>
+<li>Autoscaling to support concurrent workflows</li>
+<li>GPU-powered runners</li>
+</ul>
+<p>These larger runners are hosted by GitHub and have the runner application and other tools preinstalled.</p>
+<p>GitHub offers larger runners with macOS, Ubuntu, or Windows operating systems, and different features and sizes are available depending on which operating system you use.</p>
+<h2 title="About larger runners for code scanning default setup">
+<a href="#about-larger-runners-for-code-scanning-default-setup" aria-hidden="true" class="anchor" id="about-larger-runners-for-code-scanning-default-setup"></a>About larger runners for code scanning default setup</h2>
+<p>Consider configuring larger runners for code scanning default setup if:</p>
+<ul>
+<li>Your scans with standard GitHub-hosted runners are taking too long.</li>
+<li>Your scans with standard GitHub-hosted runners are returning memory or disk errors.</li>
+<li>You want to customize aspects of your code scanning runner, such as the runner size, runner image, and job concurrency, without using self-hosted runners.</li>
+</ul>
+<p>For more information on configuring larger runners for code scanning default setup, see <a href="https://docs.github.com/en/code-security/how-tos/scan-code-for-vulnerabilities/manage-your-configuration/configuring-larger-runners-for-default-setup" class="external">Configuring larger runners for default setup</a>.</p>
+<h2 title="About Ubuntu and Windows larger runners">
+<a href="#about-ubuntu-and-windows-larger-runners" aria-hidden="true" class="anchor" id="about-ubuntu-and-windows-larger-runners"></a>About Ubuntu and Windows larger runners</h2>
+<p>Larger runners with Ubuntu or Windows operating systems are configured in your organization or enterprise. When you add a larger runner, you are defining a type of machine from a selection of available hardware specifications and operating system images.</p>
+<p>With Ubuntu and Windows larger runners, you can:</p>
+<ul>
+<li>Assign runners static IP addresses from a specific range, allowing you to use this range to configure a firewall allowlist</li>
+<li>Control access to your resources by assigning runners to runner groups</li>
+<li>Use autoscaling to simplify runner management and control your costs</li>
+<li>Use your runners with Azure private networking</li>
+</ul>
+<h2 title="About macOS larger runners">
+<a href="#about-macos-larger-runners" aria-hidden="true" class="anchor" id="about-macos-larger-runners"></a>About macOS larger runners</h2>
+<p>Larger runners with a macOS operating system are not manually added to your organization or enterprise, but are instead used by updating the <code>runs-on</code> key of a workflow file to one of the GitHub-defined macOS larger runner labels.</p>
+<p>Since macOS larger runners are not preconfigured, they have limitations that Ubuntu and Windows larger runners do not. For more information, see <a href="../../reference/runners/larger-runners.html#limitations-for-macos-larger-runners">Larger runners reference</a>.</p>
+<h2 title="Billing">
+<a href="#billing" aria-hidden="true" class="anchor" id="billing"></a>Billing</h2>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Larger runners are not eligible for the use of included minutes on private repositories. For both private and public repositories, when larger runners are in use, they will always be billed at the per-minute rate.</p>
+</div>
+<p>Compared to standard GitHub-hosted runners, larger runners are billed differently. Larger runners are only billed at the per-minute rate for the amount of time workflows are executed on them. There is no cost associated with creating a larger runner that is not being used by a workflow. For more information, see <a href="https://docs.github.com/en/billing/reference/actions-minute-multipliers" class="external">Actions runner pricing</a>.</p>
+<h2 title="Next steps">
+<a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>To start using Windows or Ubuntu larger runners, see <a href="../../how-tos/manage-runners/larger-runners/manage-larger-runners.html">Managing larger runners</a>.</p>
+<p>To start using macOS larger runners, see <a href="../../how-tos/manage-runners/larger-runners/use-larger-runners.html">Running jobs on larger runners</a>.</p>
+<p>To find reference information about using larger runners, see <a href="../../reference/runners/larger-runners.html">Larger runners reference</a>.</p>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

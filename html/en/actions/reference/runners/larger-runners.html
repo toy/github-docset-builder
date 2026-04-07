@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Larger runners reference</title>
+    <link rel="stylesheet" href="../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Reference</a> / <a href="index.html">Runners</a> / </nav><h1>
+<a href="#larger-runners-reference" aria-hidden="true" class="anchor" id="larger-runners-reference"></a>Larger runners reference</h1>
+<p>Find information about larger runners, including their specifications and customization options.</p>
+<h2 title="Machine sizes for larger runners">
+<a href="#machine-sizes-for-larger-runners" aria-hidden="true" class="anchor" id="machine-sizes-for-larger-runners"></a>Machine sizes for larger runners</h2>
+<p>You can choose from several specifications for larger runners.</p>
+<h3 title="Machine sizes for larger runners / Specifications for general larger runners">
+<a href="#specifications-for-general-larger-runners" aria-hidden="true" class="anchor" id="specifications-for-general-larger-runners"></a>Specifications for general larger runners</h3>
+<table>
+<thead>
+<tr>
+<th>CPU</th>
+<th>Memory (RAM)</th>
+<th>Storage (SSD)</th>
+<th>Architecture</th>
+<th>Operating system (OS)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5</td>
+<td>14 GB</td>
+<td>14 GB</td>
+<td>arm64 (M2)</td>
+<td>macOS</td>
+</tr>
+<tr>
+<td>12</td>
+<td>30 GB</td>
+<td>14 GB</td>
+<td>x64 (Intel)</td>
+<td>macOS</td>
+</tr>
+<tr>
+<td>2</td>
+<td>8 GB</td>
+<td>75 GB</td>
+<td>x64, arm64</td>
+<td>Ubuntu</td>
+</tr>
+<tr>
+<td>4</td>
+<td>16 GB</td>
+<td>150 GB</td>
+<td>x64, arm64</td>
+<td>Ubuntu, Windows</td>
+</tr>
+<tr>
+<td>8</td>
+<td>32 GB</td>
+<td>300 GB</td>
+<td>x64, arm64</td>
+<td>Ubuntu, Windows</td>
+</tr>
+<tr>
+<td>16</td>
+<td>64 GB</td>
+<td>600 GB</td>
+<td>x64, arm64</td>
+<td>Ubuntu, Windows</td>
+</tr>
+<tr>
+<td>32</td>
+<td>128 GB</td>
+<td>1200 GB</td>
+<td>x64, arm64</td>
+<td>Ubuntu, Windows</td>
+</tr>
+<tr>
+<td>64</td>
+<td>208 GB</td>
+<td>2040 GB</td>
+<td>arm64</td>
+<td>Ubuntu, Windows</td>
+</tr>
+<tr>
+<td>64</td>
+<td>256 GB</td>
+<td>2040 GB</td>
+<td>x64</td>
+<td>Ubuntu, Windows</td>
+</tr>
+<tr>
+<td>96</td>
+<td>384 GB</td>
+<td>2040 GB</td>
+<td>x64</td>
+<td>Ubuntu, Windows</td>
+</tr>
+</tbody>
+</table>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The 4-vCPU Windows runner only works with the Windows Server 2025 or the Base Windows 11 Desktop image.</p>
+</div>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The 5-vCPU macOS runner is in public preview and subject to change.</p>
+</div>
+<h3 title="Machine sizes for larger runners / Specifications for GPU larger runners">
+<a href="#specifications-for-gpu-larger-runners" aria-hidden="true" class="anchor" id="specifications-for-gpu-larger-runners"></a>Specifications for GPU larger runners</h3>
+<table>
+<thead>
+<tr>
+<th>CPU</th>
+<th>GPU</th>
+<th>GPU card</th>
+<th>Memory (RAM)</th>
+<th>GPU memory (VRAM)</th>
+<th>Storage (SSD)</th>
+<th>Operating system (OS)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4</td>
+<td>1</td>
+<td>Tesla T4</td>
+<td>28 GB</td>
+<td>16 GB</td>
+<td>176 GB</td>
+<td>Ubuntu, Windows</td>
+</tr>
+</tbody>
+</table>
+<h2 title="Runner images">
+<a href="#runner-images" aria-hidden="true" class="anchor" id="runner-images"></a>Runner images</h2>
+<p>Larger runners run on virtual machines (VMs), and GitHub installs a virtual hard disk (VHD) on this machine during the VM creation process. You can choose from different VM images to install on your runners.</p>
+<p><strong>GitHub-owned images:</strong> These images are maintained by GitHub and are available for Linux x64, Windows x64, and macOS (x64 and arm) runners. For more information on these images and a full list of included tools for each runner operating system, see the <a href="https://github.com/actions/runner-images" class="external">GitHub Actions Runner Images</a> repository.</p>
+<p><strong>Partner Images:</strong> Partner images are not managed by GitHub and are pulled from the Azure Marketplace. See below for resources on where to find more information and to report issues for partner images.</p>
+<ul>
+<li>
+<a href="https://azuremarketplace.microsoft.com/en-us/marketplace/apps/microsoftwindowsdesktop.windows-11?tab=Overview" class="external">Base Windows 11 desktop image</a>.</li>
+<li><a href="https://azuremarketplace.microsoft.com/en-us/marketplace/apps/nvidia.ngc_azure_17_11" class="external">NVIDIA GPU-Optimized VMI</a></li>
+<li>
+<a href="https://azuremarketplace.microsoft.com/en-us/marketplace/apps/microsoft-dsvm.dsvm-win-2019?tab=overview" class="external">Data Science Virtual Machine - Windows 2019</a>.</li>
+<li>arm64 images: <a href="https://github.com/actions/partner-runner-images" class="external"><code>actions/partner-runner-images</code> repository</a>.</li>
+</ul>
+<h2 title="Available macOS larger runners and labels">
+<a href="#available-macos-larger-runners-and-labels" aria-hidden="true" class="anchor" id="available-macos-larger-runners-and-labels"></a>Available macOS larger runners and labels</h2>
+<p>The following machines are available for macOS larger runners.</p>
+<table>
+<thead>
+<tr>
+<th>Runner Size</th>
+<th>Architecture</th>
+<th>Processor (CPU)</th>
+<th>Memory (RAM)</th>
+<th>Storage (SSD)</th>
+<th>Workflow label</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Large</td>
+<td>Intel</td>
+<td>12</td>
+<td>30 GB</td>
+<td>14 GB</td>
+<td>
+<code>macos-latest-large</code>, <code>macos-14-large</code>, <code>macos-15-large</code> (latest), <code>macos-26-large</code>
+</td>
+</tr>
+<tr>
+<td>XLarge</td>
+<td>arm64 (M2)</td>
+<td>5 (+ 8 GPU hardware acceleration)</td>
+<td>14 GB</td>
+<td>14 GB</td>
+<td>
+<code>macos-latest-xlarge</code>, <code>macos-14-xlarge</code>, <code>macos-15-xlarge</code> (latest), <code>macos-26-xlarge</code>
+</td>
+</tr>
+</tbody>
+</table>
+<h2 title="Limitations for macOS larger runners">
+<a href="#limitations-for-macos-larger-runners" aria-hidden="true" class="anchor" id="limitations-for-macos-larger-runners"></a>Limitations for macOS larger runners</h2>
+<ul>
+<li>All actions provided by GitHub are compatible with arm64 GitHub-hosted runners. However, community actions may not be compatible with arm64 and need to be manually installed at runtime.</li>
+<li>Nested-virtualization is not supported due to the limitation of Apple's Virtualization Framework.</li>
+<li>Networking capabilities such as Azure private networking and assigning static IPs are not currently available for macOS larger runners.</li>
+<li>The arm64 macOS runners do not have a static UUID/UDID assigned to them because Apple does not support this feature. However, Intel MacOS runners are assigned a static UDID, specifically <code>4203018E-580F-C1B5-9525-B745CECA79EB</code>. If you are building and signing on the same host you plan to test the build on, you can sign with a <a href="https://developer.apple.com/help/account/provisioning-profiles/create-a-development-provisioning-profile/" class="external">development provisioning profile</a>. If you do require a static UDID, you can use Intel runners and add their UDID to your Apple Developer account.</li>
+</ul>
+<h2 title="Networking for larger runners">
+<a href="#networking-for-larger-runners" aria-hidden="true" class="anchor" id="networking-for-larger-runners"></a>Networking for larger runners</h2>
+<p>By default, larger runners receive a dynamic IP address that changes for each job run. Optionally, GitHub Enterprise Cloud customers can configure their larger runners to receive static IP addresses from GitHub's IP address pool. For more information, see <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-githubs-ip-addresses" class="external">About GitHub's IP addresses</a>.</p>
+<p>When enabled, instances of the larger runner will receive IP addresses from specific ranges that are unique to the runner, allowing you to use the ranges to configure a firewall allowlist. You can use up to 10 larger runners with static IP address ranges in total across all your larger runners. For more information, see <a href="../../how-tos/manage-runners/larger-runners/manage-larger-runners.html#networking-for-larger-runners">Managing larger runners</a>.</p>
+<p>If you would like to use more than 10 larger runners with static IP address ranges, please contact us through the <a href="https://support.github.com" class="external">GitHub Support portal</a>.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>If runners are unused for more than 90 days, their IP address ranges are automatically removed and cannot be recovered.</p>
+</div>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

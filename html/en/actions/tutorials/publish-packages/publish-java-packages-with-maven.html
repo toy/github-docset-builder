@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Publishing Java packages with Maven</title>
+    <link rel="stylesheet" href="../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Publish packages</a> / </nav><h1>
+<a href="#publishing-java-packages-with-maven" aria-hidden="true" class="anchor" id="publishing-java-packages-with-maven"></a>Publishing Java packages with Maven</h1>
+<p>In this tutorial, you'll learn how to use Maven to publish Java packages to a registry as part of your continuous integration (CI) workflow.</p>
+<h2 title="Introduction">
+<a href="#introduction" aria-hidden="true" class="anchor" id="introduction"></a>Introduction</h2>
+<p>This guide shows you how to create a workflow that publishes Java packages to GitHub Packages and the Maven Central Repository. With a single workflow, you can publish packages to a single repository or to multiple repositories.</p>
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>The examples used in this guide refer to the Legacy OSSRH service. See <a href="https://central.sonatype.org/faq/what-is-different-between-central-portal-and-legacy-ossrh/#publishing" class="external">Publishing</a> in the Maven Central Repository documentation.</p>
+</div>
+<h2 title="Prerequisites">
+<a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<p>We recommend that you have a basic understanding of workflow files and configuration options. For more information, see <a href="../../how-tos/write-workflows/index.html">Writing workflows</a>.</p>
+<p>For more information about creating a CI workflow for your Java project with Maven, see <a href="../build-and-test-code/java-with-maven.html">Building and testing Java with Maven</a>.</p>
+<p>You may also find it helpful to have a basic understanding of the following:</p>
+<ul>
+<li><a href="https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry" class="external">Working with the Apache Maven registry</a></li>
+<li><a href="../../how-tos/write-workflows/choose-what-workflows-do/use-variables.html">Store information in variables</a></li>
+<li><a href="../../how-tos/write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a></li>
+<li><a href="../authenticate-with-github_token.html">Use GITHUB<span data-escaped-char>\</span><span data-escaped-char>_</span>TOKEN for authentication in workflows</a></li>
+</ul>
+<h2 title="About package configuration">
+<a href="#about-package-configuration" aria-hidden="true" class="anchor" id="about-package-configuration"></a>About package configuration</h2>
+<p>The <code>groupId</code> and <code>artifactId</code> fields in the <em>pom.xml</em> file create a unique identifier for your package that registries use to link your package to a registry. For more information see <a href="https://maven.apache.org/repository/guide-central-repository-upload.html" class="external">Guide to uploading artifacts to the Central Repository</a> in the Apache Maven documentation.</p>
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>Your Apache Maven package must follow the naming convention, and therefore the <code>artifactId</code> field should only contain lowercase letters, digits, or hyphens. For more information, see <a href="https://maven.apache.org/guides/mini/guide-naming-conventions.html" class="external">Naming convention of Maven coordinates</a> in the maven.apache.org documentation. If you use uppercase letters in the artifact name, you'll get a <em>422 Unprocessable Entity</em> response.</p>
+</div>
+<p>The <em>pom.xml</em> file also contains configuration for the distribution management repositories that Maven will deploy packages to. Each repository must have a name and a deployment URL. Authentication for these repositories can be configured in the <em>.m2/settings.xml</em> file in the home directory of the user running Maven.</p>
+<p>You can use the <code>setup-java</code> action to configure the deployment repository as well as authentication for that repository. For more information, see <a href="https://github.com/actions/setup-java" class="external"><code>setup-java</code></a>.</p>
+<h2 title="Publishing packages to the Maven Central Repository">
+<a href="#publishing-packages-to-the-maven-central-repository" aria-hidden="true" class="anchor" id="publishing-packages-to-the-maven-central-repository"></a>Publishing packages to the Maven Central Repository</h2>
+<p>Each time you create a new release, you can trigger a workflow to publish your package. The workflow in the example below runs when the <code>release</code> event triggers with type <code>created</code>. The workflow publishes the package to the Maven Central Repository if CI tests pass. For more information on the <code>release</code> event, see <a href="../../reference/workflows-and-actions/events-that-trigger-workflows.html#release">Events that trigger workflows</a>.</p>
+<p>In this workflow, you can use the <code>setup-java</code> action. This action installs the given version of the JDK into the <code>PATH</code>, but it also configures a Maven <em>settings.xml</em> for publishing packages. By default, the settings file will be configured for GitHub Packages, but it can be configured to deploy to another package registry, such as the Maven Central Repository. If you already have a distribution management repository configured in <em>pom.xml</em>, then you can specify that <code>id</code> during the <code>setup-java</code> action invocation.</p>
+<p>For example, if you were deploying to the Maven Central Repository through the OSSRH hosting project, your <em>pom.xml</em> could specify a distribution management repository with the <code>id</code> of <code>ossrh</code>.</p>
+<pre lang="xml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">&lt;</span><span style="color:#bf616a;">project</span><span style="color:#c0c5ce;"> ...&gt;
+</span><span style="color:#c0c5ce;">  ...
+</span><span style="color:#c0c5ce;">  &lt;</span><span style="color:#bf616a;">distributionManagement</span><span style="color:#c0c5ce;">&gt;
+</span><span style="color:#c0c5ce;">    &lt;</span><span style="color:#bf616a;">repository</span><span style="color:#c0c5ce;">&gt;
+</span><span style="color:#c0c5ce;">      &lt;</span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">&gt;ossrh&lt;/</span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">&gt;
+</span><span style="color:#c0c5ce;">      &lt;</span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">&gt;Central Repository OSSRH&lt;/</span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">&gt;
+</span><span style="color:#c0c5ce;">      &lt;</span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">&gt;https://oss.sonatype.org/service/local/staging/deploy/maven2/&lt;/</span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">&gt;
+</span><span style="color:#c0c5ce;">    &lt;/</span><span style="color:#bf616a;">repository</span><span style="color:#c0c5ce;">&gt;
+</span><span style="color:#c0c5ce;">  &lt;/</span><span style="color:#bf616a;">distributionManagement</span><span style="color:#c0c5ce;">&gt;
+</span><span style="color:#c0c5ce;">&lt;/</span><span style="color:#bf616a;">project</span><span style="color:#c0c5ce;">&gt;
+</span></code></pre>
+<p>With this configuration, you can create a workflow that publishes your package to the Maven Central Repository by specifying the repository management <code>id</code> to the <code>setup-java</code> action. You’ll also need to provide environment variables that contain the username and password to authenticate to the repository.</p>
+<p>In the deploy step, you’ll need to set the environment variables to the username that you authenticate with to the repository, and to a secret that you’ve configured with the password or token to authenticate with. For more information, see <a href="../../how-tos/write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Publish package to the Maven Central Repository
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">release</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">created</span><span style="color:#c0c5ce;">]
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">publish</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set up Maven Central Repository
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-java@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">java-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">11</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">distribution</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">temurin</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">server-id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ossrh
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">server-username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">MAVEN_USERNAME
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">server-password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">MAVEN_PASSWORD
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Publish package
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">mvn --batch-mode deploy
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">MAVEN_USERNAME</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.OSSRH_USERNAME }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">MAVEN_PASSWORD</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.OSSRH_TOKEN }}
+</span></code></pre>
+<p>This workflow performs the following steps:</p>
+<ol>
+<li>
+<p>Checks out a copy of project's repository.</p>
+</li>
+<li>
+<p>Sets up the Java JDK, and also configures the Maven <em>settings.xml</em> file to add authentication for the <code>ossrh</code> repository using the <code>MAVEN_USERNAME</code> and <code>MAVEN_PASSWORD</code> environment variables.</p>
+</li>
+<li>
+<p>Runs the <code>mvn --batch-mode deploy</code> command to publish to the <code>ossrh</code> repository. The <code>MAVEN_USERNAME</code> environment variable will be set with the contents of your <code>OSSRH_USERNAME</code> secret, and the <code>MAVEN_PASSWORD</code> environment variable will be set with the contents of your <code>OSSRH_TOKEN</code> secret.</p>
+<p>For more information about using secrets in your workflow, see <a href="../../how-tos/write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a>.</p>
+</li>
+</ol>
+<h2 title="Publishing packages to GitHub Packages">
+<a href="#publishing-packages-to-github-packages" aria-hidden="true" class="anchor" id="publishing-packages-to-github-packages"></a>Publishing packages to GitHub Packages</h2>
+<p>Each time you create a new release, you can trigger a workflow to publish your package. The workflow in the example below runs when the <code>release</code> event triggers with type <code>created</code>. The workflow publishes the package to GitHub Packages if CI tests pass. For more information on the <code>release</code> event, see <a href="../../reference/workflows-and-actions/events-that-trigger-workflows.html#release">Events that trigger workflows</a>.</p>
+<p>In this workflow, you can use the <code>setup-java</code> action. This action installs the given version of the JDK into the <code>PATH</code>, and also sets up a Maven <em>settings.xml</em> for publishing the package to GitHub Packages. The generated <em>settings.xml</em> defines authentication for a server with an <code>id</code> of <code>github</code>, using the <code>GITHUB_ACTOR</code> environment variable as the username and the <code>GITHUB_TOKEN</code> environment variable as the password. The <code>GITHUB_TOKEN</code> environment variable is assigned the value of the special <code>GITHUB_TOKEN</code> secret.</p>
+<p>The <code>GITHUB_TOKEN</code> secret is set to an access token for the repository each time a job in a workflow begins. You should set the permissions for this access token in the workflow file to grant read access for the <code>contents</code> permission and write access for the <code>packages</code> permission. For more information, see <a href="../authenticate-with-github_token.html">Use GITHUB<span data-escaped-char>\</span><span data-escaped-char>_</span>TOKEN for authentication in workflows</a>.</p>
+<p>For a Maven-based project, you can make use of these settings by creating a distribution repository in your <em>pom.xml</em> file with an <code>id</code> of <code>github</code> that points to your GitHub Packages endpoint.</p>
+<p>For example, if your organization is named "octocat" and your repository is named "hello-world", then the GitHub Packages configuration in <em>pom.xml</em> would look similar to the below example.</p>
+<pre lang="xml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">&lt;</span><span style="color:#bf616a;">project</span><span style="color:#c0c5ce;"> ...&gt;
+</span><span style="color:#c0c5ce;">  ...
+</span><span style="color:#c0c5ce;">  &lt;</span><span style="color:#bf616a;">distributionManagement</span><span style="color:#c0c5ce;">&gt;
+</span><span style="color:#c0c5ce;">    &lt;</span><span style="color:#bf616a;">repository</span><span style="color:#c0c5ce;">&gt;
+</span><span style="color:#c0c5ce;">      &lt;</span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">&gt;github&lt;/</span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">&gt;
+</span><span style="color:#c0c5ce;">      &lt;</span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">&gt;GitHub Packages&lt;/</span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">&gt;
+</span><span style="color:#c0c5ce;">      &lt;</span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">&gt;https://maven.pkg.github.com/octocat/hello-world&lt;/</span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">&gt;
+</span><span style="color:#c0c5ce;">    &lt;/</span><span style="color:#bf616a;">repository</span><span style="color:#c0c5ce;">&gt;
+</span><span style="color:#c0c5ce;">  &lt;/</span><span style="color:#bf616a;">distributionManagement</span><span style="color:#c0c5ce;">&gt;
+</span><span style="color:#c0c5ce;">&lt;/</span><span style="color:#bf616a;">project</span><span style="color:#c0c5ce;">&gt;
+</span></code></pre>
+<p>With this configuration, you can create a workflow that publishes your package to GitHub Packages by making use of the automatically generated <em>settings.xml</em>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Publish package to GitHub Packages
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">release</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">created</span><span style="color:#c0c5ce;">]
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">publish</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">permissions</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">contents</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">packages</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-java@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">java-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">11</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">distribution</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">temurin</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Publish package
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">mvn --batch-mode deploy
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">GITHUB_TOKEN</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.GITHUB_TOKEN }}
+</span></code></pre>
+<p>This workflow performs the following steps:</p>
+<ol>
+<li>
+<p>Checks out a copy of project's repository.</p>
+</li>
+<li>
+<p>Sets up the Java JDK, and also automatically configures the Maven <em>settings.xml</em> file to add authentication for the <code>github</code> Maven repository to use the <code>GITHUB_TOKEN</code> environment variable.</p>
+</li>
+<li>
+<p>Runs the <code>mvn --batch-mode deploy</code> command to publish to GitHub Packages. The <code>GITHUB_TOKEN</code> environment variable will be set with the contents of the <code>GITHUB_TOKEN</code> secret. The <code>permissions</code> key specifies the access granted to the <code>GITHUB_TOKEN</code>.</p>
+<p>For more information about using secrets in your workflow, see <a href="../../how-tos/write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a>.</p>
+</li>
+</ol>
+<h2 title="Publishing packages to the Maven Central Repository and GitHub Packages">
+<a href="#publishing-packages-to-the-maven-central-repository-and-github-packages" aria-hidden="true" class="anchor" id="publishing-packages-to-the-maven-central-repository-and-github-packages"></a>Publishing packages to the Maven Central Repository and GitHub Packages</h2>
+<p>You can publish your packages to both the Maven Central Repository and GitHub Packages by using the <code>setup-java</code> action for each registry.</p>
+<p>Ensure your <em>pom.xml</em> file includes a distribution management repository for both your GitHub repository and your Maven Central Repository provider. For example, if you deploy to the Central Repository through the OSSRH hosting project, you might want to specify it in a distribution management repository with the <code>id</code> set to <code>ossrh</code>, and you might want to specify GitHub Packages in a distribution management repository with the <code>id</code> set to <code>github</code>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Publish package to the Maven Central Repository and GitHub Packages
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">release</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">created</span><span style="color:#c0c5ce;">]
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">publish</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">permissions</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">contents</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">packages</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set up Java for publishing to Maven Central Repository
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-java@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">java-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">11</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">distribution</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">temurin</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">server-id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ossrh
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">server-username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">MAVEN_USERNAME
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">server-password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">MAVEN_PASSWORD
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Publish to the Maven Central Repository
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">mvn --batch-mode deploy
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">MAVEN_USERNAME</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.OSSRH_USERNAME }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">MAVEN_PASSWORD</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.OSSRH_TOKEN }}
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set up Java for publishing to GitHub Packages
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-java@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">java-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">11</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">distribution</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">temurin</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Publish to GitHub Packages
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">mvn --batch-mode deploy
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">GITHUB_TOKEN</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.GITHUB_TOKEN }}
+</span></code></pre>
+<p>This workflow calls the <code>setup-java</code> action twice. Each time the <code>setup-java</code> action runs, it overwrites the Maven <em>settings.xml</em> file for publishing packages. For authentication to the repository, the <em>settings.xml</em> file references the distribution management repository <code>id</code>, and the username and password.</p>
+<p>This workflow performs the following steps:</p>
+<ol>
+<li>
+<p>Checks out a copy of project's repository.</p>
+</li>
+<li>
+<p>Calls <code>setup-java</code> the first time. This configures the Maven <em>settings.xml</em> file for the <code>ossrh</code> repository, and sets the authentication options to environment variables that are defined in the next step.</p>
+</li>
+<li>
+<p>Runs the <code>mvn --batch-mode deploy</code> command to publish to the <code>ossrh</code> repository. The <code>MAVEN_USERNAME</code> environment variable will be set with the contents of your <code>OSSRH_USERNAME</code> secret, and the <code>MAVEN_PASSWORD</code> environment variable will be set with the contents of your <code>OSSRH_TOKEN</code> secret.</p>
+</li>
+<li>
+<p>Calls <code>setup-java</code> the second time. This automatically configures the Maven <em>settings.xml</em> file for GitHub Packages.</p>
+</li>
+<li>
+<p>Runs the <code>mvn --batch-mode deploy</code> command to publish to GitHub Packages. The <code>GITHUB_TOKEN</code> environment variable will be set with the contents of the <code>GITHUB_TOKEN</code> secret. The <code>permissions</code> key specifies the access granted to the <code>GITHUB_TOKEN</code>.</p>
+<p>For more information about using secrets in your workflow, see <a href="../../how-tos/write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a>.</p>
+</li>
+</ol>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

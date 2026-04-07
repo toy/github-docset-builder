@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Using Actions Runner Controller runners in a workflow</title>
+    <link rel="stylesheet" href="../../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Manage runners</a> / <a href="index.html">Actions Runner Controller</a> / </nav><h1>
+<a href="#using-actions-runner-controller-runners-in-a-workflow" aria-hidden="true" class="anchor" id="using-actions-runner-controller-runners-in-a-workflow"></a>Using Actions Runner Controller runners in a workflow</h1>
+<p>Use Actions Runner Controller runners in a workflow file.</p>
+<h2 title="Using ARC runners in a workflow file">
+<a href="#using-arc-runners-in-a-workflow-file" aria-hidden="true" class="anchor" id="using-arc-runners-in-a-workflow-file"></a>Using ARC runners in a workflow file</h2>
+<p>To assign jobs to run on a runner scale set, you can specify the name of the scale set as the value for the <code>runs-on</code> key in your GitHub Actions workflow file.</p>
+<p>For example, the following configuration for a runner scale set has the <code>INSTALLATION_NAME</code> value set to <code>arc-runner-set</code>.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#65737e;"># Using a Personal Access Token (PAT)
+</span><span style="color:#bf616a;">INSTALLATION_NAME</span><span style="color:#c0c5ce;">="</span><span style="color:#a3be8c;">arc-runner-set</span><span style="color:#c0c5ce;">"
+</span><span style="color:#bf616a;">NAMESPACE</span><span style="color:#c0c5ce;">="</span><span style="color:#a3be8c;">arc-runners</span><span style="color:#c0c5ce;">"
+</span><span style="color:#bf616a;">GITHUB_CONFIG_URL</span><span style="color:#c0c5ce;">="</span><span style="color:#a3be8c;">https://github.com/&lt;your_enterprise/org/repo&gt;</span><span style="color:#c0c5ce;">"
+</span><span style="color:#bf616a;">GITHUB_PAT</span><span style="color:#c0c5ce;">="</span><span style="color:#a3be8c;">&lt;PAT&gt;</span><span style="color:#c0c5ce;">"
+</span><span style="color:#8fa1b3;">helm</span><span style="color:#c0c5ce;"> install "$</span><span style="color:#a3be8c;">{</span><span style="color:#bf616a;">INSTALLATION_NAME</span><span style="color:#a3be8c;">}</span><span style="color:#c0c5ce;">" \
+</span><span style="color:#bf616a;">    --namespace </span><span style="color:#c0c5ce;">"$</span><span style="color:#a3be8c;">{</span><span style="color:#bf616a;">NAMESPACE</span><span style="color:#a3be8c;">}</span><span style="color:#c0c5ce;">" \
+</span><span style="color:#bf616a;">    --create-namespace </span><span style="color:#c0c5ce;">\
+</span><span style="color:#bf616a;">    --set</span><span style="color:#c0c5ce;"> githubConfigUrl="$</span><span style="color:#a3be8c;">{</span><span style="color:#bf616a;">GITHUB_CONFIG_URL</span><span style="color:#a3be8c;">}</span><span style="color:#c0c5ce;">" \
+</span><span style="color:#bf616a;">    --set</span><span style="color:#c0c5ce;"> githubConfigSecret.github_token="$</span><span style="color:#a3be8c;">{</span><span style="color:#bf616a;">GITHUB_PAT</span><span style="color:#a3be8c;">}</span><span style="color:#c0c5ce;">" \
+</span><span style="color:#c0c5ce;">    oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
+</span></code></pre>
+<p>To use this configuration in a workflow, set the value of the <code>runs-on</code> key in your workflow to <code>arc-runner-set</code>, similar to the following example.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">job_name</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">arc-runner-set
+</span></code></pre>
+<h2 title="Using runner scale set names">
+<a href="#using-runner-scale-set-names" aria-hidden="true" class="anchor" id="using-runner-scale-set-names"></a>Using runner scale set names</h2>
+<p>Runner scale set names are unique within the runner group they belong to. To deploy multiple runner scale sets with the same name, they must belong to different runner groups. For more information about specifying runner scale set names, see <a href="deploy-runner-scale-sets.html">Deploying runner scale sets with Actions Runner Controller</a>.</p>
+<p>You can use the installation name of the runner scale set, or define the value of the <code>runnerScaleSetName</code> field in your <a href="https://github.com/actions/actions-runner-controller/blob/master/charts/gha-runner-scale-set/values.yaml" class="external"><code>values.yaml</code></a> file, as your <code>runs-on</code> target. You can also assign multiple labels to a scale set to enable more flexible job routing. To configure labels for a runner scale set, set the <code>runnerScaleSetLabels</code> value in your <code>values.yaml</code> file. For more information, see <a href="deploy-runner-scale-sets.html#scaling-runners">Deploying runner scale sets with Actions Runner Controller</a>.</p>
+<h2 title="Using labels to target runner scale sets">
+<a href="#using-labels-to-target-runner-scale-sets" aria-hidden="true" class="anchor" id="using-labels-to-target-runner-scale-sets"></a>Using labels to target runner scale sets</h2>
+<p>You can also assign multiple labels to a runner scale set and use them to target runners in your workflow. To configure labels for a runner scale set, set the <code>runnerScaleSetLabels</code> values in your <code>values.yaml</code> file.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">runnerScaleSetLabels</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#a3be8c;">linux
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#a3be8c;">gpu
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#a3be8c;">private-network
+</span></code></pre>
+<p>To target a runner scale set with specific labels, specify the labels as an array in the <code>runs-on</code> key of your workflow.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">job_name</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">linux</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">gpu</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">private-network</span><span style="color:#c0c5ce;">]
+</span></code></pre>
+<h2 title="Legal notice">
+<a href="#legal-notice" aria-hidden="true" class="anchor" id="legal-notice"></a>Legal notice</h2>
+<p>Portions have been adapted from <a href="https://github.com/actions/actions-runner-controller/" class="external">https://github.com/actions/actions-runner-controller/</a> under the Apache-2.0 license:</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Copyright 2019 Moto Ishizawa
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">Licensed under the Apache License, Version 2.0 (the "License");
+</span><span style="color:#c0c5ce;">you may not use this file except in compliance with the License.
+</span><span style="color:#c0c5ce;">You may obtain a copy of the License at
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    http://www.apache.org/licenses/LICENSE-2.0
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">Unless required by applicable law or agreed to in writing, software
+</span><span style="color:#c0c5ce;">distributed under the License is distributed on an "AS IS" BASIS,
+</span><span style="color:#c0c5ce;">WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+</span><span style="color:#c0c5ce;">See the License for the specific language governing permissions and
+</span><span style="color:#c0c5ce;">limitations under the License.
+</span></code></pre>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

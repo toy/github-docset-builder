@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Store information in variables</title>
+    <link rel="stylesheet" href="../../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Write workflows</a> / <a href="index.html">Choose what workflows do</a> / </nav><h1>
+<a href="#store-information-in-variables" aria-hidden="true" class="anchor" id="store-information-in-variables"></a>Store information in variables</h1>
+<p>GitHub sets default variables for each GitHub Actions workflow run. You can also set custom variables for use in a single workflow or multiple workflows.</p>
+<h2 title="Defining environment variables for a single workflow">
+<a href="#defining-environment-variables-for-a-single-workflow" aria-hidden="true" class="anchor" id="defining-environment-variables-for-a-single-workflow"></a>Defining environment variables for a single workflow</h2>
+<p>To set a custom environment variable for a single workflow, you can define it using the <code>env</code> key in the workflow file. The scope of a custom variable set by this method is limited to the element in which it is defined. You can define variables that are scoped for:</p>
+<ul>
+<li>The entire workflow, by using <a href="../../../reference/workflows-and-actions/workflow-syntax.html#env"><code>env</code></a> at the top level of the workflow file.</li>
+<li>The contents of a job within a workflow, by using <a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idenv"><code>jobs.&lt;job_id&gt;.env</code></a>.</li>
+<li>A specific step within a job, by using <a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idstepsenv"><code>jobs.&lt;job_id&gt;.steps[*].env</code></a>.</li>
+</ul>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Greeting on variable day
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#a3be8c;">workflow_dispatch
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">DAY_OF_WEEK</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Monday
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">greeting_job</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">Greeting</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Hello
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">Say Hello Mona it's Monday</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "$Greeting $First_Name. Today is $DAY_OF_WEEK!"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">First_Name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Mona
+</span></code></pre>
+<p>You can access <code>env</code> variable values using runner environment variables or using contexts. The example above shows three custom variables being used as runner environment variables in an <code>echo</code> command: <code>$DAY_OF_WEEK</code>, <code>$Greeting</code>, and <code>$First_Name</code>. The values for these variables are set, and scoped, at the workflow, job, and step level respectively. The interpolation of these variables happens on the runner.</p>
+<p>The commands in the <code>run</code> steps of a workflow, or a referenced action, are processed by the shell you are using on the runner. The instructions in the other parts of a workflow are processed by GitHub Actions and are not sent to the runner. You can use either runner environment variables or contexts in <code>run</code> steps, but in the parts of a workflow that are not sent to the runner you must use contexts to access variable values. For more information, see <a href="#using-contexts-to-access-variable-values">Using contexts to access variable values</a>.</p>
+<p>Because runner environment variable interpolation is done after a workflow job is sent to a runner machine, you must use the appropriate syntax for the shell that's used on the runner. In this example, the workflow specifies <code>ubuntu-latest</code>. By default, Linux runners use the bash shell, so you must use the syntax <code>$NAME</code>. By default, Windows runners use PowerShell, so you would use the syntax <code>$env:NAME</code>. For more information about shells, see <a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idstepsshell">Workflow syntax for GitHub Actions</a>.</p>
+<h2 title="Defining configuration variables for multiple workflows">
+<a href="#defining-configuration-variables-for-multiple-workflows" aria-hidden="true" class="anchor" id="defining-configuration-variables-for-multiple-workflows"></a>Defining configuration variables for multiple workflows</h2>
+<p>You can create configuration variables for use across multiple workflows, and can define them at either the <a href="#creating-configuration-variables-for-an-organization">organization</a>, <a href="#creating-configuration-variables-for-a-repository">repository</a>, or <a href="#creating-configuration-variables-for-an-environment">environment</a> level.</p>
+<p>For example, you can use configuration variables to set default values for parameters passed to build tools at an organization level, but then allow repository owners to override these parameters on a case-by-case basis.</p>
+<p>When you define configuration variables, they are automatically available in the <code>vars</code> context. For more information, see <a href="#using-the-vars-context-to-access-configuration-variable-values">Using the <code>vars</code> context to access configuration variable values</a>.</p>
+<h3 title="Defining configuration variables for multiple workflows / Creating configuration variables for a repository">
+<a href="#creating-configuration-variables-for-a-repository" aria-hidden="true" class="anchor" id="creating-configuration-variables-for-a-repository"></a>Creating configuration variables for a repository</h3>
+<p>To create secrets or variables on GitHub for an organization repository, you must have <code>write</code> access. For a personal account repository, you must be a repository collaborator.</p>
+<ol>
+<li>
+<p>On GitHub, navigate to the main page of the repository.</p>
+</li>
+<li>
+<p>Under your repository name, click <strong><svg version="1.1" width="16" height="16" viewbox="0 0 16 16" class="octicon octicon-gear" aria-label="gear" role="img"><path d="M8 0a8.2 8.2 0 0 1 .701.031C9.444.095 9.99.645 10.16 1.29l.288 1.107c.018.066.079.158.212.224.231.114.454.243.668.386.123.082.233.09.299.071l1.103-.303c.644-.176 1.392.021 1.82.63.27.385.506.792.704 1.218.315.675.111 1.422-.364 1.891l-.814.806c-.049.048-.098.147-.088.294.016.257.016.515 0 .772-.01.147.038.246.088.294l.814.806c.475.469.679 1.216.364 1.891a7.977 7.977 0 0 1-.704 1.217c-.428.61-1.176.807-1.82.63l-1.102-.302c-.067-.019-.177-.011-.3.071a5.909 5.909 0 0 1-.668.386c-.133.066-.194.158-.211.224l-.29 1.106c-.168.646-.715 1.196-1.458 1.26a8.006 8.006 0 0 1-1.402 0c-.743-.064-1.289-.614-1.458-1.26l-.289-1.106c-.018-.066-.079-.158-.212-.224a5.738 5.738 0 0 1-.668-.386c-.123-.082-.233-.09-.299-.071l-1.103.303c-.644.176-1.392-.021-1.82-.63a8.12 8.12 0 0 1-.704-1.218c-.315-.675-.111-1.422.363-1.891l.815-.806c.05-.048.098-.147.088-.294a6.214 6.214 0 0 1 0-.772c.01-.147-.038-.246-.088-.294l-.815-.806C.635 6.045.431 5.298.746 4.623a7.92 7.92 0 0 1 .704-1.217c.428-.61 1.176-.807 1.82-.63l1.102.302c.067.019.177.011.3-.071.214-.143.437-.272.668-.386.133-.066.194-.158.211-.224l.29-1.106C6.009.645 6.556.095 7.299.03 7.53.01 7.764 0 8 0Zm-.571 1.525c-.036.003-.108.036-.137.146l-.289 1.105c-.147.561-.549.967-.998 1.189-.173.086-.34.183-.5.29-.417.278-.97.423-1.529.27l-1.103-.303c-.109-.03-.175.016-.195.045-.22.312-.412.644-.573.99-.014.031-.021.11.059.19l.815.806c.411.406.562.957.53 1.456a4.709 4.709 0 0 0 0 .582c.032.499-.119 1.05-.53 1.456l-.815.806c-.081.08-.073.159-.059.19.162.346.353.677.573.989.02.03.085.076.195.046l1.102-.303c.56-.153 1.113-.008 1.53.27.161.107.328.204.501.29.447.222.85.629.997 1.189l.289 1.105c.029.109.101.143.137.146a6.6 6.6 0 0 0 1.142 0c.036-.003.108-.036.137-.146l.289-1.105c.147-.561.549-.967.998-1.189.173-.086.34-.183.5-.29.417-.278.97-.423 1.529-.27l1.103.303c.109.029.175-.016.195-.045.22-.313.411-.644.573-.99.014-.031.021-.11-.059-.19l-.815-.806c-.411-.406-.562-.957-.53-1.456a4.709 4.709 0 0 0 0-.582c-.032-.499.119-1.05.53-1.456l.815-.806c.081-.08.073-.159.059-.19a6.464 6.464 0 0 0-.573-.989c-.02-.03-.085-.076-.195-.046l-1.102.303c-.56.153-1.113.008-1.53-.27a4.44 4.44 0 0 0-.501-.29c-.447-.222-.85-.629-.997-1.189l-.289-1.105c-.029-.11-.101-.143-.137-.146a6.6 6.6 0 0 0-1.142 0ZM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM9.5 8a1.5 1.5 0 1 0-3.001.001A1.5 1.5 0 0 0 9.5 8Z"></path></svg> Settings</strong>. If you cannot see the "Settings" tab, select the <strong><svg version="1.1" width="16" height="16" viewbox="0 0 16 16" class="octicon octicon-kebab-horizontal" aria-label="More" role="img"><path d="M8 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM1.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm13 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path></svg></strong> dropdown menu, then click <strong>Settings</strong>.</p>
+<p><img src="../../../../..//assets/images/help/repository/repo-actions-settings.png" alt='Screenshot of a repository header showing the tabs. The "Settings" tab is highlighted by a dark orange outline.'></p>
+</li>
+<li>
+<p>In the "Security" section of the sidebar, select <strong><svg version="1.1" width="16" height="16" viewbox="0 0 16 16" class="octicon octicon-key-asterisk" aria-label="key-asterisk" role="img"><path d="M0 2.75A2.75 2.75 0 0 1 2.75 0h10.5A2.75 2.75 0 0 1 16 2.75v10.5A2.75 2.75 0 0 1 13.25 16H2.75A2.75 2.75 0 0 1 0 13.25ZM2.75 1.5c-.69 0-1.25.56-1.25 1.25v10.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25V2.75c0-.69-.56-1.25-1.25-1.25Z"></path><path d="M8 4a.75.75 0 0 1 .75.75V6.7l1.69-.975a.75.75 0 0 1 .75 1.3L9.5 8l1.69.976a.75.75 0 0 1-.75 1.298L8.75 9.3v1.951a.75.75 0 0 1-1.5 0V9.299l-1.69.976a.75.75 0 0 1-.75-1.3L6.5 8l-1.69-.975a.75.75 0 0 1 .75-1.3l1.69.976V4.75A.75.75 0 0 1 8 4Z"></path></svg> Secrets and variables</strong>, then click <strong>Actions</strong>.</p>
+</li>
+<li>
+<p>Click the <strong>Variables</strong> tab.<br>
+<img src="../../../../..//assets/images/help/repository/actions-variables-tab.png" alt='Screenshot of the "Actions secrets and variables" page. The "Variables" tab is outlined in dark orange.'></p>
+</li>
+<li>
+<p>Click <strong>New repository variable</strong>.</p>
+</li>
+<li>
+<p>In the <strong>Name</strong> field, enter a name for your variable.</p>
+</li>
+<li>
+<p>In the <strong>Value</strong> field, enter the value for your variable.</p>
+</li>
+<li>
+<p>Click <strong>Add variable</strong>.</p>
+</li>
+</ol>
+<h3 title="Defining configuration variables for multiple workflows / Creating configuration variables for an environment">
+<a href="#creating-configuration-variables-for-an-environment" aria-hidden="true" class="anchor" id="creating-configuration-variables-for-an-environment"></a>Creating configuration variables for an environment</h3>
+<p>To create secrets or variables for an environment in a personal account repository, you must be the repository owner. To create secrets or variables for an environment in an organization repository, you must have <code>admin</code> access. For more information on environments, see <a href="../../deploy/configure-and-manage-deployments/manage-environments.html">Managing environments for deployment</a>.</p>
+<ol>
+<li>
+<p>On GitHub, navigate to the main page of the repository.</p>
+</li>
+<li>
+<p>Under your repository name, click <strong><svg version="1.1" width="16" height="16" viewbox="0 0 16 16" class="octicon octicon-gear" aria-label="gear" role="img"><path d="M8 0a8.2 8.2 0 0 1 .701.031C9.444.095 9.99.645 10.16 1.29l.288 1.107c.018.066.079.158.212.224.231.114.454.243.668.386.123.082.233.09.299.071l1.103-.303c.644-.176 1.392.021 1.82.63.27.385.506.792.704 1.218.315.675.111 1.422-.364 1.891l-.814.806c-.049.048-.098.147-.088.294.016.257.016.515 0 .772-.01.147.038.246.088.294l.814.806c.475.469.679 1.216.364 1.891a7.977 7.977 0 0 1-.704 1.217c-.428.61-1.176.807-1.82.63l-1.102-.302c-.067-.019-.177-.011-.3.071a5.909 5.909 0 0 1-.668.386c-.133.066-.194.158-.211.224l-.29 1.106c-.168.646-.715 1.196-1.458 1.26a8.006 8.006 0 0 1-1.402 0c-.743-.064-1.289-.614-1.458-1.26l-.289-1.106c-.018-.066-.079-.158-.212-.224a5.738 5.738 0 0 1-.668-.386c-.123-.082-.233-.09-.299-.071l-1.103.303c-.644.176-1.392-.021-1.82-.63a8.12 8.12 0 0 1-.704-1.218c-.315-.675-.111-1.422.363-1.891l.815-.806c.05-.048.098-.147.088-.294a6.214 6.214 0 0 1 0-.772c.01-.147-.038-.246-.088-.294l-.815-.806C.635 6.045.431 5.298.746 4.623a7.92 7.92 0 0 1 .704-1.217c.428-.61 1.176-.807 1.82-.63l1.102.302c.067.019.177.011.3-.071.214-.143.437-.272.668-.386.133-.066.194-.158.211-.224l.29-1.106C6.009.645 6.556.095 7.299.03 7.53.01 7.764 0 8 0Zm-.571 1.525c-.036.003-.108.036-.137.146l-.289 1.105c-.147.561-.549.967-.998 1.189-.173.086-.34.183-.5.29-.417.278-.97.423-1.529.27l-1.103-.303c-.109-.03-.175.016-.195.045-.22.312-.412.644-.573.99-.014.031-.021.11.059.19l.815.806c.411.406.562.957.53 1.456a4.709 4.709 0 0 0 0 .582c.032.499-.119 1.05-.53 1.456l-.815.806c-.081.08-.073.159-.059.19.162.346.353.677.573.989.02.03.085.076.195.046l1.102-.303c.56-.153 1.113-.008 1.53.27.161.107.328.204.501.29.447.222.85.629.997 1.189l.289 1.105c.029.109.101.143.137.146a6.6 6.6 0 0 0 1.142 0c.036-.003.108-.036.137-.146l.289-1.105c.147-.561.549-.967.998-1.189.173-.086.34-.183.5-.29.417-.278.97-.423 1.529-.27l1.103.303c.109.029.175-.016.195-.045.22-.313.411-.644.573-.99.014-.031.021-.11-.059-.19l-.815-.806c-.411-.406-.562-.957-.53-1.456a4.709 4.709 0 0 0 0-.582c-.032-.499.119-1.05.53-1.456l.815-.806c.081-.08.073-.159.059-.19a6.464 6.464 0 0 0-.573-.989c-.02-.03-.085-.076-.195-.046l-1.102.303c-.56.153-1.113.008-1.53-.27a4.44 4.44 0 0 0-.501-.29c-.447-.222-.85-.629-.997-1.189l-.289-1.105c-.029-.11-.101-.143-.137-.146a6.6 6.6 0 0 0-1.142 0ZM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM9.5 8a1.5 1.5 0 1 0-3.001.001A1.5 1.5 0 0 0 9.5 8Z"></path></svg> Settings</strong>. If you cannot see the "Settings" tab, select the <strong><svg version="1.1" width="16" height="16" viewbox="0 0 16 16" class="octicon octicon-kebab-horizontal" aria-label="More" role="img"><path d="M8 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM1.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm13 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path></svg></strong> dropdown menu, then click <strong>Settings</strong>.</p>
+<p><img src="../../../../..//assets/images/help/repository/repo-actions-settings.png" alt='Screenshot of a repository header showing the tabs. The "Settings" tab is highlighted by a dark orange outline.'></p>
+</li>
+<li>
+<p>In the left sidebar, click <strong>Environments</strong>.</p>
+</li>
+<li>
+<p>Click on the environment that you want to add a variable to.</p>
+</li>
+<li>
+<p>Under <strong>Environment variables</strong>, click <strong>Add variable</strong>.</p>
+</li>
+<li>
+<p>In the <strong>Name</strong> field, enter a name for your variable.</p>
+</li>
+<li>
+<p>In the <strong>Value</strong> field, enter the value for your variable.</p>
+</li>
+<li>
+<p>Click <strong>Add variable</strong>.</p>
+</li>
+</ol>
+<h3 title="Defining configuration variables for multiple workflows / Creating configuration variables for an organization">
+<a href="#creating-configuration-variables-for-an-organization" aria-hidden="true" class="anchor" id="creating-configuration-variables-for-an-organization"></a>Creating configuration variables for an organization</h3>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Organization-level secrets and variables are not accessible by private repositories for GitHub Free. For more information about upgrading your GitHub subscription, see <a href="https://docs.github.com/en/billing/managing-billing-for-your-github-account/upgrading-your-github-subscription" class="external">Upgrading your account's plan</a>.</p>
+</div>
+<p>When creating a secret or variable in an organization, you can use a policy to limit access by repository. For example, you can grant access to all repositories, or limit access to only private repositories or a specified list of repositories.</p>
+<p>Organization owners can create secrets or variables at the organization level.</p>
+<ol>
+<li>
+<p>On GitHub, navigate to the main page of the organization.</p>
+</li>
+<li>
+<p>Under your organization name, click <strong><svg version="1.1" width="16" height="16" viewbox="0 0 16 16" class="octicon octicon-gear" aria-label="gear" role="img"><path d="M8 0a8.2 8.2 0 0 1 .701.031C9.444.095 9.99.645 10.16 1.29l.288 1.107c.018.066.079.158.212.224.231.114.454.243.668.386.123.082.233.09.299.071l1.103-.303c.644-.176 1.392.021 1.82.63.27.385.506.792.704 1.218.315.675.111 1.422-.364 1.891l-.814.806c-.049.048-.098.147-.088.294.016.257.016.515 0 .772-.01.147.038.246.088.294l.814.806c.475.469.679 1.216.364 1.891a7.977 7.977 0 0 1-.704 1.217c-.428.61-1.176.807-1.82.63l-1.102-.302c-.067-.019-.177-.011-.3.071a5.909 5.909 0 0 1-.668.386c-.133.066-.194.158-.211.224l-.29 1.106c-.168.646-.715 1.196-1.458 1.26a8.006 8.006 0 0 1-1.402 0c-.743-.064-1.289-.614-1.458-1.26l-.289-1.106c-.018-.066-.079-.158-.212-.224a5.738 5.738 0 0 1-.668-.386c-.123-.082-.233-.09-.299-.071l-1.103.303c-.644.176-1.392-.021-1.82-.63a8.12 8.12 0 0 1-.704-1.218c-.315-.675-.111-1.422.363-1.891l.815-.806c.05-.048.098-.147.088-.294a6.214 6.214 0 0 1 0-.772c.01-.147-.038-.246-.088-.294l-.815-.806C.635 6.045.431 5.298.746 4.623a7.92 7.92 0 0 1 .704-1.217c.428-.61 1.176-.807 1.82-.63l1.102.302c.067.019.177.011.3-.071.214-.143.437-.272.668-.386.133-.066.194-.158.211-.224l.29-1.106C6.009.645 6.556.095 7.299.03 7.53.01 7.764 0 8 0Zm-.571 1.525c-.036.003-.108.036-.137.146l-.289 1.105c-.147.561-.549.967-.998 1.189-.173.086-.34.183-.5.29-.417.278-.97.423-1.529.27l-1.103-.303c-.109-.03-.175.016-.195.045-.22.312-.412.644-.573.99-.014.031-.021.11.059.19l.815.806c.411.406.562.957.53 1.456a4.709 4.709 0 0 0 0 .582c.032.499-.119 1.05-.53 1.456l-.815.806c-.081.08-.073.159-.059.19.162.346.353.677.573.989.02.03.085.076.195.046l1.102-.303c.56-.153 1.113-.008 1.53.27.161.107.328.204.501.29.447.222.85.629.997 1.189l.289 1.105c.029.109.101.143.137.146a6.6 6.6 0 0 0 1.142 0c.036-.003.108-.036.137-.146l.289-1.105c.147-.561.549-.967.998-1.189.173-.086.34-.183.5-.29.417-.278.97-.423 1.529-.27l1.103.303c.109.029.175-.016.195-.045.22-.313.411-.644.573-.99.014-.031.021-.11-.059-.19l-.815-.806c-.411-.406-.562-.957-.53-1.456a4.709 4.709 0 0 0 0-.582c-.032-.499.119-1.05.53-1.456l.815-.806c.081-.08.073-.159.059-.19a6.464 6.464 0 0 0-.573-.989c-.02-.03-.085-.076-.195-.046l-1.102.303c-.56.153-1.113.008-1.53-.27a4.44 4.44 0 0 0-.501-.29c-.447-.222-.85-.629-.997-1.189l-.289-1.105c-.029-.11-.101-.143-.137-.146a6.6 6.6 0 0 0-1.142 0ZM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM9.5 8a1.5 1.5 0 1 0-3.001.001A1.5 1.5 0 0 0 9.5 8Z"></path></svg> Settings</strong>. If you cannot see the "Settings" tab, select the <strong><svg version="1.1" width="16" height="16" viewbox="0 0 16 16" class="octicon octicon-kebab-horizontal" aria-label="More" role="img"><path d="M8 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM1.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm13 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path></svg></strong> dropdown menu, then click <strong>Settings</strong>.</p>
+<p><img src="../../../../..//assets/images/help/discussions/org-settings-global-nav-update.png" alt="Screenshot of the tabs in an organization's profile. The &quot;Settings&quot; tab is outlined in dark orange."></p>
+</li>
+<li>
+<p>In the "Security" section of the sidebar, select <strong><svg version="1.1" width="16" height="16" viewbox="0 0 16 16" class="octicon octicon-key-asterisk" aria-label="key-asterisk" role="img"><path d="M0 2.75A2.75 2.75 0 0 1 2.75 0h10.5A2.75 2.75 0 0 1 16 2.75v10.5A2.75 2.75 0 0 1 13.25 16H2.75A2.75 2.75 0 0 1 0 13.25ZM2.75 1.5c-.69 0-1.25.56-1.25 1.25v10.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25V2.75c0-.69-.56-1.25-1.25-1.25Z"></path><path d="M8 4a.75.75 0 0 1 .75.75V6.7l1.69-.975a.75.75 0 0 1 .75 1.3L9.5 8l1.69.976a.75.75 0 0 1-.75 1.298L8.75 9.3v1.951a.75.75 0 0 1-1.5 0V9.299l-1.69.976a.75.75 0 0 1-.75-1.3L6.5 8l-1.69-.975a.75.75 0 0 1 .75-1.3l1.69.976V4.75A.75.75 0 0 1 8 4Z"></path></svg> Secrets and variables</strong>, then click <strong>Actions</strong>.</p>
+</li>
+<li>
+<p>Click the <strong>Variables</strong> tab.</p>
+<p><img src="../../../../..//assets/images/help/repository/actions-variables-tab.png" alt='Screenshot of the "Actions secrets and variables" page. The "Variables" tab is outlined in dark orange.'></p>
+</li>
+<li>
+<p>Click <strong>New organization variable</strong>.</p>
+</li>
+<li>
+<p>In the <strong>Name</strong> field, enter a name for your variable.</p>
+</li>
+<li>
+<p>In the <strong>Value</strong> field, enter the value for your variable.</p>
+</li>
+<li>
+<p>From the <strong>Repository access</strong> dropdown list, choose an access policy.</p>
+</li>
+<li>
+<p>Click <strong>Add variable</strong>.</p>
+</li>
+</ol>
+<h2 title="Using contexts to access variable values">
+<a href="#using-contexts-to-access-variable-values" aria-hidden="true" class="anchor" id="using-contexts-to-access-variable-values"></a>Using contexts to access variable values</h2>
+<p>Contexts are a way to access information about workflow runs, variables, runner environments, jobs, and steps. For more information, see <a href="../../../reference/workflows-and-actions/contexts.html">Contexts reference</a>. There are many other contexts that you can use for a variety of purposes in your workflows. For details of where you can use specific contexts within a workflow, see <a href="../../../reference/workflows-and-actions/contexts.html#context-availability">Contexts reference</a>.</p>
+<p>You can access environment variable values using the <code>env</code> context and configuration variable values using the <code>vars</code> context.</p>
+<h3 title="Using contexts to access variable values / Using the env context to access environment variable values">
+<a href="#using-the-env-context-to-access-environment-variable-values" aria-hidden="true" class="anchor" id="using-the-env-context-to-access-environment-variable-values"></a>Using the <code>env</code> context to access environment variable values</h3>
+<p>In addition to runner environment variables, GitHub Actions allows you to set and read <code>env</code> key values using contexts. Environment variables and contexts are intended for use at different points in the workflow.</p>
+<p>The <code>run</code> steps in a workflow, or in a referenced action, are processed by a runner. As a result, you can use runner environment variables here, using the appropriate syntax for the shell you are using on the runner - for example, <code>$NAME</code> for the bash shell on a Linux runner, or <code>$env:NAME</code> for PowerShell on a Windows runner. In most cases you can also use contexts, with the syntax <code>${{ CONTEXT.PROPERTY }}</code>, to access the same value. The difference is that the context will be interpolated and replaced by a string before the job is sent to a runner.</p>
+<p>However, you cannot use runner environment variables in parts of a workflow that are processed by GitHub Actions and are not sent to the runner. Instead, you must use contexts. For example, an <code>if</code> conditional, which determines whether a job or step is sent to the runner, is always processed by GitHub Actions. You must therefore use a context in an <code>if</code> conditional statement to access the value of a variable.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Conditional env variable
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">workflow_dispatch
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">DAY_OF_WEEK</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Monday
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">greeting_job</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">Greeting</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Hello
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">Say Hello Mona it's Monday</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ env.DAY_OF_WEEK == 'Monday' }}
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "$Greeting $First_Name. Today is $DAY_OF_WEEK!"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">First_Name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Mona
+</span></code></pre>
+<p>In this modification of the earlier example, we've introduced an <code>if</code> conditional. The workflow step is now only run if <code>DAY_OF_WEEK</code> is set to "Monday". We access this value from the <code>if</code> conditional statement by using the <a href="../../../reference/workflows-and-actions/contexts.html#env-context"><code>env</code> context</a>. The <code>env</code> context is not required for the variables referenced within the <code>run</code> command. They are referenced as runner environment variables and are interpolated after the job is received by the runner. We could, however, have chosen to interpolate those variables before sending the job to the runner, by using contexts. The resulting output would be the same.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "${{ env.Greeting }} ${{ env.First_Name }}. Today is ${{ env.DAY_OF_WEEK }}!"
+</span></code></pre>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Contexts are usually denoted using the dollar sign and curly braces, as <code>${{ context.property }}</code>. In an <code>if</code> conditional, the <code>${{</code> and <code>}}</code> are optional, but if you use them they must enclose the entire comparison statement, as shown above.</p>
+</div>
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>When creating workflows and actions, you should always consider whether your code might execute untrusted input from possible attackers. Certain contexts should be treated as untrusted input, as an attacker could insert their own malicious content. For more information, see <a href="../../../reference/security/secure-use.html#understanding-the-risk-of-script-injections">Secure use reference</a>.</p>
+</div>
+<h3 title="Using contexts to access variable values / Using the vars context to access configuration variable values">
+<a href="#using-the-vars-context-to-access-configuration-variable-values" aria-hidden="true" class="anchor" id="using-the-vars-context-to-access-configuration-variable-values"></a>Using the <code>vars</code> context to access configuration variable values</h3>
+<p>Configuration variables can be accessed across the workflow using <code>vars</code> context. For more information, see <a href="../../../reference/workflows-and-actions/contexts.html#vars-context">Contexts reference</a>.</p>
+<p>If a configuration variable has not been set, the return value of a context referencing the variable will be an empty string.</p>
+<p>The following example shows using configuration variables with the <code>vars</code> context across a workflow. Each of the following configuration variables have been defined at the repository, organization, or environment levels.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">workflow_dispatch</span><span style="color:#c0c5ce;">:
+</span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Setting an environment variable with the value of a configuration variable
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">env_var</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ vars.ENV_CONTEXT_VAR }}
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">display-variables</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ vars.JOB_NAME }}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># You can use configuration variables with the `vars` context for dynamic jobs
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ vars.USE_VARIABLES == 'true' }}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ vars.RUNNER }}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">environment</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ vars.ENVIRONMENT_STAGE }}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Use variables
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">        echo "repository variable : $REPOSITORY_VAR"
+</span><span style="color:#a3be8c;">        echo "organization variable : $ORGANIZATION_VAR"
+</span><span style="color:#a3be8c;">        echo "overridden variable : $OVERRIDE_VAR"
+</span><span style="color:#a3be8c;">        echo "variable from shell environment : $env_var"
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">REPOSITORY_VAR</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ vars.REPOSITORY_VAR }}
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">ORGANIZATION_VAR</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ vars.ORGANIZATION_VAR }}
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">OVERRIDE_VAR</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ vars.OVERRIDE_VAR }}
+</span><span style="color:#c0c5ce;">        
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ vars.HELLO_WORLD_STEP }}
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ vars.HELLO_WORLD_ENABLED == 'true' }}
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/hello-world-javascript-action@main
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">who-to-greet</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ vars.GREET_NAME }}
+</span></code></pre>
+<h2 title="Detecting the operating system">
+<a href="#detecting-the-operating-system" aria-hidden="true" class="anchor" id="detecting-the-operating-system"></a>Detecting the operating system</h2>
+<p>You can write a single workflow file that can be used for different operating systems by using the <code>RUNNER_OS</code> default environment variable and the corresponding context property <span style="white-space: nowrap;"><code>${{ runner.os }}</code></span>. For example, the following workflow could be run successfully if you changed the operating system from <code>macos-latest</code> to <code>windows-latest</code> without having to alter the syntax of the environment variables, which differs depending on the shell being used by the runner.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">workflow_dispatch
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">if-Windows-else</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">macos-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">condition 1
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">runner.os == 'Windows'
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "The operating system on the runner is $env:RUNNER_OS."
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">condition 2
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">runner.os != 'Windows'
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "The operating system on the runner is not Windows, it's $RUNNER_OS."
+</span></code></pre>
+<p>In this example, the two <code>if</code> statements check the <code>os</code> property of the <code>runner</code> context to determine the operating system of the runner. <code>if</code> conditionals are processed by GitHub Actions, and only steps where the check resolves as <code>true</code> are sent to the runner. Here one of the checks will always be <code>true</code> and the other <code>false</code>, so only one of these steps is sent to the runner. Once the job is sent to the runner, the step is executed and the environment variable in the <code>echo</code> command is interpolated using the appropriate syntax (<code>$env:NAME</code> for PowerShell on Windows, and <code>$NAME</code> for bash and sh on Linux and macOS). In this example, the statement <code>runs-on: macos-latest</code> means that the second step will be run.</p>
+<h2 title="Passing values between steps and jobs in a workflow">
+<a href="#passing-values-between-steps-and-jobs-in-a-workflow" aria-hidden="true" class="anchor" id="passing-values-between-steps-and-jobs-in-a-workflow"></a>Passing values between steps and jobs in a workflow</h2>
+<p>If you generate a value in one step of a job, you can use the value in subsequent steps of the same job by assigning the value to an existing or new environment variable and then writing this to the <code>GITHUB_ENV</code> environment file. The environment file can be used directly by an action, or from a shell command in the workflow file by using the <code>run</code> keyword. For more information, see <a href="../../../reference/workflows-and-actions/workflow-commands.html#setting-an-environment-variable">Workflow commands for GitHub Actions</a>.</p>
+<p>If you want to pass a value from a step in one job in a workflow to a step in another job in the workflow, you can define the value as a job output. You can then reference this job output from a step in another job. For more information, see <a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idoutputs">Workflow syntax for GitHub Actions</a>.</p>
+<h2 title="Next steps">
+<a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>For reference information, see <a href="../../../reference/workflows-and-actions/variables.html">Variables reference</a>.</p>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

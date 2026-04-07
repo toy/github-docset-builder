@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Building and testing Java with Gradle</title>
+    <link rel="stylesheet" href="../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Build and test code</a> / </nav><h1>
+<a href="#building-and-testing-java-with-gradle" aria-hidden="true" class="anchor" id="building-and-testing-java-with-gradle"></a>Building and testing Java with Gradle</h1>
+<p>Learn how to create a continuous integration (CI) workflow in GitHub Actions to build and test your Java project with Gradle.</p>
+<h2 title="Introduction">
+<a href="#introduction" aria-hidden="true" class="anchor" id="introduction"></a>Introduction</h2>
+<p>This guide shows you how to create a workflow that performs continuous integration (CI) for your Java project using the Gradle build system. The workflow you create will allow you to see when commits to a pull request cause build or test failures against your default branch; this approach can help ensure that your code is always healthy. You can extend your CI workflow to cache files and upload artifacts from a workflow run.</p>
+<p>GitHub-hosted runners have a tools cache with pre-installed software, which includes Java Development Kits (JDKs) and Gradle. For a list of software and the pre-installed versions for JDK and Gradle, see <a href="../../concepts/runners/github-hosted-runners.html#supported-software">GitHub-hosted runners</a>.</p>
+<h2 title="Prerequisites">
+<a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<p>You should be familiar with YAML and the syntax for GitHub Actions. For more information, see:</p>
+<ul>
+<li><a href="../../reference/workflows-and-actions/workflow-syntax.html">Workflow syntax for GitHub Actions</a></li>
+<li><a href="../../how-tos/write-workflows/index.html">Writing workflows</a></li>
+</ul>
+<p>We recommend that you have a basic understanding of Java and the Gradle framework. For more information, see the <a href="https://docs.gradle.org/current/userguide/userguide.html" class="external">Gradle User Manual</a>.</p>
+<h2 title="Using a Gradle workflow template">
+<a href="#using-a-gradle-workflow-template" aria-hidden="true" class="anchor" id="using-a-gradle-workflow-template"></a>Using a Gradle workflow template</h2>
+<p>To get started quickly, add a workflow template to the <code>.github/workflows</code> directory of your repository.</p>
+<p>GitHub provides a workflow template for Gradle that should work for most Java with Gradle projects. The subsequent sections of this guide give examples of how you can customize this workflow template.</p>
+<ol>
+<li>
+<p>On GitHub, navigate to the main page of the repository.</p>
+</li>
+<li>
+<p>Under your repository name, click <strong><svg version="1.1" width="16" height="16" viewbox="0 0 16 16" class="octicon octicon-play" aria-label="play" role="img"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm4.879-2.773 4.264 2.559a.25.25 0 0 1 0 .428l-4.264 2.559A.25.25 0 0 1 6 10.559V5.442a.25.25 0 0 1 .379-.215Z"></path></svg> Actions</strong>.</p>
+<p><img src="../../../..//assets/images/help/repository/actions-tab-global-nav-update.png" alt='Screenshot of the tabs for the "github/docs" repository. The "Actions" tab is highlighted with an orange outline.'></p>
+</li>
+<li>
+<p>If you already have a workflow in your repository, click <strong>New workflow</strong>.</p>
+</li>
+<li>
+<p>The "Choose a workflow" page shows a selection of recommended workflow templates. Search for "Java with Gradle".</p>
+</li>
+<li>
+<p>On the "Java with Gradle" workflow, click <strong>Configure</strong>.<br>
+This workflow performs the following steps:</p>
+</li>
+<li>
+<p>Checks out a copy of project's repository.</p>
+</li>
+<li>
+<p>Sets up the Java JDK.</p>
+</li>
+<li>
+<p>Sets up the Gradle environment. The <a href="https://github.com/gradle/actions" class="external"><code>gradle/actions/setup-gradle</code></a> action takes care of caching state between workflow runs, and provides a detailed summary of all Gradle executions.</p>
+</li>
+<li>
+<p>The "Build with Gradle" step executes the <code>build</code> task using the <a href="https://docs.gradle.org/current/userguide/gradle_wrapper.html" class="external">Gradle Wrapper</a>.</p>
+</li>
+<li>
+<p>Edit the workflow as required. For example, change the Java version.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<ul>
+<li>This workflow template contains an action that is not certified by GitHub. Actions provided by third parties are governed by separate terms of service, privacy policy, and support documentation.</li>
+<li>If you use actions from third parties you should use a version specified by a commit SHA. If the action is revised and you want to use the newer version, you will need to update the SHA. You can specify a version by referencing a tag or a branch, however the action may change without warning. For more information, see <a href="../../reference/security/secure-use.html#using-third-party-actions">Secure use reference</a>.</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Click <strong>Commit changes</strong>.</p>
+<p>The <code>gradle.yml</code> workflow file is added to the <code>.github/workflows</code> directory of your repository.</p>
+</li>
+</ol>
+<h3 title="Using a Gradle workflow template / Specifying the Java version and architecture">
+<a href="#specifying-the-java-version-and-architecture" aria-hidden="true" class="anchor" id="specifying-the-java-version-and-architecture"></a>Specifying the Java version and architecture</h3>
+<p>The workflow template sets up the <code>PATH</code> to contain OpenJDK 8 for the x64 platform. If you want to use a different version of Java, or target a different architecture (<code>x64</code> or <code>x86</code>), you can use the <code>setup-java</code> action to choose a different Java runtime environment.</p>
+<p>For example, to use version 11 of the JDK provided by Adoptium for the x64 platform, you can use the <code>setup-java</code> action and configure the <code>java-version</code>, <code>distribution</code> and <code>architecture</code> parameters to <code>'11'</code>, <code>'temurin'</code> and <code>x64</code>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set up JDK 11 for x64
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-java@v4
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">java-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">11</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">distribution</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">temurin</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">architecture</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">x64
+</span></code></pre>
+<p>For more information, see the <a href="https://github.com/actions/setup-java" class="external"><code>setup-java</code></a> action.</p>
+<h2 title="Building and testing your code">
+<a href="#building-and-testing-your-code" aria-hidden="true" class="anchor" id="building-and-testing-your-code"></a>Building and testing your code</h2>
+<p>You can use the same commands that you use locally to build and test your code.</p>
+<p>The workflow template will run the <code>build</code> task by default. In the default Gradle configuration, this command will download dependencies, build classes, run tests, and package classes into their distributable format, for example, a JAR file.</p>
+<p>If you use different commands to build your project, or you want to use a different task, you can specify those. For example, you may want to run the <code>package</code> task that's configured in your <code>ci.gradle</code> file.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># This workflow uses actions that are not certified by GitHub.
+</span><span style="color:#65737e;"># They are provided by a third-party and are governed by
+</span><span style="color:#65737e;"># separate terms of service, privacy policy, and support
+</span><span style="color:#65737e;"># documentation.
+</span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-java@v4
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">java-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">17</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">distribution</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">temurin</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup Gradle
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">gradle/actions/setup-gradle@017a9effdb900e5b5b2fddfb590a105619dca3c3 </span><span style="color:#65737e;"># v4.4.2
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Build with Gradle
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">./gradlew -b ci.gradle package
+</span></code></pre>
+<h2 title="Caching dependencies">
+<a href="#caching-dependencies" aria-hidden="true" class="anchor" id="caching-dependencies"></a>Caching dependencies</h2>
+<p>Your build dependencies can be cached to speed up your workflow runs. After a successful run, <code>gradle/actions/setup-gradle</code> caches important parts of the Gradle user home directory. In future jobs, the cache will be restored so that build scripts won't need to be recompiled and dependencies won't need to be downloaded from remote package repositories.</p>
+<p>Caching is enabled by default when using the <code>gradle/actions/setup-gradle</code> action. For more information, see <a href="https://github.com/gradle/actions/blob/main/setup-gradle/README.md#caching-build-state-between-jobs" class="external"><code>gradle/actions/setup-gradle</code></a>.</p>
+<h2 title="Packaging workflow data as artifacts">
+<a href="#packaging-workflow-data-as-artifacts" aria-hidden="true" class="anchor" id="packaging-workflow-data-as-artifacts"></a>Packaging workflow data as artifacts</h2>
+<p>After your build has succeeded and your tests have passed, you may want to upload the resulting Java packages as a build artifact. This will store the built packages as part of the workflow run, and allow you to download them. Artifacts can help you test and debug pull requests in your local environment before they're merged. For more information, see <a href="../store-and-share-data.html">Store and share data with workflow artifacts</a>.</p>
+<p>Gradle will usually create output files like JARs, EARs, or WARs in the <code>build/libs</code> directory. You can upload the contents of that directory using the <code>upload-artifact</code> action.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># This workflow uses actions that are not certified by GitHub.
+</span><span style="color:#65737e;"># They are provided by a third-party and are governed by
+</span><span style="color:#65737e;"># separate terms of service, privacy policy, and support
+</span><span style="color:#65737e;"># documentation.
+</span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-java@v4
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">java-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">17</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">distribution</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">temurin</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup Gradle
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">gradle/actions/setup-gradle@017a9effdb900e5b5b2fddfb590a105619dca3c3 </span><span style="color:#65737e;"># v4.4.2
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Build with Gradle
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">./gradlew build
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Upload build artifacts
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/upload-artifact@v4
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Package
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">build/libs
+</span></code></pre>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

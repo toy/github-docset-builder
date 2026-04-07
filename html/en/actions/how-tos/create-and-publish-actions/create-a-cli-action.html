@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Creating a third party CLI action</title>
+    <link rel="stylesheet" href="../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">How-tos</a> / <a href="index.html">Create and publish actions</a> / </nav><h1>
+<a href="#creating-a-third-party-cli-action" aria-hidden="true" class="anchor" id="creating-a-third-party-cli-action"></a>Creating a third party CLI action</h1>
+<p>Learn how to develop an action to set up a CLI on GitHub Actions runners.</p>
+<h2 title="Introduction">
+<a href="#introduction" aria-hidden="true" class="anchor" id="introduction"></a>Introduction</h2>
+<p>You can write an action to provide a way for users to access your servers via a configured CLI environment on GitHub Actions runners.</p>
+<p>Your action should:</p>
+<ul>
+<li>Make it simple for users to specify the version of the CLI to install</li>
+<li>Support multiple operating systems</li>
+<li>Run in an efficient fashion to minimize run-time and associated costs</li>
+<li>Work across GitHub-hosted and self-hosted runners</li>
+<li>Leverage community tooling when possible</li>
+</ul>
+<p>This article will demonstrate how to write an action that retrieves a specific version of your CLI, installs it, adds it to the path, and (optionally) caches it. This type of action (an action that sets up a tool) is often named <code>setup-$TOOL</code>.</p>
+<h2 title="Prerequisites">
+<a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<p>You should have an understanding of how to write a custom action. For more information, see <a href="manage-custom-actions.html">Managing custom actions</a>.</p>
+<h2 title="Example">
+<a href="#example" aria-hidden="true" class="anchor" id="example"></a>Example</h2>
+<p>The following script demonstrates how you can get a user-specified version as input, download and extract the specific version of your CLI, then add the CLI to the path.</p>
+<p>GitHub provides <a href="https://github.com/actions/toolkit" class="external"><code>actions/toolkit</code></a>, which is a set of packages that helps you create actions. This example uses the <a href="https://github.com/actions/toolkit/tree/main/packages/core" class="external"><code>actions/core</code></a> and <a href="https://github.com/actions/toolkit/tree/main/packages/tool-cache" class="external"><code>actions/tool-cache</code></a> packages.</p>
+<pre lang="javascript" style="background-color:#2b303b;"><code><span style="color:#b48ead;">const </span><span style="color:#bf616a;">core </span><span style="color:#c0c5ce;">= </span><span style="color:#8fa1b3;">require</span><span style="color:#c0c5ce;">('</span><span style="color:#a3be8c;">@actions/core</span><span style="color:#c0c5ce;">');
+</span><span style="color:#b48ead;">const </span><span style="color:#bf616a;">tc </span><span style="color:#c0c5ce;">= </span><span style="color:#8fa1b3;">require</span><span style="color:#c0c5ce;">('</span><span style="color:#a3be8c;">@actions/tool-cache</span><span style="color:#c0c5ce;">');
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#b48ead;">async function </span><span style="color:#8fa1b3;">setup</span><span style="color:#c0c5ce;">() {
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;">// Get version of tool to be installed
+</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">const </span><span style="color:#bf616a;">version </span><span style="color:#c0c5ce;">= </span><span style="color:#bf616a;">core</span><span style="color:#c0c5ce;">.</span><span style="color:#8fa1b3;">getInput</span><span style="color:#c0c5ce;">('</span><span style="color:#a3be8c;">version</span><span style="color:#c0c5ce;">');
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;">// Download the specific version of the tool, e.g. as a tarball
+</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">const </span><span style="color:#bf616a;">pathToTarball </span><span style="color:#c0c5ce;">= </span><span style="color:#bf616a;">await tc</span><span style="color:#c0c5ce;">.</span><span style="color:#8fa1b3;">downloadTool</span><span style="color:#c0c5ce;">(</span><span style="color:#8fa1b3;">getDownloadURL</span><span style="color:#c0c5ce;">());
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;">// Extract the tarball onto the runner
+</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">const </span><span style="color:#bf616a;">pathToCLI </span><span style="color:#c0c5ce;">= </span><span style="color:#bf616a;">await tc</span><span style="color:#c0c5ce;">.</span><span style="color:#8fa1b3;">extractTar</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">pathToTarball</span><span style="color:#c0c5ce;">);
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;">// Expose the tool by adding it to the PATH
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">core</span><span style="color:#c0c5ce;">.</span><span style="color:#8fa1b3;">addPath</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">pathToCLI</span><span style="color:#c0c5ce;">)
+</span><span style="color:#c0c5ce;">}
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">module.exports = </span><span style="color:#bf616a;">setup
+</span></code></pre>
+<p>To use this script, replace <code>getDownloadURL</code> with a function that downloads your CLI. You will also need to create an actions metadata file (<code>action.yml</code>) that accepts a <code>version</code> input and that runs this script. For full details about how to create an action, see <a href="../../tutorials/create-actions/create-a-javascript-action.html">Creating a JavaScript action</a>.</p>
+<h2 title="Further reading">
+<a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<p>This pattern is employed in several actions. For more examples, see:</p>
+<ul>
+<li><a href="https://github.com/ruby/setup-ruby" class="external"><code>ruby/setup-ruby</code></a></li>
+<li><a href="https://github.com/google-github-actions/setup-gcloud" class="external"><code>google-github-actions/setup-gcloud</code></a></li>
+<li><a href="https://github.com/hashicorp/setup-terraform" class="external"><code>hashicorp/setup-terraform</code></a></li>
+</ul>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

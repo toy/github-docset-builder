@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Setting a default shell and working directory</title>
+    <link rel="stylesheet" href="../../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Write workflows</a> / <a href="index.html">Choose what workflows do</a> / </nav><h1>
+<a href="#setting-a-default-shell-and-working-directory" aria-hidden="true" class="anchor" id="setting-a-default-shell-and-working-directory"></a>Setting a default shell and working directory</h1>
+<p>Define the default settings that will apply to all jobs in the workflow, or all steps in a job.</p>
+<h2 title="Overview">
+<a href="#overview" aria-hidden="true" class="anchor" id="overview"></a>Overview</h2>
+<p>Use <code>defaults</code> to create a <code>map</code> of default settings that will apply to all jobs in the workflow. You can also set default settings that are only available to a job. For more information, see <a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_iddefaults"><code>jobs.&lt;job_id&gt;.defaults</code></a>.</p>
+<p>When more than one default setting is defined with the same name, GitHub uses the most specific default setting. For example, a default setting defined in a job will override a default setting that has the same name defined in a workflow.</p>
+<h2 title="Setting default shell and working directory">
+<a href="#setting-default-shell-and-working-directory" aria-hidden="true" class="anchor" id="setting-default-shell-and-working-directory"></a>Setting default shell and working directory</h2>
+<p>You can use <code>defaults.run</code> to provide default <code>shell</code> and <code>working-directory</code> options for all <a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idstepsrun"><code>run</code></a> steps in a workflow. You can also set default settings for <code>run</code> that are only available to a job. For more information, see <a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_iddefaultsrun"><code>jobs.&lt;job_id&gt;.defaults.run</code></a>. You cannot use contexts or expressions in this keyword.</p>
+<p>When more than one default setting is defined with the same name, GitHub uses the most specific default setting. For example, a default setting defined in a job will override a default setting that has the same name defined in a workflow.</p>
+<h3 title="Setting default shell and working directory / Example: Set the default shell and working directory">
+<a href="#example-set-the-default-shell-and-working-directory" aria-hidden="true" class="anchor" id="example-set-the-default-shell-and-working-directory"></a>Example: Set the default shell and working directory</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">defaults</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">shell</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bash
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">working-directory</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">./scripts
+</span></code></pre>
+<h2 title="Setting default values for a specific job">
+<a href="#setting-default-values-for-a-specific-job" aria-hidden="true" class="anchor" id="setting-default-values-for-a-specific-job"></a>Setting default values for a specific job</h2>
+<p>Use <code>jobs.&lt;job_id&gt;.defaults</code> to create a <code>map</code> of default settings that will apply to all steps in the job. You can also set default settings for the entire workflow. For more information, see <a href="../../../reference/workflows-and-actions/workflow-syntax.html#defaults"><code>defaults</code></a>.</p>
+<p>When more than one default setting is defined with the same name, GitHub uses the most specific default setting. For example, a default setting defined in a job will override a default setting that has the same name defined in a workflow.</p>
+<h2 title="Setting default shell and working directory for a job">
+<a href="#setting-default-shell-and-working-directory-for-a-job" aria-hidden="true" class="anchor" id="setting-default-shell-and-working-directory-for-a-job"></a>Setting default shell and working directory for a job</h2>
+<p>Use <code>jobs.&lt;job_id&gt;.defaults.run</code> to provide default <code>shell</code> and <code>working-directory</code> to all <code>run</code> steps in the job.</p>
+<p>You can provide default <code>shell</code> and <code>working-directory</code> options for all <a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idstepsrun"><code>run</code></a> steps in a job. You can also set default settings for <code>run</code> for the entire workflow. For more information, see <a href="../../../reference/workflows-and-actions/workflow-syntax.html#defaultsrun"><code>defaults.run</code></a>.</p>
+<p>These can be overridden at the <code>jobs.&lt;job_id&gt;.defaults.run</code> and <code>jobs.&lt;job_id&gt;.steps[*].run</code> levels.</p>
+<p>When more than one default setting is defined with the same name, GitHub uses the most specific default setting. For example, a default setting defined in a job will override a default setting that has the same name defined in a workflow.</p>
+<h3 title="Setting default shell and working directory for a job / Example: Setting default run step options for a job">
+<a href="#example-setting-default-run-step-options-for-a-job" aria-hidden="true" class="anchor" id="example-setting-default-run-step-options-for-a-job"></a>Example: Setting default <code>run</code> step options for a job</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">job1</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">defaults</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">shell</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bash
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">working-directory</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">./scripts
+</span></code></pre>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

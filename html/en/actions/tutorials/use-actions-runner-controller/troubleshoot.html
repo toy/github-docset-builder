@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Troubleshooting Actions Runner Controller errors</title>
+    <link rel="stylesheet" href="../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Actions Runner Controller</a> / </nav><h1>
+<a href="#troubleshooting-actions-runner-controller-errors" aria-hidden="true" class="anchor" id="troubleshooting-actions-runner-controller-errors"></a>Troubleshooting Actions Runner Controller errors</h1>
+<p>Learn how to troubleshoot Actions Runner Controller errors.</p>
+<h2 title="Logging">
+<a href="#logging" aria-hidden="true" class="anchor" id="logging"></a>Logging</h2>
+<p>The Actions Runner Controller (ARC) resources, which include the controller, listener, and runners, write logs to standard output (<code>stdout</code>). We recommend you implement a logging solution to collect and store these logs. Having logs available can help you or GitHub support with troubleshooting and debugging. For more information, see <a href="https://kubernetes.io/docs/concepts/cluster-administration/logging/" class="external">Logging Architecture</a> in the Kubernetes documentation.</p>
+<h2 title="Resources labels">
+<a href="#resources-labels" aria-hidden="true" class="anchor" id="resources-labels"></a>Resources labels</h2>
+<p>Labels are added to the resources created by Actions Runner Controller, which include the controller, listener, and runner pods. You can use these labels to filter resources and to help with troubleshooting.</p>
+<h3 title="Resources labels / Controller pod">
+<a href="#controller-pod" aria-hidden="true" class="anchor" id="controller-pod"></a>Controller pod</h3>
+<p>The following labels are applied to the controller pod.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#a3be8c;">app.kubernetes.io/component=controller-manager
+</span><span style="color:#a3be8c;">app.kubernetes.io/instance=&lt;controller installation name&gt;
+</span><span style="color:#a3be8c;">app.kubernetes.io/name=gha-runner-scale-set-controller
+</span><span style="color:#a3be8c;">app.kubernetes.io/part-of=gha-runner-scale-set-controller
+</span><span style="color:#a3be8c;">app.kubernetes.io/version=&lt;chart version&gt;
+</span></code></pre>
+<h3 title="Resources labels / Listener pod">
+<a href="#listener-pod" aria-hidden="true" class="anchor" id="listener-pod"></a>Listener pod</h3>
+<p>The following labels are applied to listener pods.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#a3be8c;">actions.github.com/enterprise= </span><span style="color:#65737e;"># Will be populated if githubConfigUrl is an enterprise URL
+</span><span style="color:#a3be8c;">actions.github.com/organization= </span><span style="color:#65737e;"># Will be populated if githubConfigUrl is an organization URL
+</span><span style="color:#a3be8c;">actions.github.com/repository= </span><span style="color:#65737e;"># Will be populated if githubConfigUrl is a repository URL
+</span><span style="color:#a3be8c;">actions.github.com/scale-set-name= </span><span style="color:#65737e;"># Runners scale set name
+</span><span style="color:#a3be8c;">actions.github.com/scale-set-namespace= </span><span style="color:#65737e;"># Runners namespace
+</span><span style="color:#a3be8c;">app.kubernetes.io/component=runner-scale-set-listener
+</span><span style="color:#a3be8c;">app.kubernetes.io/part-of=gha-runner-scale-set
+</span><span style="color:#a3be8c;">app.kubernetes.io/version= </span><span style="color:#65737e;"># Chart version
+</span></code></pre>
+<h3 title="Resources labels / Runner pod">
+<a href="#runner-pod" aria-hidden="true" class="anchor" id="runner-pod"></a>Runner pod</h3>
+<p>The following labels are applied to runner pods.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#a3be8c;">actions-ephemeral-runner= </span><span style="color:#65737e;"># True | False
+</span><span style="color:#a3be8c;">actions.github.com/organization= </span><span style="color:#65737e;"># Will be populated if githubConfigUrl is an organization URL
+</span><span style="color:#a3be8c;">actions.github.com/scale-set-name= </span><span style="color:#65737e;"># Runners scale set name
+</span><span style="color:#a3be8c;">actions.github.com/scale-set-namespace= </span><span style="color:#65737e;"># Runners namespace
+</span><span style="color:#a3be8c;">app.kubernetes.io/component=runner
+</span><span style="color:#a3be8c;">app.kubernetes.io/part-of=gha-runner-scale-set
+</span><span style="color:#a3be8c;">app.kubernetes.io/version= </span><span style="color:#65737e;"># Chart version
+</span></code></pre>
+<h2 title="Checking the logs of the controller and runner set listener">
+<a href="#checking-the-logs-of-the-controller-and-runner-set-listener" aria-hidden="true" class="anchor" id="checking-the-logs-of-the-controller-and-runner-set-listener"></a>Checking the logs of the controller and runner set listener</h2>
+<p>To check the logs of the controller pod, you can use the following command.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">kubectl</span><span style="color:#c0c5ce;"> logs</span><span style="color:#bf616a;"> -n </span><span style="color:#c0c5ce;">&lt;CONTROLLER_NAMESPACE&gt; -l app.kubernetes.io/name=gha-runner-scale-set-controller
+</span></code></pre>
+<p>To check the logs of the runner set listener, you can use the following command.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">kubectl</span><span style="color:#c0c5ce;"> logs</span><span style="color:#bf616a;"> -n </span><span style="color:#c0c5ce;">&lt;CONTROLLER_NAMESPACE&gt; -l auto-scaling-runner-set-namespace=arc-systems</span><span style="color:#bf616a;"> -l</span><span style="color:#c0c5ce;"> auto-scaling-runner-set-name=arc-runner-set
+</span></code></pre>
+<h2 title="Using the charts from the master branch">
+<a href="#using-the-charts-from-the-master-branch" aria-hidden="true" class="anchor" id="using-the-charts-from-the-master-branch"></a>Using the charts from the <code>master</code> branch</h2>
+<p>We recommend you use the charts from the latest release instead of the <code>master</code> branch. The <code>master</code> branch is highly unstable, and we cannot guarantee that the charts in the <code>master</code> branch will work at any given time.</p>
+<h2 title="Troubleshooting the listener pod">
+<a href="#troubleshooting-the-listener-pod" aria-hidden="true" class="anchor" id="troubleshooting-the-listener-pod"></a>Troubleshooting the listener pod</h2>
+<p>If the controller pod is running, but the listener pod is not, inspect the logs of the controller first and see if there are any errors. If there are no errors and the runner set listener pod is still not running, ensure the controller pod has access to the Kubernetes API server in your cluster.</p>
+<p>If you have a proxy configured or you're using a sidecar proxy that's automatically injected, such as <a href="https://istio.io/" class="external">Istio</a>, ensure it's configured to allow traffic from the controller container (manager) to the Kubernetes API server.</p>
+<p>If you have installed the autoscaling runner set, but the listener pod is not created, verify that the <code>githubConfigSecret</code> you provided is correct and that the <code>githubConfigUrl</code> you provided is accurate. See <a href="../../how-tos/manage-runners/use-actions-runner-controller/authenticate-to-the-api.html">Authenticating ARC to the GitHub API</a> and <a href="../../how-tos/manage-runners/use-actions-runner-controller/deploy-runner-scale-sets.html">Deploying runner scale sets with Actions Runner Controller</a> for more information.</p>
+<h2 title="Runner pods are recreated after a canceled workflow run">
+<a href="#runner-pods-are-recreated-after-a-canceled-workflow-run" aria-hidden="true" class="anchor" id="runner-pods-are-recreated-after-a-canceled-workflow-run"></a>Runner pods are recreated after a canceled workflow run</h2>
+<p>Once a workflow run is canceled, the following events happen.</p>
+<ul>
+<li>The cancellation signal is sent to the runners directly.</li>
+<li>The runner application terminates, which also terminates the runner pods.</li>
+<li>On the next poll, the cancellation signal is received by the listener.</li>
+</ul>
+<p>There might be a slight delay between when the runners receive the signal and when the listener receives the signal. When runner pods start terminating, the listener tries to bring up new runners to match the desired number of runners according to the state it's in. However, when the listener receives the cancellation signal, it will act to reduce the number of runners. Eventually the listener will scale back down to the desired number of runners. In the meantime, you may see extra runners.</p>
+<h2 title="Error: Name must have up to n characters">
+<a href="#error-name-must-have-up-to-n-characters" aria-hidden="true" class="anchor" id="error-name-must-have-up-to-n-characters"></a>Error: <code>Name must have up to n characters</code>
+</h2>
+<p>ARC uses the generated names of certain resources as labels for other resources. Because of this requirement, ARC limits resource names to 63 characters.</p>
+<p>Because part of the resource name is defined by you, ARC imposes a limit on the number of characters you can use for the installation name and namespace.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">Error:</span><span style="color:#c0c5ce;"> INSTALLATION FAILED: execution error at (gha-runner-scale-set/templates/autoscalingrunnerset.yaml:5:5)</span><span style="color:#96b5b4;">:</span><span style="color:#c0c5ce;"> Name must have up to 45 characters
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#8fa1b3;">Error:</span><span style="color:#c0c5ce;"> INSTALLATION FAILED: execution error at (gha-runner-scale-set/templates/autoscalingrunnerset.yaml:8:5)</span><span style="color:#96b5b4;">:</span><span style="color:#c0c5ce;"> Namespace must have up to 63 characters
+</span></code></pre>
+<h2 title="Error: Access to the path /home/runner/_work/_tool is denied">
+<a href="#error-access-to-the-path-homerunner_work_tool-is-denied" aria-hidden="true" class="anchor" id="error-access-to-the-path-homerunner_work_tool-is-denied"></a>Error: <code>Access to the path /home/runner/_work/_tool is denied</code>
+</h2>
+<p>You may see this error if you're using Kubernetes mode with persistent volumes. This error occurs if the runner container is running with a non-root user and is causing a permissions mismatch with the mounted volume.</p>
+<p>To fix this, you can do one of the following things.</p>
+<ul>
+<li>
+<p>Use a volume type that supports <code>securityContext.fsGroup</code>. <code>hostPath</code> volumes do not support this property, whereas <code>local</code> volumes and other types of volumes do support it. Update the <code>fsGroup</code> of your runner pod to match the GID of the runner. You can do this by updating the <code>gha-runner-scale-set</code> helm chart values to include the following. Replace <code>VERSION</code> with the version of the <code>actions-runner</code> container image you want to use.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">template</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">spec</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">securityContext</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">fsGroup</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">123
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">containers</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">runner
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">image</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ghcr.io/actions/actions-runner:latest
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">command</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">/home/runner/run.sh</span><span style="color:#c0c5ce;">"]
+</span></code></pre>
+</li>
+<li>
+<p>If updating the <code>securityContext</code> of your runner pod is not a viable solution, you can work around the issue by using <code>initContainers</code> to change the mounted volume's ownership, as follows.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">template</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">spec</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">initContainers</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">kube-init
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">image</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ghcr.io/actions/actions-runner:latest
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">command</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">sudo</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">chown</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">-R</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">1001:123</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">/home/runner/_work</span><span style="color:#c0c5ce;">"]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">volumeMounts</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">work
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">mountPath</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">/home/runner/_work
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">containers</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">runner
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">image</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ghcr.io/actions/actions-runner:latest
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">command</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">/home/runner/run.sh</span><span style="color:#c0c5ce;">"]
+</span></code></pre>
+</li>
+</ul>
+<h2 title="Error: failed to get access token for GitHub App auth: 401 Unauthorized">
+<a href="#error-failed-to-get-access-token-for-github-app-auth-401-unauthorized" aria-hidden="true" class="anchor" id="error-failed-to-get-access-token-for-github-app-auth-401-unauthorized"></a>Error: <code>failed to get access token for GitHub App auth: 401 Unauthorized</code>
+</h2>
+<p>A <code>401 Unauthorized</code> error when attempting to obtain an access token for a GitHub App could be a result of a Network Time Protocol (NTP) drift. Ensure that your Kubernetes system is accurately syncing with an NTP server and that there isn't a significant time drift. There is more leeway if your system time is behind GitHub's time, but if the environment is more than a few seconds ahead, 401 errors will occur when using GitHub App.</p>
+<h2 title="Runner group limits">
+<a href="#runner-group-limits" aria-hidden="true" class="anchor" id="runner-group-limits"></a>Runner group limits</h2>
+<p>You can have a maximum of 10,000 self-hosted runners in one runner group. If this limit is reached, adding a new runner will not be possible.</p>
+<h2 title="Runner updates">
+<a href="#runner-updates" aria-hidden="true" class="anchor" id="runner-updates"></a>Runner updates</h2>
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>Any updates released for the software, including major, minor, or patch releases, are considered as an available update. If you do not perform a software update within 30 days, the GitHub Actions service will not queue jobs to your runner. In addition, if a critical security update is required, the GitHub Actions service will not queue jobs to your runner until it has been updated.</p>
+</div>
+<p>Validate that your runner software version and/or custom runner image(s) in use are running the latest version.</p>
+<p>For more information, see <a href="../../reference/runners/self-hosted-runners.html">Self-hosted runners reference</a>.</p>
+<h2 title="Legal notice">
+<a href="#legal-notice" aria-hidden="true" class="anchor" id="legal-notice"></a>Legal notice</h2>
+<p>Portions have been adapted from <a href="https://github.com/actions/actions-runner-controller/" class="external">https://github.com/actions/actions-runner-controller/</a> under the Apache-2.0 license:</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Copyright 2019 Moto Ishizawa
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">Licensed under the Apache License, Version 2.0 (the "License");
+</span><span style="color:#c0c5ce;">you may not use this file except in compliance with the License.
+</span><span style="color:#c0c5ce;">You may obtain a copy of the License at
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    http://www.apache.org/licenses/LICENSE-2.0
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">Unless required by applicable law or agreed to in writing, software
+</span><span style="color:#c0c5ce;">distributed under the License is distributed on an "AS IS" BASIS,
+</span><span style="color:#c0c5ce;">WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+</span><span style="color:#c0c5ce;">See the License for the specific language governing permissions and
+</span><span style="color:#c0c5ce;">limitations under the License.
+</span></code></pre>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

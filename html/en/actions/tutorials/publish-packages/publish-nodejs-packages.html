@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Publishing Node.js packages</title>
+    <link rel="stylesheet" href="../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Publish packages</a> / </nav><h1>
+<a href="#publishing-nodejs-packages" aria-hidden="true" class="anchor" id="publishing-nodejs-packages"></a>Publishing Node.js packages</h1>
+<p>In this tutorial, you'll learn how to publish Node.js packages to a registry as part of your continuous integration (CI) workflow.</p>
+<h2 title="Introduction">
+<a href="#introduction" aria-hidden="true" class="anchor" id="introduction"></a>Introduction</h2>
+<p>This guide shows you how to create a workflow that publishes Node.js packages to the GitHub Packages and npm registries after continuous integration (CI) tests pass.</p>
+<h2 title="Prerequisites">
+<a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<p>We recommend that you have a basic understanding of workflow configuration options and how to create a workflow file. For more information, see <a href="../../how-tos/write-workflows/index.html">Writing workflows</a>.</p>
+<p>For more information about creating a CI workflow for your Node.js project, see <a href="../build-and-test-code/nodejs.html">Building and testing Node.js</a>.</p>
+<p>You may also find it helpful to have a basic understanding of the following:</p>
+<ul>
+<li><a href="https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry" class="external">Working with the npm registry</a></li>
+<li><a href="../../how-tos/write-workflows/choose-what-workflows-do/use-variables.html">Store information in variables</a></li>
+<li><a href="../../how-tos/write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a></li>
+<li><a href="../authenticate-with-github_token.html">Use GITHUB<span data-escaped-char>\</span><span data-escaped-char>_</span>TOKEN for authentication in workflows</a></li>
+</ul>
+<h2 title="About package configuration">
+<a href="#about-package-configuration" aria-hidden="true" class="anchor" id="about-package-configuration"></a>About package configuration</h2>
+<p>The <code>name</code> and <code>version</code> fields in the <code>package.json</code> file create a unique identifier that registries use to link your package to a registry. You can add a summary for the package listing page by including a <code>description</code> field in the <code>package.json</code> file. For more information, see <a href="https://docs.npmjs.com/creating-a-package-json-file" class="external">Creating a package.json file</a> and <a href="https://docs.npmjs.com/creating-node-js-modules" class="external">Creating Node.js modules</a> in the npm documentation.</p>
+<p>When a local <code>.npmrc</code> file exists and has a <code>registry</code> value specified, the <code>npm publish</code> command uses the registry configured in the <code>.npmrc</code> file. You can use the <code>setup-node</code> action to create a local <code>.npmrc</code> file on the runner that configures the default registry and scope. The <code>setup-node</code> action also accepts an authentication token as input, used to access private registries or publish node packages. For more information, see <a href="https://github.com/actions/setup-node/" class="external"><code>setup-node</code></a>.</p>
+<p>You can specify the Node.js version installed on the runner using the <code>setup-node</code> action.</p>
+<p>If you add steps in your workflow to configure the <code>publishConfig</code> fields in your <code>package.json</code> file, you don't need to specify the registry-url using the <code>setup-node</code> action, but you will be limited to publishing the package to one registry. For more information, see <a href="https://docs.npmjs.com/cli/v9/configuring-npm/package-json#publishconfig" class="external">publishConfig</a> in the npm documentation.</p>
+<h2 title="Publishing packages to the npm registry">
+<a href="#publishing-packages-to-the-npm-registry" aria-hidden="true" class="anchor" id="publishing-packages-to-the-npm-registry"></a>Publishing packages to the npm registry</h2>
+<p>You can trigger a workflow to publish your package every time you publish a new release. The process in the following example is executed when the release event of type <code>published</code> is triggered. If the CI tests pass, the process uploads the package to the npm registry. For more information, see <a href="https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository#creating-a-release" class="external">Managing releases in a repository</a>.</p>
+<p>To perform authenticated operations against the npm registry in your workflow, you'll need to store your npm authentication token as a secret. For example, create a repository secret called <code>NPM_TOKEN</code>. For more information, see <a href="../../how-tos/write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a>.</p>
+<p>By default, npm uses the <code>name</code> field of the <code>package.json</code> file to determine the name of your published package. When publishing to a global namespace, you only need to include the package name. For example, you would publish a package named <code>my-package</code> to <code>https://www.npmjs.com/package/my-package</code>.</p>
+<p>If you're publishing a package that includes a scope prefix, include the scope in the name of your <code>package.json</code> file. For example, if your npm scope prefix is "octocat" and the package name is "hello-world", the <code>name</code> in your <code>package.json</code> file should be <code>@octocat/hello-world</code>. If your npm package uses a scope prefix and the package is public, you need to use the option <code>npm publish --access public</code>. This is an option that npm requires to prevent someone from publishing a private package unintentionally.</p>
+<p>If you would like to publish your package with provenance, include the <code>--provenance</code> flag with your <code>npm publish</code> command. This allows you to publicly and verifiably establish where and how your package was built, which increases supply chain security for people who consume your package. For more information, see <a href="https://docs.npmjs.com/generating-provenance-statements" class="external">Generating provenance statements</a> in the npm documentation.</p>
+<p>This example stores the <code>NPM_TOKEN</code> secret in the <code>NODE_AUTH_TOKEN</code> environment variable. When the <code>setup-node</code> action creates an <code>.npmrc</code> file, it references the token from the <code>NODE_AUTH_TOKEN</code> environment variable.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Publish Package to npmjs
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">release</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">published</span><span style="color:#c0c5ce;">]
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">permissions</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">contents</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">id-token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Setup .npmrc file to publish to npm
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-node@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">node-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">20.x</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">registry-url</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">https://registry.npmjs.org</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm ci
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm publish --provenance --access public
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">NODE_AUTH_TOKEN</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.NPM_TOKEN }}
+</span></code></pre>
+<p>In the example above, the <code>setup-node</code> action creates an <code>.npmrc</code> file on the runner with the following contents:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}
+</span><span style="color:#c0c5ce;">registry=https://registry.npmjs.org/
+</span><span style="color:#c0c5ce;">always-auth=true
+</span></code></pre>
+<p>Please note that you need to set the <code>registry-url</code> to <code>https://registry.npmjs.org/</code> in <code>setup-node</code> to properly configure your credentials.</p>
+<h2 title="Publishing packages to GitHub Packages">
+<a href="#publishing-packages-to-github-packages" aria-hidden="true" class="anchor" id="publishing-packages-to-github-packages"></a>Publishing packages to GitHub Packages</h2>
+<p>You can trigger a workflow to publish your package every time you publish a new release. The process in the following example is executed when the release event of type <code>published</code> is triggered. If the CI tests pass, the process uploads the package to GitHub Packages. For more information, see <a href="https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository#creating-a-release" class="external">Managing releases in a repository</a>.</p>
+<h3 title="Publishing packages to GitHub Packages / Configuring the destination repository">
+<a href="#configuring-the-destination-repository" aria-hidden="true" class="anchor" id="configuring-the-destination-repository"></a>Configuring the destination repository</h3>
+<p>Linking your package to GitHub Packages using the <code>repository</code> key is optional. If you choose not to provide the <code>repository</code> key in your <code>package.json</code> file, then your package will not be linked to a repository when it is published, but you can choose to connect the package to a repository later.</p>
+<p>If you do provide the <code>repository</code> key in your <code>package.json</code> file, then the repository in that key is used as the destination npm registry for GitHub Packages. For example, publishing the below <code>package.json</code> results in a package named <code>my-package</code> published to the <code>octocat/my-other-repo</code> GitHub repository.</p>
+<pre lang="json" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">{
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">name</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">@octocat/my-package</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">repository</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">type</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">git</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">url</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">https://github.com/octocat/my-other-repo.git</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">  },
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+<h3 title="Publishing packages to GitHub Packages / Authenticating to the destination repository">
+<a href="#authenticating-to-the-destination-repository" aria-hidden="true" class="anchor" id="authenticating-to-the-destination-repository"></a>Authenticating to the destination repository</h3>
+<p>To perform authenticated operations against the GitHub Packages registry in your workflow, you can use the <code>GITHUB_TOKEN</code>. The <code>GITHUB_TOKEN</code> secret is set to an access token for the repository each time a job in a workflow begins. You should set the permissions for this access token in the workflow file to grant read access for the <code>contents</code> permission and write access for the <code>packages</code> permission. For more information, see <a href="../authenticate-with-github_token.html">Use GITHUB<span data-escaped-char>\</span><span data-escaped-char>_</span>TOKEN for authentication in workflows</a>.</p>
+<p>If you want to publish your package to a different repository, you must use a personal access token (classic) that has permission to write to packages in the destination repository. For more information, see <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token" class="external">Managing your personal access tokens</a> and <a href="../../how-tos/write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a>.</p>
+<h3 title="Publishing packages to GitHub Packages / Example workflow">
+<a href="#example-workflow" aria-hidden="true" class="anchor" id="example-workflow"></a>Example workflow</h3>
+<p>This example stores the <code>GITHUB_TOKEN</code> secret in the <code>NODE_AUTH_TOKEN</code> environment variable. When the <code>setup-node</code> action creates an <code>.npmrc</code> file, it references the token from the <code>NODE_AUTH_TOKEN</code> environment variable.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Publish package to GitHub Packages
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">release</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">published</span><span style="color:#c0c5ce;">]
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">permissions</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">contents</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">packages</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Setup .npmrc file to publish to GitHub Packages
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-node@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">node-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">20.x</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">registry-url</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">https://npm.pkg.github.com</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">          </span><span style="color:#65737e;"># Defaults to the user or organization that owns the workflow file
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">scope</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">@octocat</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm ci
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm publish
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">NODE_AUTH_TOKEN</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.GITHUB_TOKEN }}
+</span></code></pre>
+<p>The <code>setup-node</code> action creates an <code>.npmrc</code> file on the runner. When you use the <code>scope</code> input to the <code>setup-node</code> action, the <code>.npmrc</code> file includes the scope prefix. By default, the <code>setup-node</code> action sets the scope in the <code>.npmrc</code> file to the account that contains that workflow file.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
+</span><span style="color:#c0c5ce;">@octocat:registry=https://npm.pkg.github.com
+</span><span style="color:#c0c5ce;">always-auth=true
+</span></code></pre>
+<h2 title="Publishing packages using Yarn">
+<a href="#publishing-packages-using-yarn" aria-hidden="true" class="anchor" id="publishing-packages-using-yarn"></a>Publishing packages using Yarn</h2>
+<p>If you use the Yarn package manager, you can install and publish packages using Yarn.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Publish Package to npmjs
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">release</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">published</span><span style="color:#c0c5ce;">]
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Setup .npmrc file to publish to npm
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-node@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">node-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">20.x</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">registry-url</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">https://registry.npmjs.org</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">          </span><span style="color:#65737e;"># Defaults to the user or organization that owns the workflow file
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">scope</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">@octocat</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">yarn
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">yarn npm publish // for Yarn version 1, use `yarn publish` instead
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">NODE_AUTH_TOKEN</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.NPM_TOKEN }}
+</span></code></pre>
+<p>To authenticate with the registry during publishing, ensure your authentication token is also defined in your <code>yarnrc.yml</code> file. For more information, see the <a href="https://yarnpkg.com/configuration/yarnrc#npmAuthToken" class="external">Settings</a> article in the Yarn documentation.</p>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

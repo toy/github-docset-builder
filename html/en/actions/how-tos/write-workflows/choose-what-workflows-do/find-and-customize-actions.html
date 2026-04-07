@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Using pre-written building blocks in your workflow</title>
+    <link rel="stylesheet" href="../../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Write workflows</a> / <a href="index.html">Choose what workflows do</a> / </nav><h1>
+<a href="#using-pre-written-building-blocks-in-your-workflow" aria-hidden="true" class="anchor" id="using-pre-written-building-blocks-in-your-workflow"></a>Using pre-written building blocks in your workflow</h1>
+<p>You can use and customize pre-written actions to power your workflow.</p>
+<h2 title="Browsing Marketplace actions in the workflow editor">
+<a href="#browsing-marketplace-actions-in-the-workflow-editor" aria-hidden="true" class="anchor" id="browsing-marketplace-actions-in-the-workflow-editor"></a>Browsing Marketplace actions in the workflow editor</h2>
+<p>You can search and browse actions directly in your repository's workflow editor. From the sidebar, you can search for a specific action, view featured actions, and browse featured categories. You can also view the number of stars an action has received from the GitHub community.</p>
+<ol>
+<li>In your repository, browse to the workflow file you want to edit.</li>
+<li>In the upper right corner of the file view, to open the workflow editor, click <svg version="1.1" width="16" height="16" viewbox="0 0 16 16" class="octicon octicon-pencil" aria-label="Edit file" role="img"><path d="M11.013 1.427a1.75 1.75 0 0 1 2.474 0l1.086 1.086a1.75 1.75 0 0 1 0 2.474l-8.61 8.61c-.21.21-.47.364-.756.445l-3.251.93a.75.75 0 0 1-.927-.928l.929-3.25c.081-.286.235-.547.445-.758l8.61-8.61Zm.176 4.823L9.75 4.81l-6.286 6.287a.253.253 0 0 0-.064.108l-.558 1.953 1.953-.558a.253.253 0 0 0 .108-.064Zm1.238-3.763a.25.25 0 0 0-.354 0L10.811 3.75l1.439 1.44 1.263-1.263a.25.25 0 0 0 0-.354Z"></path></svg>.<br>
+<img src="../../../../..//assets/images/help/repository/actions-edit-workflow-file.png" alt="Screenshot of a workflow file showing the header section. The pencil icon for editing files is highlighted with a dark orange outline.">
+</li>
+<li>To the right of the editor, use the GitHub Marketplace sidebar to browse actions. Actions with the <svg version="1.1" width="16" height="16" viewbox="0 0 16 16" class="octicon octicon-verified" aria-label="Creator verified by GitHub" role="img"><path d="m9.585.52.929.68c.153.112.331.186.518.215l1.138.175a2.678 2.678 0 0 1 2.24 2.24l.174 1.139c.029.187.103.365.215.518l.68.928a2.677 2.677 0 0 1 0 3.17l-.68.928a1.174 1.174 0 0 0-.215.518l-.175 1.138a2.678 2.678 0 0 1-2.241 2.241l-1.138.175a1.17 1.17 0 0 0-.518.215l-.928.68a2.677 2.677 0 0 1-3.17 0l-.928-.68a1.174 1.174 0 0 0-.518-.215L3.83 14.41a2.678 2.678 0 0 1-2.24-2.24l-.175-1.138a1.17 1.17 0 0 0-.215-.518l-.68-.928a2.677 2.677 0 0 1 0-3.17l.68-.928c.112-.153.186-.331.215-.518l.175-1.14a2.678 2.678 0 0 1 2.24-2.24l1.139-.175c.187-.029.365-.103.518-.215l.928-.68a2.677 2.677 0 0 1 3.17 0ZM7.303 1.728l-.927.68a2.67 2.67 0 0 1-1.18.489l-1.137.174a1.179 1.179 0 0 0-.987.987l-.174 1.136a2.677 2.677 0 0 1-.489 1.18l-.68.928a1.18 1.18 0 0 0 0 1.394l.68.927c.256.348.424.753.489 1.18l.174 1.137c.078.509.478.909.987.987l1.136.174a2.67 2.67 0 0 1 1.18.489l.928.68c.414.305.979.305 1.394 0l.927-.68a2.67 2.67 0 0 1 1.18-.489l1.137-.174a1.18 1.18 0 0 0 .987-.987l.174-1.136a2.67 2.67 0 0 1 .489-1.18l.68-.928a1.176 1.176 0 0 0 0-1.394l-.68-.927a2.686 2.686 0 0 1-.489-1.18l-.174-1.137a1.179 1.179 0 0 0-.987-.987l-1.136-.174a2.677 2.677 0 0 1-1.18-.489l-.928-.68a1.176 1.176 0 0 0-1.394 0ZM11.28 6.78l-3.75 3.75a.75.75 0 0 1-1.06 0L4.72 8.78a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L7 8.94l3.22-3.22a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042Z"></path></svg> badge indicate GitHub has verified the creator of the action as a partner organization.<br>
+<img src="../../../../..//assets/images/help/repository/actions-marketplace-sidebar.png" alt='Screenshot of a workflow in the file editor. The sidebar shows Marketplace actions. A "Creator verified by GitHub" badge is outlined in orange.'>
+</li>
+</ol>
+<h2 title="Adding an action to your workflow">
+<a href="#adding-an-action-to-your-workflow" aria-hidden="true" class="anchor" id="adding-an-action-to-your-workflow"></a>Adding an action to your workflow</h2>
+<p>You can add an action to your workflow by referencing the action in your workflow file. The actions you use in your workflow can be defined in:</p>
+<ul>
+<li>The same repository as your workflow file</li>
+<li>Any public repository</li>
+<li>A published Docker container image on Docker Hub</li>
+</ul>
+<p>You can view the actions referenced in your GitHub Actions workflows as dependencies in the dependency graph of the repository containing your workflows. For more information, see “<a href="https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/about-the-dependency-graph" class="external">About the dependency graph</a>.”</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>To enhance security, GitHub Actions does not support redirects for actions or reusable workflows. This means that when the owner, name of an action's repository, or name of an action is changed, any workflows using that action with the previous name will fail.</p>
+</div>
+<h3 title="Adding an action to your workflow / Adding an action from GitHub Marketplace">
+<a href="#adding-an-action-from-github-marketplace" aria-hidden="true" class="anchor" id="adding-an-action-from-github-marketplace"></a>Adding an action from GitHub Marketplace</h3>
+<p>An action's listing page includes the action's version and the workflow syntax required to use the action. To keep your workflow stable even when updates are made to an action, you can reference the version of the action to use by specifying the Git or Docker tag number in your workflow file.</p>
+<ol>
+<li>Navigate to the action you want to use in your workflow.</li>
+<li>Click to view the full marketplace listing for the action.</li>
+<li>Under "Installation", click <svg version="1.1" width="16" height="16" viewbox="0 0 16 16" class="octicon octicon-copy" aria-label="Copy to clipboard" role="img"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path></svg> to copy the workflow syntax.<br>
+<img src="../../../../..//assets/images/help/repository/actions-sidebar-detailed-view.png" alt='Screenshot of the marketplace listing for an action. The "Copy to clipboard" icon for the action is highlighted with a dark orange outline.'>
+</li>
+<li>Paste the syntax as a new step in your workflow. For more information, see <a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idsteps">Workflow syntax for GitHub Actions</a>.</li>
+<li>If the action requires you to provide inputs, set them in your workflow. For information on inputs an action might require, see <a href="#using-inputs-and-outputs-with-an-action">Using pre-written building blocks in your workflow</a>.</li>
+</ol>
+<p>You can also enable Dependabot version updates for the actions that you add to your workflow. For more information, see <a href="https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot" class="external">Keeping your actions up to date with Dependabot</a>.</p>
+<h3 title="Adding an action to your workflow / Adding an action from the same repository">
+<a href="#adding-an-action-from-the-same-repository" aria-hidden="true" class="anchor" id="adding-an-action-from-the-same-repository"></a>Adding an action from the same repository</h3>
+<p>If an action is defined in the same repository where your workflow file uses the action, you can reference the action with either the ‌<code>{owner}/{repo}@{ref}</code> or <code>./path/to/dir</code> syntax in your workflow file.</p>
+<p>Example repository file structure:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">|-- hello-world (repository)
+</span><span style="color:#c0c5ce;">|   |__ .github
+</span><span style="color:#c0c5ce;">|       └── workflows
+</span><span style="color:#c0c5ce;">|           └── my-first-workflow.yml
+</span><span style="color:#c0c5ce;">|       └── actions
+</span><span style="color:#c0c5ce;">|           |__ hello-world-action
+</span><span style="color:#c0c5ce;">|               └── action.yml
+</span></code></pre>
+<p>The path is relative (<code>./</code>) to the default working directory (<code>github.workspace</code>, <code>$GITHUB_WORKSPACE</code>). If the action checks out the repository to a location different than the workflow, the relative path used for local actions must be updated.</p>
+<p>Example workflow file:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">my_first_job</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># This step checks out a copy of your repository.
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">My first step - check out repository
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># This step references the directory that contains the action.
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Use local hello-world-action
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">./.github/actions/hello-world-action
+</span></code></pre>
+<p>The <code>action.yml</code> file is used to provide metadata for the action. Learn about the content of this file in <a href="../../../reference/workflows-and-actions/metadata-syntax.html">Metadata syntax reference</a>.</p>
+<h3 title="Adding an action to your workflow / Adding an action from a different repository">
+<a href="#adding-an-action-from-a-different-repository" aria-hidden="true" class="anchor" id="adding-an-action-from-a-different-repository"></a>Adding an action from a different repository</h3>
+<p>If an action is defined in a different repository than your workflow file, you can reference the action with the <code>{owner}/{repo}@{ref}</code> syntax in your workflow file.</p>
+<p>The action must be stored in a public repository.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">my_first_job</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">My first step
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-node@v4
+</span></code></pre>
+<h3 title="Adding an action to your workflow / Referencing a container on Docker Hub">
+<a href="#referencing-a-container-on-docker-hub" aria-hidden="true" class="anchor" id="referencing-a-container-on-docker-hub"></a>Referencing a container on Docker Hub</h3>
+<p>If an action is defined in a published Docker container image on Docker Hub, you must reference the action with the <code>docker://{image}:{tag}</code> syntax in your workflow file. To protect your code and data, we strongly recommend you verify the integrity of the Docker container image from Docker Hub before using it in your workflow.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">my_first_job</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">My first step
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">docker://alpine:3.8
+</span></code></pre>
+<p>For some examples of Docker actions, see the <a href="https://github.com/actions/starter-workflows/blob/main/ci/docker-image.yml" class="external">Docker-image.yml workflow</a> and <a href="../../../tutorials/use-containerized-services/create-a-docker-container-action.html">Creating a Docker container action</a>.</p>
+<h3 title="Adding an action to your workflow / Security hardening for using actions in your workflows">
+<a href="#security-hardening-for-using-actions-in-your-workflows" aria-hidden="true" class="anchor" id="security-hardening-for-using-actions-in-your-workflows"></a>Security hardening for using actions in your workflows</h3>
+<p>GitHub provides security features that you can use to increase the security of your workflows. You can use GitHub's built-in features to ensure you are notified about vulnerabilities in the actions you consume, or to automate the process of keeping the actions in your workflows up to date. For more information, see <a href="../../../reference/security/secure-use.html">Secure use reference</a>.</p>
+<h2 title="Using release management for your custom actions">
+<a href="#using-release-management-for-your-custom-actions" aria-hidden="true" class="anchor" id="using-release-management-for-your-custom-actions"></a>Using release management for your custom actions</h2>
+<p>The creators of a community action have the option to use tags, branches, or SHA values to manage releases of the action. Similar to any dependency, you should indicate the version of the action you'd like to use based on your comfort with automatically accepting updates to the action.</p>
+<p>You will designate the version of the action in your workflow file. Check the action's documentation for information on their approach to release management, and to see which tag, branch, or SHA value to use.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>We recommend that you use a SHA value when using third-party actions. However, it's important to note Dependabot will only create Dependabot alerts for vulnerable GitHub Actions that use semantic versioning. For more information, see <a href="../../../reference/security/secure-use.html#using-third-party-actions">Secure use reference</a> and <a href="https://docs.github.com/en/code-security/dependabot/dependabot-alerts/about-dependabot-alerts" class="external">About Dependabot alerts</a>.</p>
+</div>
+<h3 title="Using release management for your custom actions / Using tags">
+<a href="#using-tags" aria-hidden="true" class="anchor" id="using-tags"></a>Using tags</h3>
+<p>Tags are useful for letting you decide when to switch between major and minor versions, but these are more ephemeral and can be moved or deleted by the maintainer. This example demonstrates how to target an action that's been tagged as <code>v1.0.1</code>:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/javascript-action@v1.0.1
+</span></code></pre>
+<h3 title="Using release management for your custom actions / Using SHAs">
+<a href="#using-shas" aria-hidden="true" class="anchor" id="using-shas"></a>Using SHAs</h3>
+<p>If you need more reliable versioning, you should use the SHA value associated with the version of the action. SHAs are immutable and therefore more reliable than tags or branches. However, this approach means you will not automatically receive updates for an action, including important bug fixes and security updates. You must use a commit's full SHA value, and not an abbreviated value. When selecting a SHA, you should verify it is from the action's repository and not a repository fork. This example targets an action's SHA:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/javascript-action@a824008085750b8e136effc585c3cd6082bd575f
+</span></code></pre>
+<h3 title="Using release management for your custom actions / Using branches">
+<a href="#using-branches" aria-hidden="true" class="anchor" id="using-branches"></a>Using branches</h3>
+<p>Specifying a target branch for the action means it will always run the version currently on that branch. This approach can create problems if an update to the branch includes breaking changes. This example targets a branch named <code>@main</code>:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/javascript-action@main
+</span></code></pre>
+<p>For more information, see <a href="../../../concepts/workflows-and-actions/custom-actions.html#using-release-management-for-actions">About custom actions</a>.</p>
+<h2 title="Using inputs and outputs with an action">
+<a href="#using-inputs-and-outputs-with-an-action" aria-hidden="true" class="anchor" id="using-inputs-and-outputs-with-an-action"></a>Using inputs and outputs with an action</h2>
+<p>An action often accepts or requires inputs and generates outputs that you can use. For example, an action might require you to specify a path to a file, the name of a label, or other data it will use as part of the action processing.</p>
+<p>To see the inputs and outputs of an action, check the <code>action.yml</code> in the root directory of the repository.</p>
+<p>In this example <code>action.yml</code>, the <code>inputs</code> keyword defines a required input called <code>file-path</code>, and includes a default value that will be used if none is specified. The <code>outputs</code> keyword defines an output called <code>results-file</code>, which tells you where to locate the results.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">Example</span><span style="color:#c0c5ce;">"
+</span><span style="color:#bf616a;">description</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">Receives file and generates output</span><span style="color:#c0c5ce;">"
+</span><span style="color:#bf616a;">inputs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">file-path</span><span style="color:#c0c5ce;">: </span><span style="color:#65737e;"># id of input
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">description</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">Path to test script</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">required</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">default</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">test-file.js</span><span style="color:#c0c5ce;">"
+</span><span style="color:#bf616a;">outputs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">results-file</span><span style="color:#c0c5ce;">: </span><span style="color:#65737e;"># id of output
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">description</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">Path to results file</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

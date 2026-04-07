@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Extending GitHub Actions Importer with custom transformers</title>
+    <link rel="stylesheet" href="../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Reference</a> / <a href="index.html">GitHub Actions Importer</a> / </nav><h1>
+<a href="#extending-github-actions-importer-with-custom-transformers" aria-hidden="true" class="anchor" id="extending-github-actions-importer-with-custom-transformers"></a>Extending GitHub Actions Importer with custom transformers</h1>
+<p>GitHub Actions Importer offers the ability to extend its built-in mapping.</p>
+<h2 title="About custom transformers">
+<a href="#about-custom-transformers" aria-hidden="true" class="anchor" id="about-custom-transformers"></a>About custom transformers</h2>
+<p>GitHub Actions Importer offers the ability to extend its built-in mapping by creating custom transformers. Custom transformers can be used to:</p>
+<ul>
+<li>Convert items that GitHub Actions Importer does not automatically convert, or modify how items are converted. For more information, see <a href="#creating-custom-transformers-for-items">Creating custom transformers for items</a>.</li>
+<li>Convert references to runners to use different runner labels. For more information, see <a href="#creating-custom-transformers-for-runners">Creating custom transformers for runners</a>.</li>
+<li>Convert environment variable values from your existing pipelines to GitHub Actions workflows. For more information, see <a href="#creating-custom-transformers-for-environment-variables">Creating custom transformers for environment variables</a>.</li>
+</ul>
+<h2 title="Using custom transformers with GitHub Actions Importer">
+<a href="#using-custom-transformers-with-github-actions-importer" aria-hidden="true" class="anchor" id="using-custom-transformers-with-github-actions-importer"></a>Using custom transformers with GitHub Actions Importer</h2>
+<p>A custom transformer contains mapping logic that GitHub Actions Importer can use to transform your plugins, tasks, runner labels, or environment variables to work with GitHub Actions. Custom transformers are written with a domain-specific language (DSL) built on top of Ruby, and are defined within a file with the <code>.rb</code> file extension.</p>
+<p>You can use the <code>--custom-transformers</code> CLI option to specify which custom transformer files to use with the <code>audit</code>, <code>dry-run</code>, and <code>migrate</code> commands.</p>
+<p>For example, if custom transformers are defined in a file named <code>transformers.rb</code>, you can use the following command to use them with GitHub Actions Importer:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer ... --custom-transformers transformers.rb
+</span></code></pre>
+<p>Alternatively, you can use the glob pattern syntax to specify multiple custom transformer files. For example, if multiple custom transformer files are within a directory named <code>transformers</code>, you can provide them all to GitHub Actions Importer with the following command:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer ... --custom-transformers transformers/*.rb
+</span></code></pre>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>When you use custom transformers, the custom transformer files must reside in the same directory, or in subdirectories, from where the <code>gh actions-importer</code> command is run.</p>
+</div>
+<h2 title="Creating custom transformers for items">
+<a href="#creating-custom-transformers-for-items" aria-hidden="true" class="anchor" id="creating-custom-transformers-for-items"></a>Creating custom transformers for items</h2>
+<p>You can create custom transformers that GitHub Actions Importer will use when converting existing build steps or triggers to their equivalent in GitHub Actions. This is especially useful when:</p>
+<ul>
+<li>GitHub Actions Importer doesn't automatically convert an item.</li>
+<li>You want to change how an item is converted by GitHub Actions Importer.</li>
+<li>Your existing pipelines use custom or proprietary extensions, such as shared libraries in Jenkins, and you need to define how these steps should function in GitHub Actions.</li>
+</ul>
+<p>GitHub Actions Importer uses custom transformers that are defined using a DSL built on top of Ruby. In order to create custom transformers for build steps and triggers:</p>
+<ul>
+<li>Each custom transformer file must contain at least one <code>transform</code> method.</li>
+<li>Each <code>transform</code> method must return a <code>Hash</code>, an array of <code>Hash</code>'s, or <code>nil</code>. This returned value will correspond to an action defined in YAML. For more information about actions, see <a href="../../get-started/understand-github-actions.html">Understanding GitHub Actions</a>.</li>
+</ul>
+<h3 title="Creating custom transformers for items / Example custom transformer for a build step">
+<a href="#example-custom-transformer-for-a-build-step" aria-hidden="true" class="anchor" id="example-custom-transformer-for-a-build-step"></a>Example custom transformer for a build step</h3>
+<p>The following example converts a build step that uses the "buildJavaScriptApp" identifier to run various <code>npm</code> commands:</p>
+<pre lang="ruby" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">transform "</span><span style="color:#a3be8c;">buildJavaScriptApp</span><span style="color:#c0c5ce;">" </span><span style="color:#b48ead;">do </span><span style="color:#c0c5ce;">|</span><span style="color:#bf616a;">item</span><span style="color:#c0c5ce;">|
+</span><span style="color:#c0c5ce;">  command = ["</span><span style="color:#a3be8c;">build</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">package</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">deploy</span><span style="color:#c0c5ce;">"].map </span><span style="color:#b48ead;">do </span><span style="color:#c0c5ce;">|</span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">|
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">npm run </span><span style="color:#ab7967;">#{</span><span style="color:#a3be8c;">script</span><span style="color:#ab7967;">}</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">end
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  {
+</span><span style="color:#c0c5ce;">    </span><span style="color:#a3be8c;">name: </span><span style="color:#c0c5ce;">"</span><span style="color:#a3be8c;">build javascript app</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    </span><span style="color:#a3be8c;">run:</span><span style="color:#c0c5ce;"> command.join("</span><span style="color:#96b5b4;">\n</span><span style="color:#c0c5ce;">")
+</span><span style="color:#c0c5ce;">  }
+</span><span style="color:#b48ead;">end
+</span></code></pre>
+<p>The above example results in the following GitHub Actions workflow step. It is comprised of converted build steps that had a <code>buildJavaScriptApp</code> identifier:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">build javascript app
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">    npm run build
+</span><span style="color:#a3be8c;">    npm run package
+</span><span style="color:#a3be8c;">    npm run deploy
+</span></code></pre>
+<p>The <code>transform</code> method uses the identifier of the build step from your source CI/CD instance in an argument. In this example, the identifier is <code>buildJavaScriptLibrary</code>. You can also use comma-separated values to pass multiple identifiers to the <code>transform</code> method. For example, <code>transform "buildJavaScriptApp", "buildTypeScriptApp" { |item| ... }</code>.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The data structure of <code>item</code> will be different depending on the CI/CD platform and the type of item being converted.</p>
+</div>
+<h2 title="Creating custom transformers for runners">
+<a href="#creating-custom-transformers-for-runners" aria-hidden="true" class="anchor" id="creating-custom-transformers-for-runners"></a>Creating custom transformers for runners</h2>
+<p>You can customize the mapping between runners in your source CI/CD instance and their equivalent GitHub Actions runners.</p>
+<p>GitHub Actions Importer uses custom transformers that are defined using a DSL built on top of Ruby. To create custom transformers for runners:</p>
+<ul>
+<li>The custom transformer file must have at least one <code>runner</code> method.</li>
+<li>The <code>runner</code> method accepts two parameters. The first parameter is the source CI/CD instance's runner label, and the second parameter is the corresponding GitHub Actions runner label. For more information on GitHub Actions runners, see <a href="../../concepts/runners/github-hosted-runners.html#supported-runners-and-hardware-resources">GitHub-hosted runners</a>.</li>
+</ul>
+<h3 title="Creating custom transformers for runners / Example custom transformers for runners">
+<a href="#example-custom-transformers-for-runners" aria-hidden="true" class="anchor" id="example-custom-transformers-for-runners"></a>Example custom transformers for runners</h3>
+<p>The following example shows a <code>runner</code> method that converts one runner label to one GitHub Actions runner label in the resulting workflow.</p>
+<pre lang="ruby" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">runner "</span><span style="color:#a3be8c;">linux</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">ubuntu-latest</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<p>You can also use the <code>runner</code> method to convert one runner label to multiple GitHub Actions runner labels in the resulting workflow.</p>
+<pre lang="ruby" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">runner "</span><span style="color:#a3be8c;">big-agent</span><span style="color:#c0c5ce;">", ["</span><span style="color:#a3be8c;">self-hosted</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">xl</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">linux</span><span style="color:#c0c5ce;">"]
+</span></code></pre>
+<p>GitHub Actions Importer attempts to map the runner label as best it can. In cases where it cannot do this, the <code>ubuntu-latest</code> runner label is used as a default. You can use a special keyword with the <code>runner</code> method to control this default value. For example, the following custom transformer instructs GitHub Actions Importer to use <code>macos-latest</code> as the default runner instead of <code>ubuntu-latest</code>.</p>
+<pre lang="ruby" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">runner </span><span style="color:#a3be8c;">:default</span><span style="color:#c0c5ce;">, "</span><span style="color:#a3be8c;">macos-latest</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<h2 title="Creating custom transformers for environment variables">
+<a href="#creating-custom-transformers-for-environment-variables" aria-hidden="true" class="anchor" id="creating-custom-transformers-for-environment-variables"></a>Creating custom transformers for environment variables</h2>
+<p>You can customize the mapping between environment variables in your source CI/CD pipelines to their values in GitHub Actions.</p>
+<p>GitHub Actions Importer uses custom transformers that are defined using a DSL built on top of Ruby. To create custom transformers for environment variables:</p>
+<ul>
+<li>The custom transformer file must have at least one <code>env</code> method.</li>
+<li>The <code>env</code> method accepts two parameters. The first parameter is the name of the environment variable in the original pipeline, and the second parameter is the updated value for the environment variable for GitHub Actions. For more information about GitHub Actions environment variables, see <a href="../../how-tos/write-workflows/choose-what-workflows-do/use-variables.html">Store information in variables</a>.</li>
+</ul>
+<h3 title="Creating custom transformers for environment variables / Example custom transformers for environment variables">
+<a href="#example-custom-transformers-for-environment-variables" aria-hidden="true" class="anchor" id="example-custom-transformers-for-environment-variables"></a>Example custom transformers for environment variables</h3>
+<p>There are several ways you can set up custom transformers to map your environment variables.</p>
+<ul>
+<li>
+<p>The following example sets the value of any existing environment variables named <code>OCTO</code>, to <code>CAT</code> when transforming a pipeline.</p>
+<pre lang="ruby" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">env "</span><span style="color:#a3be8c;">OCTO</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">CAT</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<p>You can also remove all instances of a specific environment variable so they are not transformed to an GitHub Actions workflow. The following example removes all environment variables with the name <code>MONA_LISA</code>.</p>
+<pre lang="ruby" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">env "</span><span style="color:#a3be8c;">MONA_LISA</span><span style="color:#c0c5ce;">", </span><span style="color:#d08770;">nil
+</span></code></pre>
+</li>
+<li>
+<p>You can also map your existing environment variables to secrets. For example, the following <code>env</code> method maps an environment variable named <code>MONALISA</code> to a secret named <code>OCTOCAT</code>.</p>
+<pre lang="ruby" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">env "</span><span style="color:#a3be8c;">MONALISA</span><span style="color:#c0c5ce;">", secret("</span><span style="color:#a3be8c;">OCTOCAT</span><span style="color:#c0c5ce;">")
+</span></code></pre>
+<p>This will set up a reference to a secret named <code>OCTOCAT</code> in the transformed workflow. For the secret to work, you will need to create the secret in your GitHub repository. For more information, see <a href="../../how-tos/write-workflows/choose-what-workflows-do/use-secrets.html#creating-secrets-for-a-repository">Using secrets in GitHub Actions</a>.</p>
+</li>
+<li>
+<p>You can also use regular expressions to update the values of multiple environment variables at once. For example, the following custom transformer removes all environment variables from the converted workflow:</p>
+<pre lang="ruby" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">env /</span><span style="color:#96b5b4;">.*</span><span style="color:#c0c5ce;">/, </span><span style="color:#d08770;">nil
+</span></code></pre>
+<p>The following example uses a regular expression match group to transform environment variable values to dynamically generated secrets.</p>
+<pre lang="ruby" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">env /</span><span style="color:#96b5b4;">^(.+)_SSH_KEY</span><span style="color:#c0c5ce;">/, secret("</span><span style="color:#d08770;">%s</span><span style="color:#a3be8c;">_SSH_KEY)
+</span></code></pre>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The order in which <code>env</code> methods are defined matters when using regular expressions. The first <code>env</code> transformer that matches an environment variable name takes precedence over subsequent <code>env</code> methods. You should define your most specific environment variable transformers first.</p>
+</div>
+</li>
+</ul>
+<h2 title="Legal notice">
+<a href="#legal-notice" aria-hidden="true" class="anchor" id="legal-notice"></a>Legal notice</h2>
+<p>Portions have been adapted from <a href="https://github.com/github/gh-actions-importer/" class="external">https://github.com/github/gh-actions-importer/</a> under the MIT license:</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">MIT License
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">Copyright (c) 2022 GitHub
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">Permission is hereby granted, free of charge, to any person obtaining a copy
+</span><span style="color:#c0c5ce;">of this software and associated documentation files (the "Software"), to deal
+</span><span style="color:#c0c5ce;">in the Software without restriction, including without limitation the rights
+</span><span style="color:#c0c5ce;">to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+</span><span style="color:#c0c5ce;">copies of the Software, and to permit persons to whom the Software is
+</span><span style="color:#c0c5ce;">furnished to do so, subject to the following conditions:
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">The above copyright notice and this permission notice shall be included in all
+</span><span style="color:#c0c5ce;">copies or substantial portions of the Software.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+</span><span style="color:#c0c5ce;">IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+</span><span style="color:#c0c5ce;">FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+</span><span style="color:#c0c5ce;">AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+</span><span style="color:#c0c5ce;">LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+</span><span style="color:#c0c5ce;">OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+</span><span style="color:#c0c5ce;">SOFTWARE.
+</span></code></pre>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

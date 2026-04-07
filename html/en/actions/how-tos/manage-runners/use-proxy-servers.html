@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Using proxy servers with a runner</title>
+    <link rel="stylesheet" href="../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">How-tos</a> / <a href="index.html">Manage runners</a> / </nav><h1>
+<a href="#using-proxy-servers-with-a-runner" aria-hidden="true" class="anchor" id="using-proxy-servers-with-a-runner"></a>Using proxy servers with a runner</h1>
+<p>You can configure runners in isolated environments to use a proxy server for secure communication with GitHub.</p>
+<h2 title="Configuring a proxy for Linux and Windows runners">
+<a href="#configuring-a-proxy-for-linux-and-windows-runners" aria-hidden="true" class="anchor" id="configuring-a-proxy-for-linux-and-windows-runners"></a>Configuring a proxy for Linux and Windows runners</h2>
+<p>If your runner needs to communicate via a proxy server, you can configure proxy settings using environment variables or system-level configurations.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">https_proxy</code></td>
+<td>Proxy URL for HTTPS traffic. You can include basic authentication if required.</td>
+<td>
+<code>http://proxy.local</code><br><code>http://192.168.1.1:8080</code><br><code>http://username:password@proxy.local</code>
+</td>
+</tr>
+<tr>
+<td><code class="keyword">http_proxy</code></td>
+<td>Proxy URL for HTTP traffic. You can include basic authentication if required.</td>
+<td>
+<code>http://proxy.local</code><br><code>http://192.168.1.1:8080</code><br><code>http://username:password@proxy.local</code>
+</td>
+</tr>
+<tr>
+<td><code class="keyword">no_proxy</code></td>
+<td>A comma-separated list of hosts or IP addresses that should bypass the proxy. Some clients only honor IP addresses when connections are made directly to the IP rather than a hostname.</td>
+<td>
+<code>example.com</code><br><code>example.com,myserver.local:443,example.org</code>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The proxy environment variables are read when the runner application starts, so you must set the environment variables before configuring or starting the runner application. If your proxy configuration changes, you must restart the runner application.</p>
+<p>On Windows machines, the proxy environment variable names are case-insensitive. On Linux and macOS machines, we recommend that you use all lowercase environment variables. If you have an environment variable in both lowercase and uppercase on Linux or macOS, for example <code>https_proxy</code> and <code>HTTPS_PROXY</code>, the self-hosted runner application uses the lowercase environment variable.</p>
+<p>The connection between self-hosted runners and GitHub is over HTTPS (port 443).</p>
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>Self-hosted runners do not support using IP addresses in the <code>no_proxy</code> environment variable. If your GitHub Enterprise Server instance uses an IP address and you configure <code>no_proxy</code> to bypass the proxy for that address, the runner will still fail to connect.<br>
+If your GitHub Enterprise Server instance is accessed using an IP address and the connection must bypass the proxy, the runner will fail to connect, even if that IP address is listed in <code>no_proxy</code>.</p>
+</div>
+<h3 title="Configuring a proxy for Linux and Windows runners / Example configurations">
+<a href="#example-configurations" aria-hidden="true" class="anchor" id="example-configurations"></a>Example configurations</h3>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>To avoid issues, it's good practice to treat environment variables as case sensitive, irrespective of the behavior of the operating system and shell you are using.</p>
+</div>
+<h4>
+<a href="#linux-and-macos" aria-hidden="true" class="anchor" id="linux-and-macos"></a>Linux and macOS</h4>
+<p>Set proxy environment variables for your runner.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">export https_proxy=http://proxy.local:8080
+</span><span style="color:#c0c5ce;">export http_proxy=http://proxy.local:8080
+</span><span style="color:#c0c5ce;">export no_proxy=example.com,localhost,127.0.0.1
+</span></code></pre>
+<h4>
+<a href="#windows" aria-hidden="true" class="anchor" id="windows"></a>Windows</h4>
+<p>On Windows, you can configure proxy settings either by setting environment variables or by using the <a href="https://learn.microsoft.com/en-us/windows/win32/winhttp/netsh-exe-commands#set-advproxy" class="external">netsh command</a>.<br>
+The netsh approach applies to applications and services that rely on the WinHTTP API.</p>
+<p>Setting environment variables is still required for runners that use private networking. Whether you also need to configure netsh depends on the applications used in your workflows.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">netsh winhttp set advproxy setting-scope=machine settings={\"Proxy\":\"proxy.local:8080\",\"ProxyBypass\":\"168.63.129.16;169.254.169.254\",\"AutoconfigUrl\":\"\",\"AutoDetect\":false} 
+</span></code></pre>
+<p>When configuring this during custom image generation, use <code>setting-scope=machine</code> to ensure the proxy settings persist after reboots and during VM imaging.</p>
+<h3 title="Configuring a proxy for Linux and Windows runners / Making proxy settings persistent">
+<a href="#making-proxy-settings-persistent" aria-hidden="true" class="anchor" id="making-proxy-settings-persistent"></a>Making proxy settings persistent</h3>
+<p>When setting these environment variables during custom image generation, ensure the configuration persists across reboots or image rebuilds.</p>
+<h4>
+<a href="#linux-and-macos-1" aria-hidden="true" class="anchor" id="linux-and-macos-1"></a>Linux and macOS</h4>
+<p>Write the variables to <code>/etc/environment</code>.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;"> echo 'http_proxy=http://proxy.local' &gt;&gt; /etc/environment
+</span></code></pre>
+<h4>
+<a href="#windows-1" aria-hidden="true" class="anchor" id="windows-1"></a>Windows</h4>
+<p>Set the system-wide environment variables.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">[Environment]::SetEnvironmentVariable("http_proxy", "http://proxy.local", "Machine")
+</span></code></pre>
+<h2 title="Configuring a proxy for Azure runners">
+<a href="#configuring-a-proxy-for-azure-runners" aria-hidden="true" class="anchor" id="configuring-a-proxy-for-azure-runners"></a>Configuring a proxy for Azure runners</h2>
+<p>If your runner is hosted in Azure, either as a self-hosted runner or a GitHub-hosted larger runner deployed with private networking, you may need to configure a proxy to allow outbound connectivity to GitHub services while maintaining network isolation.</p>
+<p>You should add Azure metadata and management IPs to your <code>no_proxy</code> list to ensure the runner can access required Azure services. These endpoints allow Azure VMs to retrieve configuration and identity information needed for proper operation.</p>
+<p>The two Azure IPs are:</p>
+<ul>
+<li>168.63.129.16 (see <a href="https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16?tabs=linux" class="external">Azure IP address 168.63.129.16 overview</a>)</li>
+<li>169.254.169.254 (see <a href="https://learn.microsoft.com/en-us/azure/virtual-machines/instance-metadata-service?tabs=linux" class="external">Azure Instance Metadata Service</a>)</li>
+</ul>
+<h2 title="Using a .env file to set the proxy configuration">
+<a href="#using-a-env-file-to-set-the-proxy-configuration" aria-hidden="true" class="anchor" id="using-a-env-file-to-set-the-proxy-configuration"></a>Using a .env file to set the proxy configuration</h2>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Using a <code>.env</code> file to set the proxy configuration cannot be done on a GitHub-hosted runner.</p>
+</div>
+<p>On self-hosted runners, you can configure proxy settings by adding the variables to a <code>.env</code> file in the self-hosted runner application directory (the directory where you downloaded and unpacked the runner software). This approach is useful when the runner is configured to run as a service under a system account. When the runner starts, it reads the variables set in <code>.env</code> for the proxy configuration.</p>
+<h3 title="Using a .env file to set the proxy configuration / Example .env proxy configuration">
+<a href="#example-env-proxy-configuration" aria-hidden="true" class="anchor" id="example-env-proxy-configuration"></a>Example <code>.env</code> proxy configuration</h3>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">https_proxy=http://proxy.local:8080
+</span><span style="color:#c0c5ce;">no_proxy=example.com,myserver.local:443
+</span></code></pre>
+<h2 title="Setting proxy configuration for Docker containers">
+<a href="#setting-proxy-configuration-for-docker-containers" aria-hidden="true" class="anchor" id="setting-proxy-configuration-for-docker-containers"></a>Setting proxy configuration for Docker containers</h2>
+<p>If you use Docker container actions or service containers in your workflows, you might also need to configure Docker to use your proxy server in addition to setting the above environment variables.</p>
+<p>For information on the required Docker configuration, see <a href="https://docs.docker.com/network/proxy/" class="external">Configure Docker to use a proxy server</a> in the Docker documentation.</p>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

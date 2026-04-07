@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Migrating from Bitbucket Pipelines with GitHub Actions Importer</title>
+    <link rel="stylesheet" href="../../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">Tutorials</a> / <a href="../index.html">Migrate to GitHub Actions</a> / <a href="index.html">Automated migrations</a> / </nav><h1>
+<a href="#migrating-from-bitbucket-pipelines-with-github-actions-importer" aria-hidden="true" class="anchor" id="migrating-from-bitbucket-pipelines-with-github-actions-importer"></a>Migrating from Bitbucket Pipelines with GitHub Actions Importer</h1>
+<p>Learn how to use GitHub Actions Importer to automate the migration of your Bitbucket pipelines to GitHub Actions.</p>
+<h2 title="About migrating from Bitbucket Pipelines with GitHub Actions Importer">
+<a href="#about-migrating-from-bitbucket-pipelines-with-github-actions-importer" aria-hidden="true" class="anchor" id="about-migrating-from-bitbucket-pipelines-with-github-actions-importer"></a>About migrating from Bitbucket Pipelines with GitHub Actions Importer</h2>
+<p>The instructions below will guide you through configuring your environment to use GitHub Actions Importer to migrate Bitbucket Pipelines to GitHub Actions.</p>
+<h3 title="About migrating from Bitbucket Pipelines with GitHub Actions Importer / Prerequisites">
+<a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h3>
+<ul>
+<li>An environment where you can run Linux-based containers, and can install the necessary tools.
+<ul>
+<li>
+<p>Docker is <a href="https://docs.docker.com/get-docker/" class="external">installed</a> and running.</p>
+</li>
+<li>
+<p><a href="https://cli.github.com" class="external">GitHub CLI</a> is installed.</p>
+</li>
+</ul>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The GitHub Actions Importer container and CLI do not need to be installed on the same server as your CI platform.</p>
+</div>
+</li>
+</ul>
+<h3 title="About migrating from Bitbucket Pipelines with GitHub Actions Importer / Limitations">
+<a href="#limitations" aria-hidden="true" class="anchor" id="limitations"></a>Limitations</h3>
+<p>There are some limitations when migrating from Bitbucket Pipelines to GitHub Actions with GitHub Actions Importer.</p>
+<ul>
+<li>
+<p>Images in a private AWS ECR are not supported.</p>
+</li>
+<li>
+<p>The Bitbucket Pipelines option <code>size</code> is not supported. If additional runner resources are required in GitHub Actions, consider using larger runners. For more information, see <a href="../../../how-tos/manage-runners/larger-runners/index.html">Using larger runners</a>.</p>
+</li>
+<li>
+<p>Metrics detailing the queue time of jobs is not supported by the <code>forecast</code> command.</p>
+</li>
+<li>
+<p>Bitbucket <a href="https://support.atlassian.com/bitbucket-cloud/docs/step-options/#After-script" class="external">after-scripts</a> are supported using GitHub Actions <code>always()</code> in combination with checking the <code>steps.&lt;step_id&gt;.conclusion</code> of the previous step. For more information, see <a href="../../../reference/workflows-and-actions/contexts.html#steps-context">Contexts reference</a>.</p>
+<p>The following is an example of using the <code>always()</code> with <code>steps.&lt;step_id&gt;.conclusion</code>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">After Script 1
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|-
+</span><span style="color:#a3be8c;">      echo "I'm after the script ran!"
+</span><span style="color:#a3be8c;">      echo "We should be grouped!"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">after-script-1
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">${{ always() }}</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">After Script 2
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|-
+</span><span style="color:#a3be8c;">      echo "this is really the end"
+</span><span style="color:#a3be8c;">      echo "goodbye, for now!"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">after-script-2
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">${{ steps.after-script-1.conclusion == 'success' &amp;&amp; always() }}</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+</li>
+</ul>
+<h3 title="About migrating from Bitbucket Pipelines with GitHub Actions Importer / Manual tasks">
+<a href="#manual-tasks" aria-hidden="true" class="anchor" id="manual-tasks"></a>Manual tasks</h3>
+<p>Certain Bitbucket Pipelines constructs must be migrated manually. These include:</p>
+<ul>
+<li>Secured repository, workspace, and deployment variables</li>
+<li>SSH keys</li>
+</ul>
+<h2 title="Installing the GitHub Actions Importer CLI extension">
+<a href="#installing-the-github-actions-importer-cli-extension" aria-hidden="true" class="anchor" id="installing-the-github-actions-importer-cli-extension"></a>Installing the GitHub Actions Importer CLI extension</h2>
+<ol>
+<li>
+<p>Install the GitHub Actions Importer CLI extension:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> extension install github/gh-actions-importer
+</span></code></pre>
+</li>
+<li>
+<p>Verify that the extension is installed:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">$</span><span style="color:#c0c5ce;"> gh actions-importer</span><span style="color:#bf616a;"> -h
+</span><span style="color:#8fa1b3;">Options:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#8fa1b3;">-?,</span><span style="color:#bf616a;"> -h</span><span style="color:#c0c5ce;">,</span><span style="color:#bf616a;"> --help</span><span style="color:#c0c5ce;">  Show help and usage information
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#8fa1b3;">Commands:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#8fa1b3;">update</span><span style="color:#c0c5ce;">     Update to the latest version of GitHub Actions Importer.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#8fa1b3;">version</span><span style="color:#c0c5ce;">    Display the version of GitHub Actions Importer.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#8fa1b3;">configure</span><span style="color:#c0c5ce;">  Start an interactive prompt to configure credentials used to authenticate with your CI server(s)</span><span style="color:#96b5b4;">.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#8fa1b3;">audit</span><span style="color:#c0c5ce;">      Plan your CI/CD migration by analyzing your current CI/CD footprint.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#8fa1b3;">forecast</span><span style="color:#c0c5ce;">   Forecast GitHub Actions usage from historical pipeline utilization.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#8fa1b3;">dry-run</span><span style="color:#c0c5ce;">    Convert a pipeline to a GitHub Actions workflow and output its yaml file.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#8fa1b3;">migrate</span><span style="color:#c0c5ce;">    Convert a pipeline to a GitHub Actions workflow and open a pull request with the changes.
+</span></code></pre>
+</li>
+</ol>
+<h2 title="Configuring credentials">
+<a href="#configuring-credentials" aria-hidden="true" class="anchor" id="configuring-credentials"></a>Configuring credentials</h2>
+<p>The <code>configure</code> CLI command is used to set required credentials and options for GitHub Actions Importer when working with Bitbucket Pipelines and GitHub.</p>
+<ol>
+<li>
+<p>Create a GitHub personal access token (classic). For more information, see <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic" class="external">Managing your personal access tokens</a>.</p>
+<p>Your token must have the <code>workflow</code> scope.</p>
+<p>After creating the token, copy it and save it in a safe location for later use.</p>
+</li>
+<li>
+<p>Create a Workspace Access Token for Bitbucket Pipelines. For more information, see <a href="https://support.atlassian.com/bitbucket-cloud/docs/workspace-access-token-permissions/" class="external">Workspace Access Token permissions</a> in the Bitbucket documentation. Your token must have the <code>read</code> scope for pipelines, projects, and repositories.</p>
+</li>
+<li>
+<p>In your terminal, run the GitHub Actions Importer <code>configure</code> CLI command:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer configure
+</span></code></pre>
+<p>The <code>configure</code> command will prompt you for the following information:</p>
+<ul>
+<li>For "Which CI providers are you configuring?", use the arrow keys to select <code>Bitbucket</code>, press <kbd>Space</kbd> to select it, then press <kbd>Enter</kbd>.</li>
+<li>For "Personal access token for GitHub", enter the value of the personal access token (classic) that you created earlier, and press <kbd>Enter</kbd>.</li>
+<li>For "Base url of the GitHub instance", press <kbd>Enter</kbd> to accept the default value (<code>https://github.com</code>).</li>
+<li>For "Personal access token for Bitbucket", enter the Workspace Access Token that you created earlier, and press <kbd>Enter</kbd>.</li>
+<li>For "Base url of the Bitbucket instance", enter the URL for your Bitbucket instance, and press <kbd>Enter</kbd>.</li>
+</ul>
+<p>An example of the <code>configure</code> command is shown below:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">$ gh actions-importer configure
+</span><span style="color:#c0c5ce;">✔ Which CI providers are you configuring?: Bitbucket
+</span><span style="color:#c0c5ce;">Enter the following values (leave empty to omit):
+</span><span style="color:#c0c5ce;">✔ Personal access token for GitHub: ***************
+</span><span style="color:#c0c5ce;">✔ Base url of the GitHub instance: https://github.com
+</span><span style="color:#c0c5ce;">✔ Personal access token for Bitbucket: ********************
+</span><span style="color:#c0c5ce;">✔ Base url of the Bitbucket instance: https://bitbucket.example.com
+</span><span style="color:#c0c5ce;">Environment variables successfully updated.
+</span></code></pre>
+</li>
+<li>
+<p>In your terminal, run the GitHub Actions Importer <code>update</code> CLI command to connect to GitHub Packages Container registry and ensure that the container image is updated to the latest version:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer update
+</span></code></pre>
+<p>The output of the command should be similar to below:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Updating ghcr.io/actions-importer/cli:latest...
+</span><span style="color:#c0c5ce;">ghcr.io/actions-importer/cli:latest up-to-date
+</span></code></pre>
+</li>
+</ol>
+<h2 title="Perform an audit of the Bitbucket instance">
+<a href="#perform-an-audit-of-the-bitbucket-instance" aria-hidden="true" class="anchor" id="perform-an-audit-of-the-bitbucket-instance"></a>Perform an audit of the Bitbucket instance</h2>
+<p>You can use the audit command to get a high-level view of pipelines in a Bitbucket instance.</p>
+<p>The audit command performs the following steps.</p>
+<ol>
+<li>Fetches all of the pipelines for a workspace.</li>
+<li>Converts pipeline to its equivalent GitHub Actions workflow.</li>
+<li>Generates a report that summarizes how complete and complex of a migration is possible with GitHub Actions Importer.</li>
+</ol>
+<h3 title="Perform an audit of the Bitbucket instance / Running the audit command">
+<a href="#running-the-audit-command" aria-hidden="true" class="anchor" id="running-the-audit-command"></a>Running the audit command</h3>
+<p>To perform an audit run the following command in your terminal, replacing <code>:workspace</code> with the name of the Bitbucket workspace to audit.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> actions-importer audit bitbucket</span><span style="color:#bf616a;"> --workspace</span><span style="color:#c0c5ce;"> :workspace</span><span style="color:#bf616a;"> --output-dir</span><span style="color:#c0c5ce;"> tmp/audit
+</span></code></pre>
+<p>Optionally, a <code>--project-key</code> option can be provided to the audit command to limit the results to only pipelines associated with a project.</p>
+<p>In the below example command <code>:project_key</code> should be replaced with the key of the project that should be audited. Project keys can be found in Bitbucket on the workspace projects page.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> actions-importer audit bitbucket</span><span style="color:#bf616a;"> --workspace</span><span style="color:#c0c5ce;"> :workspace</span><span style="color:#bf616a;"> --project-key</span><span style="color:#c0c5ce;"> :project_key</span><span style="color:#bf616a;"> --output-dir</span><span style="color:#c0c5ce;"> tmp/audit
+</span></code></pre>
+<h3 title="Perform an audit of the Bitbucket instance / Inspecting the audit results">
+<a href="#inspecting-the-audit-results" aria-hidden="true" class="anchor" id="inspecting-the-audit-results"></a>Inspecting the audit results</h3>
+<p>The files in the specified output directory contain the results of the audit. See the <code>audit_summary.md</code> file for a summary of the audit results.</p>
+<p>The audit summary has the following sections.</p>
+<h4>
+<a href="#pipelines" aria-hidden="true" class="anchor" id="pipelines"></a>Pipelines</h4>
+<p>The "Pipelines" section contains a high-level statistics regarding the conversion rate done by GitHub Actions Importer.</p>
+<p>Listed below are some key terms that can appear in the "Pipelines" section:</p>
+<ul>
+<li>
+<strong>Successful</strong> pipelines had 100% of the pipeline constructs and individual items converted automatically to their GitHub Actions equivalent.</li>
+<li>
+<strong>Partially successful</strong> pipelines had all of the pipeline constructs converted, however, there were some individual items that were not converted automatically to their GitHub Actions equivalent.</li>
+<li>
+<strong>Unsupported</strong> pipelines are definition types that are not supported by GitHub Actions Importer.</li>
+<li>
+<strong>Failed</strong> pipelines encountered a fatal error when being converted. This can occur for one of three reasons:
+<ul>
+<li>The pipeline was originally misconfigured and not valid.</li>
+<li>GitHub Actions Importer encountered an internal error when converting it.</li>
+<li>There was an unsuccessful network response that caused the pipeline to be inaccessible, which is often due to invalid credentials.</li>
+</ul>
+</li>
+</ul>
+<h4>
+<a href="#build-steps" aria-hidden="true" class="anchor" id="build-steps"></a>Build steps</h4>
+<p>The "Build steps" section contains an overview of individual build steps that are used across all pipelines, and how many were automatically converted by GitHub Actions Importer.</p>
+<p>Listed below are some key terms that can appear in the "Build steps" section:</p>
+<ul>
+<li>A <strong>known</strong> build step is a step that was automatically converted to an equivalent action.</li>
+<li>An <strong>unknown</strong> build step is a step that was not automatically converted to an equivalent action.</li>
+<li>An <strong>unsupported</strong> build step is a step that is either:
+<ul>
+<li>Fundamentally not supported by GitHub Actions.</li>
+<li>Configured in a way that is incompatible with GitHub Actions.</li>
+</ul>
+</li>
+<li>An <strong>action</strong> is a list of the actions that were used in the converted workflows. This can be important for:
+<ul>
+<li>If you use GitHub Enterprise Server, gathering the list of actions to sync to your instance.</li>
+<li>Defining an organization-level allowlist of actions that are used. This list of actions is a comprehensive list of actions that your security or compliance teams may need to review.</li>
+</ul>
+</li>
+</ul>
+<h4>
+<a href="#manual-tasks-1" aria-hidden="true" class="anchor" id="manual-tasks-1"></a>Manual tasks</h4>
+<p>The "Manual tasks" section contains an overview of tasks that GitHub Actions Importer is not able to complete automatically, and that you must complete manually.</p>
+<p>Listed below are some key terms that can appear in the "Manual tasks" section:</p>
+<ul>
+<li>A <strong>secret</strong> is a repository or organization-level secret that is used in the converted pipelines. These secrets must be created manually in GitHub Actions for these pipelines to function properly. For more information, see <a href="../../../how-tos/write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a>.</li>
+<li>A <strong>self-hosted runner</strong> refers to a label of a runner that is referenced in a converted pipeline that is not a GitHub-hosted runner. You will need to manually define these runners for these pipelines to function properly.</li>
+</ul>
+<h4>
+<a href="#files" aria-hidden="true" class="anchor" id="files"></a>Files</h4>
+<p>The final section of the audit report provides a manifest of all the files that were written to disk during the audit.</p>
+<p>Each pipeline file has a variety of files included in the audit, including:</p>
+<ul>
+<li>The original pipeline as it was defined in GitHub.</li>
+<li>Any network responses used to convert the pipeline.</li>
+<li>The converted workflow file.</li>
+<li>Stack traces that can be used to troubleshoot a failed pipeline conversion.</li>
+</ul>
+<p>Additionally, the <code>workflow_usage.csv</code> file contains a comma-separated list of all actions, secrets, and runners that are used by each successfully converted pipeline. This can be useful for determining which workflows use which actions, secrets, or runners, and can be useful for performing security reviews.</p>
+<h2 title="Forecasting usage">
+<a href="#forecasting-usage" aria-hidden="true" class="anchor" id="forecasting-usage"></a>Forecasting usage</h2>
+<p>You can use the <code>forecast</code> command to forecast potential GitHub Actions usage by computing metrics from completed pipeline runs in your Bitbucket instance.</p>
+<h3 title="Forecasting usage / Running the forecast command">
+<a href="#running-the-forecast-command" aria-hidden="true" class="anchor" id="running-the-forecast-command"></a>Running the forecast command</h3>
+<p>To perform a forecast of potential GitHub Actions usage, run the following command in your terminal, replacing <code>:workspace</code> with the name of the Bitbucket workspace to forecast. By default, GitHub Actions Importer includes the previous seven days in the forecast report.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer forecast bitbucket --workspace :workspace --output-dir tmp/forecast_reports
+</span></code></pre>
+<h3 title="Forecasting usage / Forecasting a project">
+<a href="#forecasting-a-project" aria-hidden="true" class="anchor" id="forecasting-a-project"></a>Forecasting a project</h3>
+<p>To limit the forecast to a project, you can use the <code>--project-key</code> option. Replace the value for the <code>:project_key</code> with the project key for the project to forecast.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer forecast bitbucket --workspace :workspace --project-key :project_key --output-dir tmp/forecast_reports
+</span></code></pre>
+<h3 title="Forecasting usage / Inspecting the forecast report">
+<a href="#inspecting-the-forecast-report" aria-hidden="true" class="anchor" id="inspecting-the-forecast-report"></a>Inspecting the forecast report</h3>
+<p>The <code>forecast_report.md</code> file in the specified output directory contains the results of the forecast.</p>
+<p>Listed below are some key terms that can appear in the forecast report:</p>
+<ul>
+<li>The <strong>job count</strong> is the total number of completed jobs.</li>
+<li>The <strong>pipeline count</strong> is the number of unique pipelines used.</li>
+<li>
+<strong>Execution time</strong> describes the amount of time a runner spent on a job. This metric can be used to help plan for the cost of GitHub-hosted runners.
+<ul>
+<li>This metric is correlated to how much you should expect to spend in GitHub Actions. This will vary depending on the hardware used for these minutes. You can use the <a href="https://github.com/pricing/calculator" class="external">GitHub Actions pricing calculator</a> to estimate the costs.</li>
+</ul>
+</li>
+<li>
+<strong>Concurrent jobs</strong> metrics describe the amount of jobs running at any given time.</li>
+</ul>
+<h2 title="Performing a dry-run migration">
+<a href="#performing-a-dry-run-migration" aria-hidden="true" class="anchor" id="performing-a-dry-run-migration"></a>Performing a dry-run migration</h2>
+<p>You can use the dry-run command to convert a Bitbucket pipeline to an equivalent GitHub Actions workflow(s). A dry-run creates the output files in a specified directory, but does not open a pull request to migrate the pipeline.</p>
+<h3 title="Performing a dry-run migration / Running the dry-run command">
+<a href="#running-the-dry-run-command" aria-hidden="true" class="anchor" id="running-the-dry-run-command"></a>Running the dry-run command</h3>
+<p>To perform a dry run of migrating a Bitbucket pipeline to GitHub Actions, run the following command in your terminal, replacing <code>:workspace</code> with the name of the workspace and <code>:repo</code> with the name of the repository in Bitbucket.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> actions-importer dry-run bitbucket</span><span style="color:#bf616a;"> --workspace</span><span style="color:#c0c5ce;"> :workspace</span><span style="color:#bf616a;"> --repository</span><span style="color:#c0c5ce;"> :repo</span><span style="color:#bf616a;"> --output-dir</span><span style="color:#c0c5ce;"> tmp/dry-run
+</span></code></pre>
+<h3 title="Performing a dry-run migration / Inspecting the converted workflows">
+<a href="#inspecting-the-converted-workflows" aria-hidden="true" class="anchor" id="inspecting-the-converted-workflows"></a>Inspecting the converted workflows</h3>
+<p>You can view the logs of the dry run and the converted workflow files in the specified output directory.</p>
+<p>If there is anything that GitHub Actions Importer was not able to convert automatically, such as unknown build steps or a partially successful pipeline, you might want to create custom transformers to further customize the conversion process. For more information, see <a href="../../../reference/github-actions-importer/custom-transformers.html">Extending GitHub Actions Importer with custom transformers</a>.</p>
+<h2 title="Performing a production migration">
+<a href="#performing-a-production-migration" aria-hidden="true" class="anchor" id="performing-a-production-migration"></a>Performing a production migration</h2>
+<p>You can use the migrate command to convert a Bitbucket pipeline and open a pull request with the equivalent GitHub Actions workflow(s).</p>
+<h3 title="Performing a production migration / Running the migrate command">
+<a href="#running-the-migrate-command" aria-hidden="true" class="anchor" id="running-the-migrate-command"></a>Running the migrate command</h3>
+<p>To migrate a Bitbucket pipeline to GitHub Actions, run the following command in your terminal, replacing the following values.</p>
+<ul>
+<li>Replace <code>target-url</code> value with the URL for your GitHub repository.</li>
+<li>Replace <code>:repo</code> with the name of the repository in Bitbucket.</li>
+<li>Replace <code>:workspace</code> with the name of the workspace.</li>
+</ul>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> actions-importer migrate bitbucket</span><span style="color:#bf616a;"> --workspace</span><span style="color:#c0c5ce;"> :workspace</span><span style="color:#bf616a;"> --repository</span><span style="color:#c0c5ce;"> :repo</span><span style="color:#bf616a;"> --target-url</span><span style="color:#c0c5ce;"> https://github.com/:owner/:repo</span><span style="color:#bf616a;"> --output-dir</span><span style="color:#c0c5ce;"> tmp/dry-run
+</span></code></pre>
+<p>The command's output includes the URL of the pull request that adds the converted workflow to your repository. An example of a successful output is similar to the following:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> actions-importer migrate bitbucket</span><span style="color:#bf616a;"> --workspace</span><span style="color:#c0c5ce;"> actions-importer</span><span style="color:#bf616a;"> --repository</span><span style="color:#c0c5ce;"> custom-trigger</span><span style="color:#bf616a;"> --target-url</span><span style="color:#c0c5ce;"> https://github.com/valet-dev-testing/demo-private</span><span style="color:#bf616a;"> --output-dir</span><span style="color:#c0c5ce;"> tmp/bitbucket
+</span><span style="color:#8fa1b3;">[2023-07-18</span><span style="color:#c0c5ce;"> 09:56:06] Logs: '</span><span style="color:#a3be8c;">tmp/bitbucket/log/valet-20230718-165606.log</span><span style="color:#c0c5ce;">'
+</span><span style="color:#8fa1b3;">[2023-07-18</span><span style="color:#c0c5ce;"> 09:56:24] Pull request: '</span><span style="color:#a3be8c;">https://github.com/valet-dev-testing/demo-private/pull/55</span><span style="color:#c0c5ce;">'
+</span></code></pre>
+<h3 title="Performing a production migration / Inspecting the pull request">
+<a href="#inspecting-the-pull-request" aria-hidden="true" class="anchor" id="inspecting-the-pull-request"></a>Inspecting the pull request</h3>
+<p>The output from a successful run of the <code>migrate</code> command contains a link to the new pull request that adds the converted workflow to your repository.</p>
+<p>Some important elements of the pull request include:</p>
+<ul>
+<li>In the pull request description, a section called <strong>Manual steps</strong>, which lists steps that you must manually complete before you can finish migrating your pipelines to GitHub Actions. For example, this section might tell you to create any secrets used in your workflows.</li>
+<li>The converted workflows file. Select the <strong>Files changed</strong> tab in the pull request to view the workflow file that will be added to your GitHub repository.</li>
+</ul>
+<p>When you are finished inspecting the pull request, you can merge it to add the workflow to your GitHub repository.</p>
+<h2 title="Reference">
+<a href="#reference" aria-hidden="true" class="anchor" id="reference"></a>Reference</h2>
+<p>This section contains reference information on environment variables, optional arguments, and supported syntax when using GitHub Actions Importer to migrate from Bitbucket Pipelines.</p>
+<h3 title="Reference / Using environment variables">
+<a href="#using-environment-variables" aria-hidden="true" class="anchor" id="using-environment-variables"></a>Using environment variables</h3>
+<p>GitHub Actions Importer uses environment variables for its authentication configuration. These variables are set when following the configuration process using the <code>configure</code> command. For more information, see the <a href="#configuring-credentials">Configuring credentials</a> section.</p>
+<p>GitHub Actions Importer uses the following environment variables to connect to your Bitbucket instance.</p>
+<ul>
+<li>
+<code>GITHUB_ACCESS_TOKEN</code>: The personal access token (classic) used to create pull requests with a transformed workflow (requires <code>repo</code> and <code>workflow</code> scopes).</li>
+<li>
+<code>GITHUB_INSTANCE_URL</code>: The url to the target GitHub instance. (e.g. <code>https://github.com</code>)</li>
+<li>
+<code>BITBUCKET_ACCESS_TOKEN</code>: The workspace access token with read scopes for pipeline, project, and repository.</li>
+</ul>
+<p>These environment variables can be specified in a <code>.env.local</code> file that will be loaded by GitHub Actions Importer at run time. The distribution archive contains a <code>.env.local.template</code> file that can be used to create these files.</p>
+<h3 title="Reference / Optional arguments">
+<a href="#optional-arguments" aria-hidden="true" class="anchor" id="optional-arguments"></a>Optional arguments</h3>
+<p>There are optional arguments you can use with the GitHub Actions Importer subcommands to customize your migration.</p>
+<h4>
+<a href="#--source-file-path" aria-hidden="true" class="anchor" id="--source-file-path"></a><code>--source-file-path</code>
+</h4>
+<p>You can use the <code>--source-file-path</code> argument with the <code>dry-run</code> or <code>migrate</code> subcommands.</p>
+<p>By default, GitHub Actions Importer fetches pipeline contents from the Bitbucket instance. The <code>--source-file-path</code> argument tells GitHub Actions Importer to use the specified source file path instead.</p>
+<p>For example:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> actions-importer dry-run bitbucket</span><span style="color:#bf616a;"> --workspace</span><span style="color:#c0c5ce;"> :workspace</span><span style="color:#bf616a;"> --repository</span><span style="color:#c0c5ce;"> :repo</span><span style="color:#bf616a;"> --output-dir</span><span style="color:#c0c5ce;"> tmp/dry-run</span><span style="color:#bf616a;"> --source-file-path</span><span style="color:#c0c5ce;"> path/to/my/pipeline/file.yml
+</span></code></pre>
+<h4>
+<a href="#--config-file-path" aria-hidden="true" class="anchor" id="--config-file-path"></a><code>--config-file-path</code>
+</h4>
+<p>You can use the <code>--config-file-path</code> argument with the <code>audit</code>, <code>dry-run</code>, and <code>migrate</code> subcommands.</p>
+<p>By default, GitHub Actions Importer fetches pipeline contents from the Bitbucket instance. The <code>--config-file-path</code> argument tells GitHub Actions Importer to use the specified source files instead.</p>
+<h3 title="Reference / Audit example">
+<a href="#audit-example" aria-hidden="true" class="anchor" id="audit-example"></a>Audit example</h3>
+<p>In this example, GitHub Actions Importer uses the specified YAML configuration file to perform an audit.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> actions-importer audit bitbucket</span><span style="color:#bf616a;"> --workspace</span><span style="color:#c0c5ce;"> :workspace</span><span style="color:#bf616a;"> --output-dir</span><span style="color:#c0c5ce;"> tmp/audit</span><span style="color:#bf616a;"> --config-file-path </span><span style="color:#c0c5ce;">"</span><span style="color:#a3be8c;">path/to/my/bitbucket/config.yml</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<p>To audit a Bitbucket instance using a config file, the config file must be in the following format, and each <code>repository_slug</code> must be unique:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">source_files</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">repository_slug</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">repo_name
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">path/to/one/source/file.yml
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">repository_slug</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">another_repo_name
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">path/to/another/source/file.yml
+</span></code></pre>
+<h2 title="Supported syntax for Bitbucket Pipelines">
+<a href="#supported-syntax-for-bitbucket-pipelines" aria-hidden="true" class="anchor" id="supported-syntax-for-bitbucket-pipelines"></a>Supported syntax for Bitbucket Pipelines</h2>
+<p>The following table shows the type of properties that GitHub Actions Importer is currently able to convert.</p>
+<table>
+<thead>
+<tr>
+<th align="left">Bitbucket</th>
+<th align="left">GitHub Actions</th>
+<th align="right">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code class="keyword">after-script</code></td>
+<td align="left"><code>jobs.&lt;job_id&gt;.steps[*]</code></td>
+<td align="right">Supported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">artifacts</code></td>
+<td align="left">
+<code>actions/upload-artifact</code> &amp; <code>download-artifact</code>
+</td>
+<td align="right">Supported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">caches</code></td>
+<td align="left"><code>actions/cache</code></td>
+<td align="right">Supported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">clone</code></td>
+<td align="left"><code>actions/checkout</code></td>
+<td align="right">Supported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">condition</code></td>
+<td align="left"><code>job.&lt;job_id&gt;.steps[*].run</code></td>
+<td align="right">Supported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">deployment</code></td>
+<td align="left"><code>jobs.&lt;job_id&gt;.environment</code></td>
+<td align="right">Supported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">image</code></td>
+<td align="left"><code>jobs.&lt;job_id&gt;.container</code></td>
+<td align="right">Supported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">max-time</code></td>
+<td align="left"><code>jobs.&lt;job_id&gt;.steps[*].timeout-minutes</code></td>
+<td align="right">Supported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">options.docker</code></td>
+<td align="left">None</td>
+<td align="right">Supported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">options.max-time</code></td>
+<td align="left"><code>jobs.&lt;job_id&gt;.steps[*].timeout-minutes</code></td>
+<td align="right">Supported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">parallel</code></td>
+<td align="left"><code>jobs.&lt;job_id&gt;</code></td>
+<td align="right">Supported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">pipelines.branches</code></td>
+<td align="left"><code>on.push</code></td>
+<td align="right">Supported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">pipelines.custom</code></td>
+<td align="left"><code>on.workflow_dispatch</code></td>
+<td align="right">Supported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">pipelines.default</code></td>
+<td align="left"><code>on.push</code></td>
+<td align="right">Supported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">pipelines.pull-requests</code></td>
+<td align="left"><code>on.pull_requests</code></td>
+<td align="right">Supported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">pipelines.tags</code></td>
+<td align="left"><code>on.tags</code></td>
+<td align="right">Supported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">runs-on</code></td>
+<td align="left"><code>jobs.&lt;job_id&gt;.runs-on</code></td>
+<td align="right">Supported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">script</code></td>
+<td align="left"><code>job.&lt;job_id&gt;.steps[*].run</code></td>
+<td align="right">Supported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">services</code></td>
+<td align="left"><code>jobs.&lt;job_id&gt;.service</code></td>
+<td align="right">Supported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">stage</code></td>
+<td align="left"><code>jobs.&lt;job_id&gt;</code></td>
+<td align="right">Supported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">step</code></td>
+<td align="left"><code>jobs.&lt;job_id&gt;.steps[*]</code></td>
+<td align="right">Supported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">trigger</code></td>
+<td align="left"><code>on.workflow_dispatch</code></td>
+<td align="right">Supported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">fail-fast</code></td>
+<td align="left">None</td>
+<td align="right">Unsupported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">oidc</code></td>
+<td align="left">None</td>
+<td align="right">Unsupported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">options.size</code></td>
+<td align="left">None</td>
+<td align="right">Unsupported</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">size</code></td>
+<td align="left">None</td>
+<td align="right">Unsupported</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Supported syntax for Bitbucket Pipelines / Environment variable mapping">
+<a href="#environment-variable-mapping" aria-hidden="true" class="anchor" id="environment-variable-mapping"></a>Environment variable mapping</h3>
+<p>GitHub Actions Importer uses the mapping in the table below to convert default Bitbucket environment variables to the closest equivalent in GitHub Actions.</p>
+<table>
+<thead>
+<tr>
+<th align="left">Bitbucket</th>
+<th align="left">GitHub Actions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code class="keyword">CI</code></td>
+<td align="left"><code>true</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_BUILD_NUMBER</code></td>
+<td align="left"><code>${{ github.run_number }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_CLONE_DIR</code></td>
+<td align="left"><code>${{ github.workspace }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_COMMIT</code></td>
+<td align="left"><code>${{ github.sha }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_WORKSPACE</code></td>
+<td align="left"><code>${{ github.repository_owner }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_REPO_SLUG</code></td>
+<td align="left"><code>${{ github.repository }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_REPO_UUID</code></td>
+<td align="left"><code>${{ github.repository_id }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_REPO_FULL_NAME</code></td>
+<td align="left">
+<code>${{ github.repository_owner }}</code>/<code>${{ github.repository }}</code>
+</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_BRANCH</code></td>
+<td align="left"><code>${{ github.ref }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_TAG</code></td>
+<td align="left"><code>${{ github.ref }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_PR_ID</code></td>
+<td align="left"><code>${{ github.event.pull_request.number }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_PR_DESTINATION_BRANCH</code></td>
+<td align="left"><code>${{ github.event.pull_request.base.ref }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_GIT_HTTP_ORIGIN</code></td>
+<td align="left"><code>${{ github.event.repository.clone_url }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_GIT_SSH_ORIGIN</code></td>
+<td align="left"><code>${{ github.event.repository.ssh_url }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_EXIT_CODE</code></td>
+<td align="left"><code>${{ job.status }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_STEP_UUID</code></td>
+<td align="left"><code>${{ job.github_job }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_PIPELINE_UUID</code></td>
+<td align="left"><code>${{ github.workflow }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_PROJECT_KEY</code></td>
+<td align="left"><code>${{ github.repository_owner }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_PROJECT_UUID</code></td>
+<td align="left"><code>${{ github.repository_owner }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_STEP_TRIGGERER_UUID</code></td>
+<td align="left"><code>${{ github.actor_id }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_SSH_KEY_FILE</code></td>
+<td align="left"><code>${{ github.workspace }}/.ssh/id_rsa</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_STEP_OIDC_TOKEN</code></td>
+<td align="left">No Mapping</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_DEPLOYMENT_ENVIRONMENT</code></td>
+<td align="left">No Mapping</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_DEPLOYMENT_ENVIRONMENT_UUID</code></td>
+<td align="left">No Mapping</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_BOOKMARK</code></td>
+<td align="left">No Mapping</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_PARALLEL_STEP</code></td>
+<td align="left">No Mapping</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">BITBUCKET_PARALLEL_STEP_COUNT</code></td>
+<td align="left">No Mapping</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Supported syntax for Bitbucket Pipelines / System Variables">
+<a href="#system-variables" aria-hidden="true" class="anchor" id="system-variables"></a>System Variables</h3>
+<p>System variables used in tasks are transformed to the equivalent bash shell variable and are assumed to be available. For example, <code>${system.&lt;variable.name&gt;}</code> will be transformed to <code>$variable_name</code>. We recommend you verify this to ensure proper operation of the workflow.</p>
+<h2 title="Legal notice">
+<a href="#legal-notice" aria-hidden="true" class="anchor" id="legal-notice"></a>Legal notice</h2>
+<p>Portions have been adapted from <a href="https://github.com/github/gh-actions-importer/" class="external">https://github.com/github/gh-actions-importer/</a> under the MIT license:</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">MIT License
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">Copyright (c) 2022 GitHub
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">Permission is hereby granted, free of charge, to any person obtaining a copy
+</span><span style="color:#c0c5ce;">of this software and associated documentation files (the "Software"), to deal
+</span><span style="color:#c0c5ce;">in the Software without restriction, including without limitation the rights
+</span><span style="color:#c0c5ce;">to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+</span><span style="color:#c0c5ce;">copies of the Software, and to permit persons to whom the Software is
+</span><span style="color:#c0c5ce;">furnished to do so, subject to the following conditions:
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">The above copyright notice and this permission notice shall be included in all
+</span><span style="color:#c0c5ce;">copies or substantial portions of the Software.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+</span><span style="color:#c0c5ce;">IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+</span><span style="color:#c0c5ce;">FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+</span><span style="color:#c0c5ce;">AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+</span><span style="color:#c0c5ce;">LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+</span><span style="color:#c0c5ce;">OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+</span><span style="color:#c0c5ce;">SOFTWARE.
+</span></code></pre>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

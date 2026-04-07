@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Passing information between jobs</title>
+    <link rel="stylesheet" href="../../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Write workflows</a> / <a href="index.html">Choose what workflows do</a> / </nav><h1>
+<a href="#passing-information-between-jobs" aria-hidden="true" class="anchor" id="passing-information-between-jobs"></a>Passing information between jobs</h1>
+<p>You can define outputs to pass information from one job to another.</p>
+<h2 title="Defining and using job outputs">
+<a href="#defining-and-using-job-outputs" aria-hidden="true" class="anchor" id="defining-and-using-job-outputs"></a>Defining and using job outputs</h2>
+<ol>
+<li>
+<p>Open the workflow file containing the job you want to get outputs from.</p>
+</li>
+<li>
+<p>Use the <code>jobs.&lt;job_id&gt;.outputs</code> syntax to define the outputs for the job. For example, the following job defines the <code>output1</code> and <code>output2</code> outputs, which are mapped to the results of <code>step1</code> and <code>step2</code> respectively:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">job1</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">outputs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">output1</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ steps.step1.outputs.test }}
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">output2</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ steps.step2.outputs.test }}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">step1
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "test=hello" &gt;&gt; "$GITHUB_OUTPUT"
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">step2
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "test=world" &gt;&gt; "$GITHUB_OUTPUT"
+</span></code></pre>
+</li>
+<li>
+<p>In a separate job where you want to access those outputs, use the <code>jobs.&lt;job_id&gt;.needs</code> syntax to make it dependent on the original job. For example, the following job checks that <code>job1</code> is complete before running:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Assume job1 is defined as above
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">job2</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">needs</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">job1
+</span></code></pre>
+</li>
+<li>
+<p>To access the outputs in the dependent job, use the <code>needs.&lt;job_id&gt;.outputs.&lt;output_name&gt;</code> syntax. For example, the following job accesses the <code>output1</code> and <code>output2</code> outputs defined in <code>job1</code>:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Assume job1 is defined as above
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">job2</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">needs</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">job1
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">OUTPUT1</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{needs.job1.outputs.output1}}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">OUTPUT2</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{needs.job1.outputs.output2}}
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "$OUTPUT1 $OUTPUT2"
+</span></code></pre>
+</li>
+</ol>
+<h2 title="Next steps">
+<a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>To learn more about job outputs and the <code>needs</code> context, see the following sections of <a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idoutputs">Workflow syntax for GitHub Actions</a>:</p>
+<ul>
+<li><a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idoutputs"><code>jobs.&lt;job_id&gt;.outputs</code></a></li>
+<li><a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idneeds"><code>jobs.&lt;job_id&gt;.needs</code></a></li>
+</ul>
+<p>To learn more about passing job outputs from one workflow to another, see the following section of <a href="../../reuse-automations/reuse-workflows.html">Reuse workflows</a>:</p>
+<ul>
+<li><a href="../../reuse-automations/reuse-workflows.html#using-outputs-from-a-reusable-workflow">Using outputs from a reusable workflow</a></li>
+</ul>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

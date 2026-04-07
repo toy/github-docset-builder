@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Private networking with GitHub-hosted runners</title>
+    <link rel="stylesheet" href="../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Runners</a> / </nav><h1>
+<a href="#private-networking-with-github-hosted-runners" aria-hidden="true" class="anchor" id="private-networking-with-github-hosted-runners"></a>Private networking with GitHub-hosted runners</h1>
+<p>You can connect GitHub-hosted runners to resources on a private network, including package registries, secret managers, and other on-premises services.</p>
+<h2 title="About GitHub-hosted runners networking">
+<a href="#about-github-hosted-runners-networking" aria-hidden="true" class="anchor" id="about-github-hosted-runners-networking"></a>About GitHub-hosted runners networking</h2>
+<p>By default, GitHub-hosted runners have access to the public internet. However, you may also want these runners to access resources on your private network, such as a package registry, a secret manager, or other on-premise services.</p>
+<p>GitHub-hosted runners are shared across all GitHub customers. However with private networking, you can configure hosted runners to be exclusively used to connect to your private network and resources while they are running your workflows.</p>
+<p>There are a few different approaches you could take to configure this access, each with different advantages and disadvantages.</p>
+<h2 title="Using an API Gateway with OIDC">
+<a href="#using-an-api-gateway-with-oidc" aria-hidden="true" class="anchor" id="using-an-api-gateway-with-oidc"></a>Using an API Gateway with OIDC</h2>
+<p>With GitHub Actions, you can use OpenID Connect (OIDC) tokens to authenticate your workflow outside of GitHub Actions. For more information, see <a href="../../how-tos/manage-runners/github-hosted-runners/connect-to-a-private-network/connect-with-oidc.html">Using an API gateway with OIDC</a>.</p>
+<h2 title="Using WireGuard to create a network overlay">
+<a href="#using-wireguard-to-create-a-network-overlay" aria-hidden="true" class="anchor" id="using-wireguard-to-create-a-network-overlay"></a>Using WireGuard to create a network overlay</h2>
+<p>If you don't want to maintain separate infrastructure for an API Gateway, you can create an overlay network between your runner and a service in your private network, by running WireGuard in both places. For more information, see <a href="../../how-tos/manage-runners/github-hosted-runners/connect-to-a-private-network/connect-with-wireguard.html">Using WireGuard to create a network overlay</a>.</p>
+<h2 title="Using an Azure Virtual Network (VNET)">
+<a href="#using-an-azure-virtual-network-vnet" aria-hidden="true" class="anchor" id="using-an-azure-virtual-network-vnet"></a>Using an Azure Virtual Network (VNET)</h2>
+<p>You can use GitHub-hosted runners in an Azure VNET. This enables you to use GitHub-managed infrastructure for CI/CD while providing you with full control over the networking policies of your runners. For more information about Azure VNET, see <a href="https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview" class="external">What is Azure Virtual Network?</a> in the Azure documentation.</p>
+<p>Organization owners using the GitHub Team plan can configure Azure private networking for GitHub-hosted runners at the organization level. For more information, see <a href="https://docs.github.com/en/organizations/managing-organization-settings/about-azure-private-networking-for-github-hosted-runners-in-your-organization" class="external">About Azure private networking for GitHub-hosted runners in your organization</a>.</p>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

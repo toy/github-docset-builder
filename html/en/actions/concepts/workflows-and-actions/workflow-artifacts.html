@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Workflow artifacts</title>
+    <link rel="stylesheet" href="../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Workflows and actions</a> / </nav><h1>
+<a href="#workflow-artifacts" aria-hidden="true" class="anchor" id="workflow-artifacts"></a>Workflow artifacts</h1>
+<p>Learn about storing and sharing data as artifacts of GitHub Actions workflows.</p>
+<h2 title="About workflow artifacts">
+<a href="#about-workflow-artifacts" aria-hidden="true" class="anchor" id="about-workflow-artifacts"></a>About workflow artifacts</h2>
+<p>An artifact is a file or collection of files produced during a workflow run. Artifacts allow you to persist data after a job has completed, and share that data with another job in the same workflow. For example, you can use artifacts to save your build and test output after a workflow run has ended.</p>
+<p>GitHub provides two actions that you can use to upload and download build artifacts, <a href="https://github.com/actions/upload-artifact" class="external">upload-artifact</a> and <a href="https://github.com/actions/download-artifact" class="external">download-artifact</a>.</p>
+<p>Common artifacts include:</p>
+<ul>
+<li>Log files and core dumps</li>
+<li>Test results, failures, and screenshots</li>
+<li>Binary or compressed files</li>
+<li>Stress test performance output and code coverage results</li>
+</ul>
+<h2 title="Artifacts versus dependency caching">
+<a href="#artifacts-versus-dependency-caching" aria-hidden="true" class="anchor" id="artifacts-versus-dependency-caching"></a>Artifacts versus dependency caching</h2>
+<p>Artifacts and caching are similar because they provide the ability to store files on GitHub, but each feature offers different use cases and cannot be used interchangeably.</p>
+<ul>
+<li>Use caching when you want to reuse files that don't change often between jobs or workflow runs, such as build dependencies from a package management system.</li>
+<li>Use artifacts when you want to save files produced by a job to view after a workflow run has ended, such as built binaries or build logs.</li>
+</ul>
+<p>For more information on dependency caching, see <a href="../../reference/workflows-and-actions/dependency-caching.html#comparing-artifacts-and-dependency-caching">Dependency caching reference</a>.</p>
+<h2 title="Generating artifact attestations for builds">
+<a href="#generating-artifact-attestations-for-builds" aria-hidden="true" class="anchor" id="generating-artifact-attestations-for-builds"></a>Generating artifact attestations for builds</h2>
+<p>Artifact attestations enable you to create unfalsifiable provenance and integrity guarantees for the software you build. In turn, people who consume your software can verify where and how your software was built.</p>
+<p>When you generate artifact attestations with your software, you create cryptographically signed claims that establish your build's provenance and include the following information:</p>
+<ul>
+<li>A link to the workflow associated with the artifact</li>
+<li>The repository, organization, environment, commit SHA, and triggering event for the artifact</li>
+<li>Other information from the OIDC token used to establish provenance. For more information, see <a href="../security/openid-connect.html">OpenID Connect</a>.</li>
+</ul>
+<p>You can also generate artifact attestations that include an associated software bill of materials (SBOM). Associating your builds with a list of the open source dependencies used in them provides transparency and enables consumers to comply with data protection standards.</p>
+<p>You can access attestations after a build run, underneath the list of the artifacts the build produced.</p>
+<p>For more information, see <a href="../../how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations.html">Using artifact attestations to establish provenance for builds</a>.</p>
+<h2 title="Artifacts from deleted workflow runs">
+<a href="#artifacts-from-deleted-workflow-runs" aria-hidden="true" class="anchor" id="artifacts-from-deleted-workflow-runs"></a>Artifacts from deleted workflow runs</h2>
+<p>When a workflow run is deleted all artifacts associated with the run are also deleted from storage. You can delete a workflow run using the GitHub Actions UI, the REST API, or using the GitHub CLI, see: <a href="../../how-tos/manage-workflow-runs/delete-a-workflow-run.html">Deleting a workflow run</a>, <a href="https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28#delete-a-workflow-run" class="external">Delete a workflow run</a>, or <a href="https://cli.github.com/manual/gh_run_delete" class="external">gh run delete</a>.</p>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>

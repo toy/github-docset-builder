@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Building and testing Xamarin applications</title>
+    <link rel="stylesheet" href="../../../../assets/style.css">
+  </head>
+  <body class="markdown-body">
+    <nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Build and test code</a> / </nav><h1>
+<a href="#building-and-testing-xamarin-applications" aria-hidden="true" class="anchor" id="building-and-testing-xamarin-applications"></a>Building and testing Xamarin applications</h1>
+<p>Learn how to create a continuous integration (CI) workflow in GitHub Actions to build and test your Xamarin application.</p>
+<h2 title="Introduction">
+<a href="#introduction" aria-hidden="true" class="anchor" id="introduction"></a>Introduction</h2>
+<p>This guide shows you how to create a workflow that performs continuous integration (CI) for your Xamarin project. The workflow you create will allow you to see when commits to a pull request cause build or test failures against your default branch; this approach can help ensure that your code is always healthy.</p>
+<p>For a full list of available Xamarin SDK versions on the GitHub Actions-hosted macOS runners, see the README file for the version of macOS you want to use in the <a href="https://github.com/actions/runner-images/tree/main/images/macos" class="external">GitHub Actions Runner Images repository</a>.</p>
+<h2 title="Prerequisites">
+<a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<p>We recommend that you have a basic understanding of Xamarin, .NET Core SDK, YAML, workflow configuration options, and how to create a workflow file. For more information, see:</p>
+<ul>
+<li><a href="../../reference/workflows-and-actions/workflow-syntax.html">Workflow syntax for GitHub Actions</a></li>
+<li><a href="https://dotnet.microsoft.com/learn" class="external">Getting started with .NET</a></li>
+<li><a href="https://dotnet.microsoft.com/learn/xamarin" class="external">Learn Xamarin</a></li>
+</ul>
+<h2 title="Building Xamarin.iOS apps">
+<a href="#building-xamarinios-apps" aria-hidden="true" class="anchor" id="building-xamarinios-apps"></a>Building Xamarin.iOS apps</h2>
+<p>The example below demonstrates how to change the default Xamarin SDK versions and build a Xamarin.iOS application.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Build Xamarin.iOS app
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">push</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">macos-latest
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set default Xamarin SDK versions
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">        $VM_ASSETS/select-xamarin-sdk-v2.sh --mono=6.12 --ios=14.10
+</span><span style="color:#a3be8c;">
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set default Xcode 12.3
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">        XCODE_ROOT=/Applications/Xcode_12.3.0.app
+</span><span style="color:#a3be8c;">        echo "MD_APPLE_SDK_ROOT=$XCODE_ROOT" &gt;&gt; $GITHUB_ENV
+</span><span style="color:#a3be8c;">        sudo xcode-select -s $XCODE_ROOT
+</span><span style="color:#a3be8c;">
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup .NET Core SDK 5.0.x
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-dotnet@v4
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">dotnet-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">5.0.x</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Install dependencies
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">nuget restore &lt;sln_file_path&gt;
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Build
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">msbuild &lt;csproj_file_path&gt; /p:Configuration=Debug /p:Platform=iPhoneSimulator /t:Rebuild
+</span></code></pre>
+<h2 title="Building Xamarin.Android apps">
+<a href="#building-xamarinandroid-apps" aria-hidden="true" class="anchor" id="building-xamarinandroid-apps"></a>Building Xamarin.Android apps</h2>
+<p>The example below demonstrates how to change default Xamarin SDK versions and build a Xamarin.Android application.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Build Xamarin.Android app
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">push</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">macos-latest
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set default Xamarin SDK versions
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">        $VM_ASSETS/select-xamarin-sdk-v2.sh --mono=6.10 --android=10.2
+</span><span style="color:#a3be8c;">
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup .NET Core SDK 5.0.x
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-dotnet@v4
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">dotnet-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">5.0.x</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Install dependencies
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">nuget restore &lt;sln_file_path&gt;
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Build
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">msbuild &lt;csproj_file_path&gt; /t:PackageForAndroid /p:Configuration=Debug
+</span></code></pre>
+<h2 title="Specifying a .NET version">
+<a href="#specifying-a-net-version" aria-hidden="true" class="anchor" id="specifying-a-net-version"></a>Specifying a .NET version</h2>
+<p>To use a preinstalled version of the .NET Core SDK on a GitHub-hosted runner, use the <code>setup-dotnet</code> action. This action finds a specific version of .NET from the tools cache on each runner, and adds the necessary binaries to <code>PATH</code>. These changes will persist for the remainder of the job.</p>
+<p>The <code>setup-dotnet</code> action is the recommended way of using .NET with GitHub Actions, because it ensures consistent behavior across different runners and different versions of .NET. If you are using a self-hosted runner, you must install .NET and add it to <code>PATH</code>. For more information, see the <a href="https://github.com/marketplace/actions/setup-net-core-sdk" class="external"><code>setup-dotnet</code></a> action.</p>
+
+
+    <footer>
+      Documentation is licensed under Creative Commons Attribution 4.0
+      (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)
+    </footer>
+  </body>
+</html>
