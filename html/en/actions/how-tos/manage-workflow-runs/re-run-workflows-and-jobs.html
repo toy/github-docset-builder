@@ -9,13 +9,8 @@
     <nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">How-tos</a> / <a href="index.html">Manage workflow runs</a> / </nav><h1>
 <a href="#re-running-workflows-and-jobs" aria-hidden="true" class="anchor" id="re-running-workflows-and-jobs"></a>Re-running workflows and jobs</h1>
 <p>You can re-run a workflow run, all failed jobs in a workflow run, or specific jobs in a workflow run up to 30 days after its initial run.</p>
-<div class="markdown-alert markdown-alert-note">
-<p class="markdown-alert-title">Note</p>
-<p>Re-run workflows use the privileges of the actor who initially triggered the workflow, not the privileges of the actor who initiated the re-run. The workflow will also use the same <code>GITHUB_SHA</code> (commit SHA) and <code>GITHUB_REF</code> (git ref) of the original event that triggered the workflow run.</p>
-</div>
-<blockquote>
-<p>A workflow run can be re-run a maximum of 50 times. Re-running only a single job or failed jobs counts towards this limit.</p>
-</blockquote>
+<p>Re-runs use the privileges of the actor who initially triggered the workflow, not the privileges of the actor who initiated the re-run. The workflow will also use the same <code>GITHUB_SHA</code> (commit SHA) and <code>GITHUB_REF</code> (git ref) of the original event that triggered the workflow run.</p>
+<p>A workflow run can be re-run a maximum of 50 times. This limit includes both full re-runs and re-runs of a subset of jobs.</p>
 <h2 title="Re-running all the jobs in a workflow">
 <a href="#re-running-all-the-jobs-in-a-workflow" aria-hidden="true" class="anchor" id="re-running-all-the-jobs-in-a-workflow"></a>Re-running all the jobs in a workflow</h2>
 <div class="ghd-tool webui">
