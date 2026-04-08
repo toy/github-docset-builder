@@ -25,6 +25,8 @@ file "#{docset}/.done" => 'html/.done' do |t|
   mkdir_p dir
 
   sh "dashing build --source #{File.dirname(t.source)}"
+  ln 'icon.png', File.dirname(t.source)
+  ln 'icon@2x.png', File.dirname(t.source)
 
   touch t.name
 end
@@ -34,7 +36,6 @@ file 'html/.done' => ['data/.done', 'Rakefile'] do |t|
   rm_rf dir
   mkdir_p dir
 
-  ln 'icon.png', dir
   ln 'GitHub documentation LICENSE.txt', dir
 
   Transformer.new(File.dirname(t.source), File.dirname(t.name)).write
