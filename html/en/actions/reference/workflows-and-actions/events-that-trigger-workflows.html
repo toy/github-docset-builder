@@ -707,7 +707,18 @@
 </ul>
 </div>
 <p>Runs your workflow when activity on a pull request in the workflow's repository occurs. For example, if no activity types are specified, the workflow runs when a pull request is opened or reopened or when the head branch of the pull request is updated. For activity related to pull request reviews, pull request review comments, or pull request comments, use the <a href="#pull_request_review"><code>pull_request_review</code></a>, <a href="#pull_request_review_comment"><code>pull_request_review_comment</code></a>, or <a href="#issue_comment"><code>issue_comment</code></a> events instead. For information about the pull request APIs, see <a href="https://docs.github.com/en/graphql/reference/objects#pullrequest" class="external">Objects</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/pulls" class="external">REST API endpoints for pull requests</a>.</p>
-<p>Note that <code>GITHUB_SHA</code> for this event is the last merge commit of the pull request merge branch. If you want to get the commit ID for the last commit to the head branch of the pull request, use <code>github.event.pull_request.head.sha</code> instead.</p>
+<p>Note that <code>GITHUB_SHA</code> for this event is the last merge commit of the pull request merge branch. If you want to get the commit ID for the last commit to the head branch of the pull request, use <code>github.event.pull_request.head.sha</code> instead. For more information about merge branches, see <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests#pull-request-refs-and-merge-branches" class="external">About pull requests</a>.</p>
+<h3 title="pull_request / How the merge branch affects your workflow">
+<a href="#how-the-merge-branch-affects-your-workflow" aria-hidden="true" class="anchor" id="how-the-merge-branch-affects-your-workflow"></a>How the merge branch affects your workflow</h3>
+<p>For open, mergeable pull requests, workflows triggered by the <code>pull_request</code> event set <code>GITHUB_REF</code> to the merge branch. Because <code>actions/checkout</code> uses <code>GITHUB_REF</code> by default, it checks out the merge branch. Your CI tests run against the merged result, not just the head branch alone:</p>
+<ul>
+<li>
+<code>GITHUB_REF</code> is set to <code>refs/pull/PULL_REQUEST_NUMBER/merge</code>
+</li>
+<li>
+<code>GITHUB_SHA</code> is the SHA of the merge commit on the merge branch</li>
+</ul>
+<p>To test only the head branch commits without simulating a merge, check out the head branch using <code>github.event.pull_request.head.sha</code> in your workflow.</p>
 <p>For example, you can run a workflow when a pull request has been opened or reopened.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">pull_request</span><span style="color:#c0c5ce;">:
