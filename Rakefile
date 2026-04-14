@@ -14,7 +14,7 @@ task default: "#{docset}.tgz"
 
 file "#{docset}.tgz" => "#{docset}/.done" do |t|
   sh *%W[
-    docker run --rm -i -v #{Dir.pwd}:/here -w /here ubuntu
+    docker run --rm -i -v #{Dir.pwd}:/here -w /here debian
     tar --exclude=.{DS_Store,done} -cvzf #{t.name} #{File.dirname(t.source)}
   ]
 end
