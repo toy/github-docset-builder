@@ -25,7 +25,7 @@
 <li><a href="https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry" class="external">Working with the Apache Maven registry</a></li>
 <li><a href="../../how-tos/write-workflows/choose-what-workflows-do/use-variables.html">Store information in variables</a></li>
 <li><a href="../../how-tos/write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a></li>
-<li><a href="../authenticate-with-github_token.html">Use GITHUB<span data-escaped-char>\</span><span data-escaped-char>_</span>TOKEN for authentication in workflows</a></li>
+<li><a href="../authenticate-with-github_token.html">Use GITHUB<span data-escaped-char>_</span>TOKEN for authentication in workflows</a></li>
 </ul>
 <h2 title="About package configuration">
 <a href="#about-package-configuration" aria-hidden="true" class="anchor" id="about-package-configuration"></a>About package configuration</h2>
@@ -110,7 +110,7 @@
 <a href="#publishing-packages-to-github-packages" aria-hidden="true" class="anchor" id="publishing-packages-to-github-packages"></a>Publishing packages to GitHub Packages</h2>
 <p>Each time you create a new release, you can trigger a workflow to publish your package. The workflow in the example below runs when the <code>release</code> event triggers with type <code>created</code>. The workflow publishes the package to GitHub Packages if CI tests pass. For more information on the <code>release</code> event, see <a href="../../reference/workflows-and-actions/events-that-trigger-workflows.html#release">Events that trigger workflows</a>.</p>
 <p>You can define a new Maven repository in the publishing block of your <em>build.gradle</em> that points to GitHub Packages. In that repository configuration, you can also take advantage of environment variables set in your CI workflow run. You can use the <code>GITHUB_ACTOR</code> environment variable as a username, and you can set the <code>GITHUB_TOKEN</code> environment variable with your <code>GITHUB_TOKEN</code> secret.</p>
-<p>The <code>GITHUB_TOKEN</code> secret is set to an access token for the repository each time a job in a workflow begins. You should set the permissions for this access token in the workflow file to grant read access for the <code>contents</code> permission and write access for the <code>packages</code> permission. For more information, see <a href="../authenticate-with-github_token.html">Use GITHUB<span data-escaped-char>\</span><span data-escaped-char>_</span>TOKEN for authentication in workflows</a>.</p>
+<p>The <code>GITHUB_TOKEN</code> secret is set to an access token for the repository each time a job in a workflow begins. You should set the permissions for this access token in the workflow file to grant read access for the <code>contents</code> permission and write access for the <code>packages</code> permission. For more information, see <a href="../authenticate-with-github_token.html">Use GITHUB<span data-escaped-char>_</span>TOKEN for authentication in workflows</a>.</p>
 <p>For example, if your organization is named "octocat" and your repository is named "hello-world", then the GitHub Packages configuration in <em>build.gradle</em> would look similar to the below example.</p>
 <pre lang="groovy" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">plugins {
 </span><span style="color:#c0c5ce;">  ...

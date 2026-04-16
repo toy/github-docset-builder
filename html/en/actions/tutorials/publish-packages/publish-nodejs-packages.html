@@ -21,7 +21,7 @@
 <li><a href="https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry" class="external">Working with the npm registry</a></li>
 <li><a href="../../how-tos/write-workflows/choose-what-workflows-do/use-variables.html">Store information in variables</a></li>
 <li><a href="../../how-tos/write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a></li>
-<li><a href="../authenticate-with-github_token.html">Use GITHUB<span data-escaped-char>\</span><span data-escaped-char>_</span>TOKEN for authentication in workflows</a></li>
+<li><a href="../authenticate-with-github_token.html">Use GITHUB<span data-escaped-char>_</span>TOKEN for authentication in workflows</a></li>
 </ul>
 <h2 title="About package configuration">
 <a href="#about-package-configuration" aria-hidden="true" class="anchor" id="about-package-configuration"></a>About package configuration</h2>
@@ -82,7 +82,7 @@
 </span></code></pre>
 <h3 title="Publishing packages to GitHub Packages / Authenticating to the destination repository">
 <a href="#authenticating-to-the-destination-repository" aria-hidden="true" class="anchor" id="authenticating-to-the-destination-repository"></a>Authenticating to the destination repository</h3>
-<p>To perform authenticated operations against the GitHub Packages registry in your workflow, you can use the <code>GITHUB_TOKEN</code>. The <code>GITHUB_TOKEN</code> secret is set to an access token for the repository each time a job in a workflow begins. You should set the permissions for this access token in the workflow file to grant read access for the <code>contents</code> permission and write access for the <code>packages</code> permission. For more information, see <a href="../authenticate-with-github_token.html">Use GITHUB<span data-escaped-char>\</span><span data-escaped-char>_</span>TOKEN for authentication in workflows</a>.</p>
+<p>To perform authenticated operations against the GitHub Packages registry in your workflow, you can use the <code>GITHUB_TOKEN</code>. The <code>GITHUB_TOKEN</code> secret is set to an access token for the repository each time a job in a workflow begins. You should set the permissions for this access token in the workflow file to grant read access for the <code>contents</code> permission and write access for the <code>packages</code> permission. For more information, see <a href="../authenticate-with-github_token.html">Use GITHUB<span data-escaped-char>_</span>TOKEN for authentication in workflows</a>.</p>
 <p>If you want to publish your package to a different repository, you must use a personal access token (classic) that has permission to write to packages in the destination repository. For more information, see <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token" class="external">Managing your personal access tokens</a> and <a href="../../how-tos/write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a>.</p>
 <h3 title="Publishing packages to GitHub Packages / Example workflow">
 <a href="#example-workflow" aria-hidden="true" class="anchor" id="example-workflow"></a>Example workflow</h3>
