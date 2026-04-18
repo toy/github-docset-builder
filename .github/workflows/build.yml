@@ -44,7 +44,9 @@ jobs:
           git rm -rf .
         fi
 
-        git add -f data html
+        touch .nojekyll
+
+        git add -f .nojekyll data html
         if ! git diff --staged --quiet; then
           git commit -m "$(date)"
           git push origin "$branch"
