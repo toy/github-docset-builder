@@ -18,6 +18,12 @@ jobs:
       with:
         ruby-version: ruby
         bundler-cache: true
+    - uses: actions/cache@v5
+      with:
+        path: |
+          ~/.cache/go-build
+          ~/go/pkg/mod
+        key: dump
     - run: |
         go install github.com/technosophos/dashing@172c69f1c58cf6efe5b1813fa06ce29a684b00e4
         echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
