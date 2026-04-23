@@ -55,7 +55,7 @@
 <p>The workflow template sets up the <code>PATH</code> to contain OpenJDK 8 for the x64 platform. If you want to use a different version of Java, or target a different architecture (<code>x64</code> or <code>x86</code>), you can use the <code>setup-java</code> action to choose a different Java runtime environment.</p>
 <p>For example, to use version 11 of the JDK provided by Adoptium for the x64 platform, you can use the <code>setup-java</code> action and configure the <code>java-version</code>, <code>distribution</code> and <code>architecture</code> parameters to <code>'11'</code>, <code>'temurin'</code> and <code>x64</code>.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set up JDK 11 for x64
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-java@v4
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
@@ -70,7 +70,7 @@
 <p>The workflow template will run the default target specified in your <code>build.xml</code> file. Your default target will commonly be set to build classes, run tests and package classes into their distributable format, for example, a JAR file.</p>
 <p>If you use different commands to build your project, or you want to run a different target, you can specify those. For example, you may want to run the <code>jar</code> target that's configured in your <code>build-ci.xml</code> file.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-java@v4
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">java-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">17</span><span style="color:#c0c5ce;">'
@@ -83,7 +83,7 @@
 <p>After your build has succeeded and your tests have passed, you may want to upload the resulting Java packages as a build artifact. This will store the built packages as part of the workflow run, and allow you to download them. Artifacts can help you test and debug pull requests in your local environment before they're merged. For more information, see <a href="../store-and-share-data.html">Store and share data with workflow artifacts</a>.</p>
 <p>Ant will usually create output files like JARs, EARs, or WARs in the <code>build/jar</code> directory. You can upload the contents of that directory using the <code>upload-artifact</code> action.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-java@v4
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">java-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">17</span><span style="color:#c0c5ce;">'

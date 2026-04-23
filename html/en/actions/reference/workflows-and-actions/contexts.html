@@ -801,14 +801,38 @@ When creating workflows and actions, you should always consider whether your cod
 <td><code>string</code></td>
 <td>The current status of the job. Possible values are <code>success</code>, <code>failure</code>, or <code>cancelled</code>.</td>
 </tr>
+<tr>
+<td><code>job.workflow_ref</code></td>
+<td><code>string</code></td>
+<td>The full ref of the workflow file that defines the current job. For example, <code>octo-org/octo-repo/.github/workflows/deploy.yml@refs/heads/main</code>. For jobs defined directly in a workflow file, this is the same as <code>github.workflow_ref</code>. For jobs defined in a <a href="../../how-tos/reuse-automations/reuse-workflows.html">Reuse workflows</a>, this refers to the reusable workflow file. (not available on GitHub Enterprise Server)</td>
+</tr>
+<tr>
+<td><code>job.workflow_sha</code></td>
+<td><code>string</code></td>
+<td>The commit SHA of the workflow file that defines the current job. (not available on GitHub Enterprise Server)</td>
+</tr>
+<tr>
+<td><code>job.workflow_repository</code></td>
+<td><code>string</code></td>
+<td>The <code>owner/repo</code> of the repository containing the workflow file that defines the current job. For example, <code>octo-org/octo-repo</code>. (not available on GitHub Enterprise Server)</td>
+</tr>
+<tr>
+<td><code>job.workflow_file_path</code></td>
+<td><code>string</code></td>
+<td>The file path of the workflow file that defines the current job, relative to the repository root. For example, <code>.github/workflows/deploy.yml</code>. (not available on GitHub Enterprise Server)</td>
+</tr>
 </tbody>
 </table>
 <h3 title="Example contents of the job context">
 <a href="#example-contents-of-the-job-context" aria-hidden="true" class="anchor" id="example-contents-of-the-job-context"></a>Example contents of the <code>job</code> context</h3>
-<p>This example <code>job</code> context uses a PostgreSQL service container with mapped ports. If there are no containers or service containers used in a job, the <code>job</code> context only contains the <code>status</code> and <code>check_run_id</code> properties.</p>
+<p>This example <code>job</code> context uses a PostgreSQL service container with mapped ports. If there are no containers or service containers used in a job, the <code>job</code> context only contains <code>status</code>. The <code>check_run_id</code> and workflow identity properties (<code>workflow_ref</code>, <code>workflow_sha</code>, <code>workflow_repository</code>, <code>workflow_file_path</code>) are not available on GitHub Enterprise Server.</p>
 <pre lang="json" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">{
 </span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">status</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">success</span><span style="color:#c0c5ce;">",
 </span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">check_run_id</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">51725241954</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">workflow_ref</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">octo-org/octo-repo/.github/workflows/deploy.yml@refs/heads/main</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">workflow_sha</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">abc123def456789abc123def456789abc123def4</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">workflow_repository</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">octo-org/octo-repo</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">workflow_file_path</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">.github/workflows/deploy.yml</span><span style="color:#c0c5ce;">",
 </span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">container</span><span style="color:#c0c5ce;">": {
 </span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">network</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">github_network_53269bd575974817b43f4733536b200c</span><span style="color:#c0c5ce;">"
 </span><span style="color:#c0c5ce;">  },
@@ -844,6 +868,30 @@ When creating workflows and actions, you should always consider whether your cod
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">pg_isready -h localhost -p ${{ job.services.postgres.ports[5432] }}
 </span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "Run tests against Postgres"
+</span></code></pre>
+<h3 title="Example usage of job context workflow identity">
+<a href="#example-usage-of-job-context-workflow-identity" aria-hidden="true" class="anchor" id="example-usage-of-job-context-workflow-identity"></a>Example usage of <code>job</code> context workflow identity</h3>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The <code>job.workflow_*</code> context properties are not available on GitHub Enterprise Server.</p>
+</div>
+<p>This example reusable workflow uses <code>job.workflow_repository</code> and <code>job.workflow_sha</code> to check out its own source code, rather than the caller's repository. This is useful when a reusable workflow needs to access files co-located with the workflow definition.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># In a reusable workflow (e.g., octo-org/shared-workflows/.github/workflows/deploy.yml)
+</span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Reusable deploy workflow
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">workflow_call</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">deploy</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">repository</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ job.workflow_repository }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">ref</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ job.workflow_sha }}
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "Deploying from ${{ job.workflow_ref }}"
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "Workflow file path is ${{ job.workflow_file_path }}"
 </span></code></pre>
 <h2 title="jobs context">
 <a href="#jobs-context" aria-hidden="true" class="anchor" id="jobs-context"></a><code>jobs</code> context</h2>
@@ -1070,7 +1118,7 @@ When creating workflows and actions, you should always consider whether your cod
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Build with logs
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
 </span><span style="color:#a3be8c;">          mkdir ${{ runner.temp }}/build_logs

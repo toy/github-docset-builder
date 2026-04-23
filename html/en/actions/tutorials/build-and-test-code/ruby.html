@@ -68,7 +68,7 @@
 </span><span style="color:#65737e;"># separate terms of service, privacy policy, and support
 </span><span style="color:#65737e;"># documentation.
 </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">ruby-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">3.1</span><span style="color:#c0c5ce;">' </span><span style="color:#65737e;"># Not needed with a .ruby-version file
@@ -112,7 +112,7 @@
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">ruby-version</span><span style="color:#c0c5ce;">: ['</span><span style="color:#a3be8c;">3.1</span><span style="color:#c0c5ce;">', '</span><span style="color:#a3be8c;">3.0</span><span style="color:#c0c5ce;">', '</span><span style="color:#a3be8c;">2.7</span><span style="color:#c0c5ce;">']
 </span><span style="color:#c0c5ce;">
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set up Ruby ${{ matrix.ruby-version }}
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
@@ -130,7 +130,7 @@
 </span><span style="color:#65737e;"># separate terms of service, privacy policy, and support
 </span><span style="color:#65737e;"># documentation.
 </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">ruby-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">3.1</span><span style="color:#c0c5ce;">'
@@ -207,7 +207,7 @@
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">ruby</span><span style="color:#c0c5ce;">: [</span><span style="color:#d08770;">2.5</span><span style="color:#c0c5ce;">, </span><span style="color:#d08770;">2.6</span><span style="color:#c0c5ce;">, </span><span style="color:#d08770;">2.7</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">head</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">debug</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">jruby</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">jruby-head</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">truffleruby</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">truffleruby-head</span><span style="color:#c0c5ce;">]
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">continue-on-error</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ endsWith(matrix.ruby, 'head') || matrix.ruby == 'debug' }}
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">ruby-version</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ matrix.ruby }}
@@ -234,7 +234,7 @@
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">test</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">ruby-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">2.6</span><span style="color:#c0c5ce;">'
@@ -276,7 +276,7 @@
 </span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">contents</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read
 </span><span style="color:#c0c5ce;">
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set up Ruby 2.6
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:

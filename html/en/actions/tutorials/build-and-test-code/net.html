@@ -65,7 +65,7 @@
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">dotnet-version</span><span style="color:#c0c5ce;">: [ '</span><span style="color:#a3be8c;">3.1.x</span><span style="color:#c0c5ce;">', '</span><span style="color:#a3be8c;">6.0.x</span><span style="color:#c0c5ce;">' ]
 </span><span style="color:#c0c5ce;">
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup dotnet ${{ matrix.dotnet-version }}
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-dotnet@v4
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
@@ -87,7 +87,7 @@
 <a href="#installing-dependencies" aria-hidden="true" class="anchor" id="installing-dependencies"></a>Installing dependencies</h2>
 <p>GitHub-hosted runners have the NuGet package manager installed. You can use the dotnet CLI to install dependencies from the NuGet package registry before building and testing your code. For example, the YAML below installs the <code>Newtonsoft</code> package.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup dotnet
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-dotnet@v4
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
@@ -100,7 +100,7 @@
 <p>You can cache NuGet dependencies for future workflows using the optional <code>cache</code> input. For example, the YAML below caches the NuGet <code>global-packages</code> folder, and then installs the <code>Newtonsoft</code> package. A second optional input, <code>cache-dependency-path</code>, can be used to specify the path to a dependency file: <code>packages.lock.json</code>.</p>
 <p>For more information, see <a href="../../reference/workflows-and-actions/dependency-caching.html">Dependency caching reference</a>.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup dotnet
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-dotnet@v4
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
@@ -117,7 +117,7 @@
 <a href="#building-and-testing-your-code" aria-hidden="true" class="anchor" id="building-and-testing-your-code"></a>Building and testing your code</h2>
 <p>You can use the same commands that you use locally to build and test your code. This example demonstrates how to use <code>dotnet build</code> and <code>dotnet test</code> in a job:</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup dotnet
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-dotnet@v4
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
@@ -146,7 +146,7 @@
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">dotnet-version</span><span style="color:#c0c5ce;">: [ '</span><span style="color:#a3be8c;">3.1.x</span><span style="color:#c0c5ce;">', '</span><span style="color:#a3be8c;">6.0.x</span><span style="color:#c0c5ce;">' ]
 </span><span style="color:#c0c5ce;">
 </span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">        - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">        - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">        - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup dotnet
 </span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-dotnet@v4
 </span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
@@ -179,7 +179,7 @@
 </span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">packages</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
 </span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">contents</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-dotnet@v4
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">dotnet-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">6.0.x</span><span style="color:#c0c5ce;">' </span><span style="color:#65737e;"># SDK Version to use.

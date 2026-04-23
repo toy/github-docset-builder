@@ -84,7 +84,7 @@
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">outputs</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">release_built</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ steps.set-output.outputs.release_built }}
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Build binaries in "${{ matrix.BUILD_TARGET }}" mode
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">cargo build --profile ${{ matrix.BUILD_TARGET }}
 </span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Run tests in "${{ matrix.BUILD_TARGET }}" mode
@@ -114,7 +114,7 @@
 </span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">target/${{ matrix.BUILD_TARGET }}/&lt;my-app&gt;
 </span></code></pre>
 <p>To use the uploaded artifact in a different job, ensure your workflows have the right permissions for the repository, see <a href="../authenticate-with-github_token.html">Use GITHUB<span data-escaped-char>_</span>TOKEN for authentication in workflows</a>. You could use these example steps to download the app created in the previous workflow and publish it on GitHub.</p>
-<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Download release artifact
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/download-artifact@v5
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:

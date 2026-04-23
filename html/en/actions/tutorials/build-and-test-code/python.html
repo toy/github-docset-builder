@@ -105,7 +105,7 @@
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">python-version</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">pypy3.10</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">3.9</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">3.10</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">3.11</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">3.12</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">3.13</span><span style="color:#c0c5ce;">"]
 </span><span style="color:#c0c5ce;">
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set up Python ${{ matrix.python-version }}
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-python@v5
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
@@ -127,7 +127,7 @@
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
 </span><span style="color:#c0c5ce;">
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set up Python
 </span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># This is the version of the action for setting up Python, not the Python version.
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-python@v5
@@ -192,7 +192,7 @@
 <p>GitHub-hosted runners have the pip package manager installed. You can use pip to install dependencies from the PyPI package registry before building and testing your code. For example, the YAML below installs or upgrades the <code>pip</code> package installer and the <code>setuptools</code> and <code>wheel</code> packages.</p>
 <p>You can also cache dependencies to speed up your workflow. For more information, see <a href="../../reference/workflows-and-actions/dependency-caching.html">Dependency caching reference</a>.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set up Python
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-python@v5
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
@@ -204,7 +204,7 @@
 <a href="#requirements-file" aria-hidden="true" class="anchor" id="requirements-file"></a>Requirements file</h3>
 <p>After you update <code>pip</code>, a typical next step is to install dependencies from <code>requirements.txt</code>. For more information, see <a href="https://pip.pypa.io/en/stable/cli/pip_install/#example-requirements-file" class="external">pip</a>.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set up Python
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-python@v5
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
@@ -219,7 +219,7 @@
 <p>You can cache and restore the dependencies using the <a href="https://github.com/actions/setup-python" class="external"><code>setup-python</code> action</a>.</p>
 <p>The following example caches dependencies for pip.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-python@v5
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">python-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">3.12</span><span style="color:#c0c5ce;">'
@@ -236,7 +236,7 @@
 <a href="#testing-with-pytest-and-pytest-cov" aria-hidden="true" class="anchor" id="testing-with-pytest-and-pytest-cov"></a>Testing with pytest and pytest-cov</h3>
 <p>This example installs or upgrades <code>pytest</code> and <code>pytest-cov</code>. Tests are then run and output in JUnit format while code coverage results are output in Cobertura. For more information, see <a href="https://junit.org/junit5/" class="external">JUnit</a> and <a href="https://cobertura.github.io/cobertura/" class="external">Cobertura</a>.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set up Python
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-python@v5
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
@@ -254,7 +254,7 @@
 <a href="#using-ruff-to-lint-andor-format-code" aria-hidden="true" class="anchor" id="using-ruff-to-lint-andor-format-code"></a>Using Ruff to lint and/or format code</h3>
 <p>The following example installs or upgrades <code>ruff</code> and uses it to lint all files. For more information, see <a href="https://docs.astral.sh/ruff" class="external">Ruff</a>.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set up Python
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-python@v5
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
@@ -284,7 +284,7 @@
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">python</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">3.9</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">3.11</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">3.13</span><span style="color:#c0c5ce;">"]
 </span><span style="color:#c0c5ce;">
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup Python
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-python@v5
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
@@ -312,7 +312,7 @@
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">python-version</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">3.9</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">3.10</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">3.11</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">3.12</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">3.13</span><span style="color:#c0c5ce;">"]
 </span><span style="color:#c0c5ce;">
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup Python </span><span style="color:#65737e;"># Set Python version
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-python@v5
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
@@ -359,7 +359,7 @@
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
 </span><span style="color:#c0c5ce;">
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">
 </span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-python@v5
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:

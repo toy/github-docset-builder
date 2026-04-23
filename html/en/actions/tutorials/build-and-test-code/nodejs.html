@@ -62,7 +62,7 @@
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">node-version</span><span style="color:#c0c5ce;">: ['</span><span style="color:#a3be8c;">18.x</span><span style="color:#c0c5ce;">', '</span><span style="color:#a3be8c;">20.x</span><span style="color:#c0c5ce;">']
 </span><span style="color:#c0c5ce;">
 </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Use Node.js ${{ matrix.node-version }}
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-node@v4
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
@@ -84,7 +84,7 @@
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
 </span><span style="color:#c0c5ce;">
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Use Node.js
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-node@v4
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
@@ -103,7 +103,7 @@ For more information, see <a href="../../concepts/runners/github-hosted-runners.
 <a href="#example-using-npm" aria-hidden="true" class="anchor" id="example-using-npm"></a>Example using npm</h3>
 <p>This example installs the versions in the <code>package-lock.json</code> or <code>npm-shrinkwrap.json</code> file and prevents updates to the lock file. Using <code>npm ci</code> is generally faster than running <code>npm install</code>. For more information, see <a href="https://docs.npmjs.com/cli/ci.html" class="external"><code>npm ci</code></a> and <a href="https://blog.npmjs.org/post/171556855892/introducing-npm-ci-for-faster-more-reliable" class="external">Introducing <code>npm ci</code> for faster, more reliable builds</a>.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Use Node.js
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-node@v4
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
@@ -113,7 +113,7 @@ For more information, see <a href="../../concepts/runners/github-hosted-runners.
 </span></code></pre>
 <p>Using <code>npm install</code> installs the dependencies defined in the <code>package.json</code> file. For more information, see <a href="https://docs.npmjs.com/cli/install" class="external"><code>npm install</code></a>.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Use Node.js
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-node@v4
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
@@ -125,7 +125,7 @@ For more information, see <a href="../../concepts/runners/github-hosted-runners.
 <a href="#example-using-yarn" aria-hidden="true" class="anchor" id="example-using-yarn"></a>Example using Yarn</h3>
 <p>This example installs the dependencies defined in the <code>yarn.lock</code> file and prevents updates to the <code>yarn.lock</code> file. For more information, see <a href="https://yarnpkg.com/en/docs/cli/install" class="external"><code>yarn install</code></a>.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Use Node.js
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-node@v4
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
@@ -135,7 +135,7 @@ For more information, see <a href="../../concepts/runners/github-hosted-runners.
 </span></code></pre>
 <p>Alternatively, you can install the dependencies defined in the <code>package.json</code> file.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Use Node.js
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-node@v4
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
@@ -150,7 +150,7 @@ For more information, see <a href="../../concepts/runners/github-hosted-runners.
 <p>In the example below, the secret <code>NPM_TOKEN</code> stores the npm authentication token. The <code>setup-node</code> action configures the <code>.npmrc</code> file to read the npm authentication token from the <code>NODE_AUTH_TOKEN</code> environment variable. When using the <code>setup-node</code> action to create an <code>.npmrc</code> file, you must set the <code>NODE_AUTH_TOKEN</code> environment variable with the secret that contains your npm authentication token.</p>
 <p>Before installing dependencies, use the <code>setup-node</code> action to create the <code>.npmrc</code> file. The action has two input parameters. The <code>node-version</code> parameter sets the Node.js version, and the <code>registry-url</code> parameter sets the default registry. If your package registry uses scopes, you must use the <code>scope</code> parameter. For more information, see <a href="https://docs.npmjs.com/misc/scope" class="external"><code>npm-scope</code></a>.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Use Node.js
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-node@v4
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
@@ -173,7 +173,7 @@ For more information, see <a href="../../concepts/runners/github-hosted-runners.
 <p>You can cache and restore the dependencies using the <a href="https://github.com/actions/setup-node" class="external"><code>setup-node</code> action</a>.</p>
 <p>The following example caches dependencies for npm.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-node@v4
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">node-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">20</span><span style="color:#c0c5ce;">'
@@ -183,7 +183,7 @@ For more information, see <a href="../../concepts/runners/github-hosted-runners.
 </span></code></pre>
 <p>The following example caches dependencies for Yarn.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-node@v4
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">node-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">20</span><span style="color:#c0c5ce;">'
@@ -200,7 +200,7 @@ For more information, see <a href="../../concepts/runners/github-hosted-runners.
 </span><span style="color:#65737e;"># NOTE: pnpm caching support requires pnpm version &gt;= 6.10.0
 </span><span style="color:#c0c5ce;">
 </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">pnpm/action-setup@0609f0983b7a228f052f81ef4c3d6510cae254ad
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">6.10.0
@@ -216,7 +216,7 @@ For more information, see <a href="../../concepts/runners/github-hosted-runners.
 <a href="#building-and-testing-your-code" aria-hidden="true" class="anchor" id="building-and-testing-your-code"></a>Building and testing your code</h2>
 <p>You can use the same commands that you use locally to build and test your code. For example, if you run <code>npm run build</code> to run build steps defined in your <code>package.json</code> file and <code>npm test</code> to run your test suite, you would add those commands in your workflow file.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v5
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
 </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Use Node.js
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-node@v4
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
