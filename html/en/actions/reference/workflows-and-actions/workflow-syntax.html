@@ -674,11 +674,23 @@
 </tr>
 <tr>
 <td><code>security-events</code></td>
-<td>Work with GitHub code scanning alerts. For example, <code>security-events: read</code> permits an action to list the code scanning alerts for the repository, and <code>security-events: write</code> allows an action to update the status of a code scanning alert. For more information, see <a href="https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-code-scanning-alerts" class="external">Repository permissions for 'Code scanning alerts'</a>. <br><br> Dependabot and secret scanning alerts cannot be read with this permission and require a GitHub App or a personal access token. For more information, see <a href="https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-dependabot-alerts" class="external">Repository permissions for 'Dependabot alerts'</a> and <a href="https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-secret-scanning-alerts" class="external">Repository permissions for 'Secret scanning alerts'</a> in "Permissions required for GitHub Apps."</td>
+<td>Work with GitHub code scanning alerts. For example, <code>security-events: read</code> permits an action to list the code scanning alerts for the repository, and <code>security-events: write</code> allows an action to update the status of a code scanning alert. For more information, see <a href="https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-code-scanning-alerts" class="external">Repository permissions for "Code scanning alerts"</a>. <br><br> For Dependabot alerts, use the <code>vulnerability-alerts</code> permission. Secret scanning alerts cannot be read with this permission and require a GitHub App or a personal access token. For more information, see <a href="https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-secret-scanning-alerts" class="external">Repository permissions for "Secret scanning alerts"</a> in "Permissions required for GitHub Apps."</td>
 </tr>
 <tr>
 <td><code>statuses</code></td>
 <td>Work with commit statuses. For example, <code>statuses:read</code> permits an action to list the commit statuses for a given reference. For more information, see <a href="https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-commit-statuses" class="external">Permissions required for GitHub Apps</a>.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>vulnerability-alerts</code></td>
+<td>Read Dependabot alerts. For example, <code>vulnerability-alerts: read</code> permits an action to list Dependabot alerts for the repository. Only <code>read</code> and <code>none</code> are supported; <code>write</code> is not valid. When <code>write-all</code> or <code>read-all</code> is used, <code>vulnerability-alerts</code> is automatically included as <code>read</code>. For more information, see <a href="https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-dependabot-alerts" class="external">Repository permissions for "Dependabot alerts"</a>.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -701,6 +713,7 @@
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">pull-requests</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">security-events</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">statuses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">vulnerability-alerts</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|none
 </span></code></pre>
 <p>If you specify the access for any of these permissions, all of those that are not specified are set to <code>none</code>.</p>
 <p>You can use the following syntax to define one of <code>read-all</code> or <code>write-all</code> access for all of the available permissions:</p>
@@ -1072,11 +1085,23 @@ When more than one default setting is defined with the same name, GitHub uses th
 </tr>
 <tr>
 <td><code>security-events</code></td>
-<td>Work with GitHub code scanning alerts. For example, <code>security-events: read</code> permits an action to list the code scanning alerts for the repository, and <code>security-events: write</code> allows an action to update the status of a code scanning alert. For more information, see <a href="https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-code-scanning-alerts" class="external">Repository permissions for 'Code scanning alerts'</a>. <br><br> Dependabot and secret scanning alerts cannot be read with this permission and require a GitHub App or a personal access token. For more information, see <a href="https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-dependabot-alerts" class="external">Repository permissions for 'Dependabot alerts'</a> and <a href="https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-secret-scanning-alerts" class="external">Repository permissions for 'Secret scanning alerts'</a> in "Permissions required for GitHub Apps."</td>
+<td>Work with GitHub code scanning alerts. For example, <code>security-events: read</code> permits an action to list the code scanning alerts for the repository, and <code>security-events: write</code> allows an action to update the status of a code scanning alert. For more information, see <a href="https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-code-scanning-alerts" class="external">Repository permissions for "Code scanning alerts"</a>. <br><br> For Dependabot alerts, use the <code>vulnerability-alerts</code> permission. Secret scanning alerts cannot be read with this permission and require a GitHub App or a personal access token. For more information, see <a href="https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-secret-scanning-alerts" class="external">Repository permissions for "Secret scanning alerts"</a> in "Permissions required for GitHub Apps."</td>
 </tr>
 <tr>
 <td><code>statuses</code></td>
 <td>Work with commit statuses. For example, <code>statuses:read</code> permits an action to list the commit statuses for a given reference. For more information, see <a href="https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-commit-statuses" class="external">Permissions required for GitHub Apps</a>.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>vulnerability-alerts</code></td>
+<td>Read Dependabot alerts. For example, <code>vulnerability-alerts: read</code> permits an action to list Dependabot alerts for the repository. Only <code>read</code> and <code>none</code> are supported; <code>write</code> is not valid. When <code>write-all</code> or <code>read-all</code> is used, <code>vulnerability-alerts</code> is automatically included as <code>read</code>. For more information, see <a href="https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-dependabot-alerts" class="external">Repository permissions for "Dependabot alerts"</a>.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -1099,6 +1124,7 @@ When more than one default setting is defined with the same name, GitHub uses th
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">pull-requests</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">security-events</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">statuses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">vulnerability-alerts</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|none
 </span></code></pre>
 <p>If you specify the access for any of these permissions, all of those that are not specified are set to <code>none</code>.</p>
 <p>You can use the following syntax to define one of <code>read-all</code> or <code>write-all</code> access for all of the available permissions:</p>

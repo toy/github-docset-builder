@@ -25,7 +25,12 @@
 <p>The token is also available in the <code>github.token</code> context. For more information, see <a href="../../reference/workflows-and-actions/contexts.html#github-context">Contexts reference</a>.</p>
 <h2 title="When GITHUB_TOKEN triggers workflow runs">
 <a href="#when-github_token-triggers-workflow-runs" aria-hidden="true" class="anchor" id="when-github_token-triggers-workflow-runs"></a>When <code>GITHUB_TOKEN</code> triggers workflow runs</h2>
-<p>When you use the repository's <code>GITHUB_TOKEN</code> to perform tasks, events triggered by the <code>GITHUB_TOKEN</code>, with the exception of <code>workflow_dispatch</code> and <code>repository_dispatch</code>, will not create a new workflow run. This prevents you from accidentally creating recursive workflow runs. For example, if a workflow run pushes code using the repository's <code>GITHUB_TOKEN</code>, a new workflow will not run even when the repository contains a workflow configured to run when <code>push</code> events occur.</p>
+<p>When you use the repository's <code>GITHUB_TOKEN</code> to perform tasks, events triggered by the <code>GITHUB_TOKEN</code> will not create a new workflow run, with the following exception:</p>
+<ul>
+<li>
+<code>workflow_dispatch</code> and <code>repository_dispatch</code> events always create workflow runs.</li>
+</ul>
+<p>For all other events, this behavior prevents you from accidentally creating recursive workflow runs. For example, if a workflow run pushes code using the repository's <code>GITHUB_TOKEN</code>, a new workflow will not run even when the repository contains a workflow configured to run when <code>push</code> events occur.</p>
 <p>Commits pushed by a GitHub Actions workflow that uses the <code>GITHUB_TOKEN</code> do not trigger a GitHub Pages build.</p>
 <h2 title="Next steps">
 <a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>

@@ -38,6 +38,12 @@
 </li>
 <li>
 <p>This example command installs the latest version of the Helm chart. To install a specific version, you can pass the <code>--version</code> argument with the version of the chart you want to install. You can find the list of releases in the <a href="https://github.com/actions/actions-runner-controller/pkgs/container/actions-runner-controller-charts%2Fgha-runner-scale-set" class="external"><code>actions-runner-controller</code></a> repository.</p>
+</li>
+</ul>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This example uses a personal access token to keep the initial setup short. If you are registering runners at the repository or organization level, we recommend authenticating with a GitHub App instead. For more information, see <a href="authenticate-to-the-api.html">Authenticating ARC to the GitHub API</a>. Enterprise-level runners require personal access token (classic) authentication.</p>
+</div>
 <pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#bf616a;">INSTALLATION_NAME</span><span style="color:#c0c5ce;">="</span><span style="color:#a3be8c;">arc-runner-set</span><span style="color:#c0c5ce;">"
 </span><span style="color:#bf616a;">NAMESPACE</span><span style="color:#c0c5ce;">="</span><span style="color:#a3be8c;">arc-runners</span><span style="color:#c0c5ce;">"
 </span><span style="color:#bf616a;">GITHUB_CONFIG_URL</span><span style="color:#c0c5ce;">="</span><span style="color:#a3be8c;">https://github.com/&lt;your_enterprise/org/repo&gt;</span><span style="color:#c0c5ce;">"
@@ -50,8 +56,6 @@
 </span><span style="color:#c0c5ce;">    oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 </span></code></pre>
 <p>For additional Helm configuration options, see <a href="https://github.com/actions/actions-runner-controller/blob/master/charts/gha-runner-scale-set/values.yaml" class="external"><code>values.yaml</code></a> in the ARC repository.</p>
-</li>
-</ul>
 </li>
 <li>
 <p>To check your installation, run the following command in your terminal.</p>
