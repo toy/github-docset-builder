@@ -616,6 +616,18 @@
 <td>Work with check runs and check suites. For example, <code>checks: write</code> permits an action to create a check run. For more information, see <a href="https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-checks" class="external">Permissions required for GitHub Apps</a>.</td>
 </tr>
 <tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>code-quality</code></td>
+<td>Work with code quality. For example, <code>code-quality: write</code> permits an action to upload code coverage reports. For more information, see <a href="https://docs.github.com/en/code-security/concepts/about-code-quality" class="external">About GitHub Code Quality</a>.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td><code>contents</code></td>
 <td>Work with the contents of the repository. For example, <code>contents: read</code> permits an action to list the commits, and <code>contents: write</code> allows the action to create a release. For more information, see <a href="https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-contents" class="external">Permissions required for GitHub Apps</a>.</td>
 </tr>
@@ -702,6 +714,7 @@
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">artifact-metadata</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">attestations</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">checks</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">code-quality</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">contents</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">deployments</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">id-token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write|none
@@ -1049,6 +1062,18 @@ When more than one default setting is defined with the same name, GitHub uses th
 <td>Work with check runs and check suites. For example, <code>checks: write</code> permits an action to create a check run. For more information, see <a href="https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-checks" class="external">Permissions required for GitHub Apps</a>.</td>
 </tr>
 <tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>code-quality</code></td>
+<td>Work with code quality. For example, <code>code-quality: write</code> permits an action to upload code coverage reports. For more information, see <a href="https://docs.github.com/en/code-security/concepts/about-code-quality" class="external">About GitHub Code Quality</a>.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td><code>contents</code></td>
 <td>Work with the contents of the repository. For example, <code>contents: read</code> permits an action to list the commits, and <code>contents: write</code> allows the action to create a release. For more information, see <a href="https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-contents" class="external">Permissions required for GitHub Apps</a>.</td>
 </tr>
@@ -1135,6 +1160,7 @@ When more than one default setting is defined with the same name, GitHub uses th
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">artifact-metadata</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">attestations</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">checks</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">code-quality</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">contents</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">deployments</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">id-token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write|none
@@ -1338,7 +1364,7 @@ When more than one default setting is defined with the same name, GitHub uses th
       <td>
         <code><a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows2025-Readme.md" class="external">windows-latest</a></code>,
          <code><a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows2025-Readme.md" class="external">windows-2025</a></code>,
-        <code><a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows2025-VS2026-Readme.md" class="external">windows-2025-vs2026</a></code> (public preview),
+        <code><a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows2025-VS2026-Readme.md" class="external">windows-2025-vs2026</a></code>,
         <code><a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md" class="external">windows-2022</a></code>
       </td>
     </tr>
@@ -2082,7 +2108,8 @@ When more than one default setting is defined with the same name, GitHub uses th
 </span></code></pre>
 <h3 title="jobs.&lt;job_id&gt;.steps[*].uses / Example: Using an action inside a different private repository than the workflow">
 <a href="#example-using-an-action-inside-a-different-private-repository-than-the-workflow" aria-hidden="true" class="anchor" id="example-using-an-action-inside-a-different-private-repository-than-the-workflow"></a>Example: Using an action inside a different private repository than the workflow</h3>
-<p>Your workflow must checkout the private repository and reference the action locally. Generate a personal access token and add the token as a secret. For more information, see <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token" class="external">Managing your personal access tokens</a> and <a href="../../how-tos/write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a>.</p>
+<p>If the action is in an internal repository, or in a private repository configured to allow access from your workflow's repository, you can reference the action directly. For more information, see <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-access-to-components-in-an-internal-repository" class="external">Managing GitHub Actions settings for a repository</a> and <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-access-to-components-in-a-private-repository" class="external">Managing GitHub Actions settings for a repository</a>.</p>
+<p>If the action isn't in a repository configured to allow access, you need to check out the repository and reference the action locally. Generate a personal access token and add the token as a secret. The following example shows this method for referencing an action. For more information, see <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token" class="external">Managing your personal access tokens</a> and <a href="../../how-tos/write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a>.</p>
 <p>Replace <code>PERSONAL_ACCESS_TOKEN</code> in the example with the name of your secret.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">my_first_job</span><span style="color:#c0c5ce;">:
