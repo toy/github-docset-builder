@@ -1,70 +1,16 @@
-require 'cgi'
+exec 'rake' if __FILE__ == $0
+
 require 'commonmarker'
+require 'date'
 require 'fspath'
 require 'json'
 require 'net/http'
 require 'nokogiri'
 require 'yaml/store'
 
-docset = 'GitHub_Actions.docset'
-
-PATH_R = %r{^/en/actions(?:/.+|$)}
-
-task default: "#{docset}.tgz"
-
-file "#{docset}.tgz" => "#{docset}/.done" do |t|
-  sh *%W[
-    docker run --rm -i -v #{Dir.pwd}:/here -w /here debian
-    tar --exclude=.{DS_Store,done} -cvzf #{t.name} #{File.dirname(t.source)}
-  ]
-end
-
-file "#{docset}/.done" => 'html/.done' do |t|
-  dir = FSPath(t.name).dirname
-  rm_rf dir
-  mkdir_p dir
-
-  sh "dashing build --source #{File.dirname(t.source)}"
-  ln 'icon.png', File.dirname(t.source)
-  ln 'icon@2x.png', File.dirname(t.source)
-
-  touch t.name
-end
-
-file 'html/.done' => ['data/.done', 'Rakefile'] do |t|
-  dir = FSPath(t.name).dirname
-  rm_rf dir
-  mkdir_p dir
-
-  ln 'GitHub documentation LICENSE.txt', dir
-
-  Transformer.new(File.dirname(t.source), File.dirname(t.name)).write
-
-  touch t.name
-end
-
-file 'data/.done' do |t|
-  dir = FSPath(t.name).dirname
-  rm_rf dir
-  mkdir_p dir
-
-  pages = Fetch.get('https://docs.github.com/api/pagelist/en/free-pro-team@latest').scan(PATH_R)
-
-  unexpected = pages.grep_v(%r{\A(/[a-z]+([\-_][a-z]+)*)+\z})
-  abort "unexpected paths #{unexpected}" unless unexpected.empty?
-
-  pages.each do |page|
-    (dir / "#{page}.json").carefull_write{ Fetch.get("https://docs.github.com/api/article?pathname=#{page}") }
-  end
-
-  touch t.name
-end
-
-task :clean do
-  rm_rf %W[#{docset}.tgz #{docset} html data]
-end
-
 FSPath.class_eval do
+  def done = self / '.done'
+
   def carefull_write(content = nil)
     return if size? && (content.nil? || read == content)
 
@@ -78,48 +24,52 @@ FSPath.class_eval do
 end
 
 module Fetch
+  class Unexpected < StandardError; end
+
   PERIOD = 1
   MAX_REQUESTS = 5
 
   @times = []
 
-module_function
+  class << self
+    def get(url)
+      response = get_response(url)
+      return response.body if response.is_a?(Net::HTTPSuccess)
 
-  def get_response(url)
-    wait?
-    puts url
-    Net::HTTP.get_response(URI(url))
-  end
-
-  def wait?
-    now = nil
-    loop do
-      now = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-      @times.reject!{ |t| now - t > PERIOD }
-      break if @times.size < MAX_REQUESTS
-
-      to_sleep = PERIOD - (now - @times.first)
-      sleep(to_sleep) if to_sleep > 0
+      fail Unexpected, "instead of #{Net::HTTPSuccess} got #{response.class} with #{response.body}"
     end
-    @times << now
-  end
 
-  def get(url)
-    response = get_response(url)
-    abort "got #{response.class} with #{response.body}" unless response.is_a?(Net::HTTPSuccess)
+    def get_redirect(url)
+      response = get_response(url)
+      return response['Location'] if response.is_a?(Net::HTTPMovedPermanently)
 
-    response.body
-  end
+      fail Unexpected, "instead of #{Net::HTTPMovedPermanently} got #{response.class}"
+    end
 
-  def get_redirect(url)
-    response = get_response(url)
-    abort "got #{response.class} with #{response.body}" unless response.is_a?(Net::HTTPMovedPermanently)
+  private
 
-    response['Location']
+    def get_response(url)
+      wait
+      puts "fetching #{url}"
+      Net::HTTP.get_response(URI(url))
+    end
+
+    def wait
+      now = nil
+      loop do
+        now = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        @times.reject!{ |t| now - t > PERIOD }
+        break if @times.size < MAX_REQUESTS
+
+        to_sleep = PERIOD - (now - @times.first)
+        sleep(to_sleep) if to_sleep > 0
+      end
+      @times << now
+    end
   end
 end
 
-class Transformer
+class GithubDocBuilder
   Json = Data.define(:path, :data) do
     def title = meta['title']
     def body = data['body']
@@ -128,68 +78,242 @@ class Transformer
     def breadcrumbs = meta['breadcrumbs']
   end
 
-  def initialize(data_dir, html_dir)
-    @data_dir = FSPath(data_dir)
-    @html_dir = FSPath(html_dir)
-    @jsons = Dir.chdir(data_dir) do
-      FSPath.glob('**/*.json').map do |path|
-        Json.new(path.to_s.delete_suffix('.json'), ::JSON.parse(path.read))
-      end.sort_by(&:path)
-    end
-    @known_paths = @jsons.each_with_object({}) do |json, paths|
-      paths["/#{json.path}"] = "#{json.path}#{'/index' if json.folder?}.html"
-    end
-    @redirects = YAML::Store.new("#{data_dir}/redirects.yml")
-    @css_path = 'assets/style.css'
+  include Rake::DSL
+  extend Rake::DSL
+
+  CLEAN_PATHS = [
+    CACHE_MARK_PATH = '.cache-mark',
+    PAGELIST_PATH = '.pagelist',
+    CSS_PATH = '.css',
+    DATA_DIR = 'data',
+    HTML_DIR = 'html',
+    DASHING_CONFIGS_DIR = 'dashing-configs',
+    DOCSETS_DIR = 'docsets',
+    ARCHIVES_DIR = 'archives',
+    RESULTS_DIR = 'results',
+  ]
+
+  CSS_URLS = {
+    light: 'https://raw.githubusercontent.com/sindresorhus/github-markdown-css/gh-pages/github-markdown-light.css',
+    dark: 'https://raw.githubusercontent.com/sindresorhus/github-markdown-css/gh-pages/github-markdown-dark-dimmed.css',
+  }
+
+  def self.all
+    yield new 'actions'
+    yield new 'code-security', name: 'GitHub Security and code quality'
+    yield new 'pages'
   end
 
-  def write
-    write_css
+  def self.define_tasks
+    if File.exist?(CACHE_MARK_PATH) && Time.now - File.mtime(CACHE_MARK_PATH) > 24 * 60 * 60
+      File.unlink(CACHE_MARK_PATH)
+    end
 
-    @redirects.transaction do
-      @jsons.each do |json|
-        write_html(json)
+    file CACHE_MARK_PATH do |t|
+      touch t.name
+    end
+
+    file PAGELIST_PATH => CACHE_MARK_PATH do |t|
+      FSPath(t.name).carefull_write do
+        Fetch.get('https://docs.github.com/api/pagelist/en/free-pro-team@latest')
       end
     end
+
+    file CSS_PATH => CACHE_MARK_PATH do |t|
+      css = CSS_URLS.transform_values{ |url| Fetch.get(url) }
+
+      FSPath(t.name).carefull_write <<~CSS
+        body { padding: 40px; }
+
+        a.external::after {
+          content: "↗";
+          padding-left: 0.25em;
+        }
+
+        #{css[:light]}
+        @media (prefers-color-scheme: dark) {
+          #{css[:dark].gsub(/^/, '  ')}
+        }
+      CSS
+    end
+
+    all(&:define_tasks)
+
+    task :clean do
+      rm_rf CLEAN_PATHS
+    end
+  end
+
+  attr_reader :prefix, :name
+  attr_reader :version
+  attr_reader :package, :path_r
+  attr_reader :data_path, :html_path, :dashing_config_path, :docset_path, :archive_path, :result_path
+
+  def initialize(prefix, name: "GitHub #{prefix.capitalize}")
+    @prefix = prefix
+    @name = name
+
+    @version = Date.today.strftime('%Y.%m')
+
+    @package = name.tr(' ', '_')
+    @path_r = %r{^/en/#{prefix}(?:/.+|$)}
+
+    @data_path = FSPath(DATA_DIR) / package
+    @html_path = FSPath(HTML_DIR) / package
+    @dashing_config_path = FSPath(DASHING_CONFIGS_DIR) / "#{package}-#{version}.json"
+    @docset_path = FSPath(DOCSETS_DIR) / "#{package}.docset"
+    @archive_path = FSPath(ARCHIVES_DIR) / "#{package}.docset.tgz"
+    @result_path = FSPath(RESULTS_DIR) / package
+  end
+
+  def define_tasks
+    dir data_path => PAGELIST_PATH do
+      pages = File.read(PAGELIST_PATH).scan(path_r)
+
+      unexpected = pages.grep_v(%r{\A(/[a-z0-9]+([\-_][a-z0-9]+)*)+\z})
+      abort "unexpected paths #{unexpected}" unless unexpected.empty?
+
+      pages.each do |page|
+        (data_path / "#{page}.json").carefull_write do
+          Fetch.get("https://docs.github.com/api/article?pathname=#{page}")
+        end
+      end
+    end
+
+    dir html_path => [CSS_PATH, data_path.done] do
+      mkdir_p html_path
+
+      ln 'GitHub documentation LICENSE.txt', html_path
+
+      generate_html
+    end
+
+    file dashing_config_path => html_path.done do
+      dashing_config_path.carefull_write(dashing_config)
+    end
+
+    dir docset_path => [dashing_config_path, html_path.done] do
+      mkdir_p docset_path.dirname
+
+      sh(*%W[dashing build --source #{html_path} --config #{dashing_config_path}])
+
+      mv docset_path.basename, docset_path.dirname
+
+      %w[icon.png icon@2x.png].each do |icon_basename|
+        ln icon_basename, docset_path
+      end
+    end
+
+    file archive_path => docset_path.done do
+      mkdir_p archive_path.dirname
+
+      sh(*docker_run_args('debian') + %W[
+        tar
+        --directory=#{docset_path.dirname}
+        --exclude=.DS_Store
+        -cvzf
+        #{archive_path}
+        #{docset_path.basename}
+      ])
+    end
+
+    docset_meta_path = result_path / 'docset.json'
+
+    results = {
+      result_path / archive_path.basename => archive_path,
+      **%w[README.md icon.png icon@2x.png].to_h do |basename|
+        [result_path / basename, basename]
+      end,
+    }
+
+    file docset_meta_path => results.values do
+      rm_rf result_path
+      mkdir_p result_path
+
+      results.each do |dst, src|
+        ln src, dst
+      end
+
+      docset_meta_path.carefull_write(docset_meta)
+    end
+
+    task default: docset_meta_path
   end
 
 private
 
-  def write_css
-    dst = @html_dir / @css_path
+  def dir(arg)
+    fail ArgumentError, 'expected Hash with 1 pair' unless arg.is_a?(Hash) && arg.length == 1
 
-    css = {
-      light: 'https://raw.githubusercontent.com/sindresorhus/github-markdown-css/gh-pages/github-markdown-light.css',
-      dark: 'https://raw.githubusercontent.com/sindresorhus/github-markdown-css/gh-pages/github-markdown-dark-dimmed.css',
-    }.to_h do |name, url|
-      cache = @data_dir / "#{name}.css"
-      cache.carefull_write{ Fetch.get(url) }
-      [name, cache.read]
+    dir, dependencies = arg.first
+    done = dir.done
+
+    file done => dependencies do
+      rm_rf dir
+
+      yield
+
+      touch done
+    end
+  end
+
+  def dashing_config
+    JSON.pretty_generate(
+      name:,
+      package:,
+      index: "#{html_path}/en/#{prefix}/index.html",
+      externalURL: "https://docs.github.com/en/#{prefix}",
+      selectors: {
+        'h1' => 'Guide',
+        'h2, h3' => {attr: 'title', type: 'Section'},
+        'code.keyword' => 'Keyword',
+      },
+    )
+  end
+
+  def docset_meta
+    JSON.pretty_generate({
+      name:,
+      version:,
+      archive: archive_path.basename,
+      author: {
+        name: 'Ivan Kuchin',
+        link: 'https://github.com/toy',
+      },
+    })
+  end
+
+  def generate_html
+    jsons = chdir(data_path) do
+      FSPath.glob('**/*.json').map do |path|
+        Json.new(path.to_s.delete_suffix('.json'), ::JSON.parse(path.read))
+      end.sort_by(&:path)
     end
 
-    dst.dirname.mkpath
-    dst.write <<~CSS
-      body { padding: 40px; }
+    known_paths = jsons.each_with_object({}) do |json, paths|
+      paths["/#{json.path}"] = "#{json.path}#{'/index' if json.folder?}.html"
+    end
 
-      a.external::after {
-        content: "↗";
-        padding-left: 0.25em;
-      }
+    redirects = YAML::Store.new(data_path / 'redirects.yml')
 
-      #{css[:light]}
-      @media (prefers-color-scheme: dark) {
-        #{css[:dark]}
-      }
-    CSS
+    relative_css_path = 'assets/style.css'
+    css_path = html_path / relative_css_path
+
+    mkdir_p css_path.dirname
+    ln CSS_PATH, html_path / relative_css_path
+
+    jsons.each do |json|
+      redirects.transaction do
+        relative_file_path = known_paths["/#{json.path}"]
+
+        html = markdown_to_html(json:, relative_file_path:, known_paths:, relative_css_path:, redirects:)
+
+        (html_path / relative_file_path).carefull_write(html)
+      end
+    end
   end
 
-  def write_html(json)
-    html_path = @known_paths["/#{json.path}"]
-
-    (@html_dir / html_path).carefull_write(markdown_to_html(json, html_path))
-  end
-
-  def markdown_to_html(json, html_path)
+  def markdown_to_html(json:, relative_file_path:, known_paths:, relative_css_path:, redirects:)
     fixed_markdown = json.body.gsub(/^( *> )\\(\[!(?:NOTE|TIP|IMPORTANT|WARNING|CAUTION)\])(.*)/) do
       $3 == '' ? "#{$1}#{$2}" : "#{$1}#{$2}\n#{$1}#{$3}"
     end
@@ -206,7 +330,7 @@ private
       },
     )
 
-    fragment = Nokogiri::HTML::DocumentFragment.parse(html)
+    fragment = Nokogiri::HTML5::DocumentFragment.parse(html)
 
     fragment.search('a[href]').each do |a|
       href = a['href']
@@ -215,8 +339,8 @@ private
         next
       end
 
-      if path =~ PATH_R && !@known_paths[path]
-        href = (@redirects[path] ||= Fetch.get_redirect("https://docs.github.com#{href}"))
+      if path =~ path_r && !known_paths[path]
+        href = (redirects[path] ||= Fetch.get_redirect("https://docs.github.com#{href}"))
 
         abort "unexpected redirect #{path} to #{href}" unless %r{\A(?<path>/[^#]*)(?<redirect_anchor>#.*)?} =~ href
 
@@ -232,30 +356,32 @@ private
         end
       end
 
-      if path =~ PATH_R
-        abort "unknown path #{path}" unless link_path = @known_paths[path]
+      if path =~ path_r
+        abort "unknown path #{path}" unless link_path = known_paths[path]
 
-        a['href'] = "#{relative_path(link_path, html_path)}#{anchor}"
+        a['href'] = "#{relative_path(link_path, relative_file_path)}#{anchor}"
       else
         a['href'] = "https://docs.github.com#{href}"
         a['class'] = [a['class'], 'external'].compact.join(' ')
       end
+    rescue Fetch::Unexpected
+      warn "ignoring #{path}"
     end
 
     fragment.search('img[src]').each do |img|
       src = img['src']
-      abort "unexpected path #{src}" unless src =~ %r{\A/assets(/[a-z0-9]+([\-_][a-z0-9]+)*)+\.png\z}
+      abort "unexpected path #{src}" unless src =~ %r{\A/assets(/[a-z0-9]+([\-_+][a-z0-9]+)*)+\.png\z}
 
-      cache = @data_dir / src
+      cache = data_path / src
       cache.carefull_write{ Fetch.get("https://docs.github.com#{src}") }
 
-      dst = @html_dir / src
+      dst = html_path / src
       unless dst.size?
         dst.dirname.mkpath
         dst.make_link(cache)
       end
 
-      img['src'] = relative_path(src, html_path)
+      img['src'] = relative_path(src, relative_file_path)
     end
 
     if json.breadcrumbs.length > 1
@@ -264,10 +390,10 @@ private
       json.breadcrumbs[...-1].each do |breadcrumb|
         path = breadcrumb['href']
         title = breadcrumb['title']
-        abort "unknown path #{path}" unless link_path = @known_paths[path]
+        abort "unknown path #{path}" unless link_path = known_paths[path]
 
         a = Nokogiri::XML::Node.new('a', fragment)
-        a['href'] = relative_path(link_path, html_path)
+        a['href'] = relative_path(link_path, relative_file_path)
         a.content = title
 
         nav.add_child(a)
@@ -306,24 +432,23 @@ private
       columns.first.each{ |code| code['class'] = 'keyword' }
     end
 
-    <<~HTML
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8">
-          <title>#{h json.title}</title>
-          <link rel="stylesheet" href="#{h relative_path(@css_path, html_path)}">
-        </head>
-        <body class="markdown-body">
-          #{fragment}
-
-          <footer>
-            Documentation is licensed under Creative Commons Attribution 4.0
-            (see <a href="#{h relative_path('GitHub documentation LICENSE.txt', html_path)}">GitHub documentation LICENSE</a>)
-          </footer>
-        </body>
-      </html>
-    HTML
+    Nokogiri::HTML5::Builder.new do |doc|
+      doc.html do
+        doc.head do
+          doc.meta charset: 'utf-8'
+          doc.title json.title
+          doc.link rel: 'stylesheet', href: relative_path(relative_css_path, relative_file_path)
+        end
+        doc.body class: 'markdown-body' do
+          doc << fragment
+          doc.footer do
+            doc.text 'Documentation is licensed under Creative Commons Attribution 4.0 (see '
+            doc.a 'GitHub documentation LICENSE', href: relative_path('GitHub documentation LICENSE.txt', relative_file_path)
+            doc.text ')'
+          end
+        end
+      end
+    end.to_html
   end
 
   def relative_path(to, from)
@@ -335,5 +460,17 @@ private
     "#{'../' * (from_parts.length - same - 1)}#{to_parts.drop(same).join('/')}"
   end
 
-  def h(s) = CGI.escapeHTML(s)
+  def docker_run_args(image)
+    %W[
+      docker run
+      --user #{Process.uid}:#{Process.gid}
+      --rm
+      -i
+      -v #{Dir.pwd}:/here
+      -w /here
+      #{image}
+    ]
+  end
 end
+
+GithubDocBuilder.define_tasks

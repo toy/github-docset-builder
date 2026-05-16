@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+
+require 'nokogiri'
+
+Nokogiri::HTML5::Builder.new do |doc|
+  doc.html do
+    doc.head do
+      doc.meta 'http-equiv': 'Content-Type', content: 'text/html;charset=UTF-8'
+      doc.title 'docsets'
+      doc.style <<~CSS, type: 'text/css'
+        html, body { margin: 0; padding: 0; }
+        body { font: 14px "Myriad Pro", "Helvetica", Arial, sans-serif; margin: 20px; }
+        a { color: #00a; }
+        a:hover { color: #00f; }
+        a:visited { color: #004; }
+      CSS
+    end
+    doc.body do
+      doc.ul do
+        Dir['html/*'].sort_by(&:downcase).each do |docset|
+          next unless (index = Dir['{,*/}*/index.html', base: docset].first)
+
+          doc.li do
+            doc.a File.basename(docset), href: "#{docset}/#{index}"
+          end
+        end
+      end
+    end
+  end
+end.doc.write_to($stdout)

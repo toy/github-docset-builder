@@ -5,15 +5,23 @@ on:
   pull_request:
   workflow_dispatch:
   schedule:
-    - cron: '40 4 * * 4'
+  - cron: '40 4 * * 4'
 
 jobs:
   build:
+    env:
+      CONTRIBUTIONS_REPO: Dash-User-Contributions
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      issues: write
     steps:
     - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.DASH_USER_CONTRIBUTIONS_PAT }}
+        repository: Kapeli/${{ env.CONTRIBUTIONS_REPO }}
+        path: ${{ env.CONTRIBUTIONS_REPO }}
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ruby
@@ -23,18 +31,55 @@ jobs:
         path: |
           ~/.cache/go-build
           ~/go/pkg/mod
+          .cache-mark
+          .css
+          .pagelist
+          data
         key: dump
     - run: |
         go install github.com/technosophos/dashing@172c69f1c58cf6efe5b1813fa06ce29a684b00e4
         echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
     - run: bundle exec rake
-    - id: docset-name
-      run: echo "name=$(echo *.docset.tgz | head -n 1)" >> $GITHUB_OUTPUT
     - uses: actions/upload-artifact@v7
       with:
-        name: ${{ steps.docset-name.outputs.name }}
-        path: ${{ steps.docset-name.outputs.name }}
-    - if: github.ref == 'refs/heads/main'
+        name: results
+        path: 'results/*'
+    - name: create/update branch for PR if there are changes
+      if: github.ref == 'refs/heads/main'
+      run: |
+        changes=()
+        for src_json_path in results/*/docset.json; do
+          dst_rel_json_path="docsets/${src_json_path#*/}"
+          dst_json_path="$CONTRIBUTIONS_REPO/$dst_rel_json_path"
+          if ! diff -u "$src_json_path" "$dst_json_path"; then
+            rsync --archive --delete "$(dirname "$src_json_path")/" "$(dirname "$dst_json_path")/"
+            git -C "$CONTRIBUTIONS_REPO" add "$(dirname "$dst_rel_json_path")"
+            changes+=("$(jq --raw-output '.name + " " + .version' "$src_json_path")")
+          fi
+        done
+
+        if (( ${#changes[@]} != 0 )); then
+          owner="${{ github.repository_owner }}"
+          branch=$(basename "${{ github.repository }}")
+          message="$(ruby -e 'puts ARGV.join(", ")' -- "${changes[@]}")"
+
+          git -C "$CONTRIBUTIONS_REPO" checkout -b "$branch"
+          git -C "$CONTRIBUTIONS_REPO" \
+              -c user.name="$(git log -1 --format=%an)" \
+              -c user.email="$(git log -1 --format=%ae)" \
+              commit --message "$message"
+          git -C "$CONTRIBUTIONS_REPO" push --force "https://github.com/$owner/$CONTRIBUTIONS_REPO" HEAD
+
+          pr_url="https://github.com/Kapeli/$CONTRIBUTIONS_REPO/compare/master...$owner:$CONTRIBUTIONS_REPO:$branch?quick_pull=1"
+          gh issue create \
+            --title "$message" \
+            --body "$pr_url" \
+            --assignee "$owner"
+        fi
+      env:
+        GH_TOKEN: ${{ github.token }}
+    - name: commit changes to gh-pages
+      if: github.ref == 'refs/heads/main'
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -51,8 +96,9 @@ jobs:
         fi
 
         touch .nojekyll
+        bundle exec script/index > index.html
 
-        git add -f .nojekyll data html
+        git add -f .nojekyll html index.html
         if ! git diff --staged --quiet; then
           git commit -m "$(date)"
           git push origin "$branch"
