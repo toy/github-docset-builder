@@ -1,0 +1,126 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Deploying .NET to Azure App Service</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Deploy</a> / <a href="index.html">Deploy to third-party platforms</a> / </nav><h1><a href="#deploying-net-to-azure-app-service" aria-hidden="true" class="anchor" id="deploying-net-to-azure-app-service"></a>Deploying .NET to Azure App Service</h1>
+<p>Learn how to deploy a .NET project to Azure App Service as part of your continuous deployment (CD) workflows.</p>
+<h2 title="Prerequisites"><a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<p>Before creating your GitHub Actions workflow, you will first need to complete the following setup steps:</p>
+<ol>
+<li>
+<p>Create an Azure App Service plan.</p>
+<p>For example, you can use the Azure CLI to create a new App Service plan:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">az</span><span style="color:#c0c5ce;"> appservice plan create \
+</span><span style="color:#bf616a;">   --resource-group</span><span style="color:#c0c5ce;"> MY_RESOURCE_GROUP \
+</span><span style="color:#bf616a;">   --name</span><span style="color:#c0c5ce;"> MY_APP_SERVICE_PLAN \
+</span><span style="color:#bf616a;">   --is-linux
+</span></code></pre>
+<p>In the command above, replace <code>MY_RESOURCE_GROUP</code> with your pre-existing Azure Resource Group, and <code>MY_APP_SERVICE_PLAN</code> with a new name for the App Service plan.</p>
+<p>See the Azure documentation for more information on using the <a href="https://docs.microsoft.com/cli/azure/" class="external">Azure CLI</a>:</p>
+<ul>
+<li>For authentication, see <a href="https://docs.microsoft.com/cli/azure/authenticate-azure-cli" class="external">Sign in with Azure CLI</a>.</li>
+<li>If you need to create a new resource group, see <a href="https://docs.microsoft.com/cli/azure/group?view=azure-cli-latest#az_group_create" class="external">az group</a>.</li>
+</ul>
+</li>
+<li>
+<p>Create a web app.</p>
+<p>For example, you can use the Azure CLI to create an Azure App Service web app with a .NET runtime:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">az</span><span style="color:#c0c5ce;"> webapp create \
+</span><span style="color:#bf616a;">    --name</span><span style="color:#c0c5ce;"> MY_WEBAPP_NAME \
+</span><span style="color:#bf616a;">    --plan</span><span style="color:#c0c5ce;"> MY_APP_SERVICE_PLAN \
+</span><span style="color:#bf616a;">    --resource-group</span><span style="color:#c0c5ce;"> MY_RESOURCE_GROUP \
+</span><span style="color:#bf616a;">    --runtime </span><span style="color:#c0c5ce;">"</span><span style="color:#a3be8c;">DOTNET|5.0</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<p>In the command above, replace the parameters with your own values, where <code>MY_WEBAPP_NAME</code> is a new name for the web app.</p>
+</li>
+<li>
+<p>Configure an Azure publish profile and create an <code>AZURE_WEBAPP_PUBLISH_PROFILE</code> secret.</p>
+<p>Generate your Azure deployment credentials using a publish profile. For more information, see <a href="https://docs.microsoft.com/azure/app-service/deploy-github-actions?tabs=applevel#generate-deployment-credentials" class="external">Generate deployment credentials</a> in the Azure documentation.</p>
+<p>In your GitHub repository, create a secret named <code>AZURE_WEBAPP_PUBLISH_PROFILE</code> that contains the contents of the publish profile. For more information on creating secrets, see <a href="../../write-workflows/choose-what-workflows-do/use-secrets.html#creating-secrets-for-a-repository">Using secrets in GitHub Actions</a>.</p>
+</li>
+<li>
+<p>Optionally, configure a deployment environment. Environments are used to describe a general deployment target like <code>production</code>, <code>staging</code>, or <code>development</code>. When a GitHub Actions workflow deploys to an environment, the environment is displayed on the main page of the repository. You can use environments to require approval for a job to proceed, restrict which branches can trigger a workflow, gate deployments with custom deployment protection rules, or limit access to secrets. For more information about creating environments, see <a href="../configure-and-manage-deployments/manage-environments.html">Managing environments for deployment</a>.</p>
+</li>
+</ol>
+<h2 title="Creating the workflow"><a href="#creating-the-workflow" aria-hidden="true" class="anchor" id="creating-the-workflow"></a>Creating the workflow</h2>
+<p>Once you've completed the prerequisites, you can proceed with creating the workflow.</p>
+<p>The following example workflow demonstrates how to build and deploy a .NET project to Azure App Service when there is a push to the <code>main</code> branch.</p>
+<p>Ensure that you set <code>AZURE_WEBAPP_NAME</code> in the workflow <code>env</code> key to the name of the web app you created. If the path to your project is not the repository root, change <code>AZURE_WEBAPP_PACKAGE_PATH</code>. If you use a version of .NET other than <code>5</code>, change <code>DOTNET_VERSION</code>.</p>
+<p>If you configured a deployment environment, change the value of <code>environment</code> to be the name of your environment. If you did not configure an environment or if your workflow is in a private repository and you do not use GitHub Enterprise Cloud, delete the <code>environment</code> key.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># This workflow uses actions that are not certified by GitHub.
+</span><span style="color:#65737e;"># They are provided by a third-party and are governed by
+</span><span style="color:#65737e;"># separate terms of service, privacy policy, and support
+</span><span style="color:#65737e;"># documentation.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># GitHub recommends pinning actions to a commit SHA.
+</span><span style="color:#65737e;"># To get a newer version, you will need to update the SHA.
+</span><span style="color:#65737e;"># You can also reference a tag or branch, but the action may change without warning.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Build and deploy ASP.Net Core app to an Azure Web App
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">AZURE_WEBAPP_NAME</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">MY_WEBAPP_NAME   </span><span style="color:#65737e;"># set this to your application's name
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">AZURE_WEBAPP_PACKAGE_PATH</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">.</span><span style="color:#c0c5ce;">'      </span><span style="color:#65737e;"># set this to the path to your web app project, defaults to the repository root
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">DOTNET_VERSION</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">5</span><span style="color:#c0c5ce;">'                 </span><span style="color:#65737e;"># set this to the .NET Core version to use
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">main
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set up .NET Core
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-dotnet@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">dotnet-version</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ env.DOTNET_VERSION }}
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set up dependency caching for faster builds
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/cache@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">~/.nuget/packages
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">key</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">restore-keys</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">            ${{ runner.os }}-nuget-
+</span><span style="color:#a3be8c;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Build with dotnet
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet build --configuration Release
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet publish
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Upload artifact for deployment job
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/upload-artifact@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">.net-app
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{env.DOTNET_ROOT}}/myapp
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">deploy</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">needs</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">build
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">environment</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">production</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ steps.deploy-to-webapp.outputs.webapp-url }}
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Download artifact from build job
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/download-artifact@v5
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">.net-app
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Deploy to Azure Web App
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">deploy-to-webapp
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">azure/webapps-deploy@85270a1854658d167ab239bce43949edb336fa7c
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">app-name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ env.AZURE_WEBAPP_NAME }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">publish-profile</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">package</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+</span></code></pre>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li>For the original workflow template, see <a href="https://github.com/actions/starter-workflows/blob/main/deployments/azure-webapps-dotnet-core.yml" class="external"><code>azure-webapps-dotnet-core.yml</code></a> in the GitHub Actions <code>starter-workflows</code> repository.</li>
+<li>The action used to deploy the web app is the official Azure <a href="https://github.com/Azure/webapps-deploy" class="external"><code>Azure/webapps-deploy</code></a> action.</li>
+<li>For more examples of GitHub Action workflows that deploy to Azure, see the <a href="https://github.com/Azure/actions-workflow-samples" class="external">actions-workflow-samples</a> repository.</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

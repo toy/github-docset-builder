@@ -1,0 +1,98 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Viewing and filtering alerts from secret scanning</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Manage security alerts</a> / <a href="index.html">Secret scanning alerts</a> / </nav><h1><a href="#viewing-and-filtering-alerts-from-secret-scanning" aria-hidden="true" class="anchor" id="viewing-and-filtering-alerts-from-secret-scanning"></a>Viewing and filtering alerts from secret scanning</h1>
+<p>Learn how to find and filter secret scanning alerts for your repository.</p>
+<p>You can find and filter secret scanning alerts for users through your repository's <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab. To learn more about alerts and the different types you may encounter, see <a href="../../../concepts/secret-security/about-alerts.html">About secret scanning alerts</a>.</p>
+<h2 title="Viewing alerts"><a href="#viewing-alerts" aria-hidden="true" class="anchor" id="viewing-alerts"></a>Viewing alerts</h2>
+<p>Alerts for secret scanning are displayed under the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab of the repository.</p>
+<ol>
+<li>
+<p>On GitHub, navigate to the main page of the repository.</p>
+</li>
+<li>
+<p>Under the repository name, click the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab. If you cannot see the "<svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality" tab, select the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-kebab-horizontal" aria-label="kebab-horizontal" role="img"><path d="M8 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM1.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm13 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path></svg></strong> dropdown menu, and then click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong>.</p>
+</li>
+<li>
+<p>In the left sidebar, under "Vulnerability alerts", click <strong>Secret scanning</strong>.</p>
+</li>
+<li>
+<p>Optionally, toggle to "Generic" to see alerts for non-provider patterns or generic secrets detected using AI.</p>
+</li>
+<li>
+<p>Under "Secret scanning", click the alert you want to view.</p>
+</li>
+<li>
+<p>Optionally, assign the alert to someone to fix using the <strong>Assignees</strong> control shown on the right, see <a href="../../../concepts/security-at-scale/about-security-campaigns.html#assigning-alerts">Assigning alerts</a>.</p>
+</li>
+</ol>
+<h2 title="Filtering alerts"><a href="#filtering-alerts" aria-hidden="true" class="anchor" id="filtering-alerts"></a>Filtering alerts</h2>
+<p>You can apply various filters to the alerts list to help you find the alerts you're interested in. You can use the dropdown menus above the alerts list, or input the qualifiers listed in the table into the search bar.</p>
+<table>
+<thead>
+<tr>
+<th>Qualifier</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bypassed</code></td>
+<td>Display alerts for secrets where push protection has been bypassed (<code>true</code>). For more information, see <a href="../../../concepts/secret-security/about-push-protection.html">About push protection</a>.</td>
+</tr>
+<tr>
+<td><code>is</code></td>
+<td>Display alerts that are open (<code>open</code>), closed (<code>closed</code>), found in a public repository (<code>publicly-leaked</code>), or found in more than one repository within the same organization or enterprise (<code>multi-repository</code>).</td>
+</tr>
+<tr>
+<td><code>props</code></td>
+<td>Display alerts for repositories with a specific custom property (<code>CUSTOM_PROPERTY_NAME</code>) set. For example, <code>props:data_sensitivity:high</code> display results for repositories with the <code>data_sensitivity</code> property set to the value <code>high</code>.</td>
+</tr>
+<tr>
+<td><code>provider</code></td>
+<td>Display alerts for a specific provider (<code>PROVIDER-NAME</code>), for example, <code>provider:github</code>. For a list of supported partners, see <a href="../../../reference/secret-security/supported-secret-scanning-patterns.html#supported-secrets">Supported secret scanning patterns</a>.</td>
+</tr>
+<tr>
+<td><code>repo</code></td>
+<td>Display alerts detected in a specified repository (<code>REPOSITORY-NAME</code>), for example: <code>repo:octo-repository</code>.</td>
+</tr>
+<tr>
+<td><code>resolution</code></td>
+<td>Display alerts closed as "false positive" (<code>false-positive</code>), "hidden by config" (<code>hidden-by-config</code>), "pattern deleted" (<code>pattern-deleted</code>), "pattern edited" (<code>pattern-edited</code>), "revoked" (<code>revoked</code>), "used in tests" (<code>used-in-tests</code>), or "won't fix" (<code>wont-fix</code>).</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>results</code></td>
+<td>Display alerts for supported secrets and custom patterns (<code>default</code>), or for non-provider patterns (<code>generic</code>) such as private keys, and AI-detected generic secrets such as passwords. See <a href="../../../reference/secret-security/supported-secret-scanning-patterns.html">Supported secret scanning patterns</a>, and for more information about AI-detected generic secrets, see <a href="../../../responsible-use/responsible-ai-generic-secrets.html">Responsible detection of generic secrets with Copilot secret scanning</a>.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>secret-type</code></td>
+<td>Display alerts for a specific secret type (<code>SECRET-NAME</code>), for example, <code>secret-type:github_personal_access_token</code>. For a list of supported secret types, see <a href="../../../reference/secret-security/supported-secret-scanning-patterns.html#supported-secrets">Supported secret scanning patterns</a>.</td>
+</tr>
+<tr>
+<td><code>sort</code></td>
+<td>Display alerts from newest to oldest (<code>created-desc</code>), oldest to newest (<code>created-asc</code>), most recently updated (<code>updated-desc</code>), or least recently updated (<code>updated-asc</code>).</td>
+</tr>
+<tr>
+<td><code>team</code></td>
+<td>Display alerts owned by members of the specified team, for example: <code>team:octocat-dependabot-team</code>.</td>
+</tr>
+<tr>
+<td><code>topic</code></td>
+<td>Display alerts with the matching repository topic, for example: <code>topic:asdf</code>.</td>
+</tr>
+<tr>
+<td><code>validity</code></td>
+<td>Display alerts for secrets with a specific validity (<code>active</code>, <code>inactive</code>, or <code>unknown</code>). Applies only to GitHub tokens unless you enable validity checks. For more information about validity statuses, see <a href="../../../tutorials/remediate-leaked-secrets/evaluating-alerts.html#checking-a-secrets-validity">Evaluating alerts from secret scanning</a>.</td>
+</tr>
+</tbody>
+</table>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<ul>
+<li><a href="../../../tutorials/remediate-leaked-secrets/evaluating-alerts.html">Evaluating alerts from secret scanning</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Protecting against security threats</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Secure your organization</a> / </nav><h1><a href="#protecting-against-security-threats" aria-hidden="true" class="anchor" id="protecting-against-security-threats"></a>Protecting against security threats</h1>
+<p>What steps should I take now, in the near future, and on an ongoing basis to reduce exposure to security threats across my organizations on GitHub?</p>
+<h2 title="Introduction"><a href="#introduction" aria-hidden="true" class="anchor" id="introduction"></a>Introduction</h2>
+<p>Preventing security incidents is less costly and less disruptive than responding<br>
+to them. By proactively hardening your environment on GitHub, you reduce your exposure to threats such as exploited credentials, unauthorized access, and supply chain attacks.</p>
+<p>This guide primarily focuses on the protective measures you can apply across organizations that are part of an enterprise on GitHub Enterprise Cloud. To trial GitHub Enterprise Cloud, see <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/overview/setting-up-a-trial-of-github-enterprise-cloud" class="external">Setting up a trial of GitHub Enterprise Cloud</a>.</p>
+<p>Many of GitHub's security features mentioned here, such as security configurations, branch rulesets and access controls, can be configured at both the organization level or enterprise level.</p>
+<h2 title="Immediate actions"><a href="#immediate-actions" aria-hidden="true" class="anchor" id="immediate-actions"></a>Immediate actions</h2>
+<p>These are high-impact actions you can take right now to establish a security baseline across an organization.</p>
+<ul>
+<li><a href="#establish-security-coverage">Establish security coverage</a></li>
+<li><a href="#tighten-controls">Tighten controls</a></li>
+<li><a href="#review-and-restrict-access">Review and restrict access</a></li>
+<li><a href="#run-a-secret-risk-assessment">Run a secret risk assessment</a></li>
+</ul>
+<h3 title="Immediate actions / Establish security coverage"><a href="#establish-security-coverage" aria-hidden="true" class="anchor" id="establish-security-coverage"></a>Establish security coverage</h3>
+<p>Ensure that GitHub's GitHub Advanced Security tools are active across all repositories. Rather than enabling tools one by one, you can create and apply a <strong>security configuration</strong>, which is a collection of security settings that can be applied to repositories across your organization or enterprise in a single action.</p>
+<p>A strong configuration might include:</p>
+<ul>
+<li><strong>Secret scanning</strong> and <strong>push protection</strong> to detect secrets that have already been committed to your codebase, and prevent new secrets from being pushed. Leaked credentials are one of the most common causes of security breaches.</li>
+<li><strong>Code scanning</strong> to identify vulnerabilities and coding errors in your source code before they reach production.</li>
+<li><strong>Dependabot alerts</strong> and <strong>Dependabot security updates</strong> to notify you of known vulnerabilities and malware in your dependencies and automatically open pull requests to update vulnerable dependencies.</li>
+</ul>
+<p>See <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-at-scale/configure-organization-security/establish-complete-coverage/creating-a-custom-security-configuration" class="external">Creating a custom security configuration</a> (organizations) and <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-at-scale/configure-enterprise-security/establish-complete-coverage/creating-a-custom-security-configuration-for-your-enterprise" class="external">Creating a custom security configuration for your enterprise</a> (enterprises).</p>
+<h3 title="Immediate actions / Tighten controls"><a href="#tighten-controls" aria-hidden="true" class="anchor" id="tighten-controls"></a>Tighten controls</h3>
+<p>GitHub gives you a range of controls that govern what can happen in your repositories and organization. Ensuring these controls are configured appropriately is essential for reducing risk.</p>
+<h4><a href="#protect-critical-branches-with-rulesets" aria-hidden="true" class="anchor" id="protect-critical-branches-with-rulesets"></a>Protect critical branches with rulesets</h4>
+<p>Rulesets let you define protection rules for branches and tags across one or more repositories. Use them to enforce requirements such as pull request reviews and status checks (such as automated security scans). This can help prevent unauthorized changes from reaching production code, including changes from compromised accounts.</p>
+<p>See <a href="https://docs.github.com/en/organizations/managing-organization-settings/creating-rulesets-for-repositories-in-your-organization" class="external">Creating rulesets for repositories in your organization</a> (organizations) and <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-code-governance" class="external">Enforcing code governance in your enterprise with rulesets</a> (enterprises).</p>
+<h4><a href="#control-who-can-bypass-push-protection" aria-hidden="true" class="anchor" id="control-who-can-bypass-push-protection"></a>Control who can bypass push protection</h4>
+<p>When you enable push protection, contributors who attempt to push a detected secret are blocked but, by default, they have the option to bypass the block. <strong>Delegated bypass</strong> requires that bypass requests pass through a review and approval cycle, so no bypass can happen without an explicit, audited decision.</p>
+<p>See <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-your-secrets/manage-bypass-requests/enabling-delegated-bypass-for-push-protection" class="external">Enabling delegated bypass for push protection</a>.</p>
+<h4><a href="#enforce-dependency-review-on-pull-requests" aria-hidden="true" class="anchor" id="enforce-dependency-review-on-pull-requests"></a>Enforce dependency review on pull requests</h4>
+<p>The dependency review action lets you catch vulnerable dependencies before they're merged, by surfacing known vulnerabilities in a pull request's dependency changes. Like push protection for secrets, it acts as a gate rather than an after-the-fact alert. You can enforce dependency review on pull requests across your organization.</p>
+<p>See <a href="../../concepts/supply-chain-security/about-dependency-review.html#about-the-dependency-review-action">About dependency review</a> and <a href="../../how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/enforcing-dependency-review-across-an-organization.html">Enforcing dependency review across an organization</a>.</p>
+<h3 title="Immediate actions / Review and restrict access"><a href="#review-and-restrict-access" aria-hidden="true" class="anchor" id="review-and-restrict-access"></a>Review and restrict access</h3>
+<p>Access that was appropriate when it was granted may no longer be necessary. Regularly reviewing who and what has access to an organization reduces the risk of unauthorized actions.</p>
+<h4><a href="#audit-member-access-and-follow-the-principle-of-least-privilege" aria-hidden="true" class="anchor" id="audit-member-access-and-follow-the-principle-of-least-privilege"></a>Audit member access and follow the principle of least privilege</h4>
+<p>Ensure that members of organizations have only the access they need. Remove members who no longer require access, downgrade roles where broader permissions aren't justified, and review outside collaborator access. Overly permissive access increases the blast radius of any compromised account.</p>
+<p>If the default roles are more permissive than an organization requires, you can create <strong>custom roles</strong> that grant only the specific permissions each team needs. This is especially valuable for organizations adopting a zero trust security model.</p>
+<p>See <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/managing-accounts-and-repositories/managing-roles-in-your-enterprise/identify-role-requirements" class="external">Identifying the roles required by your enterprise</a>.</p>
+<h4><a href="#review-authorized-applications" aria-hidden="true" class="anchor" id="review-authorized-applications"></a>Review authorized applications</h4>
+<p>OAuth apps and GitHub Apps that are installed in an organization can access data. Review the list of authorized applications and remove any that are no longer needed or no longer trusted. Stale integrations represent an often-overlooked attack surface.</p>
+<p>See <a href="https://docs.github.com/en/apps/using-github-apps/reviewing-and-modifying-installed-github-apps" class="external">Reviewing and modifying installed GitHub Apps</a> and <a href="https://docs.github.com/en/enterprise-cloud@latest/organizations/managing-oauth-access-to-your-organizations-data/about-oauth-app-access-restrictions" class="external">About OAuth app access restrictions</a>.</p>
+<h4><a href="#restrict-network-access-with-ip-allow-lists" aria-hidden="true" class="anchor" id="restrict-network-access-with-ip-allow-lists"></a>Restrict network access with IP allow lists</h4>
+<p>For organizations on GitHub Enterprise Cloud, if your organization operates from known network ranges, configure an IP allow list to restrict access to GitHub resources from those ranges only. This adds a layer of defense against compromised credentials being used from unexpected locations.</p>
+<p>See <a href="https://docs.github.com/en/enterprise-cloud@latest/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/managing-allowed-ip-addresses-for-your-organization" class="external">Managing allowed IP addresses for your organization</a> and <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/configuring-settings/hardening-security-for-your-enterprise/restricting-network-traffic-to-your-enterprise-with-an-ip-allow-list" class="external">Restricting network traffic to your enterprise with an IP allow list</a>.</p>
+<h3 title="Immediate actions / Run a secret risk assessment"><a href="#run-a-secret-risk-assessment" aria-hidden="true" class="anchor" id="run-a-secret-risk-assessment"></a>Run a secret risk assessment</h3>
+<p>Run a free, on-demand scan for an organization's repositories that gives you a point-in-time view of the total number of currently exposed secrets across your organization.</p>
+<p>See <a href="../../how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/assess-your-secret-risk.html">Running the secret risk assessment for your organization</a>.</p>
+<h2 title="Near-term actions"><a href="#near-term-actions" aria-hidden="true" class="anchor" id="near-term-actions"></a>Near-term actions</h2>
+<p>These actions are also important for your security posture, but may require more preparation and coordination before you can roll them out.</p>
+<ul>
+<li><a href="#strengthen-authentication">Strengthen authentication</a></li>
+<li><a href="#harden-your-github-actions-workflows">Harden your GitHub Actions workflows</a></li>
+<li><a href="#prepare-for-a-security-incident">Prepare for a security incident</a></li>
+</ul>
+<h3 title="Near-term actions / Strengthen authentication"><a href="#strengthen-authentication" aria-hidden="true" class="anchor" id="strengthen-authentication"></a>Strengthen authentication</h3>
+<p>Weak or compromised authentication is one of the most common causes of account takeover. Requiring strong authentication across your organization significantly reduces this risk.</p>
+<p>Require two-factor authentication (2FA) for all members, which ensures that a compromised password alone is not enough to access an account. Before enforcing the requirement, communicate with your organization so members have time to set up 2FA.</p>
+<p>Organizations on GitHub Enterprise Cloud can go further by enforcing single sign-on (SSO), which centralizes authentication through your identity provider.</p>
+<p>See <a href="https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-two-factor-authentication-for-your-organization/requiring-two-factor-authentication-in-your-organization" class="external">Requiring two-factor authentication in your organization</a> and <a href="https://docs.github.com/en/enterprise-cloud@latest/organizations/managing-saml-single-sign-on-for-your-organization/about-identity-and-access-management-with-saml-single-sign-on" class="external">About identity and access management with SAML single sign-on</a>.</p>
+<h3 title="Near-term actions / Harden your GitHub Actions workflows"><a href="#harden-your-github-actions-workflows" aria-hidden="true" class="anchor" id="harden-your-github-actions-workflows"></a>Harden your GitHub Actions workflows</h3>
+<p>GitHub Actions workflows often have access to secrets, deployment credentials, and write permissions to your repository. Without careful configuration, a compromised or malicious action can exfiltrate data or inject malicious code.</p>
+<h4><a href="#explicitly-declare-workflow-permissions" aria-hidden="true" class="anchor" id="explicitly-declare-workflow-permissions"></a>Explicitly declare workflow permissions</h4>
+<p>By default, workflows may receive broad permissions through the <code>GITHUB_TOKEN</code>. Explicitly declare the minimum permissions each workflow needs using the <code>permissions</code> key in your workflow files. This limits the damage that a compromised workflow step can cause.</p>
+<h4><a href="#pin-third-party-actions-to-commit-shas" aria-hidden="true" class="anchor" id="pin-third-party-actions-to-commit-shas"></a>Pin third-party actions to commit SHAs</h4>
+<p>When you reference a third-party action by tag (for example, <code>v1</code>), the tag can be moved to point to different code. Pinning actions to a full commit SHA ensures you always run the exact code you reviewed and approved. This protects against supply chain attacks where a tag is hijacked.</p>
+<h4><a href="#restrict-which-actions-can-run" aria-hidden="true" class="anchor" id="restrict-which-actions-can-run"></a>Restrict which actions can run</h4>
+<p>Configure policies at the organization or enterprise level to control which actions are allowed to run. You can limit actions to those created by GitHub, actions from verified creators, or a specific allowlist.</p>
+<p>For more information on all of these practices, as well as additional secure use practices for GitHub Actions specifically, see <a href="https://docs.github.com/en/actions/reference/security/secure-use" class="external">Secure use reference</a>.</p>
+<h2 title="Ongoing security practices"><a href="#ongoing-security-practices" aria-hidden="true" class="anchor" id="ongoing-security-practices"></a>Ongoing security practices</h2>
+<p>These practices should become part of your regular operational rhythm.</p>
+<ul>
+<li><a href="#monitor-your-security-posture-with-security-overview">Monitor your security posture with security overview</a></li>
+<li><a href="#run-regular-security-campaigns-to-reduce-security-debt">Run regular security campaigns to reduce security debt</a></li>
+<li><a href="#continue-to-audit-access-and-permissions">Continue to audit access and permissions</a></li>
+<li><a href="#keep-dependencies-up-to-date">Keep dependencies up to date</a></li>
+<li><a href="#rotate-secrets-and-enforce-expiration">Rotate secrets and enforce expiration</a></li>
+</ul>
+<h3 title="Ongoing security practices / Monitor your security posture with security overview"><a href="#monitor-your-security-posture-with-security-overview" aria-hidden="true" class="anchor" id="monitor-your-security-posture-with-security-overview"></a>Monitor your security posture with security overview</h3>
+<p>Security overview gives you a centralized view of an organization's and enterprise's security landscape. Use it to track which repositories have security features enabled and identify repositories with open alerts, so that emerging risks don't go unnoticed.</p>
+<p>See <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/security-at-scale/about-security-overview" class="external">About security overview</a>.</p>
+<h3 title="Ongoing security practices / Run regular security campaigns to reduce security debt"><a href="#run-regular-security-campaigns-to-reduce-security-debt" aria-hidden="true" class="anchor" id="run-regular-security-campaigns-to-reduce-security-debt"></a>Run regular security campaigns to reduce security debt</h3>
+<p>Over time, security alerts can accumulate. Security campaigns let you organize and prioritize remediation efforts, assign groups of alerts to developers (with the help of Copilot-generated fixes), or assign alerts directly to Copilot.</p>
+<p>Security campaigns are available to organizations on GitHub Team or GitHub Enterprise Cloud with GitHub Secret Protection or GitHub Code Security enabled. See <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/manage-security-alerts/remediate-alerts-at-scale/creating-managing-security-campaigns" class="external">Creating and managing security campaigns</a>.</p>
+<h3 title="Ongoing security practices / Continue to audit access and permissions"><a href="#continue-to-audit-access-and-permissions" aria-hidden="true" class="anchor" id="continue-to-audit-access-and-permissions"></a>Continue to audit access and permissions</h3>
+<p>As people join and leave an organization, and as projects evolve, access requirements change. Schedule periodic reviews of:</p>
+<ul>
+<li>Organization membership and roles.</li>
+<li>Outside collaborator access.</li>
+<li>Repository-level permissions and team assignments.</li>
+<li>Authorized OAuth and GitHub Apps.</li>
+</ul>
+<p>This ensures that access remains aligned with the principle of least privilege, even as your organization changes.</p>
+<h3 title="Ongoing security practices / Keep dependencies up to date"><a href="#keep-dependencies-up-to-date" aria-hidden="true" class="anchor" id="keep-dependencies-up-to-date"></a>Keep dependencies up to date</h3>
+<p>Vulnerable dependencies are a common entry point for attackers. Dependabot can automatically open pull requests to update dependencies with known vulnerabilities, but those pull requests still need to be reviewed and merged promptly.</p>
+<p>Establish a process for triaging and merging Dependabot pull requests so that security updates don't stall.</p>
+<p>See <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/supply-chain-security/about-dependabot-auto-triage-rules" class="external">About Dependabot auto-triage rules</a> and <a href="../../how-tos/secure-your-supply-chain/manage-your-dependency-security/managing-pull-requests-for-dependency-updates.html">Managing pull requests for dependency updates</a>.</p>
+<h3 title="Ongoing security practices / Rotate secrets and enforce expiration"><a href="#rotate-secrets-and-enforce-expiration" aria-hidden="true" class="anchor" id="rotate-secrets-and-enforce-expiration"></a>Rotate secrets and enforce expiration</h3>
+<p>The longer a credential exists, the more opportunity there is for it to be exposed or stolen. Where possible:</p>
+<ul>
+<li>Set expiration dates on personal access tokens.</li>
+<li>Rotate secrets on a regular schedule.</li>
+</ul>
+<p>For information on managing tokens, see <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens" class="external">Managing your personal access tokens</a> and <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/token-expiration-and-revocation" class="external">Token expiration and revocation</a>.</p>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<ul>
+<li>Even with strong preventive controls in place, security incidents can still occur. There are several critical tools and response processes that you should ensure are set up in advance. See <a href="preparing-for-security-incidents.html">Preparing for a security incident</a>.</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

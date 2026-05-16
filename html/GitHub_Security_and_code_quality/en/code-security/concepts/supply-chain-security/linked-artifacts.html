@@ -1,0 +1,65 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>About linked artifacts</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Supply chain security</a> / </nav><h1><a href="#about-linked-artifacts" aria-hidden="true" class="anchor" id="about-linked-artifacts"></a>About linked artifacts</h1>
+<p>The linked artifacts page helps you audit and prioritize your organization's builds on GitHub, regardless of where the artifacts are stored.</p>
+<p>The linked artifacts page provides a unified view of software artifacts that your organization builds with GitHub Actions, such as container images, packages, or builds of your production code.</p>
+<p>The page shows you how an artifact was built, where it is stored or running, and which compliance and security metadata is associated with the artifact.</p>
+<p>Teams in your organization can use data from the linked artifacts page to:</p>
+<ul>
+<li>Prioritize alerts from GitHub Advanced Security features based on whether the detected vulnerabilities are running in production or exposed to the internet</li>
+<li>Quickly connect artifacts to build details, storage locations, and owning teams</li>
+<li>Meet compliance by exporting auditable proof of your artifacts' provenance and integrity</li>
+<li>Find repositories that are associated with a deployed artifact, and target them in branch rulesets</li>
+</ul>
+<h2 title="Which artifacts appear on the linked artifacts page?"><a href="#which-artifacts-appear-on-the-linked-artifacts-page" aria-hidden="true" class="anchor" id="which-artifacts-appear-on-the-linked-artifacts-page"></a>Which artifacts appear on the linked artifacts page?</h2>
+<p>The linked artifacts page is unique to each organization. It contains metadata for artifacts that have been built with GitHub Actions in your organization's repositories. It does <strong>not</strong> display artifacts your organization consumes from elsewhere, such as open source dependencies.</p>
+<p>Artifact records are uploaded by your organization using either a public API or an integration with an external registry. The linked artifacts page does not store the artifact files themselves. It just provides an authoritative source for the metadata associated with each artifact.</p>
+<p>Because an artifact does not need to be stored on GitHub to appear in the linked artifacts page, you can use the linked artifacts page alongside your preferred package registry, such as JFrog Artifactory or GitHub Packages.</p>
+<h2 title="Which metadata is included?"><a href="#which-metadata-is-included" aria-hidden="true" class="anchor" id="which-metadata-is-included"></a>Which metadata is included?</h2>
+<p>The linked artifacts page combines data from two different types of record: storage records and deployment records. These records are uploaded using different API endpoints or integrations.</p>
+<h3 title="Which metadata is included? / Storage records"><a href="#storage-records" aria-hidden="true" class="anchor" id="storage-records"></a>Storage records</h3>
+<p>Storage records include the repository containing the artifact's source code, the registry where the artifact is stored, and any attestations proving the artifact's integrity and provenance. You can use this data to quickly find an artifact's owning team and build details.</p>
+<p><img src="../../../..//assets/images/help/security/virtual-registry-storage-record.png" alt="Screenshot of an artifact page. Highlighted fields: storage registry, artifact repository, source repository."></p>
+<p>The <em>artifact repository</em> is not mandatory. It refers to the concept of a repository in certain external package registries: a place where multiple packages can be grouped. By contrast, the <em>source repository</em> refers to the GitHub repository where the artifact is built. The source repository is mandatory, and is detected automatically if the artifact has a build provenance attestation.</p>
+<p>For more information about attestations and SLSA levels, see <a href="https://docs.github.com/en/actions/concepts/security/artifact-attestations" class="external">Artifact attestations</a>.</p>
+<h3 title="Which metadata is included? / Deployment records"><a href="#deployment-records" aria-hidden="true" class="anchor" id="deployment-records"></a>Deployment records</h3>
+<p>Deployment records include the environment where the artifact is deployed and any runtime risks (such as "sensitive data" or "internet exposed") associated with the artifact.</p>
+<p><img src="../../../..//assets/images/help/security/virtual-registry-deployment-record.png" alt="Screenshot of an artifact page. Highlighted fields: the &quot;Deployments&quot; list, including tags for &quot;Prod&quot;, &quot;sensitive data&quot;, and &quot;pacific-east&quot;."></p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Deployment records do <strong>not</strong> include deployment activity from a repository's deployments dashboard, which comes from a different source. See <a href="https://docs.github.com/en/repositories/viewing-activity-and-data-for-your-repository/viewing-deployment-activity-for-your-repository" class="external">Viewing deployment activity for your repository</a>.</p>
+</div>
+<h2 title="Where is artifact data available?"><a href="#where-is-artifact-data-available" aria-hidden="true" class="anchor" id="where-is-artifact-data-available"></a>Where is artifact data available?</h2>
+<p>As well as being available on the linked artifacts page itself, artifact metadata is integrated into policy and security surfaces on GitHub. Teams can use this data to make policy decisions or prioritize security issues. For example, they can:</p>
+<ul>
+<li>Use <code>deployed</code> or <code>deployable</code> filters to search for repositories or target repositories in organization and enterprise rulesets. See <a href="https://docs.github.com/en/search-github/searching-on-github/searching-for-repositories#search-based-on-deployment-context" class="external">Searching for repositories</a>.</li>
+<li>Filter security campaigns, code scanning alerts, and Dependabot alerts by runtime risk. See <a href="../../tutorials/secure-your-organization/prioritize-alerts-in-production-code.html">Prioritizing Dependabot and code scanning alerts using production context</a>.</li>
+<li>View runtime risks as attributes on individual code scanning and Dependabot alerts.</li>
+</ul>
+<h2 title="How does the linked artifacts page fit into my processes?"><a href="#how-does-the-linked-artifacts-page-fit-into-my-processes" aria-hidden="true" class="anchor" id="how-does-the-linked-artifacts-page-fit-into-my-processes"></a>How does the linked artifacts page fit into my processes?</h2>
+<p>This example workflow shows how the linked artifacts page integrates with other GitHub features and external systems.</p>
+<ol>
+<li>
+<p>A developer commits code to a GitHub repository where the code for a software package is defined.</p>
+</li>
+<li>
+<p>A GitHub Actions workflow in the repository automatically:</p>
+<ol>
+<li>Builds the package.</li>
+<li>Pushes the package to your chosen registry, such as GitHub Packages or JFrog Artifactory.</li>
+<li>Creates a cryptographically signed provenance attestation, linking the package to the repository, commit, and workflow used to build the package.</li>
+<li>Deploys the package to a staging or production environment. Your deployment system may be gated to ensure that only attested artifacts can be deployed to production, for example using the Kubernetes Admissions Controller.</li>
+</ol>
+</li>
+<li>
+<p>Metadata for the package, such as its linked repository, attestations, and deployment history, is uploaded to the linked artifacts page.</p>
+</li>
+<li>
+<p>Using the data from the linked artifacts page, a security lead triages code scanning and Dependabot alerts, and creates a campaign to address alerts that affect production environments or have a specific runtime risk.</p>
+</li>
+<li>
+<p>When an audit is required, a member of the compliance team exports SBOMs, provenance details, and deployment records for all your organization's linked artifacts from a single source.</p>
+</li>
+</ol>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>To add records to your organization's linked artifacts page, see <a href="../../how-tos/secure-your-supply-chain/establish-provenance-and-integrity/upload-linked-artifacts.html">Uploading storage and deployment data to the linked artifacts page</a>.</p>
+<p>To view the linked artifacts page for your organization, see <a href="../../how-tos/secure-your-supply-chain/establish-provenance-and-integrity/view-linked-artifacts.html">Auditing your organization's builds on the linked artifacts page</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

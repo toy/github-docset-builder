@@ -1,0 +1,166 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Investigation tools for security incidents</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Reference</a> / <a href="index.html">Incident response</a> / </nav><h1><a href="#investigation-tools-for-security-incidents" aria-hidden="true" class="anchor" id="investigation-tools-for-security-incidents"></a>Investigation tools for security incidents</h1>
+<p>The core GitHub tools you can use to investigate security incidents, what each tool is best used for, and common considerations that affect what data is available.</p>
+<p>Use this reference to decide which GitHub tools to use during a security investigation, what questions each tool can answer, and what factors may affect the data you can see.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The availability of each tool (and the data it provides) varies by GitHub plan, your role and permissions, feature enablement, and pre-incident configuration (for example, audit log streaming and IP address disclosure require prior set up).</p>
+</div>
+<h2 title="Activity view"><a href="#activity-view" aria-hidden="true" class="anchor" id="activity-view"></a>Activity view</h2>
+<h3 title="Activity view / Use"><a href="#use" aria-hidden="true" class="anchor" id="use"></a>Use</h3>
+<ul>
+<li>Get an <strong>overview of activity</strong> in a specific repository, including merges, pushes, force pushes, branch creations and deletions, attributed to specific actors over a defined period.</li>
+<li>Correlate suspicious code appearances with <strong>related pushes or merges</strong>.</li>
+<li>Answer questions about <strong>when</strong> a change was made, <strong>who</strong> made it, <strong>in which branch</strong>, and explore the diff or commit history.</li>
+</ul>
+<h4><a href="#permissions" aria-hidden="true" class="anchor" id="permissions"></a>Permissions</h4>
+<p>Read access to the repository.</p>
+<h3 title="Activity view / Key resources"><a href="#key-resources" aria-hidden="true" class="anchor" id="key-resources"></a>Key resources</h3>
+<ul>
+<li><a href="https://docs.github.com/en/repositories/viewing-activity-and-data-for-your-repository/using-the-activity-view-to-see-changes-to-a-repository" class="external">Using the activity view to see changes to a repository</a></li>
+</ul>
+<h3 title="Activity view / Notes and limitations"><a href="#notes-and-limitations" aria-hidden="true" class="anchor" id="notes-and-limitations"></a>Notes and limitations</h3>
+<ul>
+<li>Activity view is best used as an initial navigation and correlation surface; it doesn't have the same completeness or query power as raw audit log exports.</li>
+<li>Some incidents require correlation across repositories or organizations, which may be easier in the audit log.</li>
+</ul>
+<h2 title="Audit logs"><a href="#audit-logs" aria-hidden="true" class="anchor" id="audit-logs"></a>Audit logs</h2>
+<h3 title="Audit logs / Use"><a href="#use-1" aria-hidden="true" class="anchor" id="use-1"></a>Use</h3>
+<ul>
+<li>Answer questions about <strong>what's changed</strong>, <strong>when</strong>, and <strong>by whom</strong> across an enterprise or organization.</li>
+<li>Investigate events that may have enabled compromise, or indicate it, such as changes to membership, roles, permissions, or the generation or use of access tokens, etc.</li>
+<li>Attribute security-relevant actions to an actor (user or integration) and build an investigation timeline.</li>
+<li>Filter by actor, action, IP address (if enabled), or token, to identify suspicious activity or trace token usage.</li>
+<li>Correlate activity across multiple repositories or organizations.</li>
+</ul>
+<h4><a href="#permissions-1" aria-hidden="true" class="anchor" id="permissions-1"></a>Permissions</h4>
+<ul>
+<li>To view the organization audit log, you need to be an organization owner.</li>
+<li>To view the enterprise audit log, you need to be an enterprise administrator.</li>
+<li>To view the security log (personal account), you need to be the account owner.</li>
+<li>To view audit log data exported to an external Security Information and Event Management (SIEM) system, log management system or other tools and services, you need access to that system.</li>
+</ul>
+<h3 title="Audit logs / Key resources"><a href="#key-resources-1" aria-hidden="true" class="anchor" id="key-resources-1"></a>Key resources</h3>
+<ul>
+<li><a href="https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/audit-log-events-for-your-enterprise" class="external">Audit log events for your enterprise</a></li>
+<li><a href="https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/audit-log-events-for-your-organization" class="external">Audit log events for your organization</a></li>
+<li><a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/security-log-events" class="external">Security log events</a></li>
+</ul>
+<h3 title="Audit logs / Notes and limitations"><a href="#notes-and-limitations-1" aria-hidden="true" class="anchor" id="notes-and-limitations-1"></a>Notes and limitations</h3>
+<ul>
+<li>GitHub provides three audit logs: <strong>enterprise</strong>, <strong>organization</strong>, and user <strong>security logs</strong>.</li>
+<li>The GitHub audit log UI has <strong>limited filtering and search</strong> capabilities. For this reason, we recommend that enterprises <strong>stream</strong> the enterprise audit log to an external SIEM or log management system for more advanced querying.
+<ul>
+<li>Audit log streaming to an external SIEM or log management system requires prior configuration. See <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/streaming-the-audit-log-for-your-enterprise" class="external">Streaming the audit log for your enterprise</a>.</li>
+<li>Without audit log streaming, you won't be able to run more complex queries, such as correlating events across organizations or repositories, or pivoting from a specific token to all related events.</li>
+<li>Git events data are included in the stream.</li>
+</ul>
+</li>
+<li>We recommend streaming <strong>API request events</strong>; this requires prior configuration. See <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/streaming-the-audit-log-for-your-enterprise#enabling-audit-log-streaming-of-api-requests" class="external">Streaming the audit log for your enterprise</a>.</li>
+<li>For enterprises on GitHub Enterprise Cloud, we recommend displaying <strong>IP addresses</strong> in the audit logs; this requires prior configuration. See <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/displaying-ip-addresses-in-the-audit-log-for-your-enterprise" class="external">Displaying IP addresses in the audit log for your enterprise</a>.</li>
+<li>Different GitHub plans have different data availability and data retention offerings:
+<ul>
+<li>GitHub Free and GitHub Team plans can't view API activity or Git events at all.</li>
+<li>Standalone organizations (organizations that are not part of an enterprise) can't stream the audit logs, can't view API request events, and are limited to 7 days for Git event data.</li>
+<li>For enterprises on GitHub Enterprise Cloud:
+<ul>
+<li>If your enterprise uses <strong>Enterprise Managed Users</strong>, then the audit log also includes user <strong>security logs</strong> (events related to user accounts, such as login activity and token usage).</li>
+<li>If your enterprise <em>doesn't use</em> Enterprise Managed Users, then the GitHub audit log only includes events related to the enterprise account and the organizations within it.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>The audit logs <strong>don't</strong> include page view or repository browsing telemetry.</li>
+</ul>
+<h2 title="Dependency graph"><a href="#dependency-graph" aria-hidden="true" class="anchor" id="dependency-graph"></a>Dependency graph</h2>
+<h3 title="Dependency graph / Use"><a href="#use-2" aria-hidden="true" class="anchor" id="use-2"></a>Use</h3>
+<ul>
+<li>Check whether a repository depends on a <strong>vulnerable or compromised package</strong> (or version).</li>
+<li>Review for <strong>new or suspicious dependencies</strong> that may have been introduced during an incident.</li>
+<li>Filter and explore dependencies by ecosystem or relationship (direct or transitive).</li>
+<li>Export a software bill of materials (SBOM) for auditing purposes, or to preserve evidence.</li>
+</ul>
+<h4><a href="#permissions-2" aria-hidden="true" class="anchor" id="permissions-2"></a>Permissions</h4>
+<ul>
+<li>Write or maintain access to the repository.</li>
+</ul>
+<h3 title="Dependency graph / Key resources"><a href="#key-resources-2" aria-hidden="true" class="anchor" id="key-resources-2"></a>Key resources</h3>
+<ul>
+<li><a href="../../how-tos/secure-your-supply-chain/secure-your-dependencies/exploring-the-dependencies-of-a-repository.html">Exploring the dependencies of a repository</a></li>
+<li><a href="../supply-chain-security/dependency-graph-supported-package-ecosystems.html">Dependency graph supported package ecosystems</a></li>
+<li><a href="../../how-tos/secure-your-supply-chain/establish-provenance-and-integrity/exporting-a-software-bill-of-materials-for-your-repository.html">Exporting a software bill of materials for your repository</a></li>
+</ul>
+<h3 title="Dependency graph / Notes and limitations"><a href="#notes-and-limitations-2" aria-hidden="true" class="anchor" id="notes-and-limitations-2"></a>Notes and limitations</h3>
+<ul>
+<li>The dependency graph is generated from supported manifest/lock files (and optional build-time submissions), so it can be incomplete or differ from what was actually built and deployed. To get the most accurate view, especially for dependencies resolved during CI/build, you should be supplementing the dependency graph with build-time dependency submission (or other build provenance such as SBOMs).</li>
+</ul>
+<h2 title="GitHub code search"><a href="#github-code-search" aria-hidden="true" class="anchor" id="github-code-search"></a>GitHub code search</h2>
+<h3 title="GitHub code search / Use"><a href="#use-3" aria-hidden="true" class="anchor" id="use-3"></a>Use</h3>
+<ul>
+<li>Search for Indicators of Compromise (IoCs) across repositories, such as known malicious workflows or package names.</li>
+<li>Quickly scope the potential blast radius by checking if suspicious code patterns, such as a leaked secret or malicious code snippet, appear in other repositories across the organization or enterprise.</li>
+<li>Scope the search by various different qualifiers that may be useful during an incident, for example:
+<ul>
+<li>Search within a specific repository, organization, or enterprise (using the <code>repo:</code>, <code>org:</code>, <code>enterprise:</code> qualifiers).</li>
+<li>Search within specific file paths (<code>path:.github/workflows repo:ORG-NAME/REPO-NAME</code>).</li>
+</ul>
+</li>
+</ul>
+<h4><a href="#permissions-required" aria-hidden="true" class="anchor" id="permissions-required"></a>Permissions required</h4>
+<ul>
+<li>To search across public repositories, you must be signed into your GitHub account.</li>
+<li>To search across private repositories, you must have read access to those repositories.</li>
+</ul>
+<h3 title="GitHub code search / Key resources"><a href="#key-resources-3" aria-hidden="true" class="anchor" id="key-resources-3"></a>Key resources</h3>
+<ul>
+<li><a href="https://docs.github.com/en/search-github/github-code-search/using-github-code-search" class="external">Using GitHub Code Search</a></li>
+<li><a href="https://docs.github.com/en/search-github/github-code-search/understanding-github-code-search-syntax" class="external">Understanding GitHub Code Search syntax</a></li>
+</ul>
+<h3 title="GitHub code search / Notes and limitations"><a href="#notes-and-limitations-3" aria-hidden="true" class="anchor" id="notes-and-limitations-3"></a>Notes and limitations</h3>
+<ul>
+<li>Supports regex search.</li>
+<li>Searches across the default branch of a repository only. If the suspicious code was introduced in a non-default branch and hasn't been merged, it won't be found by code search.</li>
+<li>You can use code search to determine if a pattern or IoC is present, but it doesn't provide context such as when the code was added or by whom. You should use code search in conjunction with other tools, such as audit logs, activity view, or checking the blame view, commit history and pull request history of a repository.</li>
+</ul>
+<h2 title="Security overview and security alerts"><a href="#security-overview-and-security-alerts" aria-hidden="true" class="anchor" id="security-overview-and-security-alerts"></a>Security overview and security alerts</h2>
+<h3 title="Security overview and security alerts / Use"><a href="#use-4" aria-hidden="true" class="anchor" id="use-4"></a>Use</h3>
+<ul>
+<li>See a high-level view of all security alerts (secret scanning, code scanning, and Dependabot alerts) across repositories in an organization or enterprise.</li>
+<li>Triage what GitHub has already detected and identify which repositories are affected.</li>
+<li>Track new alerts created during an incident (which can indicate active exploitation or spread).</li>
+</ul>
+<h4><a href="#permissions-required-1" aria-hidden="true" class="anchor" id="permissions-required-1"></a>Permissions required</h4>
+<ul>
+<li>To see data for organizations at the enterprise-level, an enterprise administrator must have the organization owner or security manager role in the relevant organizations.</li>
+<li>To see data for repositories at the organization-level, the organization owner or security manager role is required.</li>
+</ul>
+<h3 title="Security overview and security alerts / Key resources"><a href="#key-resources-4" aria-hidden="true" class="anchor" id="key-resources-4"></a>Key resources</h3>
+<ul>
+<li><a href="../../concepts/security-at-scale/about-security-overview.html">About security overview</a></li>
+<li><a href="../../how-tos/view-and-interpret-data/analyze-organization-data/viewing-security-insights.html#viewing-the-security-overview-dashboard-for-your-organization">Viewing security insights</a></li>
+</ul>
+<h3 title="Security overview and security alerts / Notes and limitations"><a href="#notes-and-limitations-4" aria-hidden="true" class="anchor" id="notes-and-limitations-4"></a>Notes and limitations</h3>
+<ul>
+<li>Alerts for leaked secrets, vulnerable code, vulnerable dependencies and malware are only visible if the relevant features were enabled and configured prior to the incident.</li>
+</ul>
+<h2 title="Workflow runs and logs"><a href="#workflow-runs-and-logs" aria-hidden="true" class="anchor" id="workflow-runs-and-logs"></a>Workflow runs and logs</h2>
+<h3 title="Workflow runs and logs / Use"><a href="#use-5" aria-hidden="true" class="anchor" id="use-5"></a>Use</h3>
+<ul>
+<li>Confirm what executed in CI/CD at a given time (such as the commands executed, or the dependency installed).</li>
+<li>Investigate suspicious workflow runs, such as those triggered by an unfamiliar user or at an unusual time, to see what actions were performed, which secrets were accessed, and what code was executed.</li>
+<li>Determine whether a workflow had access to any secrets.</li>
+</ul>
+<h4><a href="#permissions-required-2" aria-hidden="true" class="anchor" id="permissions-required-2"></a>Permissions required</h4>
+<ul>
+<li>Read access to the repository.</li>
+</ul>
+<h3 title="Workflow runs and logs / Key resources"><a href="#key-resources-5" aria-hidden="true" class="anchor" id="key-resources-5"></a>Key resources</h3>
+<ul>
+<li><a href="https://docs.github.com/en/actions/how-tos/monitor-workflows/view-workflow-run-history" class="external">Viewing workflow run history</a></li>
+<li><a href="https://docs.github.com/en/actions/how-tos/monitor-workflows/use-workflow-run-logs" class="external">Using workflow run logs</a></li>
+</ul>
+<h3 title="Workflow runs and logs / Notes and limitations"><a href="#notes-and-limitations-5" aria-hidden="true" class="anchor" id="notes-and-limitations-5"></a>Notes and limitations</h3>
+<ul>
+<li>GitHub automatically redacts secrets from workflow logs.</li>
+<li>By default, workflow logs are retained by GitHub for 90 days, but you can configure this retention period to be longer (up to 400 days for private repositories).</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

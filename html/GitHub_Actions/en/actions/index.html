@@ -1,0 +1,857 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>GitHub Actions documentation</title><link rel="stylesheet" href="../../assets/style.css"></head><body class="markdown-body"><h1><a href="#github-actions-documentation" aria-hidden="true" class="anchor" id="github-actions-documentation"></a>GitHub Actions documentation</h1>
+<p>Automate, customize, and execute your software development workflows right in your repository with GitHub Actions. You can discover, create, and share actions to perform any job you'd like, including CI/CD, and combine actions in a completely customized workflow.</p>
+<h2 title="Recommended"><a href="#recommended" aria-hidden="true" class="anchor" id="recommended"></a>Recommended</h2>
+<ul>
+<li>
+<p><a href="get-started/quickstart.html">Quickstart for GitHub Actions</a></p>
+<p>Try out the core features of GitHub Actions in minutes.</p>
+</li>
+<li>
+<p><a href="get-started/understand-github-actions.html">Understanding GitHub Actions</a></p>
+<p>Learn the basics of core concepts and essential terminology in GitHub Actions.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-runners/github-hosted-runners/use-github-hosted-runners.html">Using GitHub-hosted runners</a></p>
+<p>You can assign a job to run on a virtual machine hosted by GitHub.</p>
+</li>
+<li>
+<p><a href="reference/workflows-and-actions/workflow-syntax.html">Workflow syntax for GitHub Actions</a></p>
+<p>A workflow is a configurable automated process made up of one or more jobs. You must create a YAML file to define your workflow configuration.</p>
+</li>
+<li>
+<p><a href="reference/workflows-and-actions/events-that-trigger-workflows.html">Events that trigger workflows</a></p>
+<p>You can configure your workflows to run when specific activity on GitHub happens, at a scheduled time, or when an event outside of GitHub occurs.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations.html">Using artifact attestations to establish provenance for builds</a></p>
+<p>Artifact attestations enable you to increase the supply chain security of your builds by establishing where and how your software was built.</p>
+</li>
+<li>
+<p><a href="tutorials/migrate-to-github-actions/index.html">Migrating to GitHub Actions</a></p>
+<p>Learn how to migrate your existing CI/CD workflows to GitHub Actions.</p>
+</li>
+<li>
+<p><a href="how-tos/reuse-automations/reuse-workflows.html">Reuse workflows</a></p>
+<p>Learn how to avoid duplication when creating a workflow by reusing existing workflows.</p>
+</li>
+<li>
+<p><a href="how-tos/administer/view-metrics.html">Viewing GitHub Actions metrics</a></p>
+<p>You can view metrics to monitor where your organization or repositories use GitHub Actions and how they are performing.</p>
+</li>
+</ul>
+<h2 title="Links"><a href="#links" aria-hidden="true" class="anchor" id="links"></a>Links</h2>
+<h3 title="Links / Getting started"><a href="#getting-started" aria-hidden="true" class="anchor" id="getting-started"></a>Getting started</h3>
+<ul>
+<li>
+<p><a href="get-started/understand-github-actions.html">Understanding GitHub Actions</a></p>
+<p>Learn the basics of core concepts and essential terminology in GitHub Actions.</p>
+</li>
+<li>
+<p><a href="get-started/quickstart.html">Quickstart for GitHub Actions</a></p>
+<p>Try out the core features of GitHub Actions in minutes.</p>
+</li>
+</ul>
+<h2 title="Articles"><a href="#articles" aria-hidden="true" class="anchor" id="articles"></a>Articles</h2>
+<ul>
+<li>
+<p><a href="get-started/quickstart.html">Quickstart for GitHub Actions</a></p>
+<p>Try out the core features of GitHub Actions in minutes.</p>
+</li>
+<li>
+<p><a href="get-started/understand-github-actions.html">Understanding GitHub Actions</a></p>
+<p>Learn the basics of core concepts and essential terminology in GitHub Actions.</p>
+</li>
+<li>
+<p><a href="get-started/continuous-integration.html">Continuous integration</a></p>
+<p>You can create custom continuous integration (CI) workflows directly in your GitHub repository with GitHub Actions.</p>
+</li>
+<li>
+<p><a href="get-started/continuous-deployment.html">Continuous deployment</a></p>
+<p>You can create custom continuous deployment (CD) workflows directly in your GitHub repository with GitHub Actions.</p>
+</li>
+<li>
+<p><a href="get-started/actions-vs-apps.html">GitHub Actions vs GitHub Apps</a></p>
+<p>Learn about the key differences between GitHub Actions and GitHub Apps to help you decide which is right for your use cases.</p>
+</li>
+<li>
+<p><a href="concepts/workflows-and-actions/workflows.html">Workflows</a></p>
+<p>Get a high-level overview of GitHub Actions workflows, including triggers, syntax, and advanced features.</p>
+</li>
+<li>
+<p><a href="concepts/workflows-and-actions/variables.html">Variables</a></p>
+<p>Learn about variables in GitHub Actions workflows.</p>
+</li>
+<li>
+<p><a href="concepts/workflows-and-actions/contexts.html">Contexts</a></p>
+<p>Learn about contexts in GitHub Actions.</p>
+</li>
+<li>
+<p><a href="concepts/workflows-and-actions/expressions.html">Expressions</a></p>
+<p>You can evaluate expressions in workflows and actions.</p>
+</li>
+<li>
+<p><a href="concepts/workflows-and-actions/reusing-workflow-configurations.html">Reusing workflow configurations</a></p>
+<p>Learn how to avoid duplication when creating a workflow.</p>
+</li>
+<li>
+<p><a href="concepts/workflows-and-actions/custom-actions.html">About custom actions</a></p>
+<p>Actions are individual tasks that you can combine to create jobs and customize your workflow. You can create your own actions, or use and customize actions shared by the GitHub community.</p>
+</li>
+<li>
+<p><a href="concepts/workflows-and-actions/deployment-environments.html">Deployment environments</a></p>
+<p>You can create and deploy to different environments.</p>
+</li>
+<li>
+<p><a href="concepts/workflows-and-actions/concurrency.html">Concurrency</a></p>
+<p>Learn about running workflows and jobs simultaneously.</p>
+</li>
+<li>
+<p><a href="concepts/workflows-and-actions/workflow-artifacts.html">Workflow artifacts</a></p>
+<p>Learn about storing and sharing data as artifacts of GitHub Actions workflows.</p>
+</li>
+<li>
+<p><a href="concepts/workflows-and-actions/dependency-caching.html">Dependency caching</a></p>
+<p>Learn about dependency caching for workflow speed and efficiency.</p>
+</li>
+<li>
+<p><a href="concepts/workflows-and-actions/notifications-for-workflow-runs.html">Notifications for workflow runs</a></p>
+<p>You can subscribe to notifications about workflow runs that you trigger.</p>
+</li>
+<li>
+<p><a href="concepts/runners/github-hosted-runners.html">GitHub-hosted runners</a></p>
+<p>GitHub offers hosted virtual machines to run workflows. The virtual machine contains an environment of tools, packages, and settings available for GitHub Actions to use.</p>
+</li>
+<li>
+<p><a href="concepts/runners/larger-runners.html">Larger runners</a></p>
+<p>Learn about the types and uses of GitHub-hosted larger runners.</p>
+</li>
+<li>
+<p><a href="concepts/runners/self-hosted-runners.html">Self-hosted runners</a></p>
+<p>You can host your own runners and customize the environment used to run jobs in your GitHub Actions workflows.</p>
+</li>
+<li>
+<p><a href="concepts/runners/private-networking.html">Private networking with GitHub-hosted runners</a></p>
+<p>You can connect GitHub-hosted runners to resources on a private network, including package registries, secret managers, and other on-premises services.</p>
+</li>
+<li>
+<p><a href="concepts/runners/runner-groups.html">Runner groups</a></p>
+<p>Learn about what a runner group is, and how to use them to control access to runners at the organization level.</p>
+</li>
+<li>
+<p><a href="concepts/runners/runner-scale-sets.html">Runner scale sets</a></p>
+<p>Learn about what a runner scale set is and how they can interact with the Actions Runner Controller.</p>
+</li>
+<li>
+<p><a href="concepts/runners/actions-runner-controller.html">Actions Runner Controller</a></p>
+<p>You can host your own runners and customize the environment used to run jobs in your GitHub Actions workflows.</p>
+</li>
+<li>
+<p><a href="concepts/runners/support-for-arc.html">Support for Actions Runner Controller</a></p>
+<p>What to know before you contact GitHub Support for assistance with Actions Runner Controller.</p>
+</li>
+<li>
+<p><a href="concepts/security/secrets.html">Secrets</a></p>
+<p>Learn about secrets as they are used in GitHub Actions workflows.</p>
+</li>
+<li>
+<p><a href="concepts/security/github_token.html">GITHUB<span data-escaped-char="">_</span>TOKEN</a></p>
+<p>Learn what <code>GITHUB_TOKEN</code> is, how it works, and why it matters for secure automation in GitHub Actions workflows.</p>
+</li>
+<li>
+<p><a href="concepts/security/openid-connect.html">OpenID Connect</a></p>
+<p>OpenID Connect allows your workflows to exchange short-lived tokens directly from your cloud provider.</p>
+</li>
+<li>
+<p><a href="concepts/security/artifact-attestations.html">Artifact attestations</a></p>
+<p>Understand the usage and security benefits of artifact attestations.</p>
+</li>
+<li>
+<p><a href="concepts/security/script-injections.html">Script injections</a></p>
+<p>Understand the security risks associated with script injections and GitHub Actions workflows.</p>
+</li>
+<li>
+<p><a href="concepts/security/compromised-runners.html">Compromised runners</a></p>
+<p>Understand the security risks associated with compromised GitHub Actions runners.</p>
+</li>
+<li>
+<p><a href="concepts/security/kubernetes-admissions-controller.html">Kubernetes admissions controller</a></p>
+<p>Understand how you can use an admissions controller to enforce artifact attestations in your Kubernetes cluster.</p>
+</li>
+<li>
+<p><a href="concepts/metrics.html">About GitHub Actions metrics</a></p>
+<p>Learn about the GitHub Actions metrics available for your organizations and repositories.</p>
+</li>
+<li>
+<p><a href="concepts/billing-and-usage.html">Billing and usage</a></p>
+<p>There are usage limits for GitHub Actions workflows. Usage charges apply to repositories that go beyond the amount of free minutes and storage for a repository.</p>
+</li>
+<li>
+<p><a href="how-tos/write-workflows/use-workflow-templates.html">Using workflow templates</a></p>
+<p>GitHub provides workflow templates for a variety of languages and tooling.</p>
+</li>
+<li>
+<p><a href="how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow.html">Triggering a workflow</a></p>
+<p>How to automatically trigger GitHub Actions workflows</p>
+</li>
+<li>
+<p><a href="how-tos/write-workflows/choose-when-workflows-run/control-jobs-with-conditions.html">Using conditions to control job execution</a></p>
+<p>Prevent a job from running unless your conditions are met.</p>
+</li>
+<li>
+<p><a href="how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency.html">Control the concurrency of workflows and jobs</a></p>
+<p>Manage which workflows and jobs can run simultaneously.</p>
+</li>
+<li>
+<p><a href="how-tos/write-workflows/choose-where-workflows-run/choose-the-runner-for-a-job.html">Choosing the runner for a job</a></p>
+<p>Define the type of machine that will process a job in your workflow.</p>
+</li>
+<li>
+<p><a href="how-tos/write-workflows/choose-where-workflows-run/run-jobs-in-a-container.html">Running jobs in a container</a></p>
+<p>Use a container to run the steps in a job.</p>
+</li>
+<li>
+<p><a href="how-tos/write-workflows/choose-what-workflows-do/use-jobs.html">Using jobs in a workflow</a></p>
+<p>Use workflows to run multiple jobs.</p>
+</li>
+<li>
+<p><a href="how-tos/write-workflows/choose-what-workflows-do/find-and-customize-actions.html">Using pre-written building blocks in your workflow</a></p>
+<p>You can use and customize pre-written actions to power your workflow.</p>
+</li>
+<li>
+<p><a href="how-tos/write-workflows/choose-what-workflows-do/use-github-cli.html">Using GitHub CLI in workflows</a></p>
+<p>You can script with GitHub CLI in GitHub Actions workflows.</p>
+</li>
+<li>
+<p><a href="how-tos/write-workflows/choose-what-workflows-do/add-scripts.html">Adding scripts to your workflow</a></p>
+<p>You can use GitHub Actions workflows to run scripts.</p>
+</li>
+<li>
+<p><a href="how-tos/write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a></p>
+<p>Learn how to create secrets at the repository, environment, and organization levels for GitHub Actions workflows.</p>
+</li>
+<li>
+<p><a href="how-tos/write-workflows/choose-what-workflows-do/use-variables.html">Store information in variables</a></p>
+<p>GitHub sets default variables for each GitHub Actions workflow run. You can also set custom variables for use in a single workflow or multiple workflows.</p>
+</li>
+<li>
+<p><a href="how-tos/write-workflows/choose-what-workflows-do/pass-job-outputs.html">Passing information between jobs</a></p>
+<p>You can define outputs to pass information from one job to another.</p>
+</li>
+<li>
+<p><a href="how-tos/write-workflows/choose-what-workflows-do/set-default-values-for-jobs.html">Setting a default shell and working directory</a></p>
+<p>Define the default settings that will apply to all jobs in the workflow, or all steps in a job.</p>
+</li>
+<li>
+<p><a href="how-tos/write-workflows/choose-what-workflows-do/deploy-to-environment.html">Deploying to a specific environment</a></p>
+<p>Specify a deployment environment in your workflow.</p>
+</li>
+<li>
+<p><a href="how-tos/write-workflows/choose-what-workflows-do/run-job-variations.html">Running variations of jobs in a workflow</a></p>
+<p>Create a matrix to define variations for each job.</p>
+</li>
+<li>
+<p><a href="how-tos/reuse-automations/reuse-workflows.html">Reuse workflows</a></p>
+<p>Learn how to avoid duplication when creating a workflow by reusing existing workflows.</p>
+</li>
+<li>
+<p><a href="how-tos/reuse-automations/create-workflow-templates.html">Creating workflow templates for your organization</a></p>
+<p>Learn how you can create workflow templates to help people in your team add new workflows more easily.</p>
+</li>
+<li>
+<p><a href="how-tos/reuse-automations/share-across-private-repositories.html">Sharing actions and workflows from your private repository</a></p>
+<p>You can share an action or reusable workflow without publishing them publicly.</p>
+</li>
+<li>
+<p><a href="how-tos/reuse-automations/share-with-your-organization.html">Sharing actions and workflows with your organization</a></p>
+<p>You can share an action or reusable workflow with your organization without publishing the action or workflow publicly.</p>
+</li>
+<li>
+<p><a href="https://docs.github.com/en/share-with-your-enterprise" class="external">Sharing actions and workflows with your enterprise</a></p>
+<p>You can share an action or reusable workflow with your enterprise without publishing the action or workflow publicly.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations.html">Using artifact attestations to establish provenance for builds</a></p>
+<p>Artifact attestations enable you to increase the supply chain security of your builds by establishing where and how your software was built.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-work/use-artifact-attestations/increase-security-rating.html">Using artifact attestations and reusable workflows to achieve SLSA v1 Build Level 3</a></p>
+<p>Building software with reusable workflows and artifact attestations can streamline your supply chain security and help you achieve SLSA v1.0 Build Level 3.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-work/use-artifact-attestations/enforce-artifact-attestations.html">Enforcing artifact attestations with a Kubernetes admission controller</a></p>
+<p>Use an admission controller to enforce artifact attestations in your Kubernetes cluster.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-work/use-artifact-attestations/verify-attestations-offline.html">Verifying attestations offline</a></p>
+<p>Artifact attestations can be verified without an internet connection.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-work/use-artifact-attestations/manage-attestations.html">Managing the lifecycle of artifact attestations</a></p>
+<p>Search for and delete attestations that you no longer need.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-work/security-harden-deployments/oidc-in-aws.html">Configuring OpenID Connect in Amazon Web Services</a></p>
+<p>Use OpenID Connect within your workflows to authenticate with Amazon Web Services.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-work/security-harden-deployments/oidc-in-azure.html">Configuring OpenID Connect in Azure</a></p>
+<p>Use OpenID Connect within your workflows to authenticate with Azure.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-work/security-harden-deployments/oidc-in-google-cloud-platform.html">Configuring OpenID Connect in Google Cloud Platform</a></p>
+<p>Use OpenID Connect within your workflows to authenticate with Google Cloud Platform.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-work/security-harden-deployments/oidc-in-hashicorp-vault.html">Configuring OpenID Connect in HashiCorp Vault</a></p>
+<p>Use OpenID Connect within your workflows to authenticate with HashiCorp Vault.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-work/security-harden-deployments/oidc-in-jfrog.html">Configuring OpenID Connect in JFrog</a></p>
+<p>Use OpenID Connect within your workflows to authenticate with JFrog.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-work/security-harden-deployments/oidc-in-octopus-deploy.html">Configuring OpenID Connect in Octopus Deploy</a></p>
+<p>Use OpenID Connect within your workflows to authenticate with Octopus Deploy.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-work/security-harden-deployments/oidc-in-pypi.html">Configuring OpenID Connect in PyPI</a></p>
+<p>Use OpenID Connect within your workflows to authenticate with PyPI.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-work/security-harden-deployments/oidc-in-cloud-providers.html">Configuring OpenID Connect in cloud providers</a></p>
+<p>Use OpenID Connect within your workflows to authenticate with cloud providers.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-work/security-harden-deployments/oidc-with-reusable-workflows.html">Using OpenID Connect with reusable workflows</a></p>
+<p>You can use reusable workflows with OIDC to standardize and security harden your deployment steps.</p>
+</li>
+<li>
+<p><a href="how-tos/deploy/configure-and-manage-deployments/control-deployments.html">Deploying with GitHub Actions</a></p>
+<p>GitHub Actions gives you fine-grained control over deployments with environments, concurrency groups, and protection rules.</p>
+</li>
+<li>
+<p><a href="how-tos/deploy/configure-and-manage-deployments/view-deployment-history.html">Viewing deployment history</a></p>
+<p>View current and previous deployments for your repository.</p>
+</li>
+<li>
+<p><a href="how-tos/deploy/configure-and-manage-deployments/manage-environments.html">Managing environments for deployment</a></p>
+<p>You can create environments and secure those environments with deployment protection rules. A job that references an environment must follow any protection rules for the environment before running or accessing the environment's secrets.</p>
+</li>
+<li>
+<p><a href="how-tos/deploy/configure-and-manage-deployments/review-deployments.html">Reviewing deployments</a></p>
+<p>You can approve or reject jobs awaiting review.</p>
+</li>
+<li>
+<p><a href="how-tos/deploy/configure-and-manage-deployments/create-custom-protection-rules.html">Creating custom deployment protection rules</a></p>
+<p>Use GitHub Apps to automate protecting deployments with third-party systems.</p>
+</li>
+<li>
+<p><a href="how-tos/deploy/configure-and-manage-deployments/configure-custom-protection-rules.html">Configuring custom deployment protection rules</a></p>
+<p>Use GitHub Apps to automate protecting deployments with third-party systems.</p>
+</li>
+<li>
+<p><a href="how-tos/deploy/deploy-to-third-party-platforms/nodejs-to-azure-app-service.html">Deploying Node.js to Azure App Service</a></p>
+<p>Learn how to deploy a Node.js project to Azure App Service as part of your continuous deployment (CD) workflows.</p>
+</li>
+<li>
+<p><a href="how-tos/deploy/deploy-to-third-party-platforms/python-to-azure-app-service.html">Deploying Python to Azure App Service</a></p>
+<p>Learn how to deploy a Python project to Azure App Service as part of your continuous deployment (CD) workflows.</p>
+</li>
+<li>
+<p><a href="how-tos/deploy/deploy-to-third-party-platforms/java-to-azure-app-service.html">Deploying Java to Azure App Service</a></p>
+<p>Learn how to deploy a Java project to Azure App Service as part of your continuous deployment (CD) workflows.</p>
+</li>
+<li>
+<p><a href="how-tos/deploy/deploy-to-third-party-platforms/net-to-azure-app-service.html">Deploying .NET to Azure App Service</a></p>
+<p>Learn how to deploy a .NET project to Azure App Service as part of your continuous deployment (CD) workflows.</p>
+</li>
+<li>
+<p><a href="how-tos/deploy/deploy-to-third-party-platforms/php-to-azure-app-service.html">Deploying PHP to Azure App Service</a></p>
+<p>Learn how to deploy a PHP project to Azure App Service as part of your continuous deployment (CD) workflows.</p>
+</li>
+<li>
+<p><a href="how-tos/deploy/deploy-to-third-party-platforms/docker-to-azure-app-service.html">Deploying Docker to Azure App Service</a></p>
+<p>Learn how to deploy a Docker container to Azure App Service as part of your continuous deployment (CD) workflows.</p>
+</li>
+<li>
+<p><a href="how-tos/deploy/deploy-to-third-party-platforms/azure-static-web-app.html">Deploying to Azure Static Web App</a></p>
+<p>Learn how to deploy a web app to Azure Static Web App as part of your continuous deployment (CD) workflows.</p>
+</li>
+<li>
+<p><a href="how-tos/deploy/deploy-to-third-party-platforms/azure-kubernetes-service.html">Deploying to Azure Kubernetes Service</a></p>
+<p>Learn how to deploy a project to Azure Kubernetes Service (AKS) as part of a continuous deployment (CD) workflow.</p>
+</li>
+<li>
+<p><a href="how-tos/deploy/deploy-to-third-party-platforms/amazon-elastic-container-service.html">Deploying to Amazon Elastic Container Service</a></p>
+<p>Learn how to deploy a project to Amazon Elastic Container Service (ECS) as part of a continuous deployment (CD) workflow.</p>
+</li>
+<li>
+<p><a href="how-tos/deploy/deploy-to-third-party-platforms/google-kubernetes-engine.html">Deploying to Google Kubernetes Engine</a></p>
+<p>Learn how to deploy a project to Google Kubernetes Engine (GKE) as part of a continuous deployment (CD) workflow.</p>
+</li>
+<li>
+<p><a href="how-tos/deploy/deploy-to-third-party-platforms/sign-xcode-applications.html">Installing an Apple certificate on macOS runners for Xcode development</a></p>
+<p>Learn how to sign Xcode apps within a continuous integration (CI) workflow by installing an Apple code signing certificate on GitHub Actions runners.</p>
+</li>
+<li>
+<p><a href="how-tos/create-and-publish-actions/manage-custom-actions.html">Managing custom actions</a></p>
+<p>Learn how to create and manage your own actions, and customize actions shared by the GitHub community.</p>
+</li>
+<li>
+<p><a href="how-tos/create-and-publish-actions/create-a-cli-action.html">Creating a third party CLI action</a></p>
+<p>Learn how to develop an action to set up a CLI on GitHub Actions runners.</p>
+</li>
+<li>
+<p><a href="how-tos/create-and-publish-actions/set-exit-codes.html">Setting exit codes for actions</a></p>
+<p>You can use exit codes to set the status of an action. GitHub displays statuses to indicate passing or failing actions.</p>
+</li>
+<li>
+<p><a href="how-tos/create-and-publish-actions/publish-in-github-marketplace.html">Publishing actions in GitHub Marketplace</a></p>
+<p>You can publish actions in GitHub Marketplace and share actions you've created with the GitHub community.</p>
+</li>
+<li>
+<p><a href="how-tos/create-and-publish-actions/release-and-maintain-actions.html">Releasing and maintaining actions</a></p>
+<p>You can leverage automation and open source best practices to release and maintain actions.</p>
+</li>
+<li>
+<p><a href="how-tos/create-and-publish-actions/using-immutable-releases-and-tags-to-manage-your-actions-releases.html">Using immutable releases and tags to manage your action's releases</a></p>
+<p>Learn how you can use a combination of immutable releases on GitHub and Git tags to manage your action's releases.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-workflow-runs/manually-run-a-workflow.html">Manually running a workflow</a></p>
+<p>When a workflow is configured to run on the <code>workflow_dispatch</code> event, you can run the workflow using the Actions tab on GitHub, GitHub CLI, or the REST API.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-workflow-runs/re-run-workflows-and-jobs.html">Re-running workflows and jobs</a></p>
+<p>You can re-run a workflow run, all failed jobs in a workflow run, or specific jobs in a workflow run up to 30 days after its initial run.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-workflow-runs/cancel-a-workflow-run.html">Canceling a workflow run</a></p>
+<p>You can cancel a workflow run, including all jobs and steps, that is in progress.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-workflow-runs/disable-and-enable-workflows.html">Disabling and enabling a workflow</a></p>
+<p>You can disable and re-enable a workflow using the GitHub UI, the REST API, or GitHub CLI.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-workflow-runs/skip-workflow-runs.html">Skipping workflow runs</a></p>
+<p>You can skip workflow runs triggered by the <code>push</code> and <code>pull_request</code> events by including a command in your commit message.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-workflow-runs/delete-a-workflow-run.html">Deleting a workflow run</a></p>
+<p>You can delete a workflow run that has been completed, or is more than two weeks old.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-workflow-runs/download-workflow-artifacts.html">Downloading workflow artifacts</a></p>
+<p>You can download archived artifacts before they automatically expire.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-workflow-runs/remove-workflow-artifacts.html">Removing workflow artifacts</a></p>
+<p>You can reclaim used GitHub Actions storage by deleting artifacts before they expire on GitHub.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-workflow-runs/manage-caches.html">Managing caches</a></p>
+<p>You can monitor, filter, and delete dependency caches created from your workflows.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-workflow-runs/approve-runs-from-forks.html">Approving workflow runs from forks</a></p>
+<p>You can manually approve workflow runs that have been triggered by a contributor's pull request.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-runners/github-hosted-runners/use-github-hosted-runners.html">Using GitHub-hosted runners</a></p>
+<p>You can assign a job to run on a virtual machine hosted by GitHub.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-runners/github-hosted-runners/customize-runners.html">Customizing GitHub-hosted runners</a></p>
+<p>You can install additional software on GitHub-hosted runners as a part of your workflow.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-runners/github-hosted-runners/view-current-jobs.html">Viewing your current jobs</a></p>
+<p>Monitor how GitHub-hosted runners are processing jobs in your organization or enterprise, and identify any related constraints.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-runners/github-hosted-runners/connect-to-a-private-network/connect-with-oidc.html">Using an API gateway with OIDC</a></p>
+<p>You can use OpenID Connect (OIDC) tokens to authenticate your workflow.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-runners/github-hosted-runners/connect-to-a-private-network/connect-with-wireguard.html">Using WireGuard to create a network overlay</a></p>
+<p>You can create an overlay network between your runner and a service in your private network.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-runners/self-hosted-runners/add-runners.html">Adding self-hosted runners</a></p>
+<p>You can add a self-hosted runner to a repository, an organization, or an enterprise.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-runners/self-hosted-runners/run-scripts.html">Running scripts before or after a job</a></p>
+<p>Scripts can automatically execute on a self-hosted runner, directly before or after a job.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-runners/self-hosted-runners/customize-containers.html">Customizing the containers used by jobs</a></p>
+<p>You can customize how your self-hosted runner invokes a container for a job.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-runners/self-hosted-runners/configure-the-application.html">Configuring the self-hosted runner application as a service</a></p>
+<p>You can configure the self-hosted runner application as a service to automatically start the runner application when the machine starts.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-runners/self-hosted-runners/apply-labels.html">Using labels with self-hosted runners</a></p>
+<p>You can use labels to organize your self-hosted runners based on their characteristics.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-runners/self-hosted-runners/use-in-a-workflow.html">Using self-hosted runners in a workflow</a></p>
+<p>To use self-hosted runners in a workflow, you can use labels or groups to specify the runner for a job.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-runners/self-hosted-runners/manage-access.html">Managing access to self-hosted runners using groups</a></p>
+<p>You can use policies to limit access to self-hosted runners that have been added to an organization.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-runners/self-hosted-runners/monitor-and-troubleshoot.html">Monitoring and troubleshooting self-hosted runners</a></p>
+<p>You can monitor your self-hosted runners to view their activity and diagnose common issues.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-runners/self-hosted-runners/remove-runners.html">Removing self-hosted runners</a></p>
+<p>You can permanently remove a self-hosted runner from a repository.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-runners/larger-runners/manage-larger-runners.html">Managing larger runners</a></p>
+<p>You can configure larger runners for your organization or enterprise.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-runners/larger-runners/control-access.html">Controlling access to larger runners</a></p>
+<p>You can use policies to limit access to larger runners that have been added to an organization or enterprise.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-runners/larger-runners/use-larger-runners.html">Running jobs on larger runners</a></p>
+<p>You can speed up your workflows by configuring them to run on larger runners.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-runners/larger-runners/use-custom-images.html">Using custom images</a></p>
+<p>Create, manage, and use custom images for GitHub-hosted larger runners in your organization or enterprise.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-runners/use-actions-runner-controller/authenticate-to-the-api.html">Authenticating ARC to the GitHub API</a></p>
+<p>Authenticate Actions Runner Controller to the GitHub API.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-runners/use-actions-runner-controller/deploy-runner-scale-sets.html">Deploying runner scale sets with Actions Runner Controller</a></p>
+<p>Deploy runner scale sets with Actions Runner Controller, and use advanced configuration options to tailor Actions Runner Controller to your needs.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-runners/use-actions-runner-controller/use-arc-in-a-workflow.html">Using Actions Runner Controller runners in a workflow</a></p>
+<p>Use Actions Runner Controller runners in a workflow file.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-runners/use-proxy-servers.html">Using proxy servers with a runner</a></p>
+<p>You can configure runners in isolated environments to use a proxy server for secure communication with GitHub.</p>
+</li>
+<li>
+<p><a href="how-tos/monitor-workflows/use-the-visualization-graph.html">Using the visualization graph</a></p>
+<p>Every workflow run generates a real-time graph that illustrates the run progress. You can use this graph to monitor and debug workflows.</p>
+</li>
+<li>
+<p><a href="how-tos/monitor-workflows/view-workflow-run-history.html">Viewing workflow run history</a></p>
+<p>You can view logs for each run of a workflow. Logs include the status for each job and step in a workflow.</p>
+</li>
+<li>
+<p><a href="how-tos/monitor-workflows/view-job-execution-time.html">Viewing job execution time</a></p>
+<p>You can view the execution time of a job, including the billable minutes that a job accrued.</p>
+</li>
+<li>
+<p><a href="how-tos/monitor-workflows/add-a-status-badge.html">Adding a workflow status badge</a></p>
+<p>You can display a status badge in your repository to indicate the status of your workflows.</p>
+</li>
+<li>
+<p><a href="how-tos/monitor-workflows/use-workflow-run-logs.html">Using workflow run logs</a></p>
+<p>You can view, search, and download the logs for each job in a workflow run.</p>
+</li>
+<li>
+<p><a href="how-tos/monitor-workflows/view-job-condition-logs.html">Viewing job condition expression logs</a></p>
+<p>Learn how to access and interpret expression evaluation logs for job-level <code>if</code> conditions in GitHub Actions.</p>
+</li>
+<li>
+<p><a href="how-tos/monitor-workflows/enable-debug-logging.html">Enabling debug logging</a></p>
+<p>If the workflow logs do not provide enough detail to diagnose why a workflow, job, or step is not working as expected, you can enable additional debug logging.</p>
+</li>
+<li>
+<p><a href="how-tos/troubleshoot-workflows.html">Troubleshooting workflows</a></p>
+<p>You can use the tools in GitHub Actions to debug your workflows.</p>
+</li>
+<li>
+<p><a href="how-tos/administer/view-metrics.html">Viewing GitHub Actions metrics</a></p>
+<p>You can view metrics to monitor where your organization or repositories use GitHub Actions and how they are performing.</p>
+</li>
+<li>
+<p><a href="https://docs.github.com/en/reuse-namespaces-on-ghecom" class="external">Making retired namespaces available on GHE.com</a></p>
+<p>Allow people to use namespaces that match actions you have used from GitHub.com.</p>
+</li>
+<li>
+<p><a href="how-tos/get-support.html">Getting help from GitHub Support about GitHub Actions</a></p>
+<p>Learn how GitHub Support can assist with GitHub Actions</p>
+</li>
+<li>
+<p><a href="reference/workflows-and-actions/workflow-syntax.html">Workflow syntax for GitHub Actions</a></p>
+<p>A workflow is a configurable automated process made up of one or more jobs. You must create a YAML file to define your workflow configuration.</p>
+</li>
+<li>
+<p><a href="reference/workflows-and-actions/events-that-trigger-workflows.html">Events that trigger workflows</a></p>
+<p>You can configure your workflows to run when specific activity on GitHub happens, at a scheduled time, or when an event outside of GitHub occurs.</p>
+</li>
+<li>
+<p><a href="reference/workflows-and-actions/workflow-commands.html">Workflow commands for GitHub Actions</a></p>
+<p>You can use workflow commands when running shell commands in a workflow or in an action's code.</p>
+</li>
+<li>
+<p><a href="reference/workflows-and-actions/variables.html">Variables reference</a></p>
+<p>Find information for supported variables, naming conventions, limits, and contexts in GitHub Actions workflows.</p>
+</li>
+<li>
+<p><a href="reference/workflows-and-actions/expressions.html">Evaluate expressions in workflows and actions</a></p>
+<p>Find information for expressions in GitHub Actions.</p>
+</li>
+<li>
+<p><a href="reference/workflows-and-actions/contexts.html">Contexts reference</a></p>
+<p>Find information about contexts available in GitHub Actions workflows, including available properties, access methods, and usage examples.</p>
+</li>
+<li>
+<p><a href="reference/workflows-and-actions/deployments-and-environments.html">Deployments and environments</a></p>
+<p>Find information about deployment protection rules, environment secrets, and environment variables.</p>
+</li>
+<li>
+<p><a href="reference/workflows-and-actions/dependency-caching.html">Dependency caching reference</a></p>
+<p>Find information on the functionality of dependency caching in workflows.</p>
+</li>
+<li>
+<p><a href="reference/workflows-and-actions/reusing-workflow-configurations.html">Reusing workflow configurations</a></p>
+<p>Find information about avoiding duplication when creating a workflow by reusing existing workflows.</p>
+</li>
+<li>
+<p><a href="reference/workflows-and-actions/metadata-syntax.html">Metadata syntax reference</a></p>
+<p>You can create actions to perform tasks in your repository. If you're making a custom action, it will require a metadata file that uses YAML syntax.</p>
+</li>
+<li>
+<p><a href="reference/workflows-and-actions/workflow-cancellation.html">Workflow cancellation reference</a></p>
+<p>Find information on the steps GitHub takes to cancel a workflow run.</p>
+</li>
+<li>
+<p><a href="reference/workflows-and-actions/dockerfile-support.html">Dockerfile support for GitHub Actions</a></p>
+<p>When creating a <code>Dockerfile</code> for a Docker container action, you should be aware of how some Docker instructions interact with GitHub Actions and an action's metadata file.</p>
+</li>
+<li>
+<p><a href="reference/runners/github-hosted-runners.html">GitHub-hosted runners reference</a></p>
+<p>Find information about GitHub-hosted runners, including their specifications and customization options.</p>
+</li>
+<li>
+<p><a href="reference/runners/larger-runners.html">Larger runners reference</a></p>
+<p>Find information about larger runners, including their specifications and customization options.</p>
+</li>
+<li>
+<p><a href="reference/runners/self-hosted-runners.html">Self-hosted runners reference</a></p>
+<p>Find information about setting up and using self-hosted runners.</p>
+</li>
+<li>
+<p><a href="reference/security/secure-use.html">Secure use reference</a></p>
+<p>Security practices for writing workflows and using GitHub Actions features.</p>
+</li>
+<li>
+<p><a href="reference/security/secrets.html">Secrets reference</a></p>
+<p>Find technical information about secrets in GitHub Actions.</p>
+</li>
+<li>
+<p><a href="reference/security/oidc.html">OpenID Connect reference</a></p>
+<p>Find information about using OpenID Connect (OIDC) to authenticate GitHub Actions workflows with cloud providers.</p>
+</li>
+<li>
+<p><a href="reference/limits.html">Actions limits</a></p>
+<p>There are limits in GitHub Actions which you may hit as you scale up, some may be increased by contacting support.</p>
+</li>
+<li>
+<p><a href="reference/github-actions-importer/supplemental-arguments-and-settings.html">Supplemental arguments and settings</a></p>
+<p>GitHub Actions Importer has several supplemental arguments and settings to tailor the migration process to your needs.</p>
+</li>
+<li>
+<p><a href="reference/github-actions-importer/custom-transformers.html">Extending GitHub Actions Importer with custom transformers</a></p>
+<p>GitHub Actions Importer offers the ability to extend its built-in mapping.</p>
+</li>
+<li>
+<p><a href="tutorials/create-an-example-workflow.html">Creating an example workflow</a></p>
+<p>In this tutorial, you'll learn how to create a basic workflow that is triggered by a push event.</p>
+</li>
+<li>
+<p><a href="tutorials/build-and-test-code/go.html">Building and testing Go</a></p>
+<p>Learn how to create a continuous integration (CI) workflow to build and test your Go project.</p>
+</li>
+<li>
+<p><a href="tutorials/build-and-test-code/java-with-ant.html">Building and testing Java with Ant</a></p>
+<p>Learn how to create a continuous integration (CI) workflow in GitHub Actions to build and test your Java project with Ant.</p>
+</li>
+<li>
+<p><a href="tutorials/build-and-test-code/java-with-gradle.html">Building and testing Java with Gradle</a></p>
+<p>Learn how to create a continuous integration (CI) workflow in GitHub Actions to build and test your Java project with Gradle.</p>
+</li>
+<li>
+<p><a href="tutorials/build-and-test-code/java-with-maven.html">Building and testing Java with Maven</a></p>
+<p>Learn how to create a continuous integration (CI) workflow in GitHub Actions to build and test your Java project with Maven.</p>
+</li>
+<li>
+<p><a href="tutorials/build-and-test-code/net.html">Building and testing .NET</a></p>
+<p>Learn how to create a continuous integration (CI) workflow to build and test your .NET project.</p>
+</li>
+<li>
+<p><a href="tutorials/build-and-test-code/nodejs.html">Building and testing Node.js</a></p>
+<p>Learn how to create a continuous integration (CI) workflow to build and test your Node.js project.</p>
+</li>
+<li>
+<p><a href="tutorials/build-and-test-code/powershell.html">Building and testing PowerShell</a></p>
+<p>Learn how to create a continuous integration (CI) workflow to build and test your PowerShell project.</p>
+</li>
+<li>
+<p><a href="tutorials/build-and-test-code/python.html">Building and testing Python</a></p>
+<p>Learn how to create a continuous integration (CI) workflow to build and test your Python project.</p>
+</li>
+<li>
+<p><a href="tutorials/build-and-test-code/ruby.html">Building and testing Ruby</a></p>
+<p>You can create a continuous integration (CI) workflow to build and test your Ruby project.</p>
+</li>
+<li>
+<p><a href="tutorials/build-and-test-code/rust.html">Building and testing Rust</a></p>
+<p>Learn how to create a continuous integration (CI) workflow to build and test your Rust project.</p>
+</li>
+<li>
+<p><a href="tutorials/build-and-test-code/swift.html">Building and testing Swift</a></p>
+<p>Learn how to create a continuous integration (CI) workflow to build and test your Swift project.</p>
+</li>
+<li>
+<p><a href="tutorials/build-and-test-code/xamarin-apps.html">Building and testing Xamarin applications</a></p>
+<p>Learn how to create a continuous integration (CI) workflow in GitHub Actions to build and test your Xamarin application.</p>
+</li>
+<li>
+<p><a href="tutorials/authenticate-with-github_token.html">Use GITHUB<span data-escaped-char="">_</span>TOKEN for authentication in workflows</a></p>
+<p>Learn how to use the <code>GITHUB_TOKEN</code> to authenticate on behalf of GitHub Actions.</p>
+</li>
+<li>
+<p><a href="tutorials/migrate-to-github-runners.html">Migrating from self-hosted runners to GitHub-hosted runners</a></p>
+<p>Learn how to assess your current CI infrastructure and migrate workflows from self-hosted runners to GitHub-hosted runners.</p>
+</li>
+<li>
+<p><a href="tutorials/create-actions/create-a-javascript-action.html">Creating a JavaScript action</a></p>
+<p>In this tutorial, you'll learn how to build a JavaScript action using the actions toolkit.</p>
+</li>
+<li>
+<p><a href="tutorials/create-actions/create-a-composite-action.html">Creating a composite action</a></p>
+<p>In this tutorial, you'll learn how to build a composite action.</p>
+</li>
+<li>
+<p><a href="tutorials/publish-packages/publish-docker-images.html">Publishing Docker images</a></p>
+<p>In this tutorial, you'll learn how to publish Docker images to a registry, such as Docker Hub or GitHub Packages, as part of your continuous integration (CI) workflow.</p>
+</li>
+<li>
+<p><a href="tutorials/publish-packages/publish-java-packages-with-gradle.html">Publishing Java packages with Gradle</a></p>
+<p>In this tutorial, you'll learn how to use Gradle to publish Java packages to a registry as part of your continuous integration (CI) workflow.</p>
+</li>
+<li>
+<p><a href="tutorials/publish-packages/publish-java-packages-with-maven.html">Publishing Java packages with Maven</a></p>
+<p>In this tutorial, you'll learn how to use Maven to publish Java packages to a registry as part of your continuous integration (CI) workflow.</p>
+</li>
+<li>
+<p><a href="tutorials/publish-packages/publish-nodejs-packages.html">Publishing Node.js packages</a></p>
+<p>In this tutorial, you'll learn how to publish Node.js packages to a registry as part of your continuous integration (CI) workflow.</p>
+</li>
+<li>
+<p><a href="tutorials/manage-your-work/add-labels-to-issues.html">Adding labels to issues</a></p>
+<p>You can use GitHub Actions to automatically label issues.</p>
+</li>
+<li>
+<p><a href="tutorials/manage-your-work/close-inactive-issues.html">Closing inactive issues</a></p>
+<p>You can use GitHub Actions to comment on or close issues that have been inactive for a certain period of time.</p>
+</li>
+<li>
+<p><a href="tutorials/manage-your-work/add-comments-with-labels.html">Commenting on an issue when a label is added</a></p>
+<p>You can use GitHub Actions to automatically comment on issues when a specific label is applied.</p>
+</li>
+<li>
+<p><a href="tutorials/manage-your-work/schedule-issue-creation.html">Scheduling issue creation</a></p>
+<p>You can use GitHub Actions to create an issue on a regular basis for things like daily meetings or quarterly reviews.</p>
+</li>
+<li>
+<p><a href="tutorials/store-and-share-data.html">Store and share data with workflow artifacts</a></p>
+<p>Use artifacts to share data between jobs in a workflow and store data once that workflow has completed.</p>
+</li>
+<li>
+<p><a href="tutorials/use-containerized-services/create-a-docker-container-action.html">Creating a Docker container action</a></p>
+<p>In this tutorial, you'll learn how to build a Docker container action.</p>
+</li>
+<li>
+<p><a href="tutorials/use-containerized-services/use-docker-service-containers.html">Communicating with Docker service containers</a></p>
+<p>Learn how to use Docker service containers to connect databases, web services, memory caches, and other tools to your workflow.</p>
+</li>
+<li>
+<p><a href="tutorials/use-containerized-services/create-postgresql-service-containers.html">Creating PostgreSQL service containers</a></p>
+<p>You can create a PostgreSQL service container to use in your workflow. This guide shows examples of creating a PostgreSQL service for jobs that run in containers or directly on the runner machine.</p>
+</li>
+<li>
+<p><a href="tutorials/use-containerized-services/create-redis-service-containers.html">Creating Redis service containers</a></p>
+<p>You can use service containers to create a Redis client in your workflow. This guide shows examples of creating a Redis service for jobs that run in containers or directly on the runner machine.</p>
+</li>
+<li>
+<p><a href="tutorials/migrate-to-github-actions/automated-migrations/use-github-actions-importer.html">Automating migration with GitHub Actions Importer</a></p>
+<p>Use GitHub Actions Importer to plan and automate your migration to GitHub Actions.</p>
+</li>
+<li>
+<p><a href="tutorials/migrate-to-github-actions/automated-migrations/azure-devops-migration.html">Migrating from Azure DevOps with GitHub Actions Importer</a></p>
+<p>Learn how to use GitHub Actions Importer to automate the migration of your Azure DevOps pipelines to GitHub Actions.</p>
+</li>
+<li>
+<p><a href="tutorials/migrate-to-github-actions/automated-migrations/bamboo-migration.html">Migrating from Bamboo with GitHub Actions Importer</a></p>
+<p>Learn how to use GitHub Actions Importer to automate the migration of your Bamboo pipelines to GitHub Actions.</p>
+</li>
+<li>
+<p><a href="tutorials/migrate-to-github-actions/automated-migrations/bitbucket-pipelines-migration.html">Migrating from Bitbucket Pipelines with GitHub Actions Importer</a></p>
+<p>Learn how to use GitHub Actions Importer to automate the migration of your Bitbucket pipelines to GitHub Actions.</p>
+</li>
+<li>
+<p><a href="tutorials/migrate-to-github-actions/automated-migrations/circleci-migration.html">Migrating from CircleCI with GitHub Actions Importer</a></p>
+<p>Learn how to use GitHub Actions Importer to automate the migration of your CircleCI pipelines to GitHub Actions.</p>
+</li>
+<li>
+<p><a href="tutorials/migrate-to-github-actions/automated-migrations/gitlab-migration.html">Migrating from GitLab with GitHub Actions Importer</a></p>
+<p>Learn how to use GitHub Actions Importer to automate the migration of your GitLab pipelines to GitHub Actions.</p>
+</li>
+<li>
+<p><a href="tutorials/migrate-to-github-actions/automated-migrations/jenkins-migration.html">Migrating from Jenkins with GitHub Actions Importer</a></p>
+<p>Learn how to use GitHub Actions Importer to automate the migration of your Jenkins pipelines to GitHub Actions.</p>
+</li>
+<li>
+<p><a href="tutorials/migrate-to-github-actions/automated-migrations/travis-ci-migration.html">Migrating from Travis CI with GitHub Actions Importer</a></p>
+<p>Learn how to use GitHub Actions Importer to automate the migration of your Travis CI pipelines to GitHub Actions.</p>
+</li>
+<li>
+<p><a href="tutorials/migrate-to-github-actions/manual-migrations/migrate-from-azure-pipelines.html">Migrating from Azure Pipelines to GitHub Actions</a></p>
+<p>GitHub Actions and Azure Pipelines share several configuration similarities, which makes migrating to GitHub Actions relatively straightforward.</p>
+</li>
+<li>
+<p><a href="tutorials/migrate-to-github-actions/manual-migrations/migrate-from-circleci.html">Migrating from CircleCI to GitHub Actions</a></p>
+<p>GitHub Actions and CircleCI share several similarities in configuration, which makes migration to GitHub Actions relatively straightforward.</p>
+</li>
+<li>
+<p><a href="tutorials/migrate-to-github-actions/manual-migrations/migrate-from-gitlab-cicd.html">Migrating from GitLab CI/CD to GitHub Actions</a></p>
+<p>GitHub Actions and GitLab CI/CD share several configuration similarities, which makes migrating to GitHub Actions relatively straightforward.</p>
+</li>
+<li>
+<p><a href="tutorials/migrate-to-github-actions/manual-migrations/migrate-from-jenkins.html">Migrating from Jenkins to GitHub Actions</a></p>
+<p>GitHub Actions and Jenkins share multiple similarities, which makes migration to GitHub Actions relatively straightforward.</p>
+</li>
+<li>
+<p><a href="tutorials/migrate-to-github-actions/manual-migrations/migrate-from-travis-ci.html">Migrating from Travis CI to GitHub Actions</a></p>
+<p>GitHub Actions and Travis CI share multiple similarities, which helps make it relatively straightforward to migrate to GitHub Actions.</p>
+</li>
+<li>
+<p><a href="tutorials/use-actions-runner-controller/get-started.html">Get started with Actions Runner Controller</a></p>
+<p>In this tutorial, you'll try out the basics of Actions Runner Controller.</p>
+</li>
+<li>
+<p><a href="tutorials/use-actions-runner-controller/troubleshoot.html">Troubleshooting Actions Runner Controller errors</a></p>
+<p>Learn how to troubleshoot Actions Runner Controller errors.</p>
+</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

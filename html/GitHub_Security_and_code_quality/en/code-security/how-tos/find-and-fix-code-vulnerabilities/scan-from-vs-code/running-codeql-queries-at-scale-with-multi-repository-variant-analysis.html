@@ -1,0 +1,187 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Running CodeQL queries at scale with multi-repository variant analysis</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Find and fix code vulnerabilities</a> / <a href="index.html">Scan from VS Code</a> / </nav><h1><a href="#running-codeql-queries-at-scale-with-multi-repository-variant-analysis" aria-hidden="true" class="anchor" id="running-codeql-queries-at-scale-with-multi-repository-variant-analysis"></a>Running CodeQL queries at scale with multi-repository variant analysis</h1>
+<p>You can run CodeQL queries on a large number of repositories on GitHub from Visual Studio Code.</p>
+<p>With multi-repository variant analysis (MRVA), you can run CodeQL queries on a list of up to 1,000 repositories on GitHub from Visual Studio Code.</p>
+<h2 title="Prerequisites"><a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<ul>
+<li>
+<p>You need to enable code scanning using CodeQL on GitHub, using either default setup or advanced setup, before adding your repository to a list for analysis. For information about enabling code scanning using CodeQL, see <a href="../configure-code-scanning/configuring-default-setup-for-code-scanning.html">Configuring default setup for code scanning</a>.</p>
+</li>
+<li>
+<p>You must define a controller repository before you can run your first multi-repository variant analysis.</p>
+</li>
+<li>
+<p>Controller repositories can be empty, but they must have at least one commit.</p>
+</li>
+<li>
+<p>On GitHub.com, the controller repository visibility can be "public" if you plan to analyze only public repositories. The variant analysis will be free.</p>
+</li>
+<li>
+<p>The controller repository visibility must be "private" if you need to analyze any private or internal repositories on GitHub.com.</p>
+</li>
+</ul>
+<p>Any actions minutes that you use to run variant analysis on private or internal repositories, above the free limit, is charged to the repository owner. For more information about free minutes and billing, see <a href="https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions" class="external">GitHub Actions billing</a>.</p>
+<h2 title="Setting up a controller repository for MRVA"><a href="#setting-up-a-controller-repository-for-mrva" aria-hidden="true" class="anchor" id="setting-up-a-controller-repository-for-mrva"></a>Setting up a controller repository for MRVA</h2>
+<ol>
+<li>
+<p>In the "Variant Analysis Repositories" view, click <strong>Set up controller repository</strong> to display a field for the controller repository.</p>
+<p><img src="../../../../..//assets/images/help/security/codeql-for-vs-code-controller-repository.png" alt="Screenshot of the &quot;Variant Analysis Repositories&quot; view. The button to &quot;Set up controller repository&quot; is highlighted in dark orange."></p>
+</li>
+<li>
+<p>Type the owner and name of the repository on GitHub that you want to use as your controller repository and press the <strong>Enter</strong> key.</p>
+</li>
+<li>
+<p>If you are prompted to authenticate with GitHub, follow the instructions and sign in to your account. When you have finished, a prompt from GitHub Authentication may ask for permission to open in Visual Studio Code, click <strong>Open</strong>.</p>
+</li>
+</ol>
+<p>The name of the controller repository is saved in your settings for the CodeQL extension. For information on how to edit the controller repository, see <a href="customizing-settings.html">Customizing settings</a>.</p>
+<h2 title="Running a query at scale using MRVA"><a href="#running-a-query-at-scale-using-mrva" aria-hidden="true" class="anchor" id="running-a-query-at-scale-using-mrva"></a>Running a query at scale using MRVA</h2>
+<ol>
+<li>
+<p>By default, the "Variant Analysis Repositories" view shows the default lists of the Top 10, Top 100, and Top 1000 public repositories on GitHub.com for the language that you are analyzing. If your controller repository is hosted on SUBDOMAIN.ghe.com, these lists are not available.</p>
+</li>
+<li>
+<p>Optionally, you can add a new repository, organization, or list.</p>
+<ol>
+<li>
+<p>In the "Variant Analysis Repositories" view, click <strong>+</strong> to add a new database.</p>
+</li>
+<li>
+<p>From the dropdown menu, select <strong>From a GitHub repository</strong> or <strong>All repositories of GitHub org or owner</strong>.</p>
+</li>
+<li>
+<p>Type the identifier of the repository or organization that you want to use into the field.</p>
+</li>
+</ol>
+</li>
+<li>
+<p>Select which GitHub repository or repositories you want to run your query against.</p>
+<p><img src="../../../../..//assets/images/help/security/codeql-for-vs-code-variant-analysis-repo-lists.png" alt="Screenshot of the &quot;Variant Analysis Repositories&quot; view. The &quot;octo-org/octo-repo&quot; row is highlighted blue and its &quot;Select&quot; button outlined in orange."></p>
+</li>
+<li>
+<p>Open the query you want to run, right-click in the query file, and select <strong>CodeQL: Run Variant Analysis</strong> to start variant analysis.</p>
+</li>
+</ol>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>To a cancel a variant analysis run, click <strong>Stop query</strong> in the "Variant Analysis Results" view.</p>
+</div>
+<h2 title="Selecting a single GitHub repository or organization for analysis"><a href="#selecting-a-single-github-repository-or-organization-for-analysis" aria-hidden="true" class="anchor" id="selecting-a-single-github-repository-or-organization-for-analysis"></a>Selecting a single GitHub repository or organization for analysis</h2>
+<ol>
+<li>
+<p>In the "Variant Analysis Repositories" view, click <strong>+</strong> to add a new database.</p>
+</li>
+<li>
+<p>From the dropdown menu, select <strong>From a GitHub repository</strong> or <strong>All repositories of GitHub org or owner</strong>.</p>
+</li>
+<li>
+<p>Type the identifier of the repository or organization that you want to use into the field.</p>
+</li>
+</ol>
+<h3 title="Selecting a single GitHub repository or organization for analysis / Errors and warnings"><a href="#errors-and-warnings" aria-hidden="true" class="anchor" id="errors-and-warnings"></a>Errors and warnings</h3>
+<p>When you run MRVA, there are two key places where errors and warnings are displayed:</p>
+<ul>
+<li>
+<p>Visual Studio Code errors: any problems with creating a CodeQL pack and sending the analysis to GitHub are reported as Visual Studio Code errors in the bottom right corner of the application. Information is also available in the "Problems" view.</p>
+</li>
+<li>
+<p>"Variant Analysis Results": any problems with the variant analysis run are reported in this view.</p>
+</li>
+</ul>
+<h2 title="Exploring your results"><a href="#exploring-your-results" aria-hidden="true" class="anchor" id="exploring-your-results"></a>Exploring your results</h2>
+<p>As soon as a workflow to run your variant analysis on GitHub is running, a "Variant Analysis Results" view opens to display the results as they are ready. You can use this view to monitor progress, see any errors, and access the workflow logs in your controller repository.</p>
+<p><img src="../../../../..//assets/images/help/security/codeql-for-vs-code-variant-analysis-results-view.png" alt="Screenshot of &quot;Variant Analysis Results&quot; showing a run for &quot;FileAccessToHttp.ql&quot;. Blue circles show the number of results found or &quot;-&quot; still running."></p>
+<p>When your variant analysis run is scheduled, the "Results" view automatically opens. Initially, the view shows a list of every repository that was scheduled for analysis. As each repository is analyzed, the view is updated to show a summary of the number of results. To view the detailed results for a repository (including results paths), click the repository name.</p>
+<p>For each repository, you can see:</p>
+<ul>
+<li>
+<p>Number of results found by the query</p>
+</li>
+<li>
+<p>Visibility of the repository</p>
+</li>
+<li>
+<p>Whether analysis is still running or has finished</p>
+</li>
+<li>
+<p>Number of stars the repository has on GitHub</p>
+</li>
+</ul>
+<h3 title="Exploring your results / Seeing the results for a repository"><a href="#seeing-the-results-for-a-repository" aria-hidden="true" class="anchor" id="seeing-the-results-for-a-repository"></a>Seeing the results for a repository</h3>
+<ol>
+<li>
+<p>Click the repository name to show a summary of each result.</p>
+</li>
+<li>
+<p>Explore the information available for each result using links to the source files on GitHub. For data flow queries, there'll be an additional "Show paths" link.</p>
+<p><img src="../../../../..//assets/images/help/security/codeql-for-vs-code-variant-analysis-result.png" alt="Screenshot of the &quot;Variant Analysis Results&quot; view, with blue links to GitHub source files. There is a &quot;Show paths&quot; link, highlighted in dark orange."></p>
+</li>
+</ol>
+<h3 title="Exploring your results / Exporting your results"><a href="#exporting-your-results" aria-hidden="true" class="anchor" id="exporting-your-results"></a>Exporting your results</h3>
+<p>You can export your results for further analysis or to discuss them with collaborators. In the "Results" view, click <strong>Export results</strong> to export the results to a secret gist on GitHub or to a Markdown file in your workspace.</p>
+<h2 title="Creating a custom list of repositories"><a href="#creating-a-custom-list-of-repositories" aria-hidden="true" class="anchor" id="creating-a-custom-list-of-repositories"></a>Creating a custom list of repositories</h2>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>CodeQL analysis always requires a CodeQL database to run queries against. When you run variant analysis against a list of repositories, your query will only be executed against the repositories that currently have a CodeQL database available to download. The best way to make a repository available for variant analysis is to enable code scanning with CodeQL. For information about enabling code scanning using CodeQL, see <a href="../configure-code-scanning/configuring-default-setup-for-code-scanning.html">Configuring default setup for code scanning</a>.</p>
+</div>
+<ol>
+<li>
+<p>In the "Variant Analysis Repositories" view, click the "Add list" icon.</p>
+<p><img src="../../../../..//assets/images/help/security/codeql-for-vs-code-add-list.png" alt="Screenshot of the &quot;Variant Analysis Results&quot; view. The &quot;add-list&quot; icon is highlighted in dark orange."></p>
+</li>
+<li>
+<p>Type a name for the new list and press <strong>Enter</strong>.</p>
+</li>
+<li>
+<p>Select your list in the view, then click <strong>+</strong> to add a repository to your list.</p>
+</li>
+</ol>
+<h3 title="Creating a custom list of repositories / Managing your custom lists of repositories"><a href="#managing-your-custom-lists-of-repositories" aria-hidden="true" class="anchor" id="managing-your-custom-lists-of-repositories"></a>Managing your custom lists of repositories</h3>
+<p>You can manage and edit your custom lists by right-clicking on either the list name, or a repository name within the list, and selecting an option from the context menu.</p>
+<p>The custom lists are stored in your workspace in a <code>databases.json</code> file. If you want to edit this file directly in Visual Studio Code, you can open it by clicking <strong>{ }</strong> in the view header.</p>
+<p>For example, if you want to continue analyzing a set of repositories that had results for your query, click <strong>Copy repository list</strong> in the "Variant Analysis Results" view to add a list of only the repositories that have results to the clipboard as JSON.</p>
+<p>In the following example snippet, <code>my-organization/my-repository</code> had results for a query:</p>
+<pre lang="json" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">{
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">name</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">new-repo-list</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">repositories</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">my-organization/my-repository</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    ]
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+<p>You can then insert the <code>new-repo-list</code> of repositories into <code>databases.json</code>for easy access in the "Variant Analysis Repositories" view.</p>
+<h3 title="Creating a custom list of repositories / Using GitHub code search to add repositories to a custom list"><a href="#using-github-code-search-to-add-repositories-to-a-custom-list" aria-hidden="true" class="anchor" id="using-github-code-search-to-add-repositories-to-a-custom-list"></a>Using GitHub code search to add repositories to a custom list</h3>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This feature uses the legacy code search via the GitHub code search API. For more information on the syntax to use, see <a href="https://docs.github.com/en/search-github/searching-on-github/searching-code" class="external">Searching code (legacy)</a>.</p>
+</div>
+<p>You can use code search directly in the CodeQL extension to add a subset of repositories from GitHub to a custom list.</p>
+<p>For example, to add all repositories in the <code>rails</code> organization on GitHub, search <code>org:rails</code>.</p>
+<p>You can add a maximum of 1,000 repositories to a custom list per search.</p>
+<ol>
+<li>
+<p>In the "Variant Analysis Repositories" view, choose the list that you want to add repositories to. You can create a new list or choose an existing list that already contains repositories.</p>
+</li>
+<li>
+<p>Right-click on the list you have chosen and then click <strong>Add repositories with GitHub code search</strong>.</p>
+</li>
+<li>
+<p>In the pop-up that appears at the top of the application, under the search bar, select a language for your search from the choices in the dropdown.</p>
+</li>
+<li>
+<p>In the search bar, type the search query that you want to use and press <strong>Enter</strong>.</p>
+</li>
+</ol>
+<p>You can view the progress of your search in the bottom right corner of the application in a box with the text <code>Searching for repositories...</code>. If you click <strong>Cancel</strong>, no repositories will be added to your list. Once complete, you will see the resulting repositories appear in the dropdown under your custom list in the Variant Analysis Repositories view.</p>
+<p>Some of the resulting repositories will not have CodeQL databases and some may not allow access by the CodeQL extension for Visual Studio Code. When you run an analysis on the list, the "Variant Analysis Results" view will show you which repositories were analyzed, which denied access, and which had no CodeQL database.</p>
+<h2 title="Running CodeQL queries with multi-repository variant analysis on self-hosted runners"><a href="#running-codeql-queries-with-multi-repository-variant-analysis-on-self-hosted-runners" aria-hidden="true" class="anchor" id="running-codeql-queries-with-multi-repository-variant-analysis-on-self-hosted-runners"></a>Running CodeQL queries with multi-repository variant analysis on self-hosted runners</h2>
+<p>To run CodeQL queries with multi-repository variant analysis on self-hosted runners, you first need to ensure that you have added a self-hosted runner to your controller repository, or ensure that the controller repository has access to an organization- or enterprise-level runner.</p>
+<p>You then need to add a new Actions repository variable in your controller repository with the name <code>MRVA_RUNNER_OS</code> containing a JSON-formatted list of the labels of the self-hosted runner you wish to use. For example:</p>
+<pre lang="json" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">["</span><span style="color:#a3be8c;">self-hosted</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">macOS</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">ARM64</span><span style="color:#c0c5ce;">"]
+</span></code></pre>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>You must set the <code>MRVA_RUNNER_OS</code> variable under the Actions repository variables in your controller repository's settings, and not an environment variable or Actions secret under your Actions settings or in your workflow's <code>.yml</code> file.<br>
+See <a href="https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#creating-configuration-variables-for-a-repository" class="external">Store information in variables</a>.</p>
+</div>
+<p>For more information, see <a href="https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/adding-self-hosted-runners#adding-a-self-hosted-runner-to-a-repository" class="external">Adding self-hosted runners</a> and <a href="https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/managing-access-to-self-hosted-runners-using-groups#changing-which-repositories-can-access-a-runner-group" class="external">Managing access to self-hosted runners using groups</a>.</p>
+<p>When you run a query with multi-repository variant analysis on a self-hosted runner, the analysis is run entirely on the self-hosted runner. You don't need to create any new workflows, but you must specify which repository the CodeQL for Visual Studio Code extension should use as a controller repository. As the analysis of each repository completes, the results are sent to VS Code for you to view.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

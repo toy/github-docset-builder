@@ -1,0 +1,290 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Building and testing Ruby</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Build and test code</a> / </nav><h1><a href="#building-and-testing-ruby" aria-hidden="true" class="anchor" id="building-and-testing-ruby"></a>Building and testing Ruby</h1>
+<p>You can create a continuous integration (CI) workflow to build and test your Ruby project.</p>
+<h2 title="Introduction"><a href="#introduction" aria-hidden="true" class="anchor" id="introduction"></a>Introduction</h2>
+<p>This guide shows you how to create a continuous integration (CI) workflow that builds and tests a Ruby application. If your CI tests pass, you may want to deploy your code or publish a gem.</p>
+<h2 title="Prerequisites"><a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<p>We recommend that you have a basic understanding of Ruby, YAML, workflow configuration options, and how to create a workflow file. For more information, see:</p>
+<ul>
+<li><a href="../../how-tos/write-workflows/index.html">Learn GitHub Actions</a></li>
+<li><a href="https://www.ruby-lang.org/en/documentation/quickstart/" class="external">Ruby in 20 minutes</a></li>
+</ul>
+<h2 title="Using a Ruby workflow template"><a href="#using-a-ruby-workflow-template" aria-hidden="true" class="anchor" id="using-a-ruby-workflow-template"></a>Using a Ruby workflow template</h2>
+<p>To get started quickly, add a workflow template to the <code>.github/workflows</code> directory of your repository.</p>
+<p>GitHub provides a workflow template for Ruby that should work for most Ruby projects. The subsequent sections of this guide give examples of how you can customize this workflow template.</p>
+<ol>
+<li>
+<p>On GitHub, navigate to the main page of the repository.</p>
+</li>
+<li>
+<p>Under your repository name, click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-play" aria-label="play" role="img"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm4.879-2.773 4.264 2.559a.25.25 0 0 1 0 .428l-4.264 2.559A.25.25 0 0 1 6 10.559V5.442a.25.25 0 0 1 .379-.215Z"></path></svg> Actions</strong>.</p>
+<p><img src="../../../..//assets/images/help/repository/actions-tab-global-nav-update.png" alt="Screenshot of the tabs for the &quot;github/docs&quot; repository. The &quot;Actions&quot; tab is highlighted with an orange outline."></p>
+</li>
+<li>
+<p>If you already have a workflow in your repository, click <strong>New workflow</strong>.</p>
+</li>
+<li>
+<p>The "Choose a workflow" page shows a selection of recommended workflow templates. Search for "ruby".</p>
+</li>
+<li>
+<p>Filter the selection of workflows by clicking <strong>Continuous integration</strong>.</p>
+</li>
+<li>
+<p>On the "Ruby" workflow, click <strong>Configure</strong>.</p>
+</li>
+<li>
+<p>Edit the workflow as required. For example, change the Ruby versions you want to use.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<ul>
+<li>This workflow template contains an action that is not certified by GitHub. Actions provided by third parties are governed by separate terms of service, privacy policy, and support documentation.</li>
+<li>If you use actions from third parties you should use a version specified by a commit SHA. If the action is revised and you want to use the newer version, you will need to update the SHA. You can specify a version by referencing a tag or a branch, however the action may change without warning. For more information, see <a href="../../reference/security/secure-use.html#using-third-party-actions">Secure use reference</a>.</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Click <strong>Commit changes</strong>.</p>
+<p>The <code>ruby.yml</code> workflow file is added to the <code>.github/workflows</code> directory of your repository.</p>
+</li>
+</ol>
+<h2 title="Specifying the Ruby version"><a href="#specifying-the-ruby-version" aria-hidden="true" class="anchor" id="specifying-the-ruby-version"></a>Specifying the Ruby version</h2>
+<p>The easiest way to specify a Ruby version is by using the <code>ruby/setup-ruby</code> action provided by the Ruby organization on GitHub. The action adds any supported Ruby version to <code>PATH</code> for each job run in a workflow. For more information and available Ruby versions, see <a href="https://github.com/ruby/setup-ruby" class="external"><code>ruby/setup-ruby</code></a>.</p>
+<p>Using Ruby's <code>ruby/setup-ruby</code> action is the recommended way of using Ruby with GitHub Actions because it ensures consistent behavior across different runners and different versions of Ruby.</p>
+<p>The <code>setup-ruby</code> action takes a Ruby version as an input and configures that version on the runner.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># This workflow uses actions that are not certified by GitHub.
+</span><span style="color:#65737e;"># They are provided by a third-party and are governed by
+</span><span style="color:#65737e;"># separate terms of service, privacy policy, and support
+</span><span style="color:#65737e;"># documentation.
+</span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">ruby-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">3.1</span><span style="color:#c0c5ce;">' </span><span style="color:#65737e;"># Not needed with a .ruby-version file
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle install
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle exec rake
+</span></code></pre>
+<p>Alternatively, you can check a <code>.ruby-version</code> file into the root of your repository and <code>setup-ruby</code> will use the version defined in that file.</p>
+<h2 title="Testing with multiple versions of Ruby"><a href="#testing-with-multiple-versions-of-ruby" aria-hidden="true" class="anchor" id="testing-with-multiple-versions-of-ruby"></a>Testing with multiple versions of Ruby</h2>
+<p>You can add a matrix strategy to run your workflow with more than one version of Ruby. For example, you can test your code against the latest patch releases of versions 3.1, 3.0, and 2.7.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">strategy</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">matrix</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">ruby-version</span><span style="color:#c0c5ce;">: ['</span><span style="color:#a3be8c;">3.1</span><span style="color:#c0c5ce;">', '</span><span style="color:#a3be8c;">3.0</span><span style="color:#c0c5ce;">', '</span><span style="color:#a3be8c;">2.7</span><span style="color:#c0c5ce;">']
+</span></code></pre>
+<p>Each version of Ruby specified in the <code>ruby-version</code> array creates a job that runs the same steps. The <code>${{ matrix.ruby-version }}</code> context is used to access the current job's version. For more information about matrix strategies and contexts, see <a href="../../reference/workflows-and-actions/workflow-syntax.html">Workflow syntax for GitHub Actions</a> and <a href="../../reference/workflows-and-actions/contexts.html">Contexts reference</a>.</p>
+<p>The full updated workflow with a matrix strategy could look like this:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># This workflow uses actions that are not certified by GitHub.
+</span><span style="color:#65737e;"># They are provided by a third-party and are governed by
+</span><span style="color:#65737e;"># separate terms of service, privacy policy, and support
+</span><span style="color:#65737e;"># documentation.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># GitHub recommends pinning actions to a commit SHA.
+</span><span style="color:#65737e;"># To get a newer version, you will need to update the SHA.
+</span><span style="color:#65737e;"># You can also reference a tag or branch, but the action may change without warning.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Ruby CI
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">: [ </span><span style="color:#a3be8c;">main </span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">pull_request</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">: [ </span><span style="color:#a3be8c;">main </span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">test</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">strategy</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">matrix</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">ruby-version</span><span style="color:#c0c5ce;">: ['</span><span style="color:#a3be8c;">3.1</span><span style="color:#c0c5ce;">', '</span><span style="color:#a3be8c;">3.0</span><span style="color:#c0c5ce;">', '</span><span style="color:#a3be8c;">2.7</span><span style="color:#c0c5ce;">']
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set up Ruby ${{ matrix.ruby-version }}
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">ruby-version</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ matrix.ruby-version }}
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Install dependencies
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle install
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Run tests
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle exec rake
+</span></code></pre>
+<h2 title="Installing dependencies with Bundler"><a href="#installing-dependencies-with-bundler" aria-hidden="true" class="anchor" id="installing-dependencies-with-bundler"></a>Installing dependencies with Bundler</h2>
+<p>The <code>setup-ruby</code> action will automatically install bundler for you. The version is determined by your <code>gemfile.lock</code> file. If no version is present in your lockfile, then the latest compatible version will be installed.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># This workflow uses actions that are not certified by GitHub.
+</span><span style="color:#65737e;"># They are provided by a third-party and are governed by
+</span><span style="color:#65737e;"># separate terms of service, privacy policy, and support
+</span><span style="color:#65737e;"># documentation.
+</span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">ruby-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">3.1</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle install
+</span></code></pre>
+<h3 title="Installing dependencies with Bundler / Caching dependencies"><a href="#caching-dependencies" aria-hidden="true" class="anchor" id="caching-dependencies"></a>Caching dependencies</h3>
+<p>The <code>setup-ruby</code> actions provides a method to automatically handle the caching of your gems between runs.</p>
+<p>To enable caching, set the following.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># This workflow uses actions that are not certified by GitHub.
+</span><span style="color:#65737e;"># They are provided by a third-party and are governed by
+</span><span style="color:#65737e;"># separate terms of service, privacy policy, and support
+</span><span style="color:#65737e;"># documentation.
+</span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">bundler-cache</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span></code></pre>
+<p>This will configure bundler to install your gems to <code>vendor/cache</code>. For each successful run of your workflow, this folder will be cached by GitHub Actions and re-downloaded for subsequent workflow runs. A hash of your <code>gemfile.lock</code> and the Ruby version are used as the cache key. If you install any new gems, or change a version, the cache will be invalidated and bundler will do a fresh install.</p>
+<p><strong>Caching without setup-ruby</strong></p>
+<p>For greater control over caching, you can use the <code>actions/cache</code> action directly. For more information, see <a href="../../reference/workflows-and-actions/dependency-caching.html">Dependency caching reference</a>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/cache@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">vendor/bundle
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">key</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">restore-keys</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">      ${{ runner.os }}-gems-
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Bundle install
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">    bundle config path vendor/bundle
+</span><span style="color:#a3be8c;">    bundle install --jobs 4 --retry 3
+</span></code></pre>
+<p>If you're using a matrix build, you will want to include the matrix variables in your cache key. For example, if you have a matrix strategy for different ruby versions (<code>matrix.ruby-version</code>) and different operating systems (<code>matrix.os</code>), your workflow steps might look like this:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/cache@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">vendor/bundle
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">key</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle-use-ruby-${{ matrix.os }}-${{ matrix.ruby-version }}-${{ hashFiles('**/Gemfile.lock') }}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">restore-keys</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">      bundle-use-ruby-${{ matrix.os }}-${{ matrix.ruby-version }}-
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Bundle install
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">    bundle config path vendor/bundle
+</span><span style="color:#a3be8c;">    bundle install --jobs 4 --retry 3
+</span></code></pre>
+<h2 title="Matrix testing your code"><a href="#matrix-testing-your-code" aria-hidden="true" class="anchor" id="matrix-testing-your-code"></a>Matrix testing your code</h2>
+<p>The following example matrix tests all stable releases and head versions of MRI, JRuby and TruffleRuby on Ubuntu and macOS.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># This workflow uses actions that are not certified by GitHub.
+</span><span style="color:#65737e;"># They are provided by a third-party and are governed by
+</span><span style="color:#65737e;"># separate terms of service, privacy policy, and support
+</span><span style="color:#65737e;"># documentation.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># GitHub recommends pinning actions to a commit SHA.
+</span><span style="color:#65737e;"># To get a newer version, you will need to update the SHA.
+</span><span style="color:#65737e;"># You can also reference a tag or branch, but the action may change without warning.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Matrix Testing
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">: [ </span><span style="color:#a3be8c;">main </span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">pull_request</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">: [ </span><span style="color:#a3be8c;">main </span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">test</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ matrix.os }}-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">strategy</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">fail-fast</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">matrix</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">os</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">ubuntu</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">macos</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">ruby</span><span style="color:#c0c5ce;">: [</span><span style="color:#d08770;">2.5</span><span style="color:#c0c5ce;">, </span><span style="color:#d08770;">2.6</span><span style="color:#c0c5ce;">, </span><span style="color:#d08770;">2.7</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">head</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">debug</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">jruby</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">jruby-head</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">truffleruby</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">truffleruby-head</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">continue-on-error</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ endsWith(matrix.ruby, 'head') || matrix.ruby == 'debug' }}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">ruby-version</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ matrix.ruby }}
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle install
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle exec rake
+</span></code></pre>
+<h2 title="Linting your code"><a href="#linting-your-code" aria-hidden="true" class="anchor" id="linting-your-code"></a>Linting your code</h2>
+<p>The following example installs <code>rubocop</code> and uses it to lint all files. For more information, see <a href="https://github.com/rubocop-hq/rubocop" class="external">RuboCop</a>. You can <a href="https://docs.rubocop.org/rubocop/configuration.html" class="external">configure Rubocop</a> to decide on the specific linting rules.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># This workflow uses actions that are not certified by GitHub.
+</span><span style="color:#65737e;"># They are provided by a third-party and are governed by
+</span><span style="color:#65737e;"># separate terms of service, privacy policy, and support
+</span><span style="color:#65737e;"># documentation.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># GitHub recommends pinning actions to a commit SHA.
+</span><span style="color:#65737e;"># To get a newer version, you will need to update the SHA.
+</span><span style="color:#65737e;"># You can also reference a tag or branch, but the action may change without warning.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Linting
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">push</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">test</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">ruby-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">2.6</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle install
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Rubocop
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">rubocop -f github
+</span></code></pre>
+<p>Specifying <code>-f github</code> means that the RuboCop output will be in GitHub's annotation format. Any linting errors will show inline in the <strong>Files changed</strong> tab of the pull request that introduces them.</p>
+<h2 title="Publishing Gems"><a href="#publishing-gems" aria-hidden="true" class="anchor" id="publishing-gems"></a>Publishing Gems</h2>
+<p>You can configure your workflow to publish your Ruby package to any package registry you'd like when your CI tests pass.</p>
+<p>You can store any access tokens or credentials needed to publish your package using repository secrets. The following example creates and publishes a package to <code>GitHub Package Registry</code> and <code>RubyGems</code>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># This workflow uses actions that are not certified by GitHub.
+</span><span style="color:#65737e;"># They are provided by a third-party and are governed by
+</span><span style="color:#65737e;"># separate terms of service, privacy policy, and support
+</span><span style="color:#65737e;"># documentation.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># GitHub recommends pinning actions to a commit SHA.
+</span><span style="color:#65737e;"># To get a newer version, you will need to update the SHA.
+</span><span style="color:#65737e;"># You can also reference a tag or branch, but the action may change without warning.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Ruby Gem
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Manually publish
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">workflow_dispatch</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Alternatively, publish whenever changes are merged to the `main` branch.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">: [ </span><span style="color:#a3be8c;">main </span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">pull_request</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">: [ </span><span style="color:#a3be8c;">main </span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Build + Publish
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">permissions</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">packages</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">contents</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set up Ruby 2.6
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">ruby-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">2.6</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundle install
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Publish to GPR
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          mkdir -p $HOME/.gem
+</span><span style="color:#a3be8c;">          touch $HOME/.gem/credentials
+</span><span style="color:#a3be8c;">          chmod 0600 $HOME/.gem/credentials
+</span><span style="color:#a3be8c;">          printf -- "---\n:github: ${GEM_HOST_API_KEY}\n" &gt; $HOME/.gem/credentials
+</span><span style="color:#a3be8c;">          gem build *.gemspec
+</span><span style="color:#a3be8c;">          gem push --KEY github --host https://rubygems.pkg.github.com/${OWNER} *.gem
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">GEM_HOST_API_KEY</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">Bearer ${{secrets.GITHUB_TOKEN}}</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">OWNER</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ github.repository_owner }}
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Publish to RubyGems
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          mkdir -p $HOME/.gem
+</span><span style="color:#a3be8c;">          touch $HOME/.gem/credentials
+</span><span style="color:#a3be8c;">          chmod 0600 $HOME/.gem/credentials
+</span><span style="color:#a3be8c;">          printf -- "---\n:rubygems_api_key: ${GEM_HOST_API_KEY}\n" &gt; $HOME/.gem/credentials
+</span><span style="color:#a3be8c;">          gem build *.gemspec
+</span><span style="color:#a3be8c;">          gem push *.gem
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">GEM_HOST_API_KEY</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">${{secrets.RUBYGEMS_AUTH_TOKEN}}</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

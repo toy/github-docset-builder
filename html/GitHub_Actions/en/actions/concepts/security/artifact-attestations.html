@@ -1,0 +1,40 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Artifact attestations</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Security</a> / </nav><h1><a href="#artifact-attestations" aria-hidden="true" class="anchor" id="artifact-attestations"></a>Artifact attestations</h1>
+<p>Understand the usage and security benefits of artifact attestations.</p>
+<h2 title="Overview"><a href="#overview" aria-hidden="true" class="anchor" id="overview"></a>Overview</h2>
+<p>Artifact attestations enable you to create unfalsifiable provenance and integrity guarantees for the software you build. In turn, people who consume your software can verify where and how your software was built.</p>
+<p>When you generate artifact attestations with your software, you create cryptographically signed claims that establish your build's provenance and include the following information:</p>
+<ul>
+<li>A link to the workflow associated with the artifact</li>
+<li>The repository, organization, environment, commit SHA, and triggering event for the artifact</li>
+<li>Other information from the OIDC token used to establish provenance. For more information, see <a href="openid-connect.html">OpenID Connect</a>.</li>
+</ul>
+<p>You can also generate artifact attestations that include an associated software bill of materials (SBOM). Associating your builds with a list of the open source dependencies used in them provides transparency and enables consumers to comply with data protection standards.</p>
+<h2 title="SLSA levels for artifact attestations"><a href="#slsa-levels-for-artifact-attestations" aria-hidden="true" class="anchor" id="slsa-levels-for-artifact-attestations"></a>SLSA levels for artifact attestations</h2>
+<p>The SLSA framework is an industry standard used to evaluate supply chain security. It is organized into levels. Each level represents an increasing degree of security and trustworthiness for a software supply chain. Artifact attestations by itself provides SLSA v1.0 Build Level 2.</p>
+<p>This provides a link between your artifact and its build instructions, but you can take this a step further by requiring builds make use of known, vetted build instructions. A great way to do this is to have your build take place in a reusable workflow that many repositories across your organization share. Reusable workflows can provide isolation between the build process and the calling workflow, to meet SLSA v1.0 Build Level 3. For more information, see <a href="../../how-tos/secure-your-work/use-artifact-attestations/increase-security-rating.html">Using artifact attestations and reusable workflows to achieve SLSA v1 Build Level 3</a>.</p>
+<p>For more information on SLSA levels, see <a href="https://slsa.dev/spec/v1.0/levels" class="external">SLSA Security Levels</a>.</p>
+<h2 title="How GitHub generates artifact attestations"><a href="#how-github-generates-artifact-attestations" aria-hidden="true" class="anchor" id="how-github-generates-artifact-attestations"></a>How GitHub generates artifact attestations</h2>
+<p>To generate artifact attestations, GitHub uses Sigstore, which is an open source project that offers a comprehensive solution for signing and verifying software artifacts via attestations.</p>
+<p><strong>Public repositories</strong> that generate artifact attestations use the <a href="https://openssf.org/blog/2023/10/03/running-sigstore-as-a-managed-service-a-tour-of-sigstores-public-good-instance/" class="external">Sigstore Public Good Instance</a>. A copy of the generated Sigstore bundle is stored with GitHub and is also written to an immutable transparency log that is publicly readable on the internet.</p>
+<p><strong>Private repositories</strong> that generate artifact attestations use GitHub's Sigstore instance. GitHub's Sigstore instance uses the same codebase as the Sigstore Public Good Instance, but it does not have a transparency log and only federates with GitHub Actions.</p>
+<h2 title="When to generate attestations"><a href="#when-to-generate-attestations" aria-hidden="true" class="anchor" id="when-to-generate-attestations"></a>When to generate attestations</h2>
+<p>Generating attestations alone doesn't provide any security benefit, the attestations must be verified for the benefit to be realized. Here are some guidelines for how to think about what to sign and how often:</p>
+<p>You should sign:</p>
+<ul>
+<li>Software you are releasing that you expect people to run <code>gh attestation verify ...</code> on.</li>
+<li>Binaries people will run, packages people will download, or manifests that include hashes of detailed contents.</li>
+</ul>
+<p>You should <strong>not</strong> sign:</p>
+<ul>
+<li>Frequent builds that are just for automated testing.</li>
+<li>Individual files like source code, documentation files, or embedded images.</li>
+</ul>
+<h2 title="Verifying artifact attestations"><a href="#verifying-artifact-attestations" aria-hidden="true" class="anchor" id="verifying-artifact-attestations"></a>Verifying artifact attestations</h2>
+<p>If you consume software that publishes artifact attestations, you can use the GitHub CLI to verify those attestations. Because the attestations give you information about where and how software was built, you can use that information to create and enforce security policies that elevate your supply chain security.</p>
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>It is important to remember that artifact attestations are <em>not</em> a guarantee that an artifact is secure. Instead, artifact attestations link you to the source code and the build instructions that produced them. It is up to you to define your policy criteria, evaluate that policy by evaluating the content, and make an informed risk decision when you are consuming software.</p>
+</div>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>To start generating and verifying artifact attestations for your builds, see <a href="../../how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations.html">Using artifact attestations to establish provenance for builds</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

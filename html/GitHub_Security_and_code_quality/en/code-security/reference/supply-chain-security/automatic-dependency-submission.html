@@ -1,0 +1,91 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Automatic dependency submission</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Reference</a> / <a href="index.html">Supply chain security</a> / </nav><h1><a href="#automatic-dependency-submission" aria-hidden="true" class="anchor" id="automatic-dependency-submission"></a>Automatic dependency submission</h1>
+<p>Network access requirements, troubleshooting, and ecosystem-specific behavior for automatic dependency submission.</p>
+<h2 title="Configure network access for self-hosted runners"><a href="#configure-network-access-for-self-hosted-runners" aria-hidden="true" class="anchor" id="configure-network-access-for-self-hosted-runners"></a>Configure network access for self-hosted runners</h2>
+<p>If your self-hosted runners operate behind a firewall with restricted outbound internet access, you must add certain URLs to the allowlist for automatic dependency submission. The required URLs depend on the ecosystems your repositories use.</p>
+<h3 title="Configure network access for self-hosted runners / Required URLs for all ecosystems"><a href="#required-urls-for-all-ecosystems" aria-hidden="true" class="anchor" id="required-urls-for-all-ecosystems"></a>Required URLs for all ecosystems</h3>
+<p>These URLs are required for all automatic dependency submission workflows:</p>
+<ul>
+<li><code>https://github.com</code>—Required for accessing GitHub and downloading actions.</li>
+<li><code>https://api.github.com</code>—Required for GitHub API access.</li>
+<li><code>https://*.githubusercontent.com</code>—Required for downloading action source code and releases (including <code>raw.githubusercontent.com</code>, <code>github-releases.githubusercontent.com</code>, and <code>objects.githubusercontent.com</code>).</li>
+</ul>
+<h3 title="Configure network access for self-hosted runners / Ecosystem-specific URLs"><a href="#ecosystem-specific-urls" aria-hidden="true" class="anchor" id="ecosystem-specific-urls"></a>Ecosystem-specific URLs</h3>
+<p>Depending on the ecosystems you use, you may need to allowlist additional URLs.</p>
+<h4><a href="#go" aria-hidden="true" class="anchor" id="go"></a>Go</h4>
+<ul>
+<li><code>https://go.dev</code>—For downloading the Go toolchain.</li>
+<li><code>https://golang.org</code>—Alternate domain for Go downloads.</li>
+<li><code>https://proxy.golang.org</code>—Official Go module proxy for downloading Go modules during dependency detection.</li>
+</ul>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The <code>actions/go-versions</code> repository is accessed via <code>https://raw.githubusercontent.com</code>, which is already covered in the general requirements.</p>
+</div>
+<h4><a href="#java-maven-and-gradle" aria-hidden="true" class="anchor" id="java-maven-and-gradle"></a>Java (Maven and Gradle)</h4>
+<ul>
+<li><code>https://repo.maven.apache.org</code>—Maven Central repository for downloading dependencies.</li>
+<li><code>https://api.adoptium.net</code>—For downloading Adoptium/Temurin JDK distributions (default distribution used by <code>actions/setup-java</code>).</li>
+</ul>
+<p>If you use a different JDK distribution, you may also need:</p>
+<ul>
+<li><code>https://aka.ms</code> and <code>https://download.microsoft.com</code>—For Microsoft Build of OpenJDK (note: <code>aka.ms</code> is also used for .NET downloads).</li>
+<li><code>https://download.oracle.com</code>—For Oracle JDK.</li>
+<li><code>https://api.azul.com</code>—For Azul Zulu OpenJDK.</li>
+</ul>
+<h4><a href="#net-c-f-visual-basic" aria-hidden="true" class="anchor" id="net-c-f-visual-basic"></a>.NET (C#, F#, Visual Basic)</h4>
+<ul>
+<li><code>https://aka.ms</code>—Microsoft URL shortener that redirects to .NET download locations.</li>
+<li><code>https://builds.dotnet.microsoft.com</code>—Primary feed for .NET SDK and runtime downloads.</li>
+<li><code>https://ci.dot.net</code>—Secondary feed for .NET builds.</li>
+</ul>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The <code>microsoft/component-detection</code> tool used by .NET autosubmission is downloaded from GitHub releases, which is already covered in the general requirements (<code>https://github.com</code> and <code>https://*.githubusercontent.com</code>).</p>
+</div>
+<h4><a href="#python" aria-hidden="true" class="anchor" id="python"></a>Python</h4>
+<ul>
+<li><code>https://python.org</code>—For downloading Python interpreters.</li>
+</ul>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The <code>actions/python-versions</code> repository and <code>microsoft/component-detection</code> releases are accessed via URLs already covered in the general requirements (<code>https://*.githubusercontent.com</code> and <code>https://github.com</code>).</p>
+</div>
+<h2 title="Use GitHub-hosted larger runners for automatic dependency submission"><a href="#use-github-hosted-larger-runners-for-automatic-dependency-submission" aria-hidden="true" class="anchor" id="use-github-hosted-larger-runners-for-automatic-dependency-submission"></a>Use GitHub-hosted larger runners for automatic dependency submission</h2>
+<p>GitHub Team or GitHub Enterprise Cloud users can use larger runners to run automatic dependency submissions jobs.</p>
+<ol>
+<li>Provision a larger runner at the organization level with the name <code>dependency-submission</code>. For more information, see <a href="https://docs.github.com/en/actions/using-github-hosted-runners/about-larger-runners/managing-larger-runners#adding-a-larger-runner-to-an-organization" class="external">Adding a larger runner to an organization</a>.</li>
+<li>Give your repository access to the runner. For more information, see <a href="https://docs.github.com/en/actions/using-github-hosted-runners/about-larger-runners/managing-larger-runners#allowing-repositories-to-access-larger-runners" class="external">Allowing repositories to access larger runners</a>.</li>
+<li>Under "Dependency graph", click the dropdown menu next to “Automatic dependency submission”, then select <strong>Enabled for labeled runners</strong>.</li>
+</ol>
+<h2 title="Troubleshoot automatic dependency submission"><a href="#troubleshoot-automatic-dependency-submission" aria-hidden="true" class="anchor" id="troubleshoot-automatic-dependency-submission"></a>Troubleshoot automatic dependency submission</h2>
+<p>Automatic dependency submission makes a best effort to cache package downloads between runs using the <a href="https://github.com/marketplace/actions/cache" class="external">Cache</a> action to speed up workflows. For self-hosted runners, you may want to manage this cache within your own infrastructure. To do this, you can disable the built-in caching by setting an environment variable of <code>GH_DEPENDENCY_SUBMISSION_SKIP_CACHE</code> to <code>true</code>. For more information, see <a href="https://docs.github.com/en/actions/learn-github-actions/variables" class="external">Store information in variables</a>.</p>
+<h3 title="Troubleshoot automatic dependency submission / Manifest deduplication"><a href="#manifest-deduplication" aria-hidden="true" class="anchor" id="manifest-deduplication"></a>Manifest deduplication</h3>
+<p>A repository can use multiple methods for dependency submission, which can cause the same package manifest to be scanned multiple times, potentially with different outputs from each scan. Dependency graph uses deduplication logic to parse the outputs, prioritizing the most accurate information for each manifest file.</p>
+<p>Dependency graph displays only one instance of each manifest file using the following precedence rules.</p>
+<ol>
+<li><strong>User submissions</strong> take the highest priority, because they are usually created during artifact builds they have the most complete information.
+<ul>
+<li>If there are multiple manual snapshots from different detectors, they are sorted alphabetically by correlator and the first one used.</li>
+<li>If there are two correlators with the same detector, the resolved dependencies are merged. For more information about correlators and detectors, see <a href="https://docs.github.com/en/rest/dependency-graph/dependency-submission" class="external">REST API endpoints for dependency submission</a>.</li>
+</ul>
+</li>
+<li><strong>Dependabot graph jobs</strong> have the second-highest priority. For ecosystems where Dependabot graph jobs are available (currently Go and Python), they take precedence over automatic dependency submission.</li>
+<li><strong>Automatic submissions</strong> have the next priority since they are also created during artifact builds, but are not submitted by users.</li>
+<li><strong>Static analysis results</strong> are used when no other data is available.</li>
+</ol>
+<h2 title="Package ecosystem-specific information"><a href="#package-ecosystem-specific-information" aria-hidden="true" class="anchor" id="package-ecosystem-specific-information"></a>Package ecosystem-specific information</h2>
+<h3 title="Package ecosystem-specific information / Maven projects"><a href="#maven-projects" aria-hidden="true" class="anchor" id="maven-projects"></a>Maven projects</h3>
+<p>For Maven projects, automatic dependency submission runs an open source fork of the <a href="https://github.com/marketplace/actions/maven-dependency-tree-dependency-submission" class="external">Maven Dependency Tree Dependency Submission</a>. The fork allows GitHub to stay in sync with the upstream repository plus maintain some changes that are only applicable to automatic submission. The fork's source is available at <a href="https://github.com/advanced-security/maven-dependency-submission-action" class="external">advanced-security/maven-dependency-submission-action</a>.</p>
+<p>If your repository's dependencies seem inaccurate, check that the timestamp of the last dependency graph build matches the last change to your <code>pom.xml</code> file. The timestamp is visible on the table of alerts in the repository's Dependabot tab. Pushing a commit which updates <code>pom.xml</code> will trigger a new run of the Dependency Tree Submission action and force a rebuild of that repository's dependency graph.</p>
+<h3 title="Package ecosystem-specific information / Gradle projects"><a href="#gradle-projects" aria-hidden="true" class="anchor" id="gradle-projects"></a>Gradle projects</h3>
+<p>For Gradle projects, automatic dependency submission runs a fork of the open source Gradle actions from <a href="https://github.com/gradle/actions" class="external">gradle/actions</a>. The fork is available at <a href="https://github.com/actions/gradle-build-tools-actions" class="external">actions/gradle-build-tools-actions</a>. You can view the results of the autosubmission action under your repository's <strong>Actions</strong> tab. Each run will be labeled "Automatic Dependency Submission (Gradle)" and its output will contain the JSON payload which the action submitted to the API.</p>
+<h3 title="Package ecosystem-specific information / .NET projects"><a href="#net-projects" aria-hidden="true" class="anchor" id="net-projects"></a>.NET projects</h3>
+<p>The .NET autosubmission action uses the open source <a href="https://github.com/microsoft/component-detection/" class="external">component-detection</a> project as the engine for its dependency detection. It supports .NET 8.x, 9.x, and 10.x. .NET autosubmission runs if the repository's <code>dependabot.yml</code> defines <code>nuget</code> as a <a href="dependabot-options-reference.html#package-ecosystem-"><code>package-ecosystem</code></a> or when there is a supported manifest file in the root directory of the repository. Supported manifest files include <code>.sln</code>, <code>.csproj</code>, <code>packages.config</code>, <code>.vbproj</code>, <code>.vcxproj</code>, and <code>.fsproj</code>.</p>
+<h3 title="Package ecosystem-specific information / Python projects"><a href="#python-projects" aria-hidden="true" class="anchor" id="python-projects"></a>Python projects</h3>
+<p>Python repositories with the dependency graph enabled use Dependabot graph jobs to generate dependency graphs. Dependabot graph jobs take precedence over automatic dependency submissions, and the autosubmission workflow described below will no longer run for Python projects. For more information, see <a href="../../concepts/supply-chain-security/dependency-graph-data.html#dependabot-graph-jobs">How the dependency graph recognizes dependencies</a>.</p>
+<p>Automatic dependency submission for Python uses the open source <a href="https://github.com/microsoft/component-detection/" class="external">component-detection</a> project as its underlying graph generation engine. The autosubmission action will only run if there is a <code>requirements.txt</code> file in the root directory of the repository. Python autosubmission does not currently support private packages; packages referenced in <code>requirements.txt</code> which are not publicly available will cause the autosubmission action to fail.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This action uses <a href="https://github.com/actions/setup-python" class="external">actions/setup-python</a> to install Python. You must include a .python-version file in your repository to specify the Python version to be installed.</p>
+</div>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

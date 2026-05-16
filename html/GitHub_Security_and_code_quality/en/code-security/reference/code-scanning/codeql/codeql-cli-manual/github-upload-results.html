@@ -1,0 +1,102 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>github upload-results</title><link rel="stylesheet" href="../../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../../index.html">Security and code quality</a> / <a href="../../../index.html">Reference</a> / <a href="../../index.html">Code scanning</a> / <a href="../index.html">CodeQL</a> / <a href="index.html">CodeQL CLI manual</a> / </nav><h1><a href="#github-upload-results" aria-hidden="true" class="anchor" id="github-upload-results"></a>github upload-results</h1>
+<p>Uploads a SARIF file to GitHub code scanning.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This content describes the most recent release of the CodeQL CLI. For more information about this release, see <a href="https://github.com/github/codeql-cli-binaries/releases" class="external">https://github.com/github/codeql-cli-binaries/releases</a>.</p>
+<p>To see details of the options available for this command in an earlier release, run the command with the <span style="white-space: nowrap;"><code>--help</code></span> option in your terminal.</p>
+</div>
+<h2 title="Synopsis"><a href="#synopsis" aria-hidden="true" class="anchor" id="synopsis"></a>Synopsis</h2>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql github upload-results --sarif=&lt;file&gt; [--github-auth-stdin] [--github-url=&lt;url&gt;] [--repository=&lt;repository-name&gt;] [--ref=&lt;ref&gt;] [--commit=&lt;commit&gt;] [--checkout-path=&lt;path&gt;] &lt;options&gt;...
+</span></code></pre>
+<h2 title="Description"><a href="#description" aria-hidden="true" class="anchor" id="description"></a>Description</h2>
+<p>Uploads a SARIF file to GitHub code scanning.</p>
+<p>See: <a href="../../../../tutorials/customize-code-scanning/uploading-codeql-analysis-results-to-github.html">Uploading CodeQL analysis results to GitHub</a></p>
+<p>A GitHub Apps token or personal access token must be set. For best<br>
+security practices, it is recommended to set the <code>--github-auth-stdin</code><br>
+flag and pass the token to the command through standard input.<br>
+Alternatively, the <code>GITHUB_TOKEN</code> environment variable can be set.</p>
+<p>This token must have the <code>security_events</code> scope.</p>
+<h2 title="Options"><a href="#options" aria-hidden="true" class="anchor" id="options"></a>Options</h2>
+<h3 title="Primary Options"><a href="#primary-options" aria-hidden="true" class="anchor" id="primary-options"></a>Primary Options</h3>
+<h4><a href="#-s---sariffile" aria-hidden="true" class="anchor" id="-s---sariffile"></a><code>-s, --sarif=&lt;file&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Mandatory] Path to the SARIF files to use. This should be the output<br>
+of <a href="database-analyze.html">codeql database analyze</a> (or <a href="database-interpret-results.html">codeql database interpret-results</a>) with <code>--format sarif-latest</code> for upload to github.com or<br>
+the appropriate supported format tag for GitHub Enterprise Server<br>
+instances (see <a href="../../sarif-files/sarif-support-for-code-scanning.html">SARIF support for code scanning</a> for<br>
+SARIF versions supported by your release).</p>
+<h4><a href="#-r---repositoryrepository-name" aria-hidden="true" class="anchor" id="-r---repositoryrepository-name"></a><code>-r, --repository=&lt;repository-name&gt;</code></h4>
+<p>GitHub repository owner and name (e.g., <em>github/octocat</em>) to use as an<br>
+endpoint for uploading. The CLI will attempt to autodetect this from the<br>
+checkout path if it is omitted.</p>
+<h4><a href="#-f---refref" aria-hidden="true" class="anchor" id="-f---refref"></a><code>-f, --ref=&lt;ref&gt;</code></h4>
+<p>Name of the ref that was analyzed. If this ref is a pull request merge<br>
+commit, then use <em>refs/pull/1234/merge</em> or <em>refs/pull/1234/head</em><br>
+(depending on whether or not this commit corresponds to the HEAD or<br>
+MERGE commit of the PR). Otherwise, this should be a branch:<br>
+<em>refs/heads/branch-name</em>. If omitted, the CLI will attempt to<br>
+automatically populate this from the current branch of the checkout<br>
+path, if this exists.</p>
+<h4><a href="#-c---commitcommit" aria-hidden="true" class="anchor" id="-c---commitcommit"></a><code>-c, --commit=&lt;commit&gt;</code></h4>
+<p>SHA of commit that was analyzed. If this is omitted the CLI will attempt<br>
+to autodetect this from the checkout path.</p>
+<h4><a href="#-p---checkout-pathpath" aria-hidden="true" class="anchor" id="-p---checkout-pathpath"></a><code>-p, --checkout-path=&lt;path&gt;</code></h4>
+<p>Checkout path. Default is the current working directory.</p>
+<h4><a href="#--merge" aria-hidden="true" class="anchor" id="--merge"></a><code>--merge</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Allow more than one SARIF file to be specified, and merge<br>
+these into a single file before uploading. This is only recommended for<br>
+backwards compatibility. For new analyses it is recommended to upload<br>
+two separate SARIF files with different categories. This option only<br>
+works in conjunction with SARIF files produced by CodeQL with SARIF<br>
+version 2.1.0 (this is the default version of SARIF used by CodeQL).</p>
+<h4><a href="#--no-wait-for-processing" aria-hidden="true" class="anchor" id="--no-wait-for-processing"></a><code>--no-wait-for-processing</code></h4>
+<p>By default, the CLI will wait for GitHub to process the SARIF file for a<br>
+maximum of 2 minutes, returning a non-zero exit code if there were any<br>
+errors during processing of the analysis results. You can customize how<br>
+long the CLI will wait with <code>--wait-for-processing-timeout</code>, or disable<br>
+the feature with <code>--no-wait-for-processing</code>.</p>
+<h4><a href="#--wait-for-processing-timeoutwaitforprocessingtimeout" aria-hidden="true" class="anchor" id="--wait-for-processing-timeoutwaitforprocessingtimeout"></a><code>--wait-for-processing-timeout=&lt;waitForProcessingTimeout&gt;</code></h4>
+<p>The maximum time the CLI will wait for the uploaded SARIF file to be<br>
+processed by GitHub, in seconds. The default is 120 seconds (2 minutes).<br>
+This option is only valid when <code>--wait-for-processing</code> is enabled.</p>
+<h4><a href="#--formatfmt" aria-hidden="true" class="anchor" id="--formatfmt"></a><code>--format=&lt;fmt&gt;</code></h4>
+<p>Select output format. Choices include:</p>
+<p><code>text</code> <em>(default)</em>: Print the URL for tracking the status of the SARIF<br>
+upload.</p>
+<p><code>json</code>: Print the response body of the SARIF upload API request.</p>
+<p>See also: <a href="https://docs.github.com/en/rest/code-scanning/code-scanning" class="external">REST API endpoints for code scanning</a></p>
+<h3 title="Options to configure where to upload SARIF files."><a href="#options-to-configure-where-to-upload-sarif-files" aria-hidden="true" class="anchor" id="options-to-configure-where-to-upload-sarif-files"></a>Options to configure where to upload SARIF files.</h3>
+<h4><a href="#-a---github-auth-stdin" aria-hidden="true" class="anchor" id="-a---github-auth-stdin"></a><code>-a, --github-auth-stdin</code></h4>
+<p>Accept a GitHub Apps token or personal access token via standard input.</p>
+<p>This overrides the GITHUB<span data-escaped-char="">_</span>TOKEN environment variable.</p>
+<h4><a href="#-g---github-urlurl" aria-hidden="true" class="anchor" id="-g---github-urlurl"></a><code>-g, --github-url=&lt;url&gt;</code></h4>
+<p>URL of the GitHub instance to use. If omitted, the CLI will attempt to<br>
+autodetect this from the checkout path and if this is not possible<br>
+default to <a href="https://github.com/" class="external">https://github.com/</a></p>
+<h3 title="Options / Common options"><a href="#common-options" aria-hidden="true" class="anchor" id="common-options"></a>Common options</h3>
+<h4><a href="#-h---help" aria-hidden="true" class="anchor" id="-h---help"></a><code>-h, --help</code></h4>
+<p>Show this help text.</p>
+<h4><a href="#-jopt" aria-hidden="true" class="anchor" id="-jopt"></a><code>-J=&lt;opt&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Give option to the JVM running the command.</p>
+<p>(Beware that options containing spaces will not be handled correctly.)</p>
+<h4><a href="#-v---verbose" aria-hidden="true" class="anchor" id="-v---verbose"></a><code>-v, --verbose</code></h4>
+<p>Incrementally increase the number of progress messages printed.</p>
+<h4><a href="#-q---quiet" aria-hidden="true" class="anchor" id="-q---quiet"></a><code>-q, --quiet</code></h4>
+<p>Incrementally decrease the number of progress messages printed.</p>
+<h4><a href="#--verbositylevel" aria-hidden="true" class="anchor" id="--verbositylevel"></a><code>--verbosity=&lt;level&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Explicitly set the verbosity level to one of errors,<br>
+warnings, progress, progress+, progress++, progress+++. Overrides <code>-v</code><br>
+and <code>-q</code>.</p>
+<h4><a href="#--logdirdir" aria-hidden="true" class="anchor" id="--logdirdir"></a><code>--logdir=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Write detailed logs to one or more files in the given<br>
+directory, with generated names that include timestamps and the name of<br>
+the running subcommand.</p>
+<p>(To write a log file with a name you have full control over, instead<br>
+give <code>--log-to-stderr</code> and redirect stderr as desired.)</p>
+<h4><a href="#--common-cachesdir" aria-hidden="true" class="anchor" id="--common-cachesdir"></a><code>--common-caches=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Controls the location of cached data on disk that will<br>
+persist between several runs of the CLI, such as downloaded QL packs and<br>
+compiled query plans. If not set explicitly, this defaults to a<br>
+directory named <code>.codeql</code> in the user's home directory; it will be<br>
+created if it doesn't already exist.</p>
+<p>Available since <code>v2.15.2</code>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Creating GitHub CLI extensions</title><link rel="stylesheet" href="../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../index.html">GitHub CLI</a> / <a href="index.html">GitHub CLI</a> / </nav><h1><a href="#creating-github-cli-extensions" aria-hidden="true" class="anchor" id="creating-github-cli-extensions"></a>Creating GitHub CLI extensions</h1>
+<p>Learn how to share new GitHub CLI commands with other users by creating custom extensions for GitHub CLI.</p>
+<h2 title="About GitHub CLI extensions"><a href="#about-github-cli-extensions" aria-hidden="true" class="anchor" id="about-github-cli-extensions"></a>About GitHub CLI extensions</h2>
+<p>GitHub CLI extensions are custom GitHub CLI commands that anyone can create and use. For more information about how to use GitHub CLI extensions, see <a href="using-github-cli-extensions.html">Using GitHub CLI extensions</a>.</p>
+<p>You need a repository for each extension that you create. The repository name must start with <code>gh-</code>. The rest of the repository name is the name of the extension. The repository must have an executable file at its root with the same name as the repository or a set of precompiled binary executables attached to a release.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>When relying on an executable script, we recommend using a bash script because bash is a widely available interpreter. You may use non-bash scripts, but the user must have the necessary interpreter installed in order to use the extension. If you would prefer to not rely on users having interpreters installed, consider a precompiled extension.</p>
+</div>
+<h2 title="Creating an interpreted extension with gh extension create"><a href="#creating-an-interpreted-extension-with-gh-extension-create" aria-hidden="true" class="anchor" id="creating-an-interpreted-extension-with-gh-extension-create"></a>Creating an interpreted extension with <code>gh extension create</code></h2>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Running <code>gh extension create</code> with no arguments will start an interactive wizard.</p>
+</div>
+<p>You can use the <code>gh extension create</code> command to create a project for your extension, including a bash script that contains some starter code.</p>
+<ol>
+<li>
+<p>Set up a new extension by using the <code>gh extension create</code> subcommand. Replace <code>EXTENSION-NAME</code> with the name of your extension.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh extension create EXTENSION-NAME
+</span></code></pre>
+</li>
+<li>
+<p>Follow the printed instructions to finalize and optionally publish your extension.</p>
+</li>
+</ol>
+<h2 title="Creating a precompiled extension in Go with gh extension create"><a href="#creating-a-precompiled-extension-in-go-with-gh-extension-create" aria-hidden="true" class="anchor" id="creating-a-precompiled-extension-in-go-with-gh-extension-create"></a>Creating a precompiled extension in Go with <code>gh extension create</code></h2>
+<p>You can use the <code>--precompiled=go</code> argument to create a Go-based project for your extension, including Go scaffolding, workflow scaffolding, and starter code.</p>
+<ol>
+<li>
+<p>Set up a new extension by using the <code>gh extension create</code> subcommand. Replace <code>EXTENSION-NAME</code> with the name of your extension and specify <code>--precompiled=go</code>.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh extension create --precompiled=go EXTENSION-NAME
+</span></code></pre>
+</li>
+<li>
+<p>Follow the printed instructions to finalize and optionally publish your extension.</p>
+</li>
+</ol>
+<h2 title="Creating a non-Go precompiled extension with gh extension create"><a href="#creating-a-non-go-precompiled-extension-with-gh-extension-create" aria-hidden="true" class="anchor" id="creating-a-non-go-precompiled-extension-with-gh-extension-create"></a>Creating a non-Go precompiled extension with <code>gh extension create</code></h2>
+<p>You can use the <code>--precompiled=other</code> argument to create a project for your non-Go precompiled extension, including workflow scaffolding.</p>
+<ol>
+<li>
+<p>Set up a new extension by using the <code>gh extension create</code> subcommand. Replace <code>EXTENSION-NAME</code> with the name of your extension and specify <code>--precompiled=other</code>.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh extension create --precompiled=other EXTENSION-NAME
+</span></code></pre>
+</li>
+<li>
+<p>Add some initial code for your extension in your compiled language of choice.</p>
+</li>
+<li>
+<p>Fill in <code>script/build.sh</code> with code to build your extension to ensure that your extension can be built automatically.</p>
+</li>
+<li>
+<p>Follow the printed instructions to finalize and optionally publish your extension.</p>
+</li>
+</ol>
+<h2 title="Creating an interpreted extension manually"><a href="#creating-an-interpreted-extension-manually" aria-hidden="true" class="anchor" id="creating-an-interpreted-extension-manually"></a>Creating an interpreted extension manually</h2>
+<ol>
+<li>
+<p>Create a local directory called <code>gh-EXTENSION-NAME</code> for your extension. Replace <code>EXTENSION-NAME</code> with the name of your extension. For example, <code>gh-whoami</code>.</p>
+</li>
+<li>
+<p>In the directory that you created, add an executable file with the same name as the directory.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Make sure that your file is executable. On Unix, you can execute <code>chmod +x file_name</code> in the command line to make <code>file_name</code> executable. On Windows, you can run <code>git init -b main</code>, <code>git add file_name</code>, then <code>git update-index --chmod=+x file_name</code>.</p>
+</div>
+</li>
+<li>
+<p>Write your script in the executable file. For example:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#65737e;">#!/usr/bin/env bash
+</span><span style="color:#96b5b4;">set </span><span style="color:#bf616a;">-e
+</span><span style="color:#96b5b4;">exec</span><span style="color:#c0c5ce;"> gh api user --jq '</span><span style="color:#a3be8c;">"You are @\(.login) (\(.name))."</span><span style="color:#c0c5ce;">'
+</span></code></pre>
+</li>
+<li>
+<p>From your directory, install the extension as a local extension.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh extension install .
+</span></code></pre>
+</li>
+<li>
+<p>Verify that your extension works. Replace <code>EXTENSION-NAME</code> with the name of your extension. For example, <code>whoami</code>.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh EXTENSION-NAME
+</span></code></pre>
+</li>
+<li>
+<p>From your directory, create a repository to publish your extension. Replace <code>EXTENSION-NAME</code> with the name of your extension.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">git init -b main
+</span><span style="color:#c0c5ce;">git add . &amp;&amp; git commit -m "initial commit"
+</span><span style="color:#c0c5ce;">gh repo create gh-EXTENSION-NAME --source=. --public --push
+</span></code></pre>
+</li>
+<li>
+<p>Optionally, to help other users discover your extension, add the repository topic <code>gh-extension</code>. This will make the extension appear on the <a href="https://github.com/topics/gh-extension" class="external"><code>gh-extension</code> topic page</a>. For more information about how to add a repository topic, see <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/classifying-your-repository-with-topics" class="external">Classifying your repository with topics</a>.</p>
+</li>
+</ol>
+<h2 title="Tips for writing interpreted GitHub CLI extensions"><a href="#tips-for-writing-interpreted-github-cli-extensions" aria-hidden="true" class="anchor" id="tips-for-writing-interpreted-github-cli-extensions"></a>Tips for writing interpreted GitHub CLI extensions</h2>
+<h3 title="Tips for writing interpreted GitHub CLI extensions / Handling arguments and flags"><a href="#handling-arguments-and-flags" aria-hidden="true" class="anchor" id="handling-arguments-and-flags"></a>Handling arguments and flags</h3>
+<p>All command line arguments following a <code>gh my-extension-name</code> command will be passed to the extension script. In a bash script, you can reference arguments with <code>$1</code>, <code>$2</code>, etc. You can use arguments to take user input or to modify the behavior of the script.</p>
+<p>For example, this script handles multiple flags. When the script is called with the <code>-h</code> or <code>--help</code> flag, the script prints help text instead of continuing execution. When the script is called with the <code>--name</code> flag, the script sets the next value after the flag to <code>name_arg</code>. When the script is called with the <code>--verbose</code> flag, the script prints a different greeting.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#65737e;">#!/usr/bin/env bash
+</span><span style="color:#96b5b4;">set </span><span style="color:#bf616a;">-e
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">verbose</span><span style="color:#c0c5ce;">=""
+</span><span style="color:#bf616a;">name_arg</span><span style="color:#c0c5ce;">=""
+</span><span style="color:#b48ead;">while </span><span style="color:#96b5b4;">[ </span><span style="color:#c0c5ce;">$</span><span style="color:#bf616a;"># -gt</span><span style="color:#c0c5ce;"> 0 </span><span style="color:#96b5b4;">]</span><span style="color:#c0c5ce;">; </span><span style="color:#b48ead;">do
+</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">case </span><span style="color:#c0c5ce;">"$</span><span style="color:#bf616a;">1</span><span style="color:#c0c5ce;">" </span><span style="color:#b48ead;">in
+</span><span style="color:#c0c5ce;">  --verbose</span><span style="color:#b48ead;">)
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">verbose</span><span style="color:#c0c5ce;">=</span><span style="color:#a3be8c;">1
+</span><span style="color:#c0c5ce;">    ;;
+</span><span style="color:#c0c5ce;">  --name</span><span style="color:#b48ead;">)
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">name_arg</span><span style="color:#c0c5ce;">="$</span><span style="color:#bf616a;">2</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#96b5b4;">shift
+</span><span style="color:#c0c5ce;">    ;;
+</span><span style="color:#c0c5ce;">  -h|--help</span><span style="color:#b48ead;">)
+</span><span style="color:#c0c5ce;">    </span><span style="color:#96b5b4;">echo </span><span style="color:#c0c5ce;">"</span><span style="color:#a3be8c;">Add help text here.</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#96b5b4;">exit</span><span style="color:#c0c5ce;"> 0
+</span><span style="color:#c0c5ce;">    ;;
+</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">esac
+</span><span style="color:#c0c5ce;">  </span><span style="color:#96b5b4;">shift
+</span><span style="color:#b48ead;">done
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#b48ead;">if </span><span style="color:#96b5b4;">[ </span><span style="color:#bf616a;">-z </span><span style="color:#c0c5ce;">"$</span><span style="color:#bf616a;">name_arg</span><span style="color:#c0c5ce;">" </span><span style="color:#96b5b4;">]
+</span><span style="color:#b48ead;">then
+</span><span style="color:#c0c5ce;">  </span><span style="color:#96b5b4;">echo </span><span style="color:#c0c5ce;">"</span><span style="color:#a3be8c;">You haven't told us your name.</span><span style="color:#c0c5ce;">"
+</span><span style="color:#b48ead;">elif </span><span style="color:#96b5b4;">[ </span><span style="color:#bf616a;">-z </span><span style="color:#c0c5ce;">"$</span><span style="color:#bf616a;">verbose</span><span style="color:#c0c5ce;">" </span><span style="color:#96b5b4;">]
+</span><span style="color:#b48ead;">then
+</span><span style="color:#c0c5ce;">  </span><span style="color:#96b5b4;">echo </span><span style="color:#c0c5ce;">"</span><span style="color:#a3be8c;">Hi </span><span style="color:#c0c5ce;">$</span><span style="color:#bf616a;">name_arg</span><span style="color:#c0c5ce;">"
+</span><span style="color:#b48ead;">else
+</span><span style="color:#c0c5ce;">  </span><span style="color:#96b5b4;">echo </span><span style="color:#c0c5ce;">"</span><span style="color:#a3be8c;">Hello and welcome, </span><span style="color:#c0c5ce;">$</span><span style="color:#bf616a;">name_arg</span><span style="color:#c0c5ce;">"
+</span><span style="color:#b48ead;">fi
+</span></code></pre>
+<h3 title="Tips for writing interpreted GitHub CLI extensions / Calling core commands in non-interactive mode"><a href="#calling-core-commands-in-non-interactive-mode" aria-hidden="true" class="anchor" id="calling-core-commands-in-non-interactive-mode"></a>Calling core commands in non-interactive mode</h3>
+<p>Some GitHub CLI core commands will prompt the user for input. When scripting with those commands, a prompt is often undesirable. To avoid prompting, supply the necessary information explicitly via arguments.</p>
+<p>For example, to create an issue programmatically, specify the title and body:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh issue create --title "My Title" --body "Issue description"
+</span></code></pre>
+<h3 title="Tips for writing interpreted GitHub CLI extensions / Fetching data programmatically"><a href="#fetching-data-programmatically" aria-hidden="true" class="anchor" id="fetching-data-programmatically"></a>Fetching data programmatically</h3>
+<p>Many core commands support the <code>--json</code> flag for fetching data programmatically. For example, to return a JSON object listing the number, title, and mergeability status of pull requests:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh pr list --json number,title,mergeStateStatus
+</span></code></pre>
+<p>If there is not a core command to fetch specific data from GitHub, you can use the <a href="https://cli.github.com/manual/gh_api" class="external"><code>gh api</code></a> command to access the GitHub API. For example, to fetch information about the current user:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh api user
+</span></code></pre>
+<p>All commands that output JSON data also have options to filter that data into something more immediately usable by scripts. For example, to get the current user's name:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh api user --jq '.name'
+</span></code></pre>
+<p>For more information, see <a href="https://cli.github.com/manual/gh_help_formatting" class="external"><code>gh help formatting</code></a>.</p>
+<h2 title="Creating a precompiled extension manually"><a href="#creating-a-precompiled-extension-manually" aria-hidden="true" class="anchor" id="creating-a-precompiled-extension-manually"></a>Creating a precompiled extension manually</h2>
+<ol>
+<li>
+<p>Create a local directory called <code>gh-EXTENSION-NAME</code> for your extension. Replace <code>EXTENSION-NAME</code> with the name of your extension. For example, <code>gh-whoami</code>.</p>
+</li>
+<li>
+<p>In the directory you created, add some source code. For example:</p>
+<pre lang="golang" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">package main
+</span><span style="color:#c0c5ce;">import (
+</span><span style="color:#c0c5ce;">  "github.com/cli/go-gh"
+</span><span style="color:#c0c5ce;">  "fmt"
+</span><span style="color:#c0c5ce;">)
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">func main() {
+</span><span style="color:#c0c5ce;">  args := []string{"api", "user", "--jq", `"You are @\(.login) (\(.name))"` }
+</span><span style="color:#c0c5ce;">  stdOut, _, err := gh.Exec(args...)
+</span><span style="color:#c0c5ce;">  if err != nil {
+</span><span style="color:#c0c5ce;">    fmt.Println(err)
+</span><span style="color:#c0c5ce;">    return
+</span><span style="color:#c0c5ce;">  }
+</span><span style="color:#c0c5ce;">  fmt.Println(stdOut.String())
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+</li>
+<li>
+<p>From your directory, install the extension as a local extension.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh extension install .
+</span></code></pre>
+</li>
+<li>
+<p>Build your code. For example, with Go, replacing <code>YOUR-USERNAME</code> with your GitHub username:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">go mod init github.com/YOUR-USERNAME/gh-whoami
+</span><span style="color:#c0c5ce;">go mod tidy
+</span><span style="color:#c0c5ce;">go build
+</span></code></pre>
+</li>
+<li>
+<p>Verify that your extension works. Replace <code>EXTENSION-NAME</code> with the name of your extension. For example, <code>whoami</code>.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh EXTENSION-NAME
+</span></code></pre>
+</li>
+<li>
+<p>From your directory, create a repository to publish your extension. Replace <code>EXTENSION-NAME</code> with the name of your extension.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Be careful not to commit the binary produced by your compilation step to version control.</p>
+</div>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;"> git init -b main
+</span><span style="color:#c0c5ce;">echo "gh-EXTENSION-NAME" &gt;&gt; .gitignore
+</span><span style="color:#c0c5ce;">git add main.go go.* .gitignore &amp;&amp; git commit -m 'Initial commit'
+</span><span style="color:#c0c5ce;">gh repo create "gh-EXTENSION-NAME"
+</span></code></pre>
+</li>
+<li>
+<p>Create a release to share your precompiled extension with others. Compile for each platform you want to support, attaching each binary to a release as an asset. Binary executables attached to releases must follow a naming convention and have a suffix of OS-ARCHITECTURE<span data-escaped-char="">[</span>EXTENSION].</p>
+<p>For example, an extension named <code>whoami</code> compiled for Windows 64bit would have the name <code>gh-whoami-windows-amd64.exe</code> while the same extension compiled for Linux 32bit would have the name <code>gh-whoami-linux-386</code>. To see an exhaustive list of OS and architecture combinations recognized by <code>gh</code>, see <a href="https://github.com/cli/cli/blob/14f704fd0da58cc01413ee4ba16f13f27e33d15e/pkg/cmd/extension/manager.go#L696" class="external">this source code</a>.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>For your extension to run properly on Windows, its asset file must have a <code>.exe</code> extension. No extension is needed for other operating systems.</p>
+</div>
+<p>Releases can be created from the command line. For example:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">git tag v1.0.0
+</span><span style="color:#c0c5ce;">git push origin v1.0.0
+</span><span style="color:#c0c5ce;">GOOS=windows GOARCH=amd64 go build -o gh-EXTENSION-NAME-windows-amd64.exe
+</span><span style="color:#c0c5ce;">GOOS=linux GOARCH=amd64 go build -o gh-EXTENSION-NAME-linux-amd64
+</span><span style="color:#c0c5ce;">GOOS=darwin GOARCH=amd64 go build -o gh-EXTENSION-NAME-darwin-amd64
+</span><span style="color:#c0c5ce;">gh release create v1.0.0 ./*amd64*
+</span><span style="color:#c0c5ce;">
+</span></code></pre>
+</li>
+<li>
+<p>Optionally, to help other users discover your extension, add the repository topic <code>gh-extension</code>. This will make the extension appear on the <a href="https://github.com/topics/gh-extension" class="external"><code>gh-extension</code> topic page</a>. For more information about how to add a repository topic, see <a href="https://docs.github.com/en/github/administering-a-repository/managing-repository-settings/classifying-your-repository-with-topics" class="external">Classifying your repository with topics</a>.</p>
+</li>
+</ol>
+<h2 title="Tips for writing precompiled GitHub CLI extensions"><a href="#tips-for-writing-precompiled-github-cli-extensions" aria-hidden="true" class="anchor" id="tips-for-writing-precompiled-github-cli-extensions"></a>Tips for writing precompiled GitHub CLI extensions</h2>
+<h3 title="Tips for writing precompiled GitHub CLI extensions / Automating releases"><a href="#automating-releases" aria-hidden="true" class="anchor" id="automating-releases"></a>Automating releases</h3>
+<p>Consider adding the <a href="https://github.com/cli/gh-extension-precompile" class="external">gh-extension-precompile</a> action to a workflow in your project. This action will automatically produce cross-compiled Go binaries for your extension and supplies build scaffolding for non-Go precompiled extensions.</p>
+<h3 title="Tips for writing precompiled GitHub CLI extensions / Using GitHub CLI features from Go-based extensions"><a href="#using-github-cli-features-from-go-based-extensions" aria-hidden="true" class="anchor" id="using-github-cli-features-from-go-based-extensions"></a>Using GitHub CLI features from Go-based extensions</h3>
+<p>Consider using <a href="https://github.com/cli/go-gh" class="external">go-gh</a>, a Go library that exposes pieces of <code>gh</code> functionality for use in extensions.</p>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>To see more examples of GitHub CLI extensions, look at <a href="https://github.com/topics/gh-extension" class="external">repositories with the <code>gh-extension</code> topic</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Vulnerable dependency detection</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">Reference</a> / <a href="../index.html">Supply chain security</a> / <a href="index.html">Troubleshoot Dependabot</a> / </nav><h1><a href="#vulnerable-dependency-detection" aria-hidden="true" class="anchor" id="vulnerable-dependency-detection"></a>Vulnerable dependency detection</h1>
+<p>If the dependency information reported by GitHub is not what you expected, there are a number of points to consider, and various things you can check.</p>
+<p>The results of dependency detection reported by GitHub may be different from the results returned by other tools. There are good reasons for this and it's helpful to understand how GitHub determines dependencies for your project.</p>
+<h2 title="Missing or undetected dependencies"><a href="#missing-or-undetected-dependencies" aria-hidden="true" class="anchor" id="missing-or-undetected-dependencies"></a>Missing or undetected dependencies</h2>
+<p>GitHub generates and displays dependency data differently than other tools. Consequently, if you've been using another tool to identify dependencies you will almost certainly see different results. Consider the following:</p>
+<ul>
+<li>
+<p>GitHub Advisory Database is one of the data sources that GitHub uses to identify vulnerable dependencies and malware. It's a free, curated database of security advisories for common package ecosystems on GitHub. It includes both data reported directly to GitHub from GitHub Security Advisories, as well as official feeds and community sources. This data is reviewed and curated by GitHub to ensure that false or unactionable information is not shared with the development community. For more information, see <a href="../../../how-tos/report-and-fix-vulnerabilities/fix-reported-vulnerabilities/browsing-security-advisories-in-the-github-advisory-database.html">Browsing security advisories in the GitHub Advisory Database</a>.</p>
+</li>
+<li>
+<p>The dependency graph parses all known package manifest files in a user’s repository. For example, for npm it will parse the <em>package-lock.json</em> file. It constructs a graph of all of the repository’s dependencies and public dependents. This happens when you enable the dependency graph and when anyone pushes to the default branch, and it includes commits that makes changes to a supported manifest format. For more information, see <a href="../../../concepts/supply-chain-security/about-the-dependency-graph.html">About the dependency graph</a> and <a href="troubleshooting-the-dependency-graph.html">Troubleshooting the dependency graph</a>.</p>
+</li>
+<li>
+<p>Dependabot scans any push, to the default branch, that contains a manifest file. When a new advisory is added, it scans all existing repositories and generates an alert for each repository that is affected. Dependabot alerts are aggregated at the repository level, rather than creating one alert per advisory. For more information, see <a href="../../../concepts/supply-chain-security/about-dependabot-alerts.html">About Dependabot alerts</a>.</p>
+</li>
+<li>
+<p>Dependabot security updates are triggered when you receive an alert about a vulnerable dependency in your repository. Where possible, Dependabot creates a pull request in your repository to upgrade the vulnerable dependency to the minimum possible secure version needed to avoid the vulnerability. For more information, see <a href="../../../concepts/supply-chain-security/about-dependabot-security-updates.html">About Dependabot security updates</a> and <a href="dependabot-errors.html">Dependabot errors</a>.</p>
+<p>Dependabot doesn't scan repositories on a schedule, but rather when something changes. For example, a scan is triggered when a new dependency is added (GitHub checks for this on every push), or when a new advisory is added to the database. For more information, see <a href="../../../concepts/supply-chain-security/about-dependabot-alerts.html#detection-of-insecure-dependencies">About Dependabot alerts</a>.</p>
+</li>
+</ul>
+<h2 title="Alert coverage scope"><a href="#alert-coverage-scope" aria-hidden="true" class="anchor" id="alert-coverage-scope"></a>Alert coverage scope</h2>
+<p>Dependabot alerts advise you about dependencies you should update, including transitive dependencies, where the version can be determined from a manifest or a lockfile. Dependabot security updates only suggest a change where Dependabot can directly "fix" the dependency, that is, when these are:</p>
+<ul>
+<li>Direct dependencies explicitly declared in a manifest or lockfile</li>
+<li>Transitive dependencies declared in a lockfile</li>
+</ul>
+<p><strong>Check:</strong> Is the uncaught vulnerability for a component that's not specified in the repository's manifest or lockfile?</p>
+<h2 title="Unsupported ecosystems"><a href="#unsupported-ecosystems" aria-hidden="true" class="anchor" id="unsupported-ecosystems"></a>Unsupported ecosystems</h2>
+<p>Dependabot alerts are supported for a set of ecosystems where we can provide high-quality, actionable data. Curated advisories in the GitHub Advisory Database, the dependency graph, Dependabot security updates, and Dependabot alerts are provided for several ecosystems, including Java’s Maven, JavaScript’s npm and Yarn, .NET’s NuGet, Python’s pip, Ruby's RubyGems, and PHP’s Composer. For an overview of the package ecosystems that we support for Dependabot alerts, see <a href="../dependency-graph-supported-package-ecosystems.html#supported-package-ecosystems">Dependency graph supported package ecosystems</a>.</p>
+<p>It's worth noting that security advisories may exist for other ecosystems. The information in an unreviewed security advisory is provided by the maintainers of a particular repository. This data is not curated by GitHub. For more information, see <a href="../../../how-tos/report-and-fix-vulnerabilities/fix-reported-vulnerabilities/browsing-security-advisories-in-the-github-advisory-database.html">Browsing security advisories in the GitHub Advisory Database</a>.</p>
+<p><strong>Check:</strong> Does the uncaught vulnerability apply to an unsupported ecosystem?</p>
+<h2 title="Historical vulnerabilities"><a href="#historical-vulnerabilities" aria-hidden="true" class="anchor" id="historical-vulnerabilities"></a>Historical vulnerabilities</h2>
+<p>The GitHub Advisory Database was launched in November 2019, and initially back-filled to include advisories for security risks in the supported ecosystems, starting from 2017. When adding CVEs to the database, we prioritize curating newer CVEs, and CVEs affecting newer versions of software.</p>
+<p>Some information on older vulnerabilities is available, especially where these CVEs are particularly widespread, however some old vulnerabilities are not included in the GitHub Advisory Database. If there's a specific old vulnerability that you need to be included in the database, contact us through the <a href="https://support.github.com" class="external">GitHub Support portal</a>.</p>
+<p><strong>Check:</strong> Does the uncaught vulnerability have a publish date earlier than 2017 in the National Vulnerability Database?</p>
+<h2 title="Advisory database scope"><a href="#advisory-database-scope" aria-hidden="true" class="anchor" id="advisory-database-scope"></a>Advisory database scope</h2>
+<p>Some third-party tools use uncurated CVE data that isn't checked or filtered by a human. This means that CVEs with tagging or severity errors, or other quality issues, will cause more frequent, more noisy, and less useful alerts.</p>
+<p>Since Dependabot uses curated data in the GitHub Advisory Database, the volume of alerts may be lower, but the alerts you do receive will be accurate and relevant.</p>
+<h2 title="Alert generation and aggregation"><a href="#alert-generation-and-aggregation" aria-hidden="true" class="anchor" id="alert-generation-and-aggregation"></a>Alert generation and aggregation</h2>
+<p>When a dependency has multiple vulnerabilities, an alert is generated for each vulnerability at the level of advisory plus manifest.</p>
+<p><img src="../../../../..//assets/images/help/repository/dependabot-alerts-view.png" alt="Screenshot of the Dependabot tab showing two alerts from the same package with different manifests."></p>
+<p>Legacy Dependabot alerts were grouped into a single aggregated alert with all the vulnerabilities for the same dependency. If you navigate to a link to a legacy Dependabot alert, you will be redirected to the Dependabot tab filtered to display vulnerabilities for that dependent package and manifest.</p>
+<p><img src="../../../../..//assets/images/help/repository/legacy-dependabot-alerts-view.png" alt="Screenshot of the Dependabot tab showing the filtered alerts from navigating to a legacy Dependabot alert."></p>
+<p>The Dependabot alerts count in GitHub shows a total for the number of alerts, which is the number of vulnerabilities, not the number of dependencies.</p>
+<p><strong>Check:</strong> If there is a discrepancy in the totals you are seeing, check that you are not comparing alert numbers with dependency numbers. Also check that you are viewing all alerts and not a subset of filtered alerts.</p>
+<h2 title="Dependency ignore options"><a href="#dependency-ignore-options" aria-hidden="true" class="anchor" id="dependency-ignore-options"></a>Dependency ignore options</h2>
+<p>You can configure Dependabot to ignore specific dependencies in the configuration file, which will prevent security and version updates for those dependencies. If you only wish to use security updates, you will need to override the default behavior with a configuration file. For more information, see <a href="../../../how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-dependabot-security-updates.html#overriding-the-default-behavior-with-a-configuration-file">Configuring Dependabot security updates</a> to prevent version updates from being activated. For information about ignoring dependencies, see <a href="../../../how-tos/secure-your-supply-chain/manage-your-dependency-security/controlling-dependencies-updated.html#ignoring-specific-dependencies">Ignoring specific dependencies</a>.</p>
+<h2 title="Monorepo limitations for GitHub Actions versions"><a href="#monorepo-limitations-for-github-actions-versions" aria-hidden="true" class="anchor" id="monorepo-limitations-for-github-actions-versions"></a>Monorepo limitations for GitHub Actions versions</h2>
+<p>If your repository contains multiple GitHub Actions (for example, in a monorepo), the tag format you use affects how Dependabot detects and updates action versions.</p>
+<ul>
+<li><strong>Dash (<code>-</code>) separator</strong> (for example, <code>@my-action-v0.1.0</code>):
+<ul>
+<li>Dependabot may group multiple actions under a single dependency entry or fail to detect new versions correctly. This occurs because Dependabot relies on slash-based tag parsing to distinguish between actions.</li>
+</ul>
+</li>
+<li><strong>Slash (<code>/</code>) separator</strong> (for example, <code>@my-action/v0.1.0</code>):
+<ul>
+<li>Dependabot correctly detects and updates each action independently, as the slash creates a hierarchical tag structure that aligns with Dependabot's parsing logic.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Recommendation:</strong> For monorepos with multiple actions, use the <code>name/version</code> (slash) format for action tags. This ensures Dependabot can parse the tag hierarchy correctly and update actions independently.</p>
+<ul>
+<li>
+<p>Example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># Recommended: namespaced with slash
+</span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">my-org/monorepo/my-action@my-action/v0.1.0
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># Not recommended: dash
+</span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">my-org/monorepo@my-action-v0.1.0
+</span></code></pre>
+</li>
+</ul>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li><a href="../../../concepts/supply-chain-security/about-dependabot-alerts.html">About Dependabot alerts</a></li>
+<li><a href="../../../how-tos/manage-security-alerts/manage-dependabot-alerts/viewing-and-updating-dependabot-alerts.html">Viewing and updating Dependabot alerts</a></li>
+<li><a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-security-and-analysis-settings-for-your-repository" class="external">Managing security and analysis settings for your repository</a></li>
+<li><a href="troubleshooting-the-dependency-graph.html">Troubleshooting the dependency graph</a></li>
+<li><a href="dependabot-errors.html">Dependabot errors</a></li>
+<li><a href="../../../concepts/supply-chain-security/about-dependabot-on-github-actions-runners.html">About Dependabot on GitHub Actions runners</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

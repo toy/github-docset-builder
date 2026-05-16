@@ -1,0 +1,55 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>CodeQL query packs</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">Concepts</a> / <a href="../index.html">Code scanning</a> / <a href="index.html">CodeQL</a> / </nav><h1><a href="#codeql-query-packs" aria-hidden="true" class="anchor" id="codeql-query-packs"></a>CodeQL query packs</h1>
+<p>You can choose from different built-in CodeQL query suites to use in your CodeQL code scanning setup.</p>
+<h2 title="About CodeQL packs"><a href="#about-codeql-packs" aria-hidden="true" class="anchor" id="about-codeql-packs"></a>About CodeQL packs</h2>
+<p>CodeQL packs are used to create, share, depend on, and run CodeQL queries and libraries. You can customize your CodeQL analysis by downloading packs created by others and running them on your codebase.</p>
+<p>Each CodeQL pack requires a <code>qlpack.yml</code> file in its root directory that specifies:</p>
+<ul>
+<li>How to compile the queries</li>
+<li>Dependencies on other CodeQL packs and libraries</li>
+<li>Query suite definitions</li>
+</ul>
+<p>For more information about <code>qlpack.yml</code> properties, see <a href="../../../tutorials/customize-code-scanning/customizing-analysis-with-codeql-packs.html#codeqlpack-yml-properties">Customizing analysis with CodeQL packs</a>.</p>
+<p>Additionally, a CodeQL pack can contain:</p>
+<ul>
+<li>Custom queries (<code>.ql</code> files)</li>
+<li>Library files</li>
+<li>Query suites</li>
+<li>Metadata</li>
+</ul>
+<p>The CodeQL CLI bundle includes queries that are maintained by GitHub experts, security researchers, and community contributors. If you want to run queries developed by other organizations, CodeQL query packs provide an efficient and reliable way to download and run queries, while model packs (public preview) can be used to expand code scanning analysis to recognize libraries and frameworks that are not supported by default.</p>
+<h2 title="Types of CodeQL packs"><a href="#types-of-codeql-packs" aria-hidden="true" class="anchor" id="types-of-codeql-packs"></a>Types of CodeQL packs</h2>
+<p>There are three types of CodeQL packs: query packs, library packs, and model packs.</p>
+<ul>
+<li>
+<p>Query packs contain a set of pre-compiled queries that can be evaluated on a CodeQL database. Query packs are designed to be run. When a query pack is published, the bundle includes all the transitive dependencies and pre-compiled representations of each query, in addition to the query sources. This ensures consistent and efficient execution of the queries in the pack.</p>
+</li>
+<li>
+<p>Library packs are designed to be used by query packs (or other library packs) and do not contain queries themselves. The libraries are not compiled separately.</p>
+</li>
+<li>
+<p>Model packs can be used to expand code scanning analysis to recognize libraries and frameworks that are not supported by default. Model packs are currently in public preview and subject to change. During the public preview, model packs are available for C/C++, C#, Java/Kotlin, Python, Ruby, and Rust analysis. For more information about creating your own model packs, see <a href="../../../tutorials/customize-code-scanning/creating-and-working-with-codeql-packs.html#creating-a-codeql-model-pack">Creating and working with CodeQL packs</a>.</p>
+</li>
+</ul>
+<h2 title="Where to find query packs"><a href="#where-to-find-query-packs" aria-hidden="true" class="anchor" id="where-to-find-query-packs"></a>Where to find query packs</h2>
+<p>The standard CodeQL packs for all supported languages are published in the <a href="https://github.com/orgs/codeql/packages" class="external">Container registry</a>. If you installed the CodeQL CLI in the standard way, using the CodeQL CLI bundle, the core query packs are already downloaded and available to you. They are:</p>
+<ul>
+<li><code>codeql/cpp-queries</code></li>
+<li><code>codeql/csharp-queries</code></li>
+<li><code>codeql/go-queries</code></li>
+<li><code>codeql/java-queries</code></li>
+<li><code>codeql/javascript-queries</code></li>
+<li><code>codeql/python-queries</code></li>
+<li><code>codeql/ruby-queries</code></li>
+<li><code>codeql/swift-queries</code></li>
+</ul>
+<p>For more information about compatibility between published query packs and different CodeQL releases, see <a href="../../../reference/code-scanning/codeql/codeql-cli/codeql-query-packs.html#codeql-pack-compatibility">CodeQL query packs reference</a>.</p>
+<p>You can also use the CodeQL CLI to create your own CodeQL packs, add dependencies to packs, and install or update dependencies.</p>
+<h2 title="Publishing and sharing CodeQL packs"><a href="#publishing-and-sharing-codeql-packs" aria-hidden="true" class="anchor" id="publishing-and-sharing-codeql-packs"></a>Publishing and sharing CodeQL packs</h2>
+<p>You can share custom queries with the broader CodeQL community by:</p>
+<ul>
+<li>Publishing to GitHub Packages: Make your pack publicly available for other users to discover and use.</li>
+<li>Contributing to the CodeQL repository: Submit queries that would benefit the wider community by opening a pull request to the official repository.</li>
+</ul>
+<p>For more information about publishing and downloading CodeQL packs, see <a href="../../../how-tos/find-and-fix-code-vulnerabilities/scan-from-the-command-line/publish-and-use-packs.html">Publishing and using CodeQL packs</a>.</p>
+<p>For information about contributing to CodeQL, see <a href="https://github.com/github/codeql/blob/main/CONTRIBUTING.md" class="external">Contributing to CodeQL</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

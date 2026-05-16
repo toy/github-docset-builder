@@ -1,0 +1,156 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Store and share data with workflow artifacts</title><link rel="stylesheet" href="../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../index.html">GitHub Actions</a> / <a href="index.html">Tutorials</a> / </nav><h1><a href="#store-and-share-data-with-workflow-artifacts" aria-hidden="true" class="anchor" id="store-and-share-data-with-workflow-artifacts"></a>Store and share data with workflow artifacts</h1>
+<p>Use artifacts to share data between jobs in a workflow and store data once that workflow has completed.</p>
+<h2 title="Prerequisites"><a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<p>Before you can complete this tutorial, you need to understand workflow artifacts. See <a href="../concepts/workflows-and-actions/workflow-artifacts.html">Workflow artifacts</a>.</p>
+<h2 title="Uploading build and test artifacts"><a href="#uploading-build-and-test-artifacts" aria-hidden="true" class="anchor" id="uploading-build-and-test-artifacts"></a>Uploading build and test artifacts</h2>
+<p>The output of building and testing your code often produces files you can use to debug test failures and production code that you can deploy. You can configure a workflow to build and test the code pushed to your repository and report a success or failure status. You can upload the build and test output to use for deployments, debugging failed tests or crashes, and viewing test suite coverage.</p>
+<p>You can use the <code>upload-artifact</code> action to upload artifacts. When uploading an artifact, you can specify a single file or directory, or multiple files or directories. You can also exclude certain files or directories, and use wildcard patterns. We recommend that you provide a name for an artifact, but if no name is provided then <code>artifact</code> will be used as the default name. For more information on syntax, see the <a href="https://github.com/actions/upload-artifact" class="external">actions/upload-artifact</a> action.</p>
+<h3 title="Uploading build and test artifacts / Example"><a href="#example" aria-hidden="true" class="anchor" id="example"></a>Example</h3>
+<p>For example, your repository or a web application might contain SASS and TypeScript files that you must convert to CSS and JavaScript. Assuming your build configuration outputs the compiled files in the <code>dist</code> directory, you would deploy the files in the <code>dist</code> directory to your web application server if all tests completed successfully.</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">|-- hello-world (repository)
+</span><span style="color:#c0c5ce;">|   └── dist
+</span><span style="color:#c0c5ce;">|   └── tests
+</span><span style="color:#c0c5ce;">|   └── src
+</span><span style="color:#c0c5ce;">|       └── sass/app.scss
+</span><span style="color:#c0c5ce;">|       └── app.ts
+</span><span style="color:#c0c5ce;">|   └── output
+</span><span style="color:#c0c5ce;">|       └── test
+</span><span style="color:#c0c5ce;">|
+</span></code></pre>
+<p>This example shows you how to create a workflow for a Node.js project that builds the code in the <code>src</code> directory and runs the tests in the <code>tests</code> directory. You can assume that running <code>npm test</code> produces a code coverage report named <code>code-coverage.html</code> stored in the <code>output/test/</code> directory.</p>
+<p>The workflow uploads the production artifacts in the <code>dist</code> directory, but excludes any markdown files. It also uploads the <code>code-coverage.html</code> report as another artifact.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Node CI
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">push</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build_and_test</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Checkout repository
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm install, build, and test
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          npm install
+</span><span style="color:#a3be8c;">          npm run build --if-present
+</span><span style="color:#a3be8c;">          npm test
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Archive production artifacts
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/upload-artifact@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dist-without-markdown
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">            dist
+</span><span style="color:#a3be8c;">            !dist/**/*.md
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Archive code coverage results
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/upload-artifact@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">code-coverage-report
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">output/test/code-coverage.html
+</span></code></pre>
+<h2 title="Configuring a custom artifact retention period"><a href="#configuring-a-custom-artifact-retention-period" aria-hidden="true" class="anchor" id="configuring-a-custom-artifact-retention-period"></a>Configuring a custom artifact retention period</h2>
+<p>You can define a custom retention period for individual artifacts created by a workflow. When using a workflow to create a new artifact, you can use <code>retention-days</code> with the <code>upload-artifact</code> action. This example demonstrates how to set a custom retention period of 5 days for the artifact named <code>my-artifact</code>:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">Upload Artifact</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/upload-artifact@v4
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">my-artifact
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">my_file.txt
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">retention-days</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">5
+</span></code></pre>
+<p>The <code>retention-days</code> value cannot exceed the retention limit set by the repository, organization, or enterprise.</p>
+<h2 title="Downloading artifacts during a workflow run"><a href="#downloading-artifacts-during-a-workflow-run" aria-hidden="true" class="anchor" id="downloading-artifacts-during-a-workflow-run"></a>Downloading artifacts during a workflow run</h2>
+<p>You can use the <a href="https://github.com/actions/download-artifact" class="external"><code>actions/download-artifact</code></a> action to download previously uploaded artifacts during a workflow run.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>If you want to download artifacts from a different workflow or workflow run, you need to supply a token and run identifier. See <a href="https://github.com/actions/download-artifact?tab=readme-ov-file#download-artifacts-from-other-workflow-runs-or-repositories" class="external">Download Artifacts from other Workflow Runs or Repositories</a> in the documentation for the <code>download-artifact</code> action.</p>
+</div>
+<p>Specify an artifact's name to download an individual artifact. If you uploaded an artifact without specifying a name, the default name is <code>artifact</code>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Download a single artifact
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/download-artifact@v5
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">my-artifact
+</span></code></pre>
+<p>You can also download all artifacts in a workflow run by not specifying a name. This can be useful if you are working with lots of artifacts.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Download all workflow run artifacts
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/download-artifact@v5
+</span></code></pre>
+<p>If you download all workflow run's artifacts, a directory for each artifact is created using its name.</p>
+<p>For more information on syntax, see the <a href="https://github.com/actions/download-artifact" class="external">actions/download-artifact</a> action.</p>
+<h2 title="Passing data between jobs in a workflow"><a href="#passing-data-between-jobs-in-a-workflow" aria-hidden="true" class="anchor" id="passing-data-between-jobs-in-a-workflow"></a>Passing data between jobs in a workflow</h2>
+<p>You can use the <code>upload-artifact</code> and <code>download-artifact</code> actions to share data between jobs in a workflow. This example workflow illustrates how to pass data between jobs in the same workflow. For more information, see the <a href="https://github.com/actions/upload-artifact" class="external">actions/upload-artifact</a> and <a href="https://github.com/actions/download-artifact" class="external">download-artifact</a> actions.</p>
+<p>Jobs that are dependent on a previous job's artifacts must wait for the dependent job to complete successfully. This workflow uses the <code>needs</code> keyword to ensure that <code>job_1</code>, <code>job_2</code>, and <code>job_3</code> run sequentially. For example, <code>job_2</code> requires <code>job_1</code> using the <code>needs: job_1</code> syntax.</p>
+<p>Job 1 performs these steps:</p>
+<ul>
+<li>Performs a math calculation and saves the result to a text file called <code>math-homework.txt</code>.</li>
+<li>Uses the <code>upload-artifact</code> action to upload the <code>math-homework.txt</code> file with the artifact name <code>homework_pre</code>.</li>
+</ul>
+<p>Job 2 uses the result in the previous job:</p>
+<ul>
+<li>Downloads the <code>homework_pre</code> artifact uploaded in the previous job. By default, the <code>download-artifact</code> action downloads artifacts to the workspace directory that the step is executing in. You can use the <code>path</code> input parameter to specify a different download directory.</li>
+<li>Reads the value in the <code>math-homework.txt</code> file, performs a math calculation, and saves the result to <code>math-homework.txt</code> again, overwriting its contents.</li>
+<li>Uploads the <code>math-homework.txt</code> file. As artifacts are considered immutable in <code>v4</code>, the artifact is passed a different input, <code>homework_final</code>, as a name.</li>
+</ul>
+<p>Job 3 displays the result uploaded in the previous job:</p>
+<ul>
+<li>Downloads the <code>homework_final</code> artifact from Job 2.</li>
+<li>Prints the result of the math equation to the log.</li>
+</ul>
+<p>The full math operation performed in this workflow example is <code>(3 + 7) x 9 = 90</code>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Share data between jobs
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">push</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">job_1</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Add 3 and 7
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">shell</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bash
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          expr 3 + 7 &gt; math-homework.txt
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Upload math result for job 1
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/upload-artifact@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">homework_pre
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">math-homework.txt
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">job_2</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Multiply by 9
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">needs</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">job_1
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">windows-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Download math result for job 1
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/download-artifact@v5
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">homework_pre
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">shell</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bash
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          value=`cat math-homework.txt`
+</span><span style="color:#a3be8c;">          expr $value \* 9 &gt; math-homework.txt
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Upload math result for job 2
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/upload-artifact@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">homework_final
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">math-homework.txt
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">job_3</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Display results
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">needs</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">job_2
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">macOS-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Download math result for job 2
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/download-artifact@v5
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">homework_final
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Print the final result
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">shell</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bash
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          value=`cat math-homework.txt`
+</span><span style="color:#a3be8c;">          echo The result is $value
+</span></code></pre>
+<p>The workflow run will archive any artifacts that it generated. For more information on downloading archived artifacts, see <a href="../how-tos/manage-workflow-runs/download-workflow-artifacts.html">Downloading workflow artifacts</a>.</p>
+<h2 title="Validating artifacts"><a href="#validating-artifacts" aria-hidden="true" class="anchor" id="validating-artifacts"></a>Validating artifacts</h2>
+<p>Every time the upload-artifact action is used it returns an output called <code>digest</code>. This is a SHA256 digest of the Artifact you uploaded during a workflow run.</p>
+<p>When the download-artifact action is then used to download that artifact, it automatically calculates the digest for that downloaded artifact and validates that it matches the output from the upload-artifact step.</p>
+<p>If the digest does not match, the run will display a warning in the UI and in the job logs.</p>
+<p>To view the SHA256 digest, open the logs for the upload-artifact job or check in the Artifact output that appears in the workflow run UI.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Setting up Dependabot to run on self-hosted action runners using the Actions Runner Controller</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Secure your dependencies</a> / </nav><h1><a href="#setting-up-dependabot-to-run-on-self-hosted-action-runners-using-the-actions-runner-controller" aria-hidden="true" class="anchor" id="setting-up-dependabot-to-run-on-self-hosted-action-runners-using-the-actions-runner-controller"></a>Setting up Dependabot to run on self-hosted action runners using the Actions Runner Controller</h1>
+<p>You can configure the Actions Runner Controller to run Dependabot on self-hosted runners.</p>
+<h2 title="Working with the Actions Runner Controller (ARC)"><a href="#working-with-the-actions-runner-controller-arc" aria-hidden="true" class="anchor" id="working-with-the-actions-runner-controller-arc"></a>Working with the Actions Runner Controller (ARC)</h2>
+<p>This article provides step-by-step instructions for setting up ARC on a Kubernetes cluster and configuring Dependabot to run on self-hosted action runners. The article:</p>
+<ul>
+<li>Contains an overview of the ARC and Dependabot integration.</li>
+<li>Provides detailed installation and configuration steps using helm scripts.</li>
+</ul>
+<h2 title="What is ARC?"><a href="#what-is-arc" aria-hidden="true" class="anchor" id="what-is-arc"></a>What is ARC?</h2>
+<p>The Actions Runner Controller is a Kubernetes controller that manages self-hosted GitHub Actions as Kubernetes pods. It allows you to dynamically scale and orchestrate runners based on your workflows, providing better resource utilization and integration with Kubernetes environments. See <a href="https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller/about-actions-runner-controller" class="external">Actions Runner Controller</a>.</p>
+<h2 title="Dependabot on ARC"><a href="#dependabot-on-arc" aria-hidden="true" class="anchor" id="dependabot-on-arc"></a>Dependabot on ARC</h2>
+<p>You can run Dependabot on self-hosted GitHub Actions runners managed within a Kubernetes cluster via ARC. This enables auto-scaling, workload isolation, and better resource management for Dependabot jobs, ensuring that dependency updates can run efficiently within an organization's controlled infrastructure while integrating seamlessly with GitHub Actions.</p>
+<h2 title="Setting up ARC for Dependabot on your Local environment"><a href="#setting-up-arc-for-dependabot-on-your-local-environment" aria-hidden="true" class="anchor" id="setting-up-arc-for-dependabot-on-your-local-environment"></a>Setting up ARC for Dependabot on your Local environment</h2>
+<h3 title="Setting up ARC for Dependabot on your Local environment / Prerequisites"><a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h3>
+<ul>
+<li>A Kubernetes cluster
+<ul>
+<li>For a managed cloud environment, you can use Azure Kubernetes Service (AKS).</li>
+<li>For a local setup, you can use minikube.</li>
+</ul>
+</li>
+<li>Helm
+<ul>
+<li>A package manager for Kubernetes.</li>
+</ul>
+</li>
+</ul>
+<h3 title="Setting up ARC for Dependabot on your Local environment / Setting up ARC"><a href="#setting-up-arc" aria-hidden="true" class="anchor" id="setting-up-arc"></a>Setting up ARC</h3>
+<ol>
+<li>
+<p>Install ARC. For more information, see <a href="https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller/quickstart-for-actions-runner-controller" class="external">Get started with Actions Runner Controller</a>.</p>
+</li>
+<li>
+<p>Create a work directory for the ARC setup and create a shell script file (for example, <code>helm_install_arc.sh</code>) to install the latest ARC version.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">    </span><span style="color:#8fa1b3;">mkdir</span><span style="color:#c0c5ce;"> ARC
+</span><span style="color:#c0c5ce;">    </span><span style="color:#8fa1b3;">touch</span><span style="color:#c0c5ce;"> helm_install_arc.sh
+</span><span style="color:#c0c5ce;">    </span><span style="color:#8fa1b3;">chmod</span><span style="color:#c0c5ce;"> 755 helm_install_arc.sh
+</span></code></pre>
+</li>
+<li>
+<p>Edit <code>helm_install_arc.sh</code> with this bash script for installing ARC.</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">NAMESPACE="arc-systems"
+</span><span style="color:#c0c5ce;">helm install arc \
+</span><span style="color:#c0c5ce;">    --namespace "${NAMESPACE}" \
+</span><span style="color:#c0c5ce;">    --create-namespace \
+</span><span style="color:#c0c5ce;">    oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
+</span></code></pre>
+</li>
+<li>
+<p>Execute the <code>helm_install_arc.sh</code> script file.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">./helm_install_arc.sh
+</span></code></pre>
+</li>
+<li>
+<p>Now, you need to configure the runner scale set. For this, let's start by creating and editing a file with the following bash script.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">touch</span><span style="color:#c0c5ce;"> arc-runner-set.sh
+</span><span style="color:#8fa1b3;">chmod</span><span style="color:#c0c5ce;"> 755 arc-runner-set.sh
+</span></code></pre>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">INSTALLATION_NAME="dependabot"
+</span><span style="color:#c0c5ce;">NAMESPACE="arc-runners"
+</span><span style="color:#c0c5ce;">GITHUB_CONFIG_URL=REPO_URL
+</span><span style="color:#c0c5ce;">GITHUB_PAT=PAT
+</span><span style="color:#c0c5ce;">helm install "${INSTALLATION_NAME}" \
+</span><span style="color:#c0c5ce;">    --namespace "${NAMESPACE}" \
+</span><span style="color:#c0c5ce;">    --create-namespace \
+</span><span style="color:#c0c5ce;">    --set githubConfigUrl="${GITHUB_CONFIG_URL}" \
+</span><span style="color:#c0c5ce;">    --set githubConfigSecret.github_token="${GITHUB_PAT}" \
+</span><span style="color:#c0c5ce;">    --set containerMode.type="dind" \
+</span><span style="color:#c0c5ce;">    oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
+</span></code></pre>
+</li>
+<li>
+<p>Execute the <code>arc-runner-set.sh</code> script file.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">./arc-runner-set.sh
+</span></code></pre>
+</li>
+</ol>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<ul>
+<li>The installation name of the runner scale set has to be <code>dependabot</code> in order to target the dependabot job to the runner.</li>
+<li>The <code>containerMode.type="dind"</code> configuration is required to allow the runner to connect to the Docker daemon.</li>
+<li>If an organization-level or enterprise-level runner is created, then the appropriate scopes should be provided to the Personal Access Token (PAT).</li>
+<li>A personal access token (classic) (PAT) can be created. The token should have the following scopes based on whether you are creating a repository, organization or enterprise level runner scale set.
+<ul>
+<li>Repository level: <strong>repo</strong></li>
+<li>Organization level: <strong>admin:org</strong></li>
+<li>Enterprise level: <strong>admin:enterprise</strong><br>
+For information about creating a personal access token (classic), see <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic" class="external">Managing your personal access tokens</a>.</li>
+</ul>
+</li>
+</ul>
+</div>
+<h3 title="Setting up ARC for Dependabot on your Local environment / Adding runner groups"><a href="#adding-runner-groups" aria-hidden="true" class="anchor" id="adding-runner-groups"></a>Adding runner groups</h3>
+<p>Runner groups are used to control which organizations or repositories have access to runner scale sets. To add a runner scale set to a runner group, you must already have a runner group created.</p>
+<p>For information about creating runner groups, see <a href="https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/managing-access-to-self-hosted-runners-using-groups#creating-a-self-hosted-runner-group-for-an-organization" class="external">Managing access to self-hosted runners using groups</a>.</p>
+<p>Don't forget to add the following setting to the runner scale set configuration in the helm chart.</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">--set runnerGroup="&lt;Runner group name&gt;" \
+</span></code></pre>
+<h3 title="Setting up ARC for Dependabot on your Local environment / Checking your installation"><a href="#checking-your-installation" aria-hidden="true" class="anchor" id="checking-your-installation"></a>Checking your installation</h3>
+<ol>
+<li>
+<p>Check your installation.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">helm</span><span style="color:#c0c5ce;"> list</span><span style="color:#bf616a;"> -A
+</span></code></pre>
+<p>Output:</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">➜  ARC git:(master) ✗ helm list -A
+</span><span style="color:#c0c5ce;">    NAME           NAMESPACE   REVISION UPDATED                              STATUS   CHART                                  APP VERSION
+</span><span style="color:#c0c5ce;">    arc            arc-systems 1        2025-04-11 14:41:53.70893 -0500 CDT  deployed gha-runner-scale-set-controller-0.11.0 0.11.0
+</span><span style="color:#c0c5ce;">    arc-runner-set arc-runners 1        2025-04-11 15:08:12.58119 -0500 CDT  deployed gha-runner-scale-set-0.11.0            0.11.0
+</span><span style="color:#c0c5ce;">    dependabot     arc-runners 1        2025-04-16 21:53:40.080772 -0500 CDT deployed gha-runner-scale-set-0.11.0
+</span></code></pre>
+</li>
+<li>
+<p>Check the manager pod using this command.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">kubectl</span><span style="color:#c0c5ce;"> get pods</span><span style="color:#bf616a;"> -n</span><span style="color:#c0c5ce;"> arc-systems
+</span></code></pre>
+<p>Output:</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">➜  ARC git:(master) ✗ kubectl get pods -n arc-systems
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">NAME                                    READY   STATUS    RESTARTS      AGE
+</span><span style="color:#c0c5ce;">arc-gha-rs-controller-57c67d4c7-zjmw2   1/1     Running   8 (36h ago)   6d9h
+</span><span style="color:#c0c5ce;">arc-runner-set-754b578d-listener        1/1     Running   0             11h
+</span><span style="color:#c0c5ce;">dependabot-754b578d-listener            1/1     Running   0             14h
+</span></code></pre>
+</li>
+</ol>
+<h3 title="Setting up ARC for Dependabot on your Local environment / Setting up Dependabot"><a href="#setting-up-dependabot" aria-hidden="true" class="anchor" id="setting-up-dependabot"></a>Setting up Dependabot</h3>
+<ol>
+<li>
+<p>On GitHub, navigate to the main page of the repository.</p>
+</li>
+<li>
+<p>Under your repository name, click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-gear" aria-label="gear" role="img"><path d="M8 0a8.2 8.2 0 0 1 .701.031C9.444.095 9.99.645 10.16 1.29l.288 1.107c.018.066.079.158.212.224.231.114.454.243.668.386.123.082.233.09.299.071l1.103-.303c.644-.176 1.392.021 1.82.63.27.385.506.792.704 1.218.315.675.111 1.422-.364 1.891l-.814.806c-.049.048-.098.147-.088.294.016.257.016.515 0 .772-.01.147.038.246.088.294l.814.806c.475.469.679 1.216.364 1.891a7.977 7.977 0 0 1-.704 1.217c-.428.61-1.176.807-1.82.63l-1.102-.302c-.067-.019-.177-.011-.3.071a5.909 5.909 0 0 1-.668.386c-.133.066-.194.158-.211.224l-.29 1.106c-.168.646-.715 1.196-1.458 1.26a8.006 8.006 0 0 1-1.402 0c-.743-.064-1.289-.614-1.458-1.26l-.289-1.106c-.018-.066-.079-.158-.212-.224a5.738 5.738 0 0 1-.668-.386c-.123-.082-.233-.09-.299-.071l-1.103.303c-.644.176-1.392-.021-1.82-.63a8.12 8.12 0 0 1-.704-1.218c-.315-.675-.111-1.422.363-1.891l.815-.806c.05-.048.098-.147.088-.294a6.214 6.214 0 0 1 0-.772c.01-.147-.038-.246-.088-.294l-.815-.806C.635 6.045.431 5.298.746 4.623a7.92 7.92 0 0 1 .704-1.217c.428-.61 1.176-.807 1.82-.63l1.102.302c.067.019.177.011.3-.071.214-.143.437-.272.668-.386.133-.066.194-.158.211-.224l.29-1.106C6.009.645 6.556.095 7.299.03 7.53.01 7.764 0 8 0Zm-.571 1.525c-.036.003-.108.036-.137.146l-.289 1.105c-.147.561-.549.967-.998 1.189-.173.086-.34.183-.5.29-.417.278-.97.423-1.529.27l-1.103-.303c-.109-.03-.175.016-.195.045-.22.312-.412.644-.573.99-.014.031-.021.11.059.19l.815.806c.411.406.562.957.53 1.456a4.709 4.709 0 0 0 0 .582c.032.499-.119 1.05-.53 1.456l-.815.806c-.081.08-.073.159-.059.19.162.346.353.677.573.989.02.03.085.076.195.046l1.102-.303c.56-.153 1.113-.008 1.53.27.161.107.328.204.501.29.447.222.85.629.997 1.189l.289 1.105c.029.109.101.143.137.146a6.6 6.6 0 0 0 1.142 0c.036-.003.108-.036.137-.146l.289-1.105c.147-.561.549-.967.998-1.189.173-.086.34-.183.5-.29.417-.278.97-.423 1.529-.27l1.103.303c.109.029.175-.016.195-.045.22-.313.411-.644.573-.99.014-.031.021-.11-.059-.19l-.815-.806c-.411-.406-.562-.957-.53-1.456a4.709 4.709 0 0 0 0-.582c-.032-.499.119-1.05.53-1.456l.815-.806c.081-.08.073-.159.059-.19a6.464 6.464 0 0 0-.573-.989c-.02-.03-.085-.076-.195-.046l-1.102.303c-.56.153-1.113.008-1.53-.27a4.44 4.44 0 0 0-.501-.29c-.447-.222-.85-.629-.997-1.189l-.289-1.105c-.029-.11-.101-.143-.137-.146a6.6 6.6 0 0 0-1.142 0ZM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM9.5 8a1.5 1.5 0 1 0-3.001.001A1.5 1.5 0 0 0 9.5 8Z"></path></svg> Settings</strong>. If you cannot see the "Settings" tab, select the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-kebab-horizontal" aria-label="More" role="img"><path d="M8 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM1.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm13 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path></svg></strong> dropdown menu, then click <strong>Settings</strong>.</p>
+<p><img src="../../../..//assets/images/help/repository/repo-actions-settings.png" alt="Screenshot of a repository header showing the tabs. The &quot;Settings&quot; tab is highlighted by a dark orange outline."></p>
+</li>
+<li>
+<p>In the "Security" section of the sidebar, click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-codescan" aria-label="codescan" role="img"><path d="M8.47 4.97a.75.75 0 0 0 0 1.06L9.94 7.5 8.47 8.97a.75.75 0 1 0 1.06 1.06l2-2a.75.75 0 0 0 0-1.06l-2-2a.75.75 0 0 0-1.06 0ZM6.53 6.03a.75.75 0 0 0-1.06-1.06l-2 2a.75.75 0 0 0 0 1.06l2 2a.75.75 0 1 0 1.06-1.06L5.06 7.5l1.47-1.47Z"></path><path d="M12.246 13.307a7.501 7.501 0 1 1 1.06-1.06l2.474 2.473a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM1.5 7.5a6.002 6.002 0 0 0 3.608 5.504 6.002 6.002 0 0 0 6.486-1.117.748.748 0 0 1 .292-.293A6 6 0 1 0 1.5 7.5Z"></path></svg> Advanced Security</strong>.</p>
+</li>
+<li>
+<p>Under "Dependabot", scroll to "Dependabot on Action Runners", and select <strong>Enable</strong> for "Dependabot on self-hosted runners".</p>
+</li>
+</ol>
+<h2 title="Triggering a Dependabot run"><a href="#triggering-a-dependabot-run" aria-hidden="true" class="anchor" id="triggering-a-dependabot-run"></a>Triggering a Dependabot run</h2>
+<p>Now that you've set up ARC, you can start a Dependabot run.</p>
+<ol>
+<li>
+<p>On GitHub, navigate to the main page of the repository.</p>
+</li>
+<li>
+<p>Under your repository name, click the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-graph" aria-label="graph" role="img"><path d="M1.5 1.75V13.5h13.75a.75.75 0 0 1 0 1.5H.75a.75.75 0 0 1-.75-.75V1.75a.75.75 0 0 1 1.5 0Zm14.28 2.53-5.25 5.25a.75.75 0 0 1-1.06 0L7 7.06 4.28 9.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.25-3.25a.75.75 0 0 1 1.06 0L10 7.94l4.72-4.72a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042Z"></path></svg> Insights</strong> tab.</p>
+</li>
+<li>
+<p>In the left sidebar, click <strong>Dependency graph</strong>.<br>
+<img src="../../../..//assets/images/help/graphs/graphs-sidebar-dependency-graph.png" alt="Screenshot of the &quot;Dependency graph&quot; tab. The tab is highlighted with an orange outline."></p>
+</li>
+<li>
+<p>Under "Dependency graph", click <strong>Dependabot</strong>.</p>
+</li>
+<li>
+<p>To the right of the name of manifest file you're interested in, click <strong>Recent update jobs</strong>.</p>
+</li>
+<li>
+<p>If there are no recent update jobs for the manifest file, click <strong>Check for updates</strong> to re-run a Dependabot version updates'job and check for new updates to dependencies for that ecosystem.</p>
+</li>
+</ol>
+<h2 title="Viewing the generated ARC runners"><a href="#viewing-the-generated-arc-runners" aria-hidden="true" class="anchor" id="viewing-the-generated-arc-runners"></a>Viewing the generated ARC runners</h2>
+<p>You can view the ARC runners that have been created for the Dependabot job.</p>
+<ol>
+<li>
+<p>On GitHub, navigate to the main page of the repository.</p>
+</li>
+<li>
+<p>Under your repository name, click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-play" aria-label="play" role="img"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm4.879-2.773 4.264 2.559a.25.25 0 0 1 0 .428l-4.264 2.559A.25.25 0 0 1 6 10.559V5.442a.25.25 0 0 1 .379-.215Z"></path></svg> Actions</strong>.</p>
+<p><img src="../../../..//assets/images/help/repository/actions-tab-global-nav-update.png" alt="Screenshot of the tabs for the &quot;github/docs&quot; repository. The &quot;Actions&quot; tab is highlighted with an orange outline."></p>
+</li>
+<li>
+<p>On the left sidebar, click <strong>Runners</strong>.</p>
+</li>
+<li>
+<p>Under "Runners", click <strong>Self-hosted runners</strong> to view the list of all the runners available in the repository. You can see the ephemeral dependabot runner that has been created.<br>
+<img src="../../../..//assets/images/help/dependabot/dependabot-self-hosted-runner.png" alt="Screenshot showing a dependabot runner in the list of available runners. The runner is highlighted with an orange outline."></p>
+<p>You can also view the same dependabot runner pod created in your kubernetes cluster from the terminal by executing this command.</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">➜  ARC git:(master) ✗ kubectl get pods -n arc-runners
+</span><span style="color:#c0c5ce;">    NAME                            READY   STATUS    RESTARTS   AGE
+</span><span style="color:#c0c5ce;">    dependabot-sw8zn-runner-4mbc7   2/2     Running   0          46s
+</span></code></pre>
+</li>
+</ol>
+<p>Additionally, you can verify:</p>
+<ul>
+<li>
+<p>The logs, by checking the runner and machine name. See <a href="../../how-tos/view-and-interpret-data/viewing-dependabot-job-logs.html">Viewing Dependabot job logs</a>.</p>
+<p><img src="../../../..//assets/images/help/dependabot/dependabot-self-hosted-runner-log.png" alt="Example of log for a dependabot self hosted runner."></p>
+</li>
+<li>
+<p>The version update pull requests created by the dependabot job in the <strong>Pull requests</strong> tab of the repository.</p>
+</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

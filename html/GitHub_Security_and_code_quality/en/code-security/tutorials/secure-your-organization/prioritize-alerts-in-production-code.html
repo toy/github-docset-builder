@@ -1,0 +1,54 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Prioritizing Dependabot and code scanning alerts using production context</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Secure your organization</a> / </nav><h1><a href="#prioritizing-dependabot-and-code-scanning-alerts-using-production-context" aria-hidden="true" class="anchor" id="prioritizing-dependabot-and-code-scanning-alerts-using-production-context"></a>Prioritizing Dependabot and code scanning alerts using production context</h1>
+<p>Focus remediation on real risk by targeting Dependabot and code scanning alerts in artifacts deployed to production, using metadata from external systems and integrations like Dynatrace, JFrog Artifactory, Microsoft Defender for Cloud, or your own CI/CD workflows.</p>
+<p>Application Security (AppSec) managers are often overwhelmed by a high volume of alerts, many of which may not represent real risk because the affected code never makes it to production. By associating production context with your alerts, you can filter and prioritize vulnerabilities that impact artifacts actually approved for production environments. This enables your team to focus remediation efforts on the vulnerabilities that matter most, reducing noise and improving your security posture.</p>
+<h2 title="1. Associate artifacts with production context"><a href="#1-associate-artifacts-with-production-context" aria-hidden="true" class="anchor" id="1-associate-artifacts-with-production-context"></a>1. Associate artifacts with production context</h2>
+<p>GitHub's linked artifacts page allows you to provide production context for your company's builds using the REST API or a partner integration. Teams can then use this context to prioritize Dependabot and code scanning alerts. For more information, see <a href="../../concepts/supply-chain-security/linked-artifacts.html">About linked artifacts</a>.</p>
+<p>To provide production context, you should configure your system to:</p>
+<ul>
+<li>Update <strong>storage records</strong> in the linked artifacts page whenever an artifact is promoted to a production-approved package repository.</li>
+<li>Update <strong>deployment records</strong> when an artifact is deployed to a production environment.</li>
+</ul>
+<p>GitHub processes this metadata and uses it to power alert filters, such as <code>artifact-registry-url</code> and <code>artifact-registry</code> from storage records, and <code>has:deployment</code> and <code>runtime-risk</code> from deployment records. Runtime risks from deployment records are also visible as properties on individual code scanning and Dependabot alert pages.</p>
+<p>For more information on updating records, see <a href="../../how-tos/secure-your-supply-chain/establish-provenance-and-integrity/upload-linked-artifacts.html">Uploading storage and deployment data to the linked artifacts page</a>.</p>
+<h2 title="2. Use production context filters"><a href="#2-use-production-context-filters" aria-hidden="true" class="anchor" id="2-use-production-context-filters"></a>2. Use production context filters</h2>
+<p>Production context filters are made available in the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab.</p>
+<ul>
+<li><strong>Dependabot view</strong>: See <a href="../../how-tos/manage-security-alerts/manage-dependabot-alerts/viewing-and-updating-dependabot-alerts.html#viewing-dependabot-alerts">Viewing and updating Dependabot alerts</a>.</li>
+<li><strong>Code scanning view</strong>: See <a href="../../how-tos/manage-security-alerts/manage-code-scanning-alerts/assessing-code-scanning-alerts-for-your-repository.html">Assessing code scanning alerts for your repository</a>.</li>
+<li><strong>Security campaign view</strong>: See <a href="../../how-tos/manage-security-alerts/remediate-alerts-at-scale/creating-managing-security-campaigns.html">Creating and managing security campaigns</a>.</li>
+</ul>
+<p>Once the alert list is displayed, use the <code>artifact-registry-url</code> or <code>artifact-registry</code> filters in organization views to focus on vulnerabilities affecting artifacts present in production.</p>
+<ul>
+<li>
+<p>For your own artifact repository that is hosted at <code>my-registry.example.com</code>, you would use:</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">artifact-registry-url:my-registry.example.com
+</span></code></pre>
+</li>
+<li>
+<p>If you use JFrog Artifactory, you can use <code>artifact-registry</code> with no further setup in GitHub:</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">artifact-registry:jfrog-artifactory
+</span></code></pre>
+</li>
+</ul>
+<p>You can also use the <code>has:deployment</code> and <code>runtime-risk</code> filters to focus on vulnerabilites that deployment metadata shows as in deployment or at risk of runtime vulnerabilities. This data is populated automatically if you have connected MDC. For example:</p>
+<ul>
+<li>
+<p>To focus on alerts in deployed code that is exposed to the internet, you would use:</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">has:deployment AND runtime-risk:internet-exposed
+</span></code></pre>
+</li>
+</ul>
+<p>You can also combine these production context filters with other filters, such as EPSS:</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">epss &gt; 0.5 AND artifact-registry-url:my-registry.example.com
+</span></code></pre>
+<h2 title="3. Remediate alerts in production code"><a href="#3-remediate-alerts-in-production-code" aria-hidden="true" class="anchor" id="3-remediate-alerts-in-production-code"></a>3. Remediate alerts in production code</h2>
+<p>Now you have identified the alerts that put your production code at risk of exploitation, you need to remediate them as a matter of urgency. Where possible use automation to lower the barrier to remediation.</p>
+<ul>
+<li><strong>Dependabot alerts:</strong> Use automated pull requests for security fixes. See <a href="../../how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-dependabot-security-updates.html">Configuring Dependabot security updates</a>.</li>
+<li><strong>Code scanning alerts:</strong> Create targeted campaigns with Copilot Autofix. See <a href="../../how-tos/manage-security-alerts/remediate-alerts-at-scale/creating-managing-security-campaigns.html">Creating and managing security campaigns</a>.</li>
+</ul>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li><a href="../manage-security-alerts/prioritizing-dependabot-alerts-using-metrics.html">Prioritizing Dependabot alerts using metrics</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

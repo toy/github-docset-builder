@@ -1,0 +1,98 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>About push protection</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Secret security</a> / </nav><h1><a href="#about-push-protection" aria-hidden="true" class="anchor" id="about-push-protection"></a>About push protection</h1>
+<p>Secure your secrets by stopping them from ever reaching your repository with push protection.</p>
+<h2 title="What is push protection?"><a href="#what-is-push-protection" aria-hidden="true" class="anchor" id="what-is-push-protection"></a>What is push protection?</h2>
+<p>Push protection is a secret scanning feature designed to prevent hardcoded credentials, such as secrets or tokens, from ever being pushed to your repository. Rather than alerting you to credential leaks after the fact, push protection blocks pushes that contain secrets <em>before</em> they reach your repository.</p>
+<h2 title="How push protection works"><a href="#how-push-protection-works" aria-hidden="true" class="anchor" id="how-push-protection-works"></a>How push protection works</h2>
+<p>Push protection blocks secrets detected in:</p>
+<ul>
+<li>Pushes from the command line</li>
+<li>Commits made in the GitHub UI</li>
+<li>File uploads to a repository on GitHub</li>
+<li>Requests to the REST API</li>
+<li>Interactions with the GitHub MCP server (public repositories only)</li>
+</ul>
+<p>When push protection detects a potential secret during a push attempt, it will block the push and provide a detailed message explaining the reason for the block. You will need to review the code in question, remove any sensitive information, and reattempt the push.</p>
+<h2 title="Types of push protection"><a href="#types-of-push-protection" aria-hidden="true" class="anchor" id="types-of-push-protection"></a>Types of push protection</h2>
+<p>There are two types of push protection:</p>
+<ul>
+<li><a href="#push-protection-for-repositories">Push protection for repositories</a></li>
+<li><a href="#push-protection-for-users">Push protection for users</a></li>
+</ul>
+<h3 title="Types of push protection / Push protection for repositories"><a href="#push-protection-for-repositories" aria-hidden="true" class="anchor" id="push-protection-for-repositories"></a>Push protection for repositories</h3>
+<p>You can enable push protection for repositories at the repository, organization, or enterprise level. This form of push protection:</p>
+<ul>
+<li>Requires GitHub Secret Protection to be enabled</li>
+<li>Is disabled by default, and can be enabled by a repository administrator, organization owner, security manager, or enterprise owner</li>
+<li>Blocks pushes containing secrets from reaching specific protected repositories</li>
+<li>Generates alerts for push protection bypasses in the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab of the repository, organization, and enterprise</li>
+</ul>
+<div class="markdown-alert markdown-alert-tip">
+<p class="markdown-alert-title">Tip</p>
+<p>Regardless of the enablement status of push protection, organizations on GitHub Team and GitHub Enterprise can run a free report to scan their code for leaked secrets. The report also shows how many secret leaks could have been prevented by push protection. See <a href="about-secret-security-with-github.html">About secret security with GitHub</a>.</p>
+</div>
+<h3 title="Types of push protection / Push protection for users"><a href="#push-protection-for-users" aria-hidden="true" class="anchor" id="push-protection-for-users"></a>Push protection for users</h3>
+<p>Push protection for users is only available on GitHub.com, and is specific to your GitHub account. This form of push protection:</p>
+<ul>
+<li>Is enabled by default</li>
+<li>Stops you from pushing secrets to public repositories on GitHub</li>
+<li>Does not generate alerts when you bypass push protection unless push protection is also enabled at the repository level</li>
+</ul>
+<h2 title="Push protection bypass and alerts"><a href="#push-protection-bypass-and-alerts" aria-hidden="true" class="anchor" id="push-protection-bypass-and-alerts"></a>Push protection bypass and alerts</h2>
+<p>For push protection for repositories, by default, anyone with write access to the repository can bypass push protection by specifying a bypass reason. When a contributor bypasses a push protection block, GitHub:</p>
+<ul>
+<li>Creates an alert in the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab of the repository, organization, and enterprise</li>
+<li>Adds the bypass event to the audit log</li>
+<li>Sends an email alert to personal account, organization, and enterprise owners, security managers, and repository administrators who are watching the repository, with a link to the secret and the reason it was allowed</li>
+</ul>
+<p>This table shows the behavior of alerts for each bypass reason a user can specify.</p>
+<table>
+<thead>
+<tr>
+<th>Bypass reason</th>
+<th>Alert behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>It's used in tests</td>
+<td>GitHub creates a closed alert, resolved as "used in tests"</td>
+</tr>
+<tr>
+<td>It's a false positive</td>
+<td>GitHub creates a closed alert, resolved as "false positive"</td>
+</tr>
+<tr>
+<td>I'll fix it later</td>
+<td>GitHub creates an open alert</td>
+</tr>
+</tbody>
+</table>
+<p>If you want greater control over which contributors can bypass push protection and which pushes containing secrets should be allowed, you can configure delegated bypass for push protection. With delegated bypass, you can grant actors:</p>
+<ul>
+<li><strong>Bypass privileges</strong>, allowing them to bypass push protection themselves, as well as review and approve bypass requests from other contributors</li>
+<li><strong>Exemption from push protection</strong>, allowing them to push commits without triggering push protection</li>
+</ul>
+<h2 title="Benefits of push protection"><a href="#benefits-of-push-protection" aria-hidden="true" class="anchor" id="benefits-of-push-protection"></a>Benefits of push protection</h2>
+<ul>
+<li><strong>Preventative security:</strong> Push protection acts as a frontline defense mechanism by scanning code for hardcoded secrets at the time of the push. This preventative approach helps prevent credential leaks before they become ingrained in the repository's history, making it easier to address and remediate threats.</li>
+<li><strong>Immediate feedback:</strong> Developers receive instant feedback if a potential secret is detected during a push attempt. This immediate notification allows for quick remediation, reducing the likelihood of sensitive information being exposed.</li>
+<li><strong>Reduced risk of credential leaks:</strong> By blocking commits that contain hardcoded credentials, push protection significantly reduces the risk of accidental credential leaks and secret sprawl. This helps in safeguarding against potential breaches and maintaining the integrity of the codebase.</li>
+<li><strong>Efficient secret management:</strong> Instead of retrospectively dealing with exposed secrets, developers can address issues at the source. This makes secret management more efficient and less time-consuming.</li>
+<li><strong>Bypass functionality for flexibility:</strong> For cases where false positives occur or when certain patterns are necessary, you can bypass push protection for users, and designated users can use the delegated bypass feature to bypass push protection for repositories. Additionally, you can exempt trusted actors from push protection entirely. This provides flexibility without compromising overall security.</li>
+<li><strong>Ability to detect custom patterns (for repositories in organizations):</strong> Organizations can define custom patterns for detecting secrets unique to their environment. This customization ensures that push protection can effectively identify and block even non-standard secrets.</li>
+</ul>
+<h2 title="Customization"><a href="#customization" aria-hidden="true" class="anchor" id="customization"></a>Customization</h2>
+<p>After you enable push protection for repositories, you can customize it by:</p>
+<ul>
+<li>Defining custom patterns to block pushes containing unique secret patterns</li>
+<li>Designating contributors who can bypass push protection and approve bypass requests for other contributors, or are exempt from push protection entirely</li>
+<li>Configuring which secret patterns are included in push protection at the enterprise or organization level</li>
+</ul>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>To enable push protection:</p>
+<ul>
+<li><strong>For a repository</strong>, see <a href="../../how-tos/secure-your-secrets/prevent-future-leaks/enabling-push-protection-for-your-repository.html">Enabling push protection for your repository</a>.</li>
+<li><strong>For an organization or enterprise</strong>, you need to apply a security configuration. See <a href="../../how-tos/secure-at-scale/configure-organization-security/establish-complete-coverage/creating-a-custom-security-configuration.html">Creating a custom security configuration</a> and <a href="../../how-tos/secure-at-scale/configure-organization-security/establish-complete-coverage/creating-a-custom-security-configuration.html">Creating a custom security configuration</a>.</li>
+</ul>
+<p>For a list of secrets and service providers supported by push protection, see <a href="../../reference/secret-security/supported-secret-scanning-patterns.html#supported-secrets">Supported secret scanning patterns</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

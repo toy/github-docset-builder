@@ -1,0 +1,280 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Controlling which dependencies are updated by Dependabot</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Secure your supply chain</a> / <a href="index.html">Manage your dependency security</a> / </nav><h1><a href="#controlling-which-dependencies-are-updated-by-dependabot" aria-hidden="true" class="anchor" id="controlling-which-dependencies-are-updated-by-dependabot"></a>Controlling which dependencies are updated by Dependabot</h1>
+<p>Learn how to configure your dependabot.yml file so that Dependabot automatically updates the packages you specify, in the way you define.</p>
+<p>You can customize your Dependabot configuration to suit your needs, by adding options to your <code>dependabot.yml</code> file. For example, you can make sure that Dependabot uses the correct package manifest files, and updates only the dependencies you want maintained.</p>
+<p>This article collates customization options you may find useful.</p>
+<h2 title="Defining multiple locations for manifest files"><a href="#defining-multiple-locations-for-manifest-files" aria-hidden="true" class="anchor" id="defining-multiple-locations-for-manifest-files"></a>Defining multiple locations for manifest files</h2>
+<p>If you want to enable Dependabot version updates for manifest files stored in more than one location, you can use <code>directories</code> in place of <code>directory</code>. For example, this configuration sets two different update schedules for manifest files stored in different directories.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># Specify the locations of the manifest files to update for each package manager
+</span><span style="color:#65737e;"># using both `directories` and `directory`
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">bundler</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Update manifest files stored in these directories weekly
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directories</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - "</span><span style="color:#a3be8c;">/frontend</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      - "</span><span style="color:#a3be8c;">/backend</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      - "</span><span style="color:#a3be8c;">/admin</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">bundler</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Update manifest files stored in the root directory daily
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">daily</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<ul>
+<li>
+<p>To specify a range of directories using a pattern</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># Specify the root directory and directories that start with "lib-",
+</span><span style="color:#65737e;"># using globbing, for locations of manifest files
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">composer</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directories</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      - "</span><span style="color:#a3be8c;">/lib-*</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+</li>
+<li>
+<p>To specify manifests in the current directory and recursive subdirectories</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># Specify all directories from the current layer and below recursively,
+</span><span style="color:#65737e;"># using globstar, for locations of manifest files
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">composer</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directories</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - "</span><span style="color:#a3be8c;">**/*</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+</li>
+</ul>
+<h2 title="Ignoring specific dependencies"><a href="#ignoring-specific-dependencies" aria-hidden="true" class="anchor" id="ignoring-specific-dependencies"></a>Ignoring specific dependencies</h2>
+<p>If you are not ready to adopt changes from certain dependencies in your project, you can configure Dependabot to ignore those dependencies when it opens pull requests for version updates and security updates. You can do this using one of the following methods.</p>
+<ul>
+<li>Configure the <code>ignore</code> option for the dependency in your <code>dependabot.yml</code> file.
+<ul>
+<li><strong>You can use this to ignore updates for specific dependencies, versions, and types of updates.</strong></li>
+<li>For more information, see <code>ignore</code> in <a href="../../../reference/supply-chain-security/dependabot-options-reference.html#ignore--">Dependabot options reference</a>.</li>
+</ul>
+</li>
+<li>Use <code>@dependabot ignore</code> comment commands on a Dependabot pull request for version updates and security updates.
+<ul>
+<li><strong>You can use comment commands to ignore updates for specific dependencies and versions.</strong></li>
+<li>For more information, see <a href="managing-pull-requests-for-dependency-updates.html#managing-dependabot-pull-requests-with-comment-commands">Managing pull requests for dependency updates</a>.</li>
+</ul>
+</li>
+</ul>
+<p>Here are some examples showing how <code>ignore</code> can be used to customize which dependencies are updated.</p>
+<ul>
+<li>
+<p>To ignore updates beyond a specific version</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">ignore</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">dependency-name</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">lodash:*</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Ignore versions of Lodash that are equal to or greater than 1.0.0
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">versions</span><span style="color:#c0c5ce;">: [ "</span><span style="color:#a3be8c;">&gt;=1.0.0</span><span style="color:#c0c5ce;">" ]
+</span></code></pre>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">ignore</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">dependency-name</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">sphinx</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">versions</span><span style="color:#c0c5ce;">: [ "</span><span style="color:#a3be8c;">[1.1,)</span><span style="color:#c0c5ce;">" ]
+</span></code></pre>
+</li>
+<li>
+<p>To ignore patch updates</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">ignore</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">dependency-name</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">@types/node</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Ignore patch updates for Node
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">update-types</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">version-update:semver-patch</span><span style="color:#c0c5ce;">"]
+</span></code></pre>
+</li>
+<li>
+<p>To ignore specific versions or version ranges, see <a href="#ignoring-specific-versions-or-ranges-of-versions">Ignoring specific versions or ranges of versions</a>.</p>
+</li>
+</ul>
+<p>If you want to un-ignore a dependency or ignore condition, you can delete the ignore conditions from the <code>dependabot.yml</code> file or reopen the pull request.</p>
+<p>For pull requests for grouped updates, you can also use <code>@dependabot unignore</code> comment commands. The <code>@dependabot unignore</code> comment commands enable you to do the following by commenting on a Dependabot pull request:</p>
+<ul>
+<li>Un-ignore a specific ignore condition</li>
+<li>Un-ignore a specific dependency</li>
+<li>Un-ignore all ignore conditions for all dependencies in a Dependabot pull request</li>
+</ul>
+<p>For more information, see <a href="managing-pull-requests-for-dependency-updates.html#managing-dependabot-pull-requests-for-grouped-updates-with-comment-commands">Managing pull requests for dependency updates</a>.</p>
+<h2 title="Allowing specific dependencies to be updated"><a href="#allowing-specific-dependencies-to-be-updated" aria-hidden="true" class="anchor" id="allowing-specific-dependencies-to-be-updated"></a>Allowing specific dependencies to be updated</h2>
+<p>You can use <code>allow</code> to tell Dependabot about the dependencies you want to maintain. <code>allow</code> is usually used in conjunction with <code>ignore</code>.</p>
+<p>For more information, see <code>allow</code> in <a href="../../../reference/supply-chain-security/dependabot-options-reference.html#allow--">Dependabot options reference</a>.</p>
+<p>By default, Dependabot creates version update pull requests only for the dependencies that are explicitly defined in a manifest (<code>direct</code> dependencies). This configuration uses <code>allow</code> to tell Dependabot that we want it to maintain <code>all</code> types of dependency. That is, both the <code>direct</code> dependencies and their dependencies (also known as indirect dependencies, sub-dependencies, or transient dependencies). In addition, the configuration tells Dependabot to ignore all dependencies with a name matching the pattern <code>org.xwiki.*</code> because we have a different process for maintaining them.</p>
+<div class="markdown-alert markdown-alert-tip">
+<p class="markdown-alert-title">Tip</p>
+<p>Dependabot checks for all <strong>allowed</strong> dependencies, then filters out any <strong>ignored</strong> dependencies. If a dependency is matched by an <strong>allow</strong> and an <strong>ignore</strong> statement, then it is ignored. You can also use <code>update-types</code> in <code>allow</code> rules to restrict updates to specific semantic versioning levels.</p>
+</div>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Helps find updates for non Maven Central dependencies
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">maven-xwiki-public</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">maven-repository
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://nexus.xwiki.org/nexus/content/groups/public/
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: ""
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: ""
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Required to resolve xwiki-common SNAPSHOT parent pom
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">maven-xwiki-snapshots</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">maven-repository
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://maven.xwiki.org/snapshots
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: ""
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: ""
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">maven</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">maven-xwiki-public
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">maven-xwiki-snapshots
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">allow</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Allow both direct and indirect updates for all packages.
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">dependency-type</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">all</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">ignore</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Ignore XWiki dependencies. We have a separate process for updating them
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">dependency-name</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">org.xwiki.*</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">open-pull-requests-limit</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">15
+</span></code></pre>
+<h2 title="Allowing specific semantic versioning levels for updates"><a href="#allowing-specific-semantic-versioning-levels-for-updates" aria-hidden="true" class="anchor" id="allowing-specific-semantic-versioning-levels-for-updates"></a>Allowing specific semantic versioning levels for updates</h2>
+<p>You can use <code>update-types</code> with <code>allow</code> to restrict updates to specific semantic versioning (SemVer) levels. This is useful when you want to be explicit about which types of updates Dependabot should create pull requests for.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p><code>update-types</code> only affects <em>version</em> updates, not <em>security</em> updates. Security updates will always be created regardless of the <code>update-types</code> setting.</p>
+</div>
+<p>For more information, see <code>update-types</code> in <a href="../../../reference/supply-chain-security/dependabot-options-reference.html#update-types-allow">Dependabot options reference</a>.</p>
+<p>Here are some examples showing how <code>update-types</code> can be used with <code>allow</code>.</p>
+<ul>
+<li>
+<p>To allow only minor and patch updates for a specific dependency, you can combine <code>update-types</code> with <code>dependency-name</code>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">maven</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">allow</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">dependency-name</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">io.micrometer:micrometer-core</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">update-types</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          - "</span><span style="color:#a3be8c;">version-update:semver-minor</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">          - "</span><span style="color:#a3be8c;">version-update:semver-patch</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+</li>
+<li>
+<p>To apply different update policies for production and development dependencies, you can combine <code>update-types</code> with <code>dependency-type</code>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">composer</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">monthly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">allow</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">dependency-type</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">production</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">update-types</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          - "</span><span style="color:#a3be8c;">version-update:semver-patch</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">dependency-type</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">development</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">update-types</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          - "</span><span style="color:#a3be8c;">version-update:semver-minor</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">          - "</span><span style="color:#a3be8c;">version-update:semver-patch
+</span></code></pre>
+<p>In this example, production dependencies will only receive patch updates, while development dependencies will receive both minor and patch updates.</p>
+</li>
+</ul>
+<h2 title="Ignoring specific versions or ranges of versions"><a href="#ignoring-specific-versions-or-ranges-of-versions" aria-hidden="true" class="anchor" id="ignoring-specific-versions-or-ranges-of-versions"></a>Ignoring specific versions or ranges of versions</h2>
+<p>You can use <code>versions</code> in conjunction with <code>ignore</code> to ignore specific versions or ranges of versions.</p>
+<p>For more information, see <code>versions</code> in <a href="../../../reference/supply-chain-security/dependabot-options-reference.html#versions-ignore">Dependabot options reference</a>.</p>
+<ul>
+<li>
+<p>To ignore a specific version</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">ignore</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">dependency-name</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">django*</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Ignore version 11
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">versions</span><span style="color:#c0c5ce;">: [ "</span><span style="color:#a3be8c;">11</span><span style="color:#c0c5ce;">" ]
+</span></code></pre>
+</li>
+<li>
+<p>To ignore a range of versions</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">ignore</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">dependency-name</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">@types/node</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">versions</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">15.x</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">14.x</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">13.x</span><span style="color:#c0c5ce;">"]
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">dependency-name</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">xdg-basedir</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># 5.0.0 has breaking changes as they switch to named exports
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># and convert the module to ESM
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># We can't use it until we switch to ESM across the project
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">versions</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">5.x</span><span style="color:#c0c5ce;">"]
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">dependency-name</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">limiter</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># 2.0.0 has breaking changes
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># so we want to delay updating.
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">versions</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">2.x</span><span style="color:#c0c5ce;">"]
+</span></code></pre>
+</li>
+</ul>
+<h2 title="Specifying the semantic versioning level to ignore"><a href="#specifying-the-semantic-versioning-level-to-ignore" aria-hidden="true" class="anchor" id="specifying-the-semantic-versioning-level-to-ignore"></a>Specifying the semantic versioning level to ignore</h2>
+<p>You can specify one or more semantic versioning (SemVer) levels to ignore using <code>update-types</code> with <code>ignore</code>. Alternatively, you can use <code>update-types</code> with <code>allow</code> to explicitly specify which update levels to allow, see <a href="#allowing-specific-semantic-versioning-levels-for-updates">Allowing specific semantic versioning levels for updates</a>.</p>
+<p>For more information, see <code>update-types</code> in <a href="../../../reference/supply-chain-security/dependabot-options-reference.html#update-types-ignore">Dependabot options reference</a>.</p>
+<p>In this example, Dependabot will ignore patch versions for Node.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">npm</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">daily</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">ignore</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">dependency-name</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">express</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># For Express, ignore all updates for version 4 and 5
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">versions</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">4.x</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">5.x</span><span style="color:#c0c5ce;">"]
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># For Lodash, ignore all updates
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">dependency-name</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">lodash</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">dependency-name</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">@types/node</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># For Node types, ignore any patch versions
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">update-types</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">version-update:semver-patch</span><span style="color:#c0c5ce;">"]
+</span></code></pre>
+<h2 title="Defining a versioning strategy"><a href="#defining-a-versioning-strategy" aria-hidden="true" class="anchor" id="defining-a-versioning-strategy"></a>Defining a versioning strategy</h2>
+<p>By default, Dependabot tries to increase the minimum version requirement for dependencies it identifies as apps, and widens the allowed version requirements to include both the new and old versions for dependencies it identifies as libraries.</p>
+<p>You can change this default strategy. For more information, see <code>versioning-strategy</code> in <a href="../../../reference/supply-chain-security/dependabot-options-reference.html#versioning-strategy--">Dependabot options reference</a>.</p>
+<p>In this example, Dependabot will increase the minimum version requirement to match the new version for both apps and libraries.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">daily
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Increase the minimum version for all npm dependencies
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">versioning-strategy</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">increase
+</span></code></pre>
+<p>In this example, Dependabot will <strong>only</strong> increase the minimum version requirement if the original constraint does not allow the new version.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">pip
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">daily
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">open-pull-requests-limit</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">20
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">rebase-strategy</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">disabled</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Increase the version requirements for pip
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># only when required
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">versioning-strategy</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">increase-if-necessary
+</span></code></pre>
+<h2 title="Updating vendored dependencies"><a href="#updating-vendored-dependencies" aria-hidden="true" class="anchor" id="updating-vendored-dependencies"></a>Updating vendored dependencies</h2>
+<p>You can instruct Dependabot to vendor specific dependencies when updating them.</p>
+<p>Dependabot automatically maintains vendored dependencies for Go modules, and you can configure Bundler to also update vendored dependencies.</p>
+<p>For more information, see <code>vendor</code> in <a href="../../../reference/supply-chain-security/dependabot-options-reference.html#vendor--">Dependabot options reference</a>.</p>
+<p>In this example, <code>vendor</code> is set to <code>true</code> for Bundler, which means that Dependabot will also maintain dependencies for Bundler that are stored in the <em>vendor/cache</em> directory in the repository.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bundler
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Vendoring Bundler
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">vendor</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">weekly
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">day</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">saturday
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">open-pull-requests-limit</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">10
+</span></code></pre>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

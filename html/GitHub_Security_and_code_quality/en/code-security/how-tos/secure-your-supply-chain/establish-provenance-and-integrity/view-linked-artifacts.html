@@ -1,0 +1,31 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Auditing your organization's builds on the linked artifacts page</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Secure your supply chain</a> / <a href="index.html">Establish provenance and integrity</a> / </nav><h1><a href="#auditing-your-organizations-builds-on-the-linked-artifacts-page" aria-hidden="true" class="anchor" id="auditing-your-organizations-builds-on-the-linked-artifacts-page"></a>Auditing your organization's builds on the linked artifacts page</h1>
+<p>View or export metadata for build runs, storage details, and deployment context.</p>
+<p>You can use the linked artifacts page to connect your organization's artifacts to their build details, deployment context, and security metadata. The linked artifacts page collects metadata for artifacts built with GitHub Actions in your organization's repositories, regardless of whether the artifacts are stored on GitHub. For more information, see <a href="../../../concepts/supply-chain-security/linked-artifacts.html">About linked artifacts</a>.</p>
+<h2 title="Viewing an artifact"><a href="#viewing-an-artifact" aria-hidden="true" class="anchor" id="viewing-an-artifact"></a>Viewing an artifact</h2>
+<ol>
+<li>
+<p>On GitHub, navigate to the main page of your organization.</p>
+</li>
+<li>
+<p>Under your organization name, click the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-package" aria-label="package" role="img"><path d="m8.878.392 5.25 3.045c.54.314.872.89.872 1.514v6.098a1.75 1.75 0 0 1-.872 1.514l-5.25 3.045a1.75 1.75 0 0 1-1.756 0l-5.25-3.045A1.75 1.75 0 0 1 1 11.049V4.951c0-.624.332-1.201.872-1.514L7.122.392a1.75 1.75 0 0 1 1.756 0ZM7.875 1.69l-4.63 2.685L8 7.133l4.755-2.758-4.63-2.685a.248.248 0 0 0-.25 0ZM2.5 5.677v5.372c0 .09.047.171.125.216l4.625 2.683V8.432Zm6.25 8.271 4.625-2.683a.25.25 0 0 0 .125-.216V5.677L8.75 8.432Z"></path></svg> Packages</strong> tab.</p>
+<p><img src="../../../../..//assets/images/help/package-registry/org-tab-for-packages-with-overview-tab.png" alt="Screenshot of @octo-org's profile page. The &quot;Packages&quot; tab is highlighted with an orange outline."></p>
+</li>
+<li>
+<p>In the left sidebar, click <strong>Linked artifacts</strong>.</p>
+</li>
+<li>
+<p>Click the artifact you want to view.</p>
+</li>
+<li>
+<p>On the artifact's page, you can:</p>
+<ul>
+<li>View the artifact's deployment history and registry storage details</li>
+<li>Click through to the repository where the artifact's source code is defined</li>
+<li>If available, click on the artifact's provenance attestation to find the workflow run that was used to build the artifact</li>
+</ul>
+</li>
+</ol>
+<p>For more information about how data enters the linked artifacts page, see <a href="upload-linked-artifacts.html">Uploading storage and deployment data to the linked artifacts page</a>.</p>
+<h2 title="Exporting artifact metadata"><a href="#exporting-artifact-metadata" aria-hidden="true" class="anchor" id="exporting-artifact-metadata"></a>Exporting artifact metadata</h2>
+<p>To export metadata in bulk for an audit, use the <a href="https://docs.github.com/en/rest/orgs/artifact-metadata#list-artifact-deployment-records" class="external">List artifact deployment records</a> and <a href="https://docs.github.com/en/rest/orgs/artifact-metadata#list-artifact-storage-records" class="external">List artifact storage records</a> endpoints of the artifact metadata API.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

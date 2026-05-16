@@ -1,0 +1,573 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Available filters for security overview</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Reference</a> / <a href="index.html">Security at scale</a> / </nav><h1><a href="#available-filters-for-security-overview" aria-hidden="true" class="anchor" id="available-filters-for-security-overview"></a>Available filters for security overview</h1>
+<p>Reference for all available filters you can use to narrow security overview data.</p>
+<p>This article lists all available filters (qualifiers) for security overview. The available filters vary depending on the specific view and whether you are viewing data at the enterprise or organization level.</p>
+<p>For information about how to apply filters, see <a href="../../how-tos/manage-security-alerts/remediate-alerts-at-scale/filtering-alerts-in-security-overview.html">Filtering alerts in security overview</a>.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The information shown by security overview varies according to your access to repositories and organizations, and according to whether Advanced Security features are used by those repositories and organizations. For more information, see <a href="../../concepts/security-at-scale/about-security-overview.html#permission-to-view-data-in-security-overview">About security overview</a>.</p>
+</div>
+<h2 title="Filter logic for security overview"><a href="#filter-logic-for-security-overview" aria-hidden="true" class="anchor" id="filter-logic-for-security-overview"></a>Filter logic for security overview</h2>
+<p>You can apply filters and use logical operators to display results that meet specific criteria on security overview. By default, if you apply several different filters, you are using AND logic, meaning you will only see results that match <em>every</em> filter you apply. For example, if you add the filter <code>is:public dependabot:enabled</code>, you will only see results from repositories that are public <em>and</em> have Dependabot enabled.</p>
+<p>Currently, there are two logical operators that you can apply to your filters on security overview:</p>
+<ul>
+<li>The <code>-</code> operator applies NOT logic, displaying all results <em>except</em> those that match the specified filter. To use the <code>-</code> operator, add it to the beginning of a filter. For example, filtering for <code>-repo:REPOSITORY-NAME</code> will display data from all repositories <em>except</em> <code>REPOSITORY-NAME</code>.</li>
+<li>The <code>,</code> operator applies OR logic, displaying results that match <em>any</em> of the specified values for a single filter. To use the <code>,</code> operator, add it between each listed value for a filter. For example, filtering for <code>is:public,private</code> will display data from all repositories that are public <em>or</em> private. Similarly, if you apply the same filter multiple times with different values, you are using OR logic. For example, <code>is:public is:private</code> is equivalent to <code>is:public,private</code>.</li>
+</ul>
+<h2 title="Repository name"><a href="#repository-name" aria-hidden="true" class="anchor" id="repository-name"></a>Repository name</h2>
+<p><strong>Available in:</strong> All views</p>
+<ul>
+<li><strong>Free text or keyword search:</strong> Display data for all repositories with a name that contains the keyword. For example, search for <code>test</code> to show data for both the "test-repository" and "octocat-testing" repositories.</li>
+<li><strong><code>repo</code> qualifier:</strong> Display data only for the repository that exactly matches the value of the qualifier. For example, search for <code>repo:octocat-testing</code> to show data for only the "octocat-testing" repository.</li>
+</ul>
+<h2 title="Repository visibility and status filters"><a href="#repository-visibility-and-status-filters" aria-hidden="true" class="anchor" id="repository-visibility-and-status-filters"></a>Repository visibility and status filters</h2>
+<table>
+<thead>
+<tr>
+<th>Qualifier</th>
+<th>Description</th>
+<th>Views</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">visibility</code></td>
+<td>Display data for all repositories that are <code>public</code>, <code>private</code>, or <code>internal</code>.</td>
+<td>"Overview" and metrics</td>
+</tr>
+<tr>
+<td><code class="keyword">is</code></td>
+<td>Display data for all repositories that are <code>public</code>, <code>private</code>, or <code>internal</code>.</td>
+<td>"Risk" and "Coverage"</td>
+</tr>
+<tr>
+<td><code class="keyword">archived</code></td>
+<td>Display only data for archived (<code>true</code>) or active (<code>false</code>) repositories.</td>
+<td>All except "Alerts" views</td>
+</tr>
+</tbody>
+</table>
+<h2 title="Team and topic filters"><a href="#team-and-topic-filters" aria-hidden="true" class="anchor" id="team-and-topic-filters"></a>Team and topic filters</h2>
+<p><strong>Available in:</strong> All views</p>
+<table>
+<thead>
+<tr>
+<th>Qualifier</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">team</code></td>
+<td>Display data for all repositories that the specified team has write access or admin access to. For more information on repository roles, see <a href="https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/managing-repository-roles/repository-roles-for-an-organization" class="external">Repository roles for an organization</a>.</td>
+</tr>
+<tr>
+<td><code class="keyword">topic</code></td>
+<td>Display data for all repositories that are classified with a specific topic. For more information on repository topics, see <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/classifying-your-repository-with-topics" class="external">Classifying your repository with topics</a>.</td>
+</tr>
+</tbody>
+</table>
+<h2 title="Custom repository property filters"><a href="#custom-repository-property-filters" aria-hidden="true" class="anchor" id="custom-repository-property-filters"></a>Custom repository property filters</h2>
+<p><strong>Available in:</strong> Organization-level "Overview" view</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Repository properties are in public preview and subject to change.</p>
+</div>
+<p>Custom repository properties are metadata that organization owners can add to repositories in an organization, providing a way to group repositories by the information you are interested in. For example, you can add custom repository properties for compliance frameworks or data sensitivity. For more information on adding custom repository properties, see <a href="https://docs.github.com/en/organizations/managing-organization-settings/managing-custom-properties-for-repositories-in-your-organization" class="external">Managing custom properties for repositories in your organization</a>.</p>
+<p>If you add custom properties to your organization and set values for repositories, you can filter the "Overview" using those custom properties as qualifiers.</p>
+<table>
+<thead>
+<tr>
+<th>Qualifier</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>props.CUSTOM_PROPERTY_NAME</code></td>
+<td>The qualifier consists of a <code>props.</code> prefix, followed by the name of the custom property. For example, <code>props.data_sensitivity:high</code> displays results for repositories with the <code>data_sensitivity</code> property set to the value <code>high</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 title="Repository owner filters"><a href="#repository-owner-filters" aria-hidden="true" class="anchor" id="repository-owner-filters"></a>Repository owner filters</h2>
+<p><strong>Available in:</strong> Enterprise-level views</p>
+<table>
+<thead>
+<tr>
+<th>Qualifier</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>org</code></td>
+<td>Display data for repositories owned by one organization.</td>
+</tr>
+</tbody>
+</table>
+<h2 title="Security feature enablement filters"><a href="#security-feature-enablement-filters" aria-hidden="true" class="anchor" id="security-feature-enablement-filters"></a>Security feature enablement filters</h2>
+<p><strong>Available in:</strong> "Risk" and "Coverage" views</p>
+<table>
+<thead>
+<tr>
+<th>Qualifier</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">code-scanning-alerts</code></td>
+<td>Display repositories that have configured code scanning.</td>
+</tr>
+<tr>
+<td><code class="keyword">dependabot-alerts</code></td>
+<td>Display repositories that have enabled Dependabot alerts.</td>
+</tr>
+<tr>
+<td><code class="keyword">secret-scanning-alerts</code></td>
+<td>Display repositories that have enabled secret scanning alerts.</td>
+</tr>
+<tr>
+<td><code class="keyword">any-feature</code></td>
+<td>Display repositories where at least one security feature is enabled.</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Security feature enablement filters / Extra filters for the &quot;Coverage&quot; view"><a href="#extra-filters-for-the-coverage-view" aria-hidden="true" class="anchor" id="extra-filters-for-the-coverage-view"></a>Extra filters for the "Coverage" view</h3>
+<table>
+<thead>
+<tr>
+<th>Qualifier</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>code-scanning-default-setup</code></td>
+<td>Display data for repositories where code scanning is enabled or not enabled using CodeQL default setup.</td>
+</tr>
+<tr>
+<td><code>code-scanning-pull-request-alerts</code></td>
+<td>Display data for repositories where code scanning is enabled or not enabled to run on pull requests.</td>
+</tr>
+<tr>
+<td><code>dependabot-security-updates</code></td>
+<td>Display data for repositories where Dependabot security updates is enabled or not enabled.</td>
+</tr>
+<tr>
+<td><code>secret-scanning-push-protection</code></td>
+<td>Display data for repositories where push protection for secret scanning is enabled or not enabled.</td>
+</tr>
+</tbody>
+</table>
+<h2 title="Alert number filters"><a href="#alert-number-filters" aria-hidden="true" class="anchor" id="alert-number-filters"></a>Alert number filters</h2>
+<p><strong>Available in:</strong> "Risk" view</p>
+<table>
+<thead>
+<tr>
+<th>Qualifier</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">code-scanning-alerts</code></td>
+<td>Display data for repositories that have exactly (<code>=</code>), more than (<code>&gt;</code>) or fewer than (<code>&lt;</code>) a specific number of code scanning alerts. For example: <code>code-scanning-alerts:&gt;100</code> for repositories with more than 100 alerts.</td>
+</tr>
+<tr>
+<td><code class="keyword">dependabot-alerts</code></td>
+<td>Display data for repositories that have a specific number (<code>=</code>), more than (<code>&gt;</code>) or fewer than (<code>&lt;</code>) a specific number of Dependabot alerts. For example: <code>dependabot-alerts:&lt;=10</code> for repositories with fewer than or equal to 10 alerts.</td>
+</tr>
+<tr>
+<td><code class="keyword">secret-scanning-alerts</code></td>
+<td>Display data for repositories that have a specific number (<code>=</code>), more than (<code>&gt;</code>) or fewer than (<code>&lt;</code>) a specific number of secret scanning alerts. For example: <code>secret-scanning-alerts:=10</code> for repositories with exactly 10 alerts.</td>
+</tr>
+</tbody>
+</table>
+<h2 title="Alert type and property filters"><a href="#alert-type-and-property-filters" aria-hidden="true" class="anchor" id="alert-type-and-property-filters"></a>Alert type and property filters</h2>
+<p><strong>Available in:</strong> "Overview" view</p>
+<h3 title="Alert type and property filters / Alert type filters"><a href="#alert-type-filters" aria-hidden="true" class="anchor" id="alert-type-filters"></a>Alert type filters</h3>
+<table>
+<thead>
+<tr>
+<th>Qualifier</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">tool:codeql</code></td>
+<td>Show data only for code scanning alerts generated using CodeQL.</td>
+</tr>
+<tr>
+<td><code class="keyword">tool:dependabot</code></td>
+<td>Show data only for Dependabot alerts.</td>
+</tr>
+<tr>
+<td><code class="keyword">tool:secret-scanning</code></td>
+<td>Show data only for secret scanning alerts.</td>
+</tr>
+<tr>
+<td><code class="keyword">tool:github</code></td>
+<td>Show data for all types of alerts generated by GitHub tools.</td>
+</tr>
+<tr>
+<td><code class="keyword">tool:third-party</code></td>
+<td>Show data for all types of alerts generated by third-party tools.</td>
+</tr>
+<tr>
+<td><code class="keyword">tool:TOOL-NAME</code></td>
+<td>Show data for all alerts generated by a third-party tool for code scanning.</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Alert type and property filters / Alert property filters"><a href="#alert-property-filters" aria-hidden="true" class="anchor" id="alert-property-filters"></a>Alert property filters</h3>
+<table>
+<thead>
+<tr>
+<th>Qualifier</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">codeql.rule</code></td>
+<td>Display data only for code scanning identified by a specific rule for CodeQL.</td>
+</tr>
+<tr>
+<td><code class="keyword">dependabot.ecosystem</code></td>
+<td>Display data only for Dependabot alerts for a specific ecosystem, for example: <code>npm</code>.</td>
+</tr>
+<tr>
+<td><code class="keyword">dependabot.package</code></td>
+<td>Display data only for Dependabot alerts for a specific package, for example: <code>tensorflow</code>.</td>
+</tr>
+<tr>
+<td><code class="keyword">dependabot.scope</code></td>
+<td>Display data only for Dependabot alerts with a <code>runtime</code> or <code>development</code> scope.</td>
+</tr>
+<tr>
+<td><code class="keyword">secret-scanning.bypassed</code></td>
+<td>Display data only for secret scanning alerts where push protection was bypassed (<code>true</code>) or not bypassed (<code>false</code>).</td>
+</tr>
+<tr>
+<td><code class="keyword">secret-scanning.provider</code></td>
+<td>Display data only for secret scanning alerts issued by a specific provider, for example: <code>secret-scanning.provider:adafruit</code>.</td>
+</tr>
+<tr>
+<td><code class="keyword">secret-scanning.secret-type</code></td>
+<td>Display data only for secret scanning alerts for a specific type of secret, for example: <code>secret-scanning.secret-type:adafruit_io_key</code>.</td>
+</tr>
+<tr>
+<td><code class="keyword">secret-scanning.validity</code></td>
+<td>Display data only for secret scanning alerts for a specific validity (<code>active</code>, <code>inactive</code>, or <code>unknown</code>).</td>
+</tr>
+<tr>
+<td><code class="keyword">severity</code></td>
+<td>Display data only for alerts of a specific severity (<code>critical</code>, <code>high</code>, <code>medium</code>, or <code>low</code>).</td>
+</tr>
+<tr>
+<td><code class="keyword">third-party.rule</code></td>
+<td>Display data only for code scanning identified by a specific rule for a tool developed by a third party. For example, <code>third-party.rule:CVE-2021-26291-maven-artifact</code> shows only results for the <code>CVE-2021-26291-maven-artifact</code> rule of a third-party code scanning tool.</td>
+</tr>
+</tbody>
+</table>
+<h2 title="Production context filters"><a href="#production-context-filters" aria-hidden="true" class="anchor" id="production-context-filters"></a>Production context filters</h2>
+<p><strong>Available in:</strong> Dependabot and code scanning views</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The integration with Microsoft Defender for Cloud is in public preview and subject to change.</p>
+</div>
+<p>For more information about production context, see <a href="../../tutorials/secure-your-organization/prioritize-alerts-in-production-code.html">Prioritizing Dependabot and code scanning alerts using production context</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Qualifier</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>artifact-registry</code> or <code>artifact-registry-url</code></td>
+<td>Defines the name or location of the artifact registry used by the repository. For example: <code>artifact-registry:jfrog-artifactory</code> or <code>artifact-registry-url:my-registry.example.com</code>.<br><br>Uses metadata from the <a href="https://docs.github.com/en/rest/orgs/artifact-metadata?apiVersion=2022-11-28#create-artifact-metadata-storage-record" class="external">Storage Record API</a>.</td>
+</tr>
+<tr>
+<td><code>has: deployment</code></td>
+<td>Limits alerts to those reported as in deployment.<br><br>Uses metadata from the <a href="https://docs.github.com/en/rest/orgs/artifact-metadata?apiVersion=2022-11-28#create-artifact-deployment-record" class="external">Deployment Record API</a>.</td>
+</tr>
+<tr>
+<td><code>runtime-risk</code></td>
+<td>Limits alerts to those reported as presenting a specific type of runtime risk. For example: <code>runtime-risk:internet-exposed</code><br><br>Uses metadata from the <a href="https://docs.github.com/en/rest/orgs/artifact-metadata?apiVersion=2022-11-28#create-artifact-deployment-record" class="external">Deployment Record API</a>.</td>
+</tr>
+</tbody>
+</table>
+<h2 title="Dependabot view filters"><a href="#dependabot-view-filters" aria-hidden="true" class="anchor" id="dependabot-view-filters"></a>Dependabot view filters</h2>
+<p><strong>Available in:</strong></p>
+<ul>
+<li>Dependabot view</li>
+<li>Dependabot malware alerts view</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Qualifier</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>assignee</code></td>
+<td>Display alerts by assignee username or team, for example: <code>assignee:@octocat</code>, <code>assignee:@copilot</code>, or <code>assignee:@github/security-team</code>.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>ecosystem</code></td>
+<td>Display Dependabot alerts detected in a specified ecosystem, for example: <code>ecosystem:Maven</code>.</td>
+</tr>
+<tr>
+<td><code>epss_percentage</code></td>
+<td>Display Dependabot alerts whose EPSS score meets the defined criteria, for example: <code>epss_percentage:&gt;=0.01</code></td>
+</tr>
+<tr>
+<td><code>has</code></td>
+<td>Display Dependabot alerts for vulnerabilities where either a secure version is already available (<code>patch</code>) or where at least one call from the repository to a vulnerable function is detected (<code>vulnerable-calls</code>). For more information, see <a href="../../how-tos/manage-security-alerts/manage-dependabot-alerts/viewing-and-updating-dependabot-alerts.html#about-the-detection-of-calls-to-vulnerable-functions">Viewing and updating Dependabot alerts</a>.</td>
+</tr>
+<tr>
+<td><code>is</code></td>
+<td>Display Dependabot alerts that are open (<code>open</code>) or closed (<code>closed</code>).</td>
+</tr>
+<tr>
+<td><code>package</code></td>
+<td>Display Dependabot alerts detected in the specified package, for example: <code>package:semver</code>.</td>
+</tr>
+<tr>
+<td><code>props</code></td>
+<td>Display Dependabot alerts for repositories with a specific custom property set. For example, <code>props.data_sensitivity:high</code> displays results for repositories with the <code>data_sensitivity</code> property set to the value <code>high</code>.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>relationship</code></td>
+<td>Display Dependabot alerts detected in direct (<code>relationship:direct</code>) or indirect dependencies (<code>relationship:transitive</code>).</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>repo</code></td>
+<td>Display Dependabot alerts detected in a specified repository, for example: <code>repo:octo-repository</code>.</td>
+</tr>
+<tr>
+<td><code>resolution</code></td>
+<td>Display Dependabot alerts closed as "auto-dismissed" (<code>auto-dismissed</code>), "a fix has already been started" (<code>fix-started</code>), "fixed" (<code>fixed</code>), "this alert is inaccurate or incorrect" (<code>inaccurate</code>), "no bandwidth to fix this" (<code>no-bandwidth</code>), "vulnerable code is not actually used" (<code>not-used</code>), or "risk is tolerable to this project" (<code>tolerable-risk</code>).</td>
+</tr>
+<tr>
+<td><code>scope</code></td>
+<td>Display Dependabot alerts from the development dependency (<code>development</code>) or from the runtime dependency (<code>runtime</code>).</td>
+</tr>
+<tr>
+<td><code>severity</code></td>
+<td>Display Dependabot alerts of the specified severity, for example: <code>severity:critical</code>.</td>
+</tr>
+<tr>
+<td><code>sort</code></td>
+<td>Groups Dependabot alerts by the manifest file path the alerts point to (<code>manifest-path</code>) or by the name of the package where the alert was detected (<code>package-name</code>). Alternatively, displays alerts from most important to least important, as determined by CVSS score, vulnerability impact, relevancy, and actionability (<code>most-important</code>), from newest to oldest (<code>newest</code>), from oldest to newest (<code>oldest</code>), or from most to least severe (<code>severity</code>).</td>
+</tr>
+<tr>
+<td><code>team</code></td>
+<td>Display Dependabot alerts owned by members of the specified team, for example: <code>team:octocat-dependabot-team</code>.</td>
+</tr>
+<tr>
+<td><code>topic</code></td>
+<td>Display Dependabot alerts with the matching repository topic, for example: <code>topic:asdf</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 title="Dependabot dashboard filters"><a href="#dependabot-dashboard-filters" aria-hidden="true" class="anchor" id="dependabot-dashboard-filters"></a>Dependabot dashboard filters</h2>
+<p><strong>Available in:</strong> Dependabot dashboard view</p>
+<table>
+<thead>
+<tr>
+<th>Qualifier</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">repo</code></td>
+<td>Display Dependabot alerts detected in a specified repository, for example: <code>repo:octo-repository</code>.</td>
+</tr>
+<tr>
+<td><code class="keyword">topic</code></td>
+<td>Display Dependabot alerts with the matching repository topic, for example: <code>topic:asdf</code>.</td>
+</tr>
+<tr>
+<td><code class="keyword">team</code></td>
+<td>Display Dependabot alerts owned by members of the specified team, for example: <code>team:octocat-dependabot-team</code>.</td>
+</tr>
+<tr>
+<td><code class="keyword">visibility</code></td>
+<td>Display Dependabot alerts detected in repositories of the specified visibility, for example: <code>visibility:private</code>.</td>
+</tr>
+<tr>
+<td><code class="keyword">archived</code></td>
+<td>Display Dependabot alerts detected in respositories that are either archived, or not, for example: <code>archived:true</code>.</td>
+</tr>
+<tr>
+<td><code class="keyword">state</code></td>
+<td>Display Dependabot alerts of the specified state, for example: <code>state:unresolved</code>.</td>
+</tr>
+<tr>
+<td><code class="keyword">severity</code></td>
+<td>Display Dependabot alerts of the specified severity, for example: <code>severity:critical</code>.</td>
+</tr>
+<tr>
+<td><code class="keyword">scope</code></td>
+<td>Display Dependabot alerts from the development dependency (<code>development</code>) or from the runtime dependency (<code>runtime</code>).</td>
+</tr>
+<tr>
+<td><code class="keyword">package</code></td>
+<td>Display Dependabot alerts detected in the specified package, for example: <code>package:lodash</code>.</td>
+</tr>
+<tr>
+<td><code class="keyword">ecosystem</code></td>
+<td>Display Dependabot alerts detected in a specified ecosystem, for example: <code>ecosystem:Maven</code>.</td>
+</tr>
+<tr>
+<td><code class="keyword">relationship</code></td>
+<td>Display Dependabot alerts of the specified relationship, for example: <code>relationship:indirect</code>.</td>
+</tr>
+<tr>
+<td><code class="keyword">epss_percentage</code></td>
+<td>Display Dependabot alerts whose EPSS score meets the defined criteria, for example: <code>epss_percentage:&gt;=0.01</code></td>
+</tr>
+<tr>
+<td><code class="keyword">exclude &lt;QUALIFIER&gt;</code></td>
+<td>Applies to all the available qualifiers.<br>Display alerts that do not match the selected qualifier from the list of Dependabot alerts</td>
+</tr>
+</tbody>
+</table>
+<p>Alternatively, you can use complex filters by clicking <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-filter" aria-label="filter" role="img"><path d="M.75 3h14.5a.75.75 0 0 1 0 1.5H.75a.75.75 0 0 1 0-1.5ZM3 7.75A.75.75 0 0 1 3.75 7h8.5a.75.75 0 0 1 0 1.5h-8.5A.75.75 0 0 1 3 7.75Zm3 4a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg> Filter</strong> and build custom filters to suit your needs.</p>
+<h2 title="Code scanning view filters"><a href="#code-scanning-view-filters" aria-hidden="true" class="anchor" id="code-scanning-view-filters"></a>Code scanning view filters</h2>
+<p><strong>Available in:</strong> code scanning view</p>
+<p>You can click any result to see full details of the relevant query and the line of code that triggered the alert.</p>
+<table>
+<thead>
+<tr>
+<th>Qualifier</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">is</code></td>
+<td>Display code scanning alerts that are open (<code>open</code>) or closed (<code>closed</code>).</td>
+</tr>
+<tr>
+<td><code class="keyword">resolution</code></td>
+<td>Display code scanning alerts closed as "false positive" (<code>false-positive</code>), "fixed" (<code>fixed</code>), "used in tests" (<code>used-in-tests</code>), or "won't fix" (<code>wont-fix</code>).</td>
+</tr>
+<tr>
+<td><code class="keyword">rule</code></td>
+<td>Display code scanning alerts identified by the specified rule.</td>
+</tr>
+<tr>
+<td><code class="keyword">severity</code></td>
+<td>Display code scanning alerts categorized as <code>critical</code>, <code>high</code>, <code>medium</code>, or <code>low</code> security alerts. Alternatively, displays code scanning alerts categorized as <code>error</code>, <code>warning</code>, <code>note</code> problems.</td>
+</tr>
+<tr>
+<td><code class="keyword">sort</code></td>
+<td>Display alerts from newest to oldest (<code>created-desc</code>), oldest to newest (<code>created-asc</code>), most recently updated (<code>updated-desc</code>), or least recently updated (<code>updated-asc</code>).</td>
+</tr>
+<tr>
+<td><code class="keyword">tool</code></td>
+<td>Display code scanning alerts detected by the specified tool, for example: <code>tool:CodeQL</code> for alerts created using the CodeQL application in GitHub.</td>
+</tr>
+</tbody>
+</table>
+<h2 title="Secret scanning view filters"><a href="#secret-scanning-view-filters" aria-hidden="true" class="anchor" id="secret-scanning-view-filters"></a>Secret scanning view filters</h2>
+<p><strong>Available in:</strong> secret scanning view</p>
+<table>
+<thead>
+<tr>
+<th>Qualifier</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bypassed</code></td>
+<td>Display secret scanning alerts where push protection was bypassed (<code>true</code>) or not bypassed (<code>false</code>).</td>
+</tr>
+<tr>
+<td><code>is</code></td>
+<td>Display secret scanning alerts that are open (<code>open</code>), closed (<code>closed</code>), publicly leaked (<code>publicly-leaked</code>), or multi-repository (<code>multi-repository</code>).</td>
+</tr>
+<tr>
+<td><code>props</code></td>
+<td>Display alerts for repositories with a specific custom property set. For example, <code>props.data_sensitivity:high</code> displays results for repositories with the <code>data_sensitivity</code> property set to the value <code>high</code>.</td>
+</tr>
+<tr>
+<td><code>provider</code></td>
+<td>Display alerts for all secrets issued by a specified provider, for example: <code>adafruit</code>.</td>
+</tr>
+<tr>
+<td><code>repo</code></td>
+<td>Display alerts detected in a specified repository, for example: <code>repo:octo-repository</code>.</td>
+</tr>
+<tr>
+<td><code>resolution</code></td>
+<td>Display secret scanning alerts closed as "false positive" (<code>false-positive</code>), "hidden by config" (<code>hidden-by-config</code>), "pattern deleted" (<code>pattern-deleted</code>), "pattern edited" (<code>pattern-edited</code>), "revoked" (<code>revoked</code>), "used in tests" (<code>used-in-tests</code>), or "won't fix" (<code>wont-fix</code>).</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>results</code></td>
+<td>Display default (<code>default</code>) or generic (<code>generic</code>) secret scanning alerts.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>secret-type</code></td>
+<td>Display alerts for the specified secret and provider (<code>provider-pattern</code>) or custom pattern (<code>custom-pattern</code>).</td>
+</tr>
+<tr>
+<td><code>sort</code></td>
+<td>Display alerts from newest to oldest (<code>created-desc</code>), oldest to newest (<code>created-asc</code>), most recently updated (<code>updated-desc</code>), or least recently updated (<code>updated-asc</code>).</td>
+</tr>
+<tr>
+<td><code>team</code></td>
+<td>Display alerts owned by members of the specified team, for example: <code>team:octocat-dependabot-team</code>.</td>
+</tr>
+<tr>
+<td><code>topic</code></td>
+<td>Display alerts with the matching repository topic, for example: <code>topic:asdf</code>.</td>
+</tr>
+<tr>
+<td><code>validity</code></td>
+<td>Display alerts for a specific validity (<code>active</code>, <code>inactive</code>, or <code>unknown</code>).</td>
+</tr>
+</tbody>
+</table>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

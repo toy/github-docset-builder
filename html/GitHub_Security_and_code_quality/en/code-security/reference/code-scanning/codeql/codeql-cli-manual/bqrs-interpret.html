@@ -1,0 +1,165 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>bqrs interpret</title><link rel="stylesheet" href="../../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../../index.html">Security and code quality</a> / <a href="../../../index.html">Reference</a> / <a href="../../index.html">Code scanning</a> / <a href="../index.html">CodeQL</a> / <a href="index.html">CodeQL CLI manual</a> / </nav><h1><a href="#bqrs-interpret" aria-hidden="true" class="anchor" id="bqrs-interpret"></a>bqrs interpret</h1>
+<p>[Plumbing] Interpret data in a single BQRS.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This content describes the most recent release of the CodeQL CLI. For more information about this release, see <a href="https://github.com/github/codeql-cli-binaries/releases" class="external">https://github.com/github/codeql-cli-binaries/releases</a>.</p>
+<p>To see details of the options available for this command in an earlier release, run the command with the <span style="white-space: nowrap;"><code>--help</code></span> option in your terminal.</p>
+</div>
+<h2 title="Synopsis"><a href="#synopsis" aria-hidden="true" class="anchor" id="synopsis"></a>Synopsis</h2>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql bqrs interpret --format=&lt;format&gt; --output=&lt;output&gt; -t=&lt;String=String&gt; [--threads=&lt;num&gt;] [--source-archive=&lt;sourceArchive&gt;] [--source-location-prefix=&lt;sourceLocationPrefix&gt;] &lt;options&gt;... -- &lt;bqrs-file&gt;
+</span></code></pre>
+<h2 title="Description"><a href="#description" aria-hidden="true" class="anchor" id="description"></a>Description</h2>
+<p><span data-escaped-char="">[</span>Plumbing] Interpret data in a single BQRS.</p>
+<p>A command that interprets a single BQRS file according to the provided<br>
+metadata and generates output in the specified format.</p>
+<h2 title="Options"><a href="#options" aria-hidden="true" class="anchor" id="options"></a>Options</h2>
+<h3 title="Primary Options"><a href="#primary-options" aria-hidden="true" class="anchor" id="primary-options"></a>Primary Options</h3>
+<h4><a href="#bqrs-file" aria-hidden="true" class="anchor" id="bqrs-file"></a><code>&lt;bqrs-file&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Mandatory] The BQRS file to interpret.</p>
+<h4><a href="#--formatformat" aria-hidden="true" class="anchor" id="--formatformat"></a><code>--format=&lt;format&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Mandatory] The format in which to write the results. One of:</p>
+<p><code>csv</code>: Formatted comma-separated values, including columns with both<br>
+rule and alert metadata.</p>
+<p><code>sarif-latest</code>: Static Analysis Results Interchange Format (SARIF), a<br>
+JSON-based format for describing static analysis results. This format<br>
+option uses the most recent supported version (v2.1.0). This option is<br>
+not suitable for use in automation as it will produce different versions<br>
+of SARIF between different CodeQL versions.</p>
+<p><code>sarifv2.1.0</code>: SARIF v2.1.0.</p>
+<p><code>graphtext</code>: A textual format representing a graph. Only compatible with<br>
+queries with @kind graph.</p>
+<p><code>dgml</code>: Directed Graph Markup Language, an XML-based format for<br>
+describing graphs. Only compatible with queries with @kind graph.</p>
+<p><code>dot</code>: Graphviz DOT language, a text-based format for describing graphs.<br>
+Only compatible with queries with @kind graph.</p>
+<h4><a href="#-o---outputoutput" aria-hidden="true" class="anchor" id="-o---outputoutput"></a><code>-o, --output=&lt;output&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Mandatory] The output path to write results to. For graph formats<br>
+this should be a directory, and the result (or results if this command<br>
+supports interpreting more than one query) will be written within that<br>
+directory.</p>
+<h4><a href="#-tstringstring" aria-hidden="true" class="anchor" id="-tstringstring"></a><code>-t=&lt;String=String&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Mandatory] A query metadata key value pair. Repeat for each piece of<br>
+metadata. At least the keys 'kind' and 'id' must be specified. Keys<br>
+do not need to be prefixed with @.</p>
+<h4><a href="#--max-pathsmaxpaths" aria-hidden="true" class="anchor" id="--max-pathsmaxpaths"></a><code>--max-paths=&lt;maxPaths&gt;</code></h4>
+<p>The maximum number of paths to produce for each alert with paths.<br>
+(Default: 4)</p>
+<h4><a href="#--no-sarif-add-file-contents" aria-hidden="true" class="anchor" id="--no-sarif-add-file-contents"></a><code>--[no-]sarif-add-file-contents</code></h4>
+<p><span data-escaped-char="">[</span>SARIF formats only] Include the full file contents for all files<br>
+referenced in at least one result.</p>
+<h4><a href="#--no-sarif-add-snippets" aria-hidden="true" class="anchor" id="--no-sarif-add-snippets"></a><code>--[no-]sarif-add-snippets</code></h4>
+<p><span data-escaped-char="">[</span>SARIF formats only] Include code snippets for each location mentioned<br>
+in the results, with two lines of context before and after the reported<br>
+location.</p>
+<h4><a href="#--no-sarif-add-query-help" aria-hidden="true" class="anchor" id="--no-sarif-add-query-help"></a><code>--[no-]sarif-add-query-help</code></h4>
+<p><span data-escaped-char="">[</span>SARIF formats only] <span data-escaped-char="">[</span>Deprecated] Include Markdown query help for<br>
+all queries. It loads query help for /path/to/query.ql from the<br>
+/path/to/query.md file. If this flag is not supplied the default<br>
+behavior is to include help only for custom queries i.e. those in query<br>
+packs which are not of the form <span data-escaped-char="">`</span>codeql/<span data-escaped-char="">&lt;</span>lang<span data-escaped-char="">&amp;</span>rt;-queries<span data-escaped-char="">`</span>. This<br>
+option has no effect when passed to codeql bqrs interpret.</p>
+<h4><a href="#--sarif-include-query-helpmode" aria-hidden="true" class="anchor" id="--sarif-include-query-helpmode"></a><code>--sarif-include-query-help=&lt;mode&gt;</code></h4>
+<p><span data-escaped-char="">[</span>SARIF formats only] Specify whether to include query help in the<br>
+SARIF output. One of:</p>
+<p><code>always</code>: Include query help for all queries.</p>
+<p><code>custom_queries_only</code> <em>(default)</em>: Include query help only for custom<br>
+queries i.e. those in query packs which are not of the form<br>
+<span data-escaped-char="">`</span>codeql/<span data-escaped-char="">&lt;</span>lang<span data-escaped-char="">&amp;</span>rt;-queries<span data-escaped-char="">`</span>.</p>
+<p><code>never</code>: Do not include query help for any queries.</p>
+<p>This option has no effect when passed to codeql bqrs interpret.</p>
+<p>Available since <code>v2.15.2</code>.</p>
+<h4><a href="#--no-sarif-include-alert-provenance" aria-hidden="true" class="anchor" id="--no-sarif-include-alert-provenance"></a><code>--no-sarif-include-alert-provenance</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] <span data-escaped-char="">[</span>SARIF formats only] Do not include alert provenance<br>
+information in the SARIF output.</p>
+<p>Available since <code>v2.18.1</code>.</p>
+<h4><a href="#--no-sarif-group-rules-by-pack" aria-hidden="true" class="anchor" id="--no-sarif-group-rules-by-pack"></a><code>--[no-]sarif-group-rules-by-pack</code></h4>
+<p><span data-escaped-char="">[</span>SARIF formats only] Place the rule object for each query under its<br>
+corresponding QL pack in the <code>&lt;run&gt;.tool.extensions</code> property. This<br>
+option has no effect when passed to codeql bqrs interpret.</p>
+<h4><a href="#--no-sarif-multicause-markdown" aria-hidden="true" class="anchor" id="--no-sarif-multicause-markdown"></a><code>--[no-]sarif-multicause-markdown</code></h4>
+<p><span data-escaped-char="">[</span>SARIF formats only] For alerts that have multiple causes, include<br>
+them as a Markdown-formatted itemized list in the output in addition to<br>
+as a plain string.</p>
+<h4><a href="#--no-sarif-minify" aria-hidden="true" class="anchor" id="--no-sarif-minify"></a><code>--no-sarif-minify</code></h4>
+<p><span data-escaped-char="">[</span>SARIF formats only] Produce pretty-printed SARIF output. By default,<br>
+SARIF output is minified to reduce the size of the output file.</p>
+<h4><a href="#--sarif-run-propertystringstring" aria-hidden="true" class="anchor" id="--sarif-run-propertystringstring"></a><code>--sarif-run-property=&lt;String=String&gt;</code></h4>
+<p><span data-escaped-char="">[</span>SARIF formats only] A key value pair to add to the generated SARIF<br>
+'run' property bag. Can be repeated.</p>
+<h4><a href="#--no-group-results" aria-hidden="true" class="anchor" id="--no-group-results"></a><code>--no-group-results</code></h4>
+<p><span data-escaped-char="">[</span>SARIF formats only] Produce one result per message, rather than one<br>
+result per unique location.</p>
+<h4><a href="#--csv-location-formatcsvlocationformat" aria-hidden="true" class="anchor" id="--csv-location-formatcsvlocationformat"></a><code>--csv-location-format=&lt;csvLocationFormat&gt;</code></h4>
+<p>The format in which to produce locations in CSV output. One of: uri,<br>
+line-column, offset-length. (Default: line-column)</p>
+<h4><a href="#--dot-location-url-formatdotlocationurlformat" aria-hidden="true" class="anchor" id="--dot-location-url-formatdotlocationurlformat"></a><code>--dot-location-url-format=&lt;dotLocationUrlFormat&gt;</code></h4>
+<p>A format string defining the format in which to produce file location<br>
+URLs in DOT output. The following place holders can be used {path}<br>
+{start:line} {start:column} {end:line} {end:column}, {offset}, {length}</p>
+<h4><a href="#--no-sublanguage-file-coverage" aria-hidden="true" class="anchor" id="--no-sublanguage-file-coverage"></a><code>--[no-]sublanguage-file-coverage</code></h4>
+<p><span data-escaped-char="">[</span>GitHub.com and GitHub Enterprise Server v3.12.0+ only] Use<br>
+sub-language file coverage information. This calculates, displays, and<br>
+exports separate file coverage information for languages which share a<br>
+CodeQL extractor like C and C++, Java and Kotlin, and JavaScript and<br>
+TypeScript.</p>
+<p>Available since <code>v2.15.2</code>.</p>
+<h4><a href="#--sarif-categorycategory" aria-hidden="true" class="anchor" id="--sarif-categorycategory"></a><code>--sarif-category=&lt;category&gt;</code></h4>
+<p><span data-escaped-char="">[</span>SARIF formats only] <span data-escaped-char="">[</span>Recommended] Specify a category for this<br>
+analysis to include in the SARIF output. A category can be used to<br>
+distinguish multiple analyses performed on the same commit and<br>
+repository, but on different languages or different parts of the code.</p>
+<p>If you analyze the same version of a code base in several different ways<br>
+(e.g., for different languages) and upload the results to GitHub for<br>
+presentation in Code Scanning, this value should differ between each of<br>
+the analyses, which tells Code Scanning that the analyses <em>supplement</em><br>
+rather than <em>supersede</em> each other. (The values should be consistent<br>
+between runs of the same analysis for <em>different</em> versions of the code<br>
+base.)</p>
+<p>This value will appear (with a trailing slash appended if not already<br>
+present) as the <code>&lt;run&gt;.automationDetails.id</code> property.</p>
+<h4><a href="#-j---threadsnum" aria-hidden="true" class="anchor" id="-j---threadsnum"></a><code>-j, --threads=&lt;num&gt;</code></h4>
+<p>The number of threads used for computing paths.</p>
+<p>Defaults to 1. You can pass 0 to use one thread per core on the machine,<br>
+or -<em>N</em> to leave <em>N</em> cores unused (except still use at least one<br>
+thread).</p>
+<h4><a href="#--column-kindcolumnkind" aria-hidden="true" class="anchor" id="--column-kindcolumnkind"></a><code>--column-kind=&lt;columnKind&gt;</code></h4>
+<p><span data-escaped-char="">[</span>SARIF only] The column kind used to interpret location columns. One<br>
+of: utf8, utf16, utf32, bytes.</p>
+<h4><a href="#--no-unicode-new-lines" aria-hidden="true" class="anchor" id="--no-unicode-new-lines"></a><code>--[no-]unicode-new-lines</code></h4>
+<p><span data-escaped-char="">[</span>SARIF only] Whether the unicode newline characters LS (Line<br>
+Separator, U+2028) and PS (Paragraph Separator, U+2029) are considered<br>
+as new lines when interpreting location line numbers.</p>
+<h3 title="Options / Source archive options - must be given together or not at all"><a href="#source-archive-options---must-be-given-together-or-not-at-all" aria-hidden="true" class="anchor" id="source-archive-options---must-be-given-together-or-not-at-all"></a>Source archive options - must be given together or not at all</h3>
+<h4><a href="#-s---source-archivesourcearchive" aria-hidden="true" class="anchor" id="-s---source-archivesourcearchive"></a><code>-s, --source-archive=&lt;sourceArchive&gt;</code></h4>
+<p>The directory or zip file containing the source archive.</p>
+<h4><a href="#-p---source-location-prefixsourcelocationprefix" aria-hidden="true" class="anchor" id="-p---source-location-prefixsourcelocationprefix"></a><code>-p, --source-location-prefix=&lt;sourceLocationPrefix&gt;</code></h4>
+<p>The file path on the original file system where the source code was<br>
+stored.</p>
+<h3 title="Options / Common options"><a href="#common-options" aria-hidden="true" class="anchor" id="common-options"></a>Common options</h3>
+<h4><a href="#-h---help" aria-hidden="true" class="anchor" id="-h---help"></a><code>-h, --help</code></h4>
+<p>Show this help text.</p>
+<h4><a href="#-jopt" aria-hidden="true" class="anchor" id="-jopt"></a><code>-J=&lt;opt&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Give option to the JVM running the command.</p>
+<p>(Beware that options containing spaces will not be handled correctly.)</p>
+<h4><a href="#-v---verbose" aria-hidden="true" class="anchor" id="-v---verbose"></a><code>-v, --verbose</code></h4>
+<p>Incrementally increase the number of progress messages printed.</p>
+<h4><a href="#-q---quiet" aria-hidden="true" class="anchor" id="-q---quiet"></a><code>-q, --quiet</code></h4>
+<p>Incrementally decrease the number of progress messages printed.</p>
+<h4><a href="#--verbositylevel" aria-hidden="true" class="anchor" id="--verbositylevel"></a><code>--verbosity=&lt;level&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Explicitly set the verbosity level to one of errors,<br>
+warnings, progress, progress+, progress++, progress+++. Overrides <code>-v</code><br>
+and <code>-q</code>.</p>
+<h4><a href="#--logdirdir" aria-hidden="true" class="anchor" id="--logdirdir"></a><code>--logdir=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Write detailed logs to one or more files in the given<br>
+directory, with generated names that include timestamps and the name of<br>
+the running subcommand.</p>
+<p>(To write a log file with a name you have full control over, instead<br>
+give <code>--log-to-stderr</code> and redirect stderr as desired.)</p>
+<h4><a href="#--common-cachesdir" aria-hidden="true" class="anchor" id="--common-cachesdir"></a><code>--common-caches=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Controls the location of cached data on disk that will<br>
+persist between several runs of the CLI, such as downloaded QL packs and<br>
+compiled query plans. If not set explicitly, this defaults to a<br>
+directory named <code>.codeql</code> in the user's home directory; it will be<br>
+created if it doesn't already exist.</p>
+<p>Available since <code>v2.15.2</code>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

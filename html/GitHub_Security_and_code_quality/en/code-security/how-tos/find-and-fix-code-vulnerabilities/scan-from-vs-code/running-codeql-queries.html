@@ -1,0 +1,138 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Running CodeQL queries</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Find and fix code vulnerabilities</a> / <a href="index.html">Scan from VS Code</a> / </nav><h1><a href="#running-codeql-queries" aria-hidden="true" class="anchor" id="running-codeql-queries"></a>Running CodeQL queries</h1>
+<p>You can run queries on CodeQL databases and view the results in Visual Studio Code.</p>
+<h2 title="About running CodeQL queries"><a href="#about-running-codeql-queries" aria-hidden="true" class="anchor" id="about-running-codeql-queries"></a>About running CodeQL queries</h2>
+<p>The <a href="https://github.com/github/codeql" class="external"><code>github/codeql</code></a> repository contains a large number of example queries. You can access any existing queries in your workspace through the "Queries" view.</p>
+<h3 title="About running CodeQL queries / Prerequisites"><a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h3>
+<p>To analyze a codebase, you run queries against a CodeQL database extracted from the code, so you'll need to select a database to work with in the extension. You can select a database locally (from a ZIP archive or an unarchived folder), from a public URL, or from a project's URL on GitHub.com. For more information, see <a href="managing-codeql-databases.html">Managing CodeQL databases</a>.</p>
+<h2 title="Running a single query"><a href="#running-a-single-query" aria-hidden="true" class="anchor" id="running-a-single-query"></a>Running a single query</h2>
+<ol>
+<li>
+<p>In the sidebar, open the "Queries" view.</p>
+</li>
+<li>
+<p>To run a query against the selected database, hover over the desired query, then click the <strong>Run local query</strong> icon.</p>
+</li>
+</ol>
+<p><img src="../../../../..//assets/images/help/security/codeql-for-vs-code-running-a-query.png" alt="Screenshot of the &quot;Queries&quot; view, with the &quot;Run local query&quot; button outlined in dark orange."></p>
+<p>The CodeQL extension runs the query on the current database and reports progress in the bottom-right corner of the application. When the results are ready, they're displayed in the CodeQL "Query Results" view.</p>
+<p>If there are any problems running a query, a notification is displayed in the bottom right corner of the application. In addition to the error message, the notification includes details of how to fix the problem.</p>
+<h2 title="Running all queries in a directory"><a href="#running-all-queries-in-a-directory" aria-hidden="true" class="anchor" id="running-all-queries-in-a-directory"></a>Running all queries in a directory</h2>
+<p>You can run every query in a directory.</p>
+<ol>
+<li>
+<p>In the sidebar, open the "Queries" view.</p>
+</li>
+<li>
+<p>Hover over the desired directory of queries, then click the <strong>Run local queries</strong> icon.</p>
+</li>
+</ol>
+<h2 title="Running a selection of queries"><a href="#running-a-selection-of-queries" aria-hidden="true" class="anchor" id="running-a-selection-of-queries"></a>Running a selection of queries</h2>
+<p>You can run multiple queries with a single command.</p>
+<ol>
+<li>
+<p>Go to the File Explorer.</p>
+</li>
+<li>
+<p>Select multiple files or folders that contain queries.</p>
+</li>
+<li>
+<p>Right-click and select <strong>CodeQL: Run Queries in Selected Files</strong>.</p>
+</li>
+</ol>
+<h2 title="Running a query without any setup"><a href="#running-a-query-without-any-setup" aria-hidden="true" class="anchor" id="running-a-query-without-any-setup"></a>Running a query without any setup</h2>
+<p>When working on a new query, you can open a "Quick Query" tab to easily execute your code and view the results, without having to save a <code>.ql</code> file in your workspace. Select <strong>CodeQL: Quick Query</strong> from the VS Code Command Palette, then to run the query use <strong>CodeQL: Run Query on Selected Database</strong>.</p>
+<p>You can see all quick queries that you've run in the current session in the "Query History" view. Click an entry to see the exact text of the quick query that produced the results. For more information, see <a href="#viewing-your-query-history">Viewing your query history</a>.</p>
+<p>Once you're happy with your quick query, you should save it in a CodeQL pack so you can access it later. For more information, see <a href="../../../tutorials/customize-code-scanning/customizing-analysis-with-codeql-packs.html">Customizing analysis with CodeQL packs</a>.</p>
+<h2 title="Running a specific part of a query or library"><a href="#running-a-specific-part-of-a-query-or-library" aria-hidden="true" class="anchor" id="running-a-specific-part-of-a-query-or-library"></a>Running a specific part of a query or library</h2>
+<p>This can be helpful if you're debugging a query or library and you want to locate the part that is wrong.</p>
+<p>Instead of using <strong>CodeQL: Run Query on Selected Database</strong> to run the whole query (the <a href="https://codeql.github.com/docs/ql-language-reference/queries/#select-clauses" class="external">select clause</a> and any <a href="https://codeql.github.com/docs/ql-language-reference/queries/#query-predicates" class="external">query predicates</a>), you can use <strong>CodeQL: Quick Evaluation</strong> to run a specific part of a <code>.ql</code> or <code>.qll</code> file.</p>
+<p><strong>CodeQL: Quick Evaluation</strong> evaluates a code snippet that you have selected, instead of the whole query, and displays results of that selection in the "Results" view.</p>
+<p>Possible targets for quick evaluation include:</p>
+<ul>
+<li>
+<p>Selecting the name of a CodeQL entity (such as a <a href="https://codeql.github.com/docs/ql-language-reference/types/#classes" class="external">class</a> or <a href="https://codeql.github.com/docs/ql-language-reference/predicates/#predicates" class="external">predicate</a>) to evaluate that entity.</p>
+</li>
+<li>
+<p>Selecting a <a href="https://codeql.github.com/docs/ql-language-reference/formulas/#formulas" class="external">formula</a> or <a href="https://codeql.github.com/docs/ql-language-reference/expressions/#expressions" class="external">expression</a> with free variables to evaluate that formula or expression.</p>
+</li>
+</ul>
+<p>For example, in the following snippet, you could select the predicate name <code>foo</code> or the formula <code>s = "bar"</code> for quick evaluation:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">predicate</span><span style="color:#c0c5ce;"> foo(string s) { </span><span style="color:#8fa1b3;">s</span><span style="color:#c0c5ce;"> = "</span><span style="color:#a3be8c;">bar</span><span style="color:#c0c5ce;">" }
+</span></code></pre>
+<h2 title="Running a query on multiple databases"><a href="#running-a-query-on-multiple-databases" aria-hidden="true" class="anchor" id="running-a-query-on-multiple-databases"></a>Running a query on multiple databases</h2>
+<p>This can be helpful if you want to test your query on multiple codebases, or find a vulnerability in multiple projects.</p>
+<ol>
+<li>
+<p>Open a query (<code>.ql</code>) file.</p>
+</li>
+<li>
+<p>Right-click and select <strong>CodeQL: Run Query on Multiple Databases</strong>.</p>
+</li>
+<li>
+<p>From the dropdown menu, select the databases that you want to run the query on.</p>
+</li>
+</ol>
+<h2 title="Viewing your query history"><a href="#viewing-your-query-history" aria-hidden="true" class="anchor" id="viewing-your-query-history"></a>Viewing your query history</h2>
+<p>To see the queries that you have run in the current session, open the "Query History" view.</p>
+<p>The "Query History" view contains information including the date and time when the query was run, the name of the query, the database on which it was run, and how long it took to run the query:</p>
+<ul>
+<li>
+<p>To customize the information that is displayed, right-click an entry and select <strong>Rename</strong>.</p>
+</li>
+<li>
+<p>Optionally, filter the view by language using the language selector. For more information, see <a href="managing-codeql-databases.html#filtering-databases-and-queries-by-language">Filtering databases and queries by language</a>.</p>
+</li>
+<li>
+<p>Click an entry to display the corresponding results, and double-click to display the query itself in the editor (or right-click and select <strong>View Query</strong>).</p>
+</li>
+<li>
+<p>To display the exact text that produced the results for a particular entry, right-click it and select <strong>View Query Text</strong>. This can differ from <strong>View Query</strong>, as the query file may have been modified since you last ran it.</p>
+</li>
+<li>
+<p>To remove queries from the view, select all the queries you want to remove, then right-click and select <strong>Delete</strong>.</p>
+</li>
+</ul>
+<h2 title="Understanding your query results"><a href="#understanding-your-query-results" aria-hidden="true" class="anchor" id="understanding-your-query-results"></a>Understanding your query results</h2>
+<ol>
+<li>
+<p>Click a query in the "Query History" view to display its results in the "Results" view.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Depending on the query, you can also choose different views such as CSV, <a href="../../../reference/code-scanning/codeql/codeql-cli/sarif-output.html">CodeQL CLI SARIF output</a>, or <a href="https://codeql.github.com/docs/codeql-overview/codeql-glossary/#dil" class="external">DIL format</a>. For example, to view the DIL format, right-click a result and select <strong>View DIL</strong>. The available output views are determined by the format and the metadata of the query. For more information, see <a href="https://codeql.github.com/docs/writing-codeql-queries/codeql-queries/#codeql-queries" class="external">CodeQL queries</a>.</p>
+</div>
+</li>
+<li>
+<p>Use the dropdown menu in the "Results" view to choose which results to display, and in what form to display them, such as a formatted alert message or a table of raw results.</p>
+</li>
+<li>
+<p>To sort the results by the entries in a particular column, click the column header.</p>
+</li>
+</ol>
+<p>If a result links to a source code element, you can click it to display it in the source.</p>
+<p>To use standard code navigation features in the source code, you can right-click an element and use the commands <strong>Go to Definition</strong> or <strong>Go to References</strong>. This runs a CodeQL query over the active file, which may take a few seconds. This query needs to run once for every file, so any additional references from the same file will be fast.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>If you're using an older database, code navigation commands such as <strong>Go to Definition</strong> and <strong>Go to References</strong> may not work. To use code navigation, try unzipping the database and running <code>codeql database cleanup &lt;database&gt;</code> on the unzipped database using the CodeQL CLI. Then, re-add the database to Visual Studio Code. For more information, see <a href="../../../reference/code-scanning/codeql/codeql-cli-manual/database-cleanup.html">database cleanup</a>.</p>
+</div>
+<h3 title="Understanding your query results / Comparing query results"><a href="#comparing-query-results" aria-hidden="true" class="anchor" id="comparing-query-results"></a>Comparing query results</h3>
+<p>When you're writing or debugging a query, it's useful to see how your changes affect the results. You can compare two sets of results to see exactly what has changed. To compare results, the two queries must be run on the same database.</p>
+<ol>
+<li>
+<p>Right-click a query in the "Query History" view and select <strong>Compare Results</strong>.</p>
+</li>
+<li>
+<p>A Quick Pick menu shows all valid queries to compare with. Select a query.</p>
+</li>
+<li>
+<p>The "Compare" view shows the differences in the results of the two queries.</p>
+</li>
+</ol>
+<h2 title="Troubleshooting"><a href="#troubleshooting" aria-hidden="true" class="anchor" id="troubleshooting"></a>Troubleshooting</h2>
+<p>To see the logs from running a particular query, right-click the query in the "Query History" view and select <strong>Show Query Log</strong>. If the log file is too large for the extension to open in VS Code, the file will be displayed in your file explorer so you can open it with an external program.</p>
+<p>For details about compiling and running queries, as well as information about database upgrades, check the CodeQL Query Server log. For more information, see <a href="accessing-logs.html">Accessing logs for CodeQL in Visual Studio Code</a>.</p>
+<p>By default, the extension deletes logs after each workspace session. To override this behavior, you can specify a custom directory for query server logs. For more information, see <a href="customizing-settings.html">Customizing settings</a>.</p>
+<p>You can use the <strong>CodeQL: Restart Query Server</strong> command to restart the query server. This restarts the server without affecting your CodeQL session history. You are most likely to need to restart the query server if you make external changes to files that the extension is using. For example, regenerating a CodeQL database that’s open in VS Code. In addition to problems in the log, you might also see: errors in code highlighting, incorrect results totals, or duplicate notifications that a query is running.</p>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>You can optionally use the extension to create your own custom queries. For more information, see <a href="creating-a-custom-query.html">Creating a custom query</a>.</p>
+<p>For information on running analysis at scale across many CodeQL databases, see <a href="running-codeql-queries-at-scale-with-multi-repository-variant-analysis.html">Running CodeQL queries at scale with multi-repository variant analysis</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

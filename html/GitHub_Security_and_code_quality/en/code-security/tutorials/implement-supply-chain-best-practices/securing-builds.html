@@ -1,0 +1,55 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Best practices for securing your build system</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Implement supply chain best practices</a> / </nav><h1><a href="#best-practices-for-securing-your-build-system" aria-hidden="true" class="anchor" id="best-practices-for-securing-your-build-system"></a>Best practices for securing your build system</h1>
+<p>Guidance on how to protect the end of your supply chain—the systems you use to build and distribute artifacts.</p>
+<h2 title="About this guide"><a href="#about-this-guide" aria-hidden="true" class="anchor" id="about-this-guide"></a>About this guide</h2>
+<p>This guide describes the highest impact changes you can make to improve the security of your build systems. Each section outlines a change you can make to your processes to improve security. The highest impact changes are listed first.</p>
+<h2 title="What's the risk?"><a href="#whats-the-risk" aria-hidden="true" class="anchor" id="whats-the-risk"></a>What's the risk?</h2>
+<p>Some attacks on software supply chains target the build system directly. If an attacker can modify the build process, they can exploit your system without the effort of compromising personal accounts or code. It's important to make sure that you don't forget to protect the build system as well as personal accounts and code.</p>
+<h2 title="Secure your build system"><a href="#secure-your-build-system" aria-hidden="true" class="anchor" id="secure-your-build-system"></a>Secure your build system</h2>
+<p>There are several security capabilities a build system should have:</p>
+<ol>
+<li>
+<p>The build steps should be clear and repeatable.</p>
+</li>
+<li>
+<p>You should know exactly what was running during the build process.</p>
+</li>
+<li>
+<p>Each build should start in a fresh environment, so a compromised build doesn't persist to affect future builds.</p>
+</li>
+</ol>
+<p>GitHub Actions can help you meet these capabilities. Build instructions are stored in your repository, alongside your code. You choose what environment your build runs on, including Windows, Mac, Linux, or runners you host yourself. Each build starts with a fresh runner image, making it difficult for an attack to persist in your build environment.</p>
+<p>In addition to the security benefits, GitHub Actions lets you trigger builds manually, periodically, or on git events in your repository for frequent and fast builds.</p>
+<p>GitHub Actions is a big topic, but a good place to get started is <a href="https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions" class="external">Understanding GitHub Actions</a>, as well as <a href="https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#choosing-github-hosted-runners" class="external">Workflow syntax for GitHub Actions</a>, and <a href="https://docs.github.com/en/actions/using-workflows/triggering-a-workflow" class="external">Triggering a workflow</a>.</p>
+<h2 title="Generate artifact attestations for your builds"><a href="#generate-artifact-attestations-for-your-builds" aria-hidden="true" class="anchor" id="generate-artifact-attestations-for-your-builds"></a>Generate artifact attestations for your builds</h2>
+<p>Artifact attestations enable you to create unfalsifiable provenance and integrity guarantees for the software you build. In turn, people who consume your software can verify where and how your software was built.</p>
+<p>When you generate artifact attestations with your software, you create cryptographically signed claims that establish your build's provenance and include the following information:</p>
+<ul>
+<li>A link to the workflow associated with the artifact</li>
+<li>The repository, organization, environment, commit SHA, and triggering event for the artifact</li>
+<li>Other information from the OIDC token used to establish provenance. For more information, see <a href="https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect" class="external">OpenID Connect</a>.</li>
+</ul>
+<p>You can also generate artifact attestations that include an associated software bill of materials (SBOM). Associating your builds with a list of the open source dependencies used in them provides transparency and enables consumers to comply with data protection standards.</p>
+<p>Artifact attestations include a signature over a built artifact, along with links to the source code and build instructions. If you sign your build with artifact attestations, you do not have to manage your own signing key material. GitHub handles this for you with the signing authority we operate.</p>
+<p>For more information, see <a href="https://docs.github.com/en/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds" class="external">Using artifact attestations to establish provenance for builds</a>.</p>
+<h2 title="Sign your builds"><a href="#sign-your-builds" aria-hidden="true" class="anchor" id="sign-your-builds"></a>Sign your builds</h2>
+<p>After your build process is secure, you want to prevent someone from tampering with the end result of your build process. A great way to do this is to sign your builds. When distributing software publicly, this is often done with a public/private cryptographic key pair. You use the private key to sign the build, and you publish your public key so users of your software can verify the signature on the build before they use it. If the bytes of the build are modified, the signature will not verify.</p>
+<p>How exactly you sign your build will depend on what sort of code you're writing, and who your users are. Often it's difficult to know how to securely store the private key. One basic option here is to use GitHub Actions encrypted secrets, although you'll need to be careful to limit who has access to those GitHub Actions workflows. If your private key is stored in another system accessible over the public internet (like Microsoft Azure, or HashiCorp Vault), a more advanced option is to authenticate with OpenID Connect, so you don't have to share secrets across systems. If your private key is only accessible from a private network, another option is to use self-hosted runners for GitHub Actions.</p>
+<p>For more information, see <a href="https://docs.github.com/en/actions/security-guides/encrypted-secrets" class="external">Using secrets in GitHub Actions</a>, <a href="https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect" class="external">OpenID Connect</a>, and <a href="https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners" class="external">Self-hosted runners</a>.</p>
+<h2 title="Use immutable releases"><a href="#use-immutable-releases" aria-hidden="true" class="anchor" id="use-immutable-releases"></a>Use immutable releases</h2>
+<p>If you are using release assets from other projects in your build system, or creating releases for your own work, you should reduce security risk by ensuring those releases are immutable, meaning they cannot be changed after publication. Immutable releases help prevent supply chain attacks and accidental breaking changes. For more information, see <a href="../../concepts/supply-chain-security/immutable-releases.html">Immutable releases</a>.</p>
+<h2 title="Harden security for GitHub Actions"><a href="#harden-security-for-github-actions" aria-hidden="true" class="anchor" id="harden-security-for-github-actions"></a>Harden security for GitHub Actions</h2>
+<p>There are many further steps you can take to additionally secure GitHub Actions. In particular, be careful when evaluating third-party workflows, and consider using <code>CODEOWNERS</code> to limit who can make changes to your workflows.</p>
+<p>For more information, see <a href="https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions" class="external">Secure use reference</a> and <a href="https://docs.github.com/en/actions/security-guides/using-githubs-security-features-to-secure-your-use-of-github-actions" class="external">Secure use reference</a>.</p>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<ul>
+<li>
+<p><a href="end-to-end-supply-chain-overview.html">Securing your end-to-end supply chain</a></p>
+</li>
+<li>
+<p><a href="securing-accounts.html">Best practices for securing accounts</a></p>
+</li>
+<li>
+<p><a href="securing-code.html">Best practices for securing code in your supply chain</a></p>
+</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

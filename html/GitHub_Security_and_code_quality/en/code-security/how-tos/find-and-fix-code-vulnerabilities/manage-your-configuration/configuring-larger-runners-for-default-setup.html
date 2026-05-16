@@ -1,0 +1,28 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Configuring larger runners for default setup</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Find and fix code vulnerabilities</a> / <a href="index.html">Manage your configuration</a> / </nav><h1><a href="#configuring-larger-runners-for-default-setup" aria-hidden="true" class="anchor" id="configuring-larger-runners-for-default-setup"></a>Configuring larger runners for default setup</h1>
+<p>Run code scanning default setup more quickly on bigger codebases using larger runners.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Support for larger runners for code scanning default setup is currently in public preview and subject to change.</p>
+</div>
+<h2 title="Provisioning organization-level larger runners for default setup"><a href="#provisioning-organization-level-larger-runners-for-default-setup" aria-hidden="true" class="anchor" id="provisioning-organization-level-larger-runners-for-default-setup"></a>Provisioning organization-level larger runners for default setup</h2>
+<ol>
+<li>
+<p>Add a larger runner to your organization. See <a href="https://docs.github.com/en/actions/using-github-hosted-runners/about-larger-runners/managing-larger-runners#adding-a-larger-runner-to-an-organization" class="external">Managing larger runners</a>.</p>
+<ul>
+<li>To add a custom label to your larger runner, give the runner a name that matches that label. You can use this custom label when you configure default setup with larger runners.</li>
+</ul>
+</li>
+<li>
+<p>By default, all repositories in your organization have access to organization-level runners, meaning every repository can use your larger runner. For information on granting only select repositories access to a larger runner, see <a href="https://docs.github.com/en/actions/using-github-hosted-runners/about-larger-runners/managing-larger-runners#allowing-repositories-to-access-larger-runners" class="external">Managing larger runners</a>.</p>
+</li>
+<li>
+<p>You can now configure default setup for your organization and repositories, and your larger runner will automatically pick up code scanning jobs. For more information on configuring default setup, see <a href="../configure-code-scanning/configuring-default-setup-for-code-scanning.html">Configuring default setup for code scanning</a> and <a href="../../secure-at-scale/configure-organization-security/configure-specific-tools/configuring-default-setup-for-code-scanning-at-scale.html">Configuring default setup for code scanning at scale</a>.</p>
+</li>
+</ol>
+<h2 title="Extra steps for Swift analysis"><a href="#extra-steps-for-swift-analysis" aria-hidden="true" class="anchor" id="extra-steps-for-swift-analysis"></a>Extra steps for Swift analysis</h2>
+<p>Currently, Swift analysis is not available on larger runners for default setup. Additionally, if your repository has access to a runner with the <code>code-scanning</code> label, such as a larger runner provisioned for default setup, default setup workflows will <em>only</em> use runners labeled <code>code-scanning</code>. If you would like to configure default setup on larger runners <em>and</em> analyze Swift, you have two options:</p>
+<ul>
+<li>Provision a self-hosted macOS runner with the <code>code-scanning</code> label in addition to your larger runner. For more information, see <a href="https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/adding-self-hosted-runners#adding-a-self-hosted-runner-to-a-repository" class="external">Adding self-hosted runners</a>.</li>
+<li>Ensure any repositories containing Swift <em>do not</em> have access to runners with the label <code>code-scanning</code>. Default setup workflows for that repository will only use standard runners</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

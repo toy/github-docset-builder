@@ -1,0 +1,28 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Enabling debug logging</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">How-tos</a> / <a href="index.html">Monitor workflows</a> / </nav><h1><a href="#enabling-debug-logging" aria-hidden="true" class="anchor" id="enabling-debug-logging"></a>Enabling debug logging</h1>
+<p>If the workflow logs do not provide enough detail to diagnose why a workflow, job, or step is not working as expected, you can enable additional debug logging.</p>
+<p>These extra logs are enabled by setting secrets or variables in the repository containing the workflow, so the same permissions requirements will apply:</p>
+<ul>
+<li>To create secrets or variables on GitHub for an organization repository, you must have <code>write</code> access. For a personal account repository, you must be a repository collaborator.</li>
+<li>To create secrets or variables for an environment in a personal account repository, you must be the repository owner. To create secrets or variables for an environment in an organization repository, you must have <code>admin</code> access. For more information on environments, see <a href="../deploy/configure-and-manage-deployments/manage-environments.html">Managing environments for deployment</a>.</li>
+<li>Organization owners can create secrets or variables at the organization level.</li>
+</ul>
+<p>For more information on setting secrets and variables, see <a href="../write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a> and <a href="../write-workflows/choose-what-workflows-do/use-variables.html">Store information in variables</a>.</p>
+<p>Additionally, anyone who has access to run a workflow can enable runner diagnostic logging and step debug logging for a workflow re-run. For more information, see <a href="../manage-workflow-runs/re-run-workflows-and-jobs.html">Re-running workflows and jobs</a>.</p>
+<h2 title="Enabling runner diagnostic logging"><a href="#enabling-runner-diagnostic-logging" aria-hidden="true" class="anchor" id="enabling-runner-diagnostic-logging"></a>Enabling runner diagnostic logging</h2>
+<p>Runner diagnostic logging provides additional log files that contain information about how a runner is executing a job. Two extra log files are added to the log archive:</p>
+<ul>
+<li>The runner process log, which includes information about coordinating and setting up runners to execute jobs.</li>
+<li>The worker process log, which logs the execution of a job.</li>
+</ul>
+<ol>
+<li>To enable runner diagnostic logging, set the following secret or variable in the repository that contains the workflow: <code>ACTIONS_RUNNER_DEBUG</code> to <code>true</code>. If both the secret and variable are set, the value of the secret takes precedence over the variable.</li>
+<li>To download runner diagnostic logs, download the log archive of the workflow run. The runner diagnostic logs are contained in the <code>runner-diagnostic-logs</code> folder. For more information on downloading logs, see <a href="use-workflow-run-logs.html#downloading-logs">Using workflow run logs</a>.</li>
+</ol>
+<h2 title="Enabling step debug logging"><a href="#enabling-step-debug-logging" aria-hidden="true" class="anchor" id="enabling-step-debug-logging"></a>Enabling step debug logging</h2>
+<p>Step debug logging increases the verbosity of a job's logs during and after a job's execution.</p>
+<ol>
+<li>To enable step debug logging, set the following secret or variable in the repository that contains the workflow: <code>ACTIONS_STEP_DEBUG</code> to <code>true</code>. If both the secret and variable are set, the value of the secret takes precedence over the variable.</li>
+<li>After setting the secret or variable, more debug events are shown in the step logs. For more information, see <a href="use-workflow-run-logs.html#viewing-logs-to-diagnose-failures">Using workflow run logs</a>.</li>
+</ol>
+<p>You can also use the <code>runner.debug</code> context to conditionally run steps only when debug logging is enabled. For more information, see <a href="../../reference/workflows-and-actions/contexts.html#runner-context">Contexts reference</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

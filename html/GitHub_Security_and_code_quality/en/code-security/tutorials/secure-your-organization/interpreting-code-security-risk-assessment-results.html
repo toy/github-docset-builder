@@ -1,0 +1,67 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Interpreting code security risk assessment results</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Secure your organization</a> / </nav><h1><a href="#interpreting-code-security-risk-assessment-results" aria-hidden="true" class="anchor" id="interpreting-code-security-risk-assessment-results"></a>Interpreting code security risk assessment results</h1>
+<p>Understand the results from your code security risk assessment and prioritize vulnerability remediation.</p>
+<h2 title="Introduction"><a href="#introduction" aria-hidden="true" class="anchor" id="introduction"></a>Introduction</h2>
+<p>In this tutorial, you'll interpret your code security risk assessment results, and learn how to:</p>
+<ul>
+<li>Understand risk metrics on the dashboard</li>
+<li>Identify which repositories and languages are most affected</li>
+<li>Prioritize vulnerabilities for remediation</li>
+</ul>
+<h2 title="Prerequisites"><a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<p>You must generate a code security risk assessment report and wait for the scan to complete. See <a href="../../how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/assess-your-vulnerability-risk.html">Running the code security risk assessment for your organization</a>.</p>
+<h2 title="Step 1: Understand your dashboard metrics"><a href="#step-1-understand-your-dashboard-metrics" aria-hidden="true" class="anchor" id="step-1-understand-your-dashboard-metrics"></a>Step 1: Understand your dashboard metrics</h2>
+<p>Once your assessment completes, review the key metrics at the top of the dashboard:</p>
+<ul>
+<li><strong>Total repositories scanned</strong>: The number of repositories that were successfully scanned out of those selected.</li>
+<li><strong>Total vulnerabilities found</strong>: The total number of vulnerabilities found across all scanned repositories.</li>
+<li><strong>Copilot Autofix</strong>: The number of vulnerabilities that are eligible for Copilot Autofix. Enabling GitHub Code Security gives you access to Copilot Autofix, which can automatically suggest fixes for these alerts.</li>
+</ul>
+<h2 title="Step 2: Review vulnerabilities by language"><a href="#step-2-review-vulnerabilities-by-language" aria-hidden="true" class="anchor" id="step-2-review-vulnerabilities-by-language"></a>Step 2: Review vulnerabilities by language</h2>
+<p>Look at the <strong>Vulnerabilities by language</strong> chart to understand which languages in your codebase are contributing most to your overall vulnerability count.</p>
+<p>If vulnerabilities are concentrated in a particular language, this may indicate:</p>
+<ul>
+<li>Specific frameworks or patterns in use that introduce common weaknesses</li>
+<li>Teams working in that language who may benefit from targeted secure coding guidance</li>
+</ul>
+<h2 title="Step 3: Identify the most affected repositories"><a href="#step-3-identify-the-most-affected-repositories" aria-hidden="true" class="anchor" id="step-3-identify-the-most-affected-repositories"></a>Step 3: Identify the most affected repositories</h2>
+<p>In the <strong>Repositories scanned</strong> table, you can see each scanned repository alongside the ratio of vulnerabilities eligible for Copilot Autofix out of the total vulnerabilities found.</p>
+<p>The <strong>Most vulnerable repository</strong> metric at the top of the page highlights the repository with the highest vulnerability count. This is a good place to start when prioritizing remediation.</p>
+<p>If a <strong>high percentage</strong> of repositories contain vulnerabilities, this may indicate:</p>
+<ul>
+<li>Widespread gaps in secure coding practices across teams</li>
+<li>A need for organization-wide tooling and guardrails like code scanning</li>
+</ul>
+<p>If only a <strong>few</strong> repositories contain vulnerabilities, you can focus remediation efforts on specific teams or codebases.</p>
+<h2 title="Step 4: Review rules detected"><a href="#step-4-review-rules-detected" aria-hidden="true" class="anchor" id="step-4-review-rules-detected"></a>Step 4: Review rules detected</h2>
+<p>Scroll to the <strong>Rules detected</strong> table to see a breakdown of vulnerabilities by rule, including:</p>
+<ul>
+<li><strong>Rule</strong>: The specific class of security issue detected</li>
+<li><strong>Rule severity</strong>: The severity level (critical, high, medium, or low)</li>
+<li><strong>Distinct repositories</strong>: How many different repositories contain this rule violation</li>
+<li><strong>Vulnerabilities found</strong>: The total count of this rule violation across all repositories</li>
+</ul>
+<p>The table sorts by vulnerability count by default, helping you identify the most prevalent issues. Pay particular attention to rules with a <strong>Critical</strong> or <strong>High</strong> severity that appear across multiple repositories, as these represent the greatest risk.</p>
+<h2 title="Step 5: Prioritize remediation"><a href="#step-5-prioritize-remediation" aria-hidden="true" class="anchor" id="step-5-prioritize-remediation"></a>Step 5: Prioritize remediation</h2>
+<p>Now that you understand the metrics, prioritize remediation based on risk.</p>
+<p>The highest priority vulnerabilities are <strong>critical and high severity rules that appear across multiple repositories</strong>, because they:</p>
+<ul>
+<li>Represent the greatest potential impact if exploited</li>
+<li>Are present in code your teams are actively working on</li>
+</ul>
+<p>Next, address vulnerabilities that present lower risk or require more effort to remediate:</p>
+<ul>
+<li><strong>Medium and low severity issues</strong>, which may still pose risk but are less immediately critical</li>
+<li><strong>Rules appearing in only one repository</strong>, which represent more contained exposure</li>
+</ul>
+<p>Also look for the following indicators, which may require broader intervention beyond individual fixes:</p>
+<ul>
+<li><strong>Many repositories affected by the same rule</strong>: Suggests a systemic pattern that may require team training or updated coding standards</li>
+<li><strong>High vulnerability counts in a specific language</strong>: May point to framework-level issues or missing scanning tooling for that language</li>
+</ul>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>To start remediating vulnerabilities with Copilot Autofix, enable GitHub Code Security for your organization. You have two options:</p>
+<ul>
+<li>To enable GitHub Code Security for an individual repository, click <strong>Enable</strong> next to a repository in the "Repositories scanned" table.</li>
+<li>To enable GitHub Code Security across your organization, click <strong>Enable Code Security</strong> at the top of the page. Here, you can choose whether to enable it for all repositories or selected repositories, then review the estimated cost before confirming.</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

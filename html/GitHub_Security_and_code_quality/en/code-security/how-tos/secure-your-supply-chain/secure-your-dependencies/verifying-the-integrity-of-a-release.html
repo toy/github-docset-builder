@@ -1,0 +1,41 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Verifying the integrity of a release</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Secure your supply chain</a> / <a href="index.html">Secure your dependencies</a> / </nav><h1><a href="#verifying-the-integrity-of-a-release" aria-hidden="true" class="anchor" id="verifying-the-integrity-of-a-release"></a>Verifying the integrity of a release</h1>
+<p>You can avoid tampering and accidental changes by ensuring the releases you use have not been modified after publication.</p>
+<div class="ghd-tool cli">
+<h2 title="Prerequisites"><a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<p>Before you can validate the authenticity of a release and its assets on the command line, you need to <a href="https://github.com/cli/cli?tab=readme-ov-file&amp;ref_product=supply-chain-security&amp;ref_type=engagement&amp;ref_style=text#installation" class="external">install the GitHub CLI</a>.</p>
+<h2 title="Verifying immutable releases and local artifacts"><a href="#verifying-immutable-releases-and-local-artifacts" aria-hidden="true" class="anchor" id="verifying-immutable-releases-and-local-artifacts"></a>Verifying immutable releases and local artifacts</h2>
+<ol>
+<li>
+<p>On the command line, open the repository containing the release you want to verify.</p>
+</li>
+<li>
+<p>To verify a release exists and is immutable, run the following command:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> release verify RELEASE-TAG
+</span></code></pre>
+</li>
+<li>
+<p>To verify a local artifact is an exact match for a release asset, run the following command:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> release verify-asset RELEASE-TAG ARTIFACT-PATH
+</span></code></pre>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This command cannot be used to verify the source code zip file or tarball for a release, since these assets are only created when a download is requested.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="ghd-tool webui">
+<ol>
+<li>
+<p>On GitHub, navigate to the main page of the repository.</p>
+</li>
+<li>
+<p>To the right of the list of files, click <strong>Releases</strong>.</p>
+<p><img src="../../../../..//assets/images/help/releases/release-link.png" alt="Screenshot of the main page of a repository. A link, labeled &quot;Releases&quot;, is highlighted with an orange outline."></p>
+</li>
+<li>
+<p>To the left of the release you want to verify, below the release author, confirm that "<svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-lock" aria-label="lock icon" role="img"><path d="M4 4a4 4 0 0 1 8 0v2h.25c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 12.25 15h-8.5A1.75 1.75 0 0 1 2 13.25v-5.5C2 6.784 2.784 6 3.75 6H4Zm8.25 3.5h-8.5a.25.25 0 0 0-.25.25v5.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25ZM10.5 6V4a2.5 2.5 0 1 0-5 0v2Z"></path></svg> Immutable" is present.</p>
+</li>
+</ol>
+</div>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

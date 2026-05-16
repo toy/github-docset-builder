@@ -1,0 +1,93 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>About security campaigns</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Security at scale</a> / </nav><h1><a href="#about-security-campaigns" aria-hidden="true" class="anchor" id="about-security-campaigns"></a>About security campaigns</h1>
+<p>You can fix security alerts at scale by creating security campaigns and collaborating with developers to burn down your security backlog.</p>
+<p>Once you have identified security alerts the next step is to identify the most urgent alerts and get them fixed. Security campaigns are a way to group alerts and share them with developers, so you can collaborate to remediate vulnerabilities in the code and any exposed secrets.</p>
+<h2 title="Security campaigns in your day-to-day work"><a href="#security-campaigns-in-your-day-to-day-work" aria-hidden="true" class="anchor" id="security-campaigns-in-your-day-to-day-work"></a>Security campaigns in your day-to-day work</h2>
+<p>You can use security campaigns to support many of your aims as a security leader.</p>
+<ul>
+<li>Improving the security posture of the company by leading work to remediate alerts.</li>
+<li>Reinforcing security training for developers by creating a campaign of related, code scanning alerts to fix collaboratively.</li>
+<li>Ensuring that secret scanning alerts are resolved within your remediation target.</li>
+<li>Building collaborative relationships between the security team and developers to promote shared ownership of security alerts.</li>
+<li>Providing clarity to developers on the most urgent alerts to fix and monitoring alert remediation.</li>
+</ul>
+<h2 title="Benefits of using security campaigns"><a href="#benefits-of-using-security-campaigns" aria-hidden="true" class="anchor" id="benefits-of-using-security-campaigns"></a>Benefits of using security campaigns</h2>
+<p>A security campaign has many benefits over other ways of encouraging developers to remediate security alerts. In particular,</p>
+<ul>
+<li>Developers are notified about any security campaigns that they can contribute to.</li>
+<li>Developers can see the alerts you've highlighted for remediation without leaving their normal workflows.</li>
+<li>Each campaign has a named point of contact for questions, reviews, and collaboration.</li>
+<li>For code scanning alerts, GitHub Copilot Autofix is automatically triggered to suggest a resolution.</li>
+<li>For both code scanning and secret scanning, you can assign alerts in a campaign to users with write access or to Copilot cloud agent to automatically generate pull requests with fixes.</li>
+</ul>
+<p>You can use one of the templates to select a group of closely related alerts for a campaign. This allows developers to build on the knowledge gained by resolving one alert and use it to fix several more, providing them with an incentive to fix multiple alerts.</p>
+<p>In addition, you can use the REST API to create and interact with campaigns more efficiently and at scale. For more information, see <a href="https://docs.github.com/en/rest/campaigns/campaigns" class="external">REST API endpoints for security campaigns</a>.</p>
+<h2 title="Differences between code and secret campaigns"><a href="#differences-between-code-and-secret-campaigns" aria-hidden="true" class="anchor" id="differences-between-code-and-secret-campaigns"></a>Differences between code and secret campaigns</h2>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Campaigns for secret scanning alerts are currently in public preview and are subject to change.</p>
+</div>
+<p>The creation workflow is the same for all campaigns, but you will notice a few differences in progress tracking and developer experience.</p>
+<div class="ghd-tool rowheaders">
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Code</th>
+<th>Secret</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Alerts available for inclusion</td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg> Default branch only</td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+</tr>
+<tr>
+<td>Repository tracking issues</td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Not supported" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+</tr>
+<tr>
+<td>Developer notifications</td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg> Requires write access to repository</td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg> Requires view access to alerts list</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Alert assignment</td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg> May raise permissions</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Automatic remediation support</td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg> GitHub Copilot Autofix</td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Not supported" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 title="About assigning alerts to users and Copilot cloud agent"><a href="#about-assigning-alerts-to-users-and-copilot-cloud-agent" aria-hidden="true" class="anchor" id="about-assigning-alerts-to-users-and-copilot-cloud-agent"></a>About assigning alerts to users and Copilot cloud agent</h2>
+<p>You can assign a code scanning or secret scanning alert to any user who has <strong>write</strong> access for the repository.</p>
+<p>If the assignee for a secret scanning alert <strong>cannot view the alert list</strong>, their permissions are temporarily raised for that alert. Any additional permissions are revoked when they are unassigned from the alert.</p>
+<p>GitHub notifies users:</p>
+<ul>
+<li>When they are assigned to an alert</li>
+<li>When that alert is dismissed</li>
+</ul>
+<p>For code scanning, you can also perform some of these operations programmatically using the REST API, such as assigning or unassigning users to alerts, and filtering alerts by assignee. For more information, see <a href="https://docs.github.com/en/rest/reference/code-scanning" class="external">REST API endpoints for code scanning</a> in the REST API documentation. Additionally, webhooks are available to notify you when an alert is assigned or an assignment is removed.</p>
+<p>If an autofix has been generated for alerts in a security campaign, you can select those alerts and assign them to Copilot cloud agent. Copilot will create a pull request and add you as a requested reviewer. See <a href="../../how-tos/manage-security-alerts/remediate-alerts-at-scale/fixing-alerts-in-security-campaign.html#assigning-alerts-to-copilot-cloud-agent">Fixing alerts in a security campaign</a>.</p>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<ul>
+<li><a href="../../tutorials/secure-your-organization/best-practice-fix-alerts-at-scale.html">Running a security campaign to fix alerts at scale</a></li>
+<li><a href="../../how-tos/manage-security-alerts/remediate-alerts-at-scale/creating-managing-security-campaigns.html">Creating and managing security campaigns</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

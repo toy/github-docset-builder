@@ -1,0 +1,47 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>CodeQL-powered analysis for Code Quality</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Reference</a> / <a href="index.html">Code quality</a> / </nav><h1><a href="#codeql-powered-analysis-for-code-quality" aria-hidden="true" class="anchor" id="codeql-powered-analysis-for-code-quality"></a>CodeQL-powered analysis for Code Quality</h1>
+<p>Information on how CodeQL-powered analysis for Code Quality works, the workflow used, and the status checks reported on pull requests.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>GitHub Code Quality is currently in public preview and subject to change.<br>
+During public preview, Code Quality will not be billed, although Code Quality scans will consume GitHub Actions minutes.</p>
+</div>
+<h2 title="CodeQL-powered analysis"><a href="#codeql-powered-analysis" aria-hidden="true" class="anchor" id="codeql-powered-analysis"></a>CodeQL-powered analysis</h2>
+<p>Code Quality uses CodeQL to perform rule-based analysis of pull requests and your default branch.</p>
+<ul>
+<li>
+<p>Findings for your <strong>default branch</strong> appear under the "Standard findings" dashboard under your repository's <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab.</p>
+</li>
+<li>
+<p>Findings <strong>on pull requests</strong> appear as comments made by <code>github-code-quality[bot]</code>.</p>
+</li>
+</ul>
+<p>Copilot Autofix suggestions are provided for findings where possible.</p>
+<h3 title="CodeQL-powered analysis / Query lists for supported languages"><a href="#query-lists-for-supported-languages" aria-hidden="true" class="anchor" id="query-lists-for-supported-languages"></a>Query lists for supported languages</h3>
+<p>Each Code Quality rule is written as a query in CodeQL and then run using GitHub Actions.</p>
+<p>The rules are continually refined by both GitHub and open source developers.</p>
+<ul>
+<li><a href="codeql-queries/csharp-queries.html">C# CodeQL queries for Code Quality</a></li>
+<li><a href="codeql-queries/go-queries.html">Go CodeQL queries for Code Quality</a></li>
+<li><a href="codeql-queries/java-queries.html">Java CodeQL queries for Code Quality</a></li>
+<li><a href="codeql-queries/javascript-queries.html">JavaScript CodeQL queries for Code Quality</a></li>
+<li><a href="codeql-queries/python-queries.html">Python CodeQL queries for Code Quality</a></li>
+<li><a href="codeql-queries/ruby-queries.html">Ruby CodeQL queries for Code Quality</a></li>
+</ul>
+<p>For more information about the CodeQL project, see <a href="https://codeql.github.com/" class="external">https://codeql.github.com/</a>.</p>
+<h2 title="Workflow used for code quality analysis"><a href="#workflow-used-for-code-quality-analysis" aria-hidden="true" class="anchor" id="workflow-used-for-code-quality-analysis"></a>Workflow used for code quality analysis</h2>
+<p>You can see all the workflow runs for Code Quality on the <strong>Actions</strong> tab for your repository. The dynamic workflow is called "Code Quality".</p>
+<p>By default, the Code Quality workflow runs on standard GitHub runners but you can configure Code Quality to use runners with a specific label. These may be hosted by GitHub or self-hosted.</p>
+<p>If your organization has configured caching of private registries, these will be available for code quality analysis to use to resolve dependencies.</p>
+<p>For more information, see:</p>
+<ul>
+<li><a href="../../how-tos/maintain-quality-code/enable-code-quality.html">Enabling GitHub Code Quality</a></li>
+<li><a href="../../how-tos/secure-at-scale/configure-organization-security/manage-usage-and-access/giving-org-access-private-registries.html#code-quality-access-to-private-registries">Giving security features access to private registries</a></li>
+</ul>
+<h2 title="Pull request status checks"><a href="#pull-request-status-checks" aria-hidden="true" class="anchor" id="pull-request-status-checks"></a>Pull request status checks</h2>
+<p>When code quality analysis runs on a pull request, the "CodeQL - Code Quality / Analyze" check is shown in the "Checks" section at the bottom of the pull request.</p>
+<p>Any code problems identified by the scan are reported in comments on the pull request. The comment is made by the <code>github-code-quality[bot]</code> and includes a Copilot Autofix suggestion.</p>
+<h3 title="Pull request status checks / Status check failures"><a href="#status-check-failures" aria-hidden="true" class="anchor" id="status-check-failures"></a>Status check failures</h3>
+<p>The workflow failed to run. For example, your budget for actions minutes is exhausted. See <a href="https://docs.github.com/en/actions/how-tos/monitor-workflows/use-workflow-run-logs#viewing-logs-to-diagnose-failures" class="external">Viewing logs to diagnose failures</a>.</p>
+<h3 title="Pull request status checks / Merging is blocked: Code quality findings were detected"><a href="#merging-is-blocked-code-quality-findings-were-detected" aria-hidden="true" class="anchor" id="merging-is-blocked-code-quality-findings-were-detected"></a>Merging is blocked: Code quality findings were detected</h3>
+<p>The scan found problems in the code that exceed the quality gate set by a code quality branch rule for the repository. You need to resolve these problems before you can merge the pull request. See <a href="../../how-tos/maintain-quality-code/unblock-your-pr.html">Resolving a block on your pull request</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

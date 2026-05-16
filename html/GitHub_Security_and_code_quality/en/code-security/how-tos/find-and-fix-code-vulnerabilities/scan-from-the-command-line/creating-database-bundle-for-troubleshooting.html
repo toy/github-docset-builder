@@ -1,0 +1,16 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Creating CodeQL CLI database bundles</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Find and fix code vulnerabilities</a> / <a href="index.html">Scan from the command line</a> / </nav><h1><a href="#creating-codeql-cli-database-bundles" aria-hidden="true" class="anchor" id="creating-codeql-cli-database-bundles"></a>Creating CodeQL CLI database bundles</h1>
+<p>Create a database bundle with CodeQL troubleshooting information.</p>
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>CodeQL CLI database bundles contain a copy of the source code being analyzed by CodeQL, therefore we suggest sharing these bundles only with people who are authorized to access that source code.</p>
+</div>
+<p>The following CodeQL CLI command syntax is suggested when creating a database bundle for troubleshooting purposes. This sample <code>database bundle</code> command requires CodeQL CLI version 2.17.6 or higher.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql database bundle --output=codeql-debug-artifacts.zip --include-diagnostics --include-logs --include-results -- &lt;dir&gt;
+</span></code></pre>
+<p>For this command, <code>&lt;dir&gt;</code> must be the path to the directory where the CodeQL database was created.</p>
+<p>The successful command execution creates a zip file called <code>codeql-debug-artifacts.zip</code> which contains CodeQL troubleshooting information. That file is the database bundle.</p>
+<p>This command assumes that the <code>--log-dir</code> command line argument was not used for the <code>database create</code> and <code>database analyze</code> commands. When that command line argument is used, the log files created by those commands will not be included with the database bundle.</p>
+<h2 title="Increasing the verbosity for database create and database analyze"><a href="#increasing-the-verbosity-for-database-create-and-database-analyze" aria-hidden="true" class="anchor" id="increasing-the-verbosity-for-database-create-and-database-analyze"></a>Increasing the verbosity for <code>database create</code> and <code>database analyze</code></h2>
+<p>If the <code>database create</code> and <code>database analyze</code> commands are not detailed enough for troubleshooting purposes, you can increase their verbosity.</p>
+<p>Both commands support the <code>--verbosity</code> command line argument which can be set to <code>progress++</code> prior to creating a database bundle.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

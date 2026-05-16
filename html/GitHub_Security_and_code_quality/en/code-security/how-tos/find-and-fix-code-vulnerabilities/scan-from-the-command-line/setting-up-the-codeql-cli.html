@@ -1,0 +1,83 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Setting up the CodeQL CLI</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Find and fix code vulnerabilities</a> / <a href="index.html">Scan from the command line</a> / </nav><h1><a href="#setting-up-the-codeql-cli" aria-hidden="true" class="anchor" id="setting-up-the-codeql-cli"></a>Setting up the CodeQL CLI</h1>
+<p>To get started with the CodeQL CLI, you need to download and set up the CLI so that it can access the tools and libraries required to create and analyze databases.</p>
+<h2 title="Setting up the CodeQL CLI"><a href="#setting-up-the-codeql-cli-1" aria-hidden="true" class="anchor" id="setting-up-the-codeql-cli-1"></a>Setting up the CodeQL CLI</h2>
+<p>To run CodeQL commands, you need to set up the CodeQL CLI so that it can access the tools, queries, and libraries required to create and analyze databases.</p>
+<p>The CodeQL CLI supports a range of use cases and directory structures. This article walks through a simple setup that works for most users and environments.</p>
+<p>If you plan to use the CodeQL CLI for security research or to test or contribute queries, you may need a more advanced setup. For more information, see <a href="../../../concepts/code-scanning/codeql/about-the-codeql-cli.html#getting-started">About the CodeQL CLI</a>.</p>
+<h3 title="Setting up the CodeQL CLI / Before you begin"><a href="#before-you-begin" aria-hidden="true" class="anchor" id="before-you-begin"></a>Before you begin</h3>
+<p>If you are using macOS on Apple Silicon (for example, Apple M1), ensure that the <a href="https://developer.apple.com/library/archive/technotes/tn2339/_index.html" class="external">Xcode command-line developer<br>
+tools</a> and <a href="https://support.apple.com/en-us/HT211861" class="external">Rosetta 2</a> are installed.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The CodeQL CLI is currently not compatible with non-glibc Linux distributions such as (muslc-based) Alpine Linux.</p>
+</div>
+<h3 title="Setting up the CodeQL CLI / 1. Download the CodeQL CLI tar archive"><a href="#1-download-the-codeql-cli-tar-archive" aria-hidden="true" class="anchor" id="1-download-the-codeql-cli-tar-archive"></a>1. Download the CodeQL CLI tar archive</h3>
+<p>The CodeQL CLI download package is a tar archive containing tools, scripts, and<br>
+various CodeQL-specific files. If you don’t have a GitHub Enterprise license then, by<br>
+downloading this archive, you are agreeing to the <a href="https://securitylab.github.com/tools/codeql/license" class="external">GitHub CodeQL Terms and<br>
+Conditions</a>.</p>
+<p>You should download the CodeQL bundle from <a href="https://github.com/github/codeql-action/releases" class="external">https://github.com/github/codeql-action/releases</a>. The bundle contains:</p>
+<ul>
+<li>CodeQL CLI product</li>
+<li>A compatible version of the queries and libraries from <a href="https://github.com/github/codeql" class="external">https://github.com/github/codeql</a></li>
+<li>Precompiled versions of all the queries included in the bundle</li>
+</ul>
+<p>You should always use the CodeQL bundle. This ensures compatibility and gives much better performance than a separate download of the CodeQL CLI and checkout of the CodeQL queries. If you will only be running the CLI on one specific platform, download the appropriate <code>codeql-bundle-PLATFORM.tar.zst</code> file. Alternatively, you can download <code>codeql-bundle.tar.zst</code>, which contains the CLI for all supported platforms.</p>
+<p>There are also <code>tar.gz</code> variants of the bundle, which are identical to the <code>tar.zst</code> variants except compressed using the less efficient gzip algorithm. The only reason to download the <code>tar.gz</code> variants is if you are using older decompression tools that do not support the Zstandard compression algorithm.</p>
+<h3 title="Setting up the CodeQL CLI / 2. Extract the CodeQL CLI tar archive"><a href="#2-extract-the-codeql-cli-tar-archive" aria-hidden="true" class="anchor" id="2-extract-the-codeql-cli-tar-archive"></a>2. Extract the CodeQL CLI tar archive</h3>
+<p>Extract the CodeQL CLI tar archive to a directory of your choosing.</p>
+<h3 title="Setting up the CodeQL CLI / Optional: Make the CodeQL CLI available in your CI system"><a href="#optional-make-the-codeql-cli-available-in-your-ci-system" aria-hidden="true" class="anchor" id="optional-make-the-codeql-cli-available-in-your-ci-system"></a>Optional: Make the CodeQL CLI available in your CI system</h3>
+<p>If you plan to run CodeQL code scanning analysis in a CI system, ensure that the full contents of the CodeQL CLI bundle are available to every CI server that will run analysis.</p>
+<p>For example, you can:</p>
+<ul>
+<li>Copy the bundle from a central internal location and extract it on each server, or</li>
+<li>Use the REST API to download the bundle directly from GitHub, ensuring that you receive the latest improvements to queries. For more information, see <a href="https://docs.github.com/en/rest/releases" class="external">REST API endpoints for releases and release assets</a>.</li>
+</ul>
+<h3 title="Setting up the CodeQL CLI / 3. Launch codeql"><a href="#3-launch-codeql" aria-hidden="true" class="anchor" id="3-launch-codeql"></a>3. Launch <code>codeql</code></h3>
+<p>Once extracted, you can run CodeQL processes by running the <code>codeql</code> executable in a couple of ways:</p>
+<ul>
+<li>By executing <code>&lt;extraction-root&gt;/codeql/codeql</code>, where <code>&lt;extraction-root&gt;</code> is the folder where you extracted the CodeQL CLI<br>
+package.</li>
+<li>By adding <code>&lt;extraction-root&gt;/codeql</code> to your <code>PATH</code>, so that you<br>
+can run the executable as just <code>codeql</code>.</li>
+</ul>
+<p>At this point, you can execute CodeQL commands. For a full list of the CodeQL CLI commands, see <a href="../../../reference/code-scanning/codeql/codeql-cli-manual/index.html">CodeQL CLI commands manual</a>.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>If you add <code>codeql</code> to your <code>PATH</code>, it can be accessed by CodeQL for Visual Studio Code to compile and run queries. For more information about configuring VS Code to access the CodeQL CLI, see <a href="../scan-from-vs-code/configuring-access-to-the-codeql-cli.html">Managing the CodeQL CLI in the VS Code extension</a>.</p>
+</div>
+<h2 title="Testing the CodeQL CLI configuration"><a href="#testing-the-codeql-cli-configuration" aria-hidden="true" class="anchor" id="testing-the-codeql-cli-configuration"></a>Testing the CodeQL CLI configuration</h2>
+<p>After you extract the CodeQL CLI bundle, you can run the following command to verify that the CLI is correctly configured to create and analyze databases:</p>
+<ul>
+<li><code>codeql resolve packs</code> if <code>/&lt;extraction root&gt;/codeql</code> is on the <code>PATH</code>.</li>
+<li><code>/&lt;extraction root&gt;/codeql/codeql resolve packs</code> otherwise.</li>
+</ul>
+<p>If successful, you should see output similar to the extract below:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Searching directories specified by `--additional-packs`. All directories have equal priority.
+</span><span style="color:#c0c5ce;">  Searching in:
+</span><span style="color:#c0c5ce;">    No packs were found at this location.
+</span><span style="color:#c0c5ce;">Searching directories specified by `--search-path`. Directories are searched in order.
+</span><span style="color:#c0c5ce;">Searching the root of the CodeQL distribution.
+</span><span style="color:#c0c5ce;">  Searching in:
+</span><span style="color:#c0c5ce;">      &lt;extraction root&gt;
+</span><span style="color:#c0c5ce;">    The following packs were found:
+</span><span style="color:#c0c5ce;">      codeql/java-all@&lt;version&gt;: (library) &lt;extraction root&gt;/qlpacks/codeql/javat-all/&lt;version&gt;/qlpack.yml
+</span><span style="color:#c0c5ce;">      codeql/java-queries@&lt;version&gt;: (query) &lt;extraction root&gt;/qlpacks/codeql/java-queries/&lt;version&gt;/qlpack.yml
+</span><span style="color:#c0c5ce;">      codeql/javascript-all@&lt;version&gt;: (library) &lt;extraction root&gt;/qlpacks/codeql/javascript-all/&lt;version&gt;/qlpack.yml
+</span><span style="color:#c0c5ce;">      codeql/javascript-queries@&lt;version&gt;: (query) &lt;extraction root&gt;/qlpacks/codeql/javascript-queries/&lt;version&gt;/qlpack.yml
+</span><span style="color:#c0c5ce;">      codeql/swift-all@&lt;version&gt;: (library) &lt;extraction root&gt;/qlpacks/codeql/swift-all/&lt;version&gt;/qlpack.yml
+</span><span style="color:#c0c5ce;">      codeql/swift-queries@&lt;version&gt;: (query) &lt;extraction root&gt;/qlpacks/codeql/swift-queries/&lt;version&gt;/qlpack.yml
+</span><span style="color:#c0c5ce;">...
+</span></code></pre>
+<p>The results have been truncated for brevity. The actual results will be longer and more detailed.</p>
+<p>You should check that the output contains the expected languages and also that the directory location for the qlpack files is correct. The location should be within the extracted CodeQL CLI bundle, shown in the earlier example as <code>&lt;extraction root&gt;</code>. If the CodeQL CLI is unable to locate the qlpacks for the expected languages, check that you downloaded the CodeQL bundle and not a standalone copy of the CodeQL CLI.</p>
+<p>You can also run <code>codeql resolve languages</code> to show which languages are available for database creation. This will list the languages supported by default in your CodeQL CLI package.</p>
+<p>Optionally, you can download some CodeQL packs containing pre-compiled queries you would like to run. For more information, see <a href="../../../tutorials/customize-code-scanning/customizing-analysis-with-codeql-packs.html">Customizing analysis with CodeQL packs</a>.</p>
+<p>The <code>codeql resolve packs</code> command is useful for diagnosing problems when the CodeQL CLI is unable to locate query packs that you expect to be available for analysis.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The <code>codeql resolve packs</code> command is available in the CodeQL CLI versions 2.19.0 and later. For earlier versions of the CLI, you should run the <code>codeql resolve qlpacks</code> command, which produces similar, but less detailed output.</p>
+</div>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>To learn how to prepare your code to be analyzed by the CodeQL CLI, see <a href="../../../tutorials/customize-code-scanning/preparing-your-code-for-codeql-analysis.html">Preparing your code for CodeQL analysis</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

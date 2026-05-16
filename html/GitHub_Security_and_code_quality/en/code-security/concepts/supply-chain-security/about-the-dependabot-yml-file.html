@@ -1,0 +1,53 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>About the dependabot.yml file</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Supply chain security</a> / </nav><h1><a href="#about-the-dependabotyml-file" aria-hidden="true" class="anchor" id="about-the-dependabotyml-file"></a>About the dependabot.yml file</h1>
+<p>The dependabot.yml controls automated dependency updates in your repository.</p>
+<p>The <code>dependabot.yml</code> file is an optional configuration file that gives you fine-grained control over how Dependabot monitors and updates dependencies (mainly <em>version updates</em> but also <em>security updates</em>) in your repository.</p>
+<p>Without a <code>dependabot.yml</code> file, Dependabot can still create security updates for vulnerable dependencies if you've enabled Dependabot security updates in your repository settings. However, you won't receive automated version updates or have control over update schedules and other configuration options.</p>
+<p>The <code>dependabot.yml</code> file uses YAML syntax. If you're new to YAML and want to learn more, see <a href="https://learnxinyminutes.com/yaml/" class="external">Learn YAML in five minutes</a>.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Dependabot alerts are configured in the repository or organization "Settings" tab and not in the <code>dependabot.yml</code> file, see <a href="../../how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-dependabot-alerts.html">Configuring Dependabot alerts</a>.</p>
+</div>
+<h2 title="What the dependabot.yml file does"><a href="#what-the-dependabotyml-file-does" aria-hidden="true" class="anchor" id="what-the-dependabotyml-file-does"></a>What the <code>dependabot.yml</code> file does</h2>
+<p>The <code>dependabot.yml</code> file controls how Dependabot performs updates on your dependencies. With this file, you can:</p>
+<h3 title="What the dependabot.yml file does / For version updates"><a href="#for-version-updates" aria-hidden="true" class="anchor" id="for-version-updates"></a>For version updates</h3>
+<ul>
+<li>Enable automated version updates</li>
+<li>Specify which package ecosystems and directories to monitor</li>
+<li>Set update schedules</li>
+<li>Customize pull request labels, assignees, reviewers, and commit messages</li>
+<li>Control which dependencies to update or ignore</li>
+<li>Configure authentication for private registries</li>
+</ul>
+<h3 title="What the dependabot.yml file does / For security updates"><a href="#for-security-updates" aria-hidden="true" class="anchor" id="for-security-updates"></a>For security updates</h3>
+<ul>
+<li>Customize security update pull requests with labels, assignees, and reviewers</li>
+<li>Define target branches for security updates</li>
+<li>Configure private registry authentication</li>
+<li>Set limits on open pull requests</li>
+</ul>
+<h2 title="Where to store the dependabot.yml file"><a href="#where-to-store-the-dependabotyml-file" aria-hidden="true" class="anchor" id="where-to-store-the-dependabotyml-file"></a>Where to store the <code>dependabot.yml</code> file</h2>
+<p>You must store this file in the <code>.github</code> directory of your repository in the default branch (typically <code>main</code>), at <code>.github/dependabot.yml</code> or <code>.github/dependabot.yaml</code>.</p>
+<h2 title="How the dependabot.yml file works"><a href="#how-the-dependabotyml-file-works" aria-hidden="true" class="anchor" id="how-the-dependabotyml-file-works"></a>How the <code>dependabot.yml</code> file works</h2>
+<p>When you add or update the <code>dependabot.yml</code> file in your repository, Dependabot reads the configuration and begins monitoring the specified package ecosystems according to your defined schedules. When Dependabot finds available updates, it creates pull requests with the dependency changes, following any customization rules you've specified in the configuration.</p>
+<p>The configuration file requires the following keys for each package ecosystem to monitor.</p>
+<ul>
+<li><strong><code>version</code></strong>: Top-level field that specifies the Dependabot configuration syntax version.</li>
+<li><strong><code>updates</code></strong>: Top-level section where you define each package ecosystem to monitor for updates.</li>
+<li><strong><code>package-ecosystem</code></strong>: Defined under <code>updates</code>, specifies which package manager to update (such as npm, pip, or Docker).</li>
+<li><strong><code>directories</code> or <code>directory</code></strong>: Defined under each <code>package-ecosystem</code> entry, specifies the location of manifest or dependency definition files.</li>
+<li><strong><code>schedule.interval</code></strong>: Defined under each <code>package-ecosystem</code> entry, sets how often to check for version updates (<code>daily</code>, <code>weekly</code>, or <code>monthly</code>).</li>
+</ul>
+<h2 title="Basic example"><a href="#basic-example" aria-hidden="true" class="anchor" id="basic-example"></a>Basic example</h2>
+<p>Here's a minimal <code>dependabot.yml</code> file that monitors npm dependencies daily:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">npm</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">daily</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<h2 title="Next step"><a href="#next-step" aria-hidden="true" class="anchor" id="next-step"></a>Next step</h2>
+<ul>
+<li>Configure your repository so that Dependabot automatically updates the packages you use, see <a href="../../how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-dependabot-version-updates.html">Configuring Dependabot version updates</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Configuring the self-hosted runner application as a service</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Manage runners</a> / <a href="index.html">Self-hosted runners</a> / </nav><h1><a href="#configuring-the-self-hosted-runner-application-as-a-service" aria-hidden="true" class="anchor" id="configuring-the-self-hosted-runner-application-as-a-service"></a>Configuring the self-hosted runner application as a service</h1>
+<p>You can configure the self-hosted runner application as a service to automatically start the runner application when the machine starts.</p>
+<div class="ghd-tool linux">
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>You must add a runner to GitHub before you can configure the self-hosted runner application as a service.<br>
+For more information, see <a href="add-runners.html">Adding self-hosted runners</a>.</p>
+</div>
+<p>For Linux systems that use <code>systemd</code>, you can use the <code>svc.sh</code> script that is created after successfully adding the runner to install and manage using the application as a service.</p>
+<p>On the runner machine, open a shell in the directory where you installed the self-hosted runner application. Use the commands below to install and manage the self-hosted runner service.</p>
+</div>
+<div class="ghd-tool windows">
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Configuring the self-hosted runner application as a service on Windows is part of the application configuration process. If you have already configured the self-hosted runner application but did not choose to configure it as a service, you must remove the runner from GitHub and re-configure the application. When you re-configure the application, choose the option to configure the application as a service.</p>
+<p>For more information, see <a href="remove-runners.html">Removing self-hosted runners</a> and <a href="add-runners.html">Adding self-hosted runners</a>.</p>
+</div>
+<p>You can manage the runner service in the Windows <strong>Services</strong> application, or you can use PowerShell to run the commands below.</p>
+</div>
+<div class="ghd-tool mac">
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>You must add a runner to GitHub before you can configure the self-hosted runner application as a service.<br>
+For more information, see <a href="add-runners.html">Adding self-hosted runners</a>.</p>
+</div>
+<p>On the runner machine, open a shell in the directory where you installed the self-hosted runner application. Use the commands below to install and manage the self-hosted runner service.</p>
+</div>
+<div class="ghd-tool linux">
+<h2 title="Installing the service"><a href="#installing-the-service" aria-hidden="true" class="anchor" id="installing-the-service"></a>Installing the service</h2>
+<ol>
+<li>
+<p>Stop the self-hosted runner application if it is currently running.</p>
+</li>
+<li>
+<p>Install the service with the following command:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">sudo ./svc.sh install
+</span></code></pre>
+</li>
+<li>
+<p>Alternatively, the command takes an optional <code>user</code> argument to install the service as a different user.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">./svc.sh install USERNAME
+</span></code></pre>
+</li>
+</ol>
+</div>
+<div class="ghd-tool mac">
+<h2 title="Installing the service"><a href="#installing-the-service-1" aria-hidden="true" class="anchor" id="installing-the-service-1"></a>Installing the service</h2>
+<ol>
+<li>
+<p>Stop the self-hosted runner application if it is currently running.</p>
+</li>
+<li>
+<p>Install the service with the following command:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">./svc.sh install
+</span></code></pre>
+</li>
+</ol>
+</div>
+<h2 title="Starting the service"><a href="#starting-the-service" aria-hidden="true" class="anchor" id="starting-the-service"></a>Starting the service</h2>
+<p>Start the service with the following command:</p>
+<div class="ghd-tool linux">
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">sudo ./svc.sh start
+</span></code></pre>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>On Debian-based Linux systems (such as Debian or Ubuntu) with <code>needrestart</code> enabled, you can prevent <code>needrestart</code> from restarting the runner service during a workflow job by configuring it to ignore the runner service. Run the following command:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#96b5b4;">echo </span><span style="color:#c0c5ce;">'</span><span style="color:#a3be8c;">$nrconf{override_rc}{qr(^actions\.runner\..+\.service$)} = 0;</span><span style="color:#c0c5ce;">' | </span><span style="color:#8fa1b3;">sudo</span><span style="color:#c0c5ce;"> tee /etc/needrestart/conf.d/actions_runner_services.conf
+</span></code></pre>
+</div>
+</div>
+<div class="ghd-tool windows">
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Start-Service "actions.runner.*"
+</span></code></pre>
+</div>
+<div class="ghd-tool mac">
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">./svc.sh start
+</span></code></pre>
+</div>
+<h2 title="Checking the status of the service"><a href="#checking-the-status-of-the-service" aria-hidden="true" class="anchor" id="checking-the-status-of-the-service"></a>Checking the status of the service</h2>
+<p>Check the status of the service with the following command:</p>
+<div class="ghd-tool linux">
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">sudo ./svc.sh status
+</span></code></pre>
+</div>
+<div class="ghd-tool windows">
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Get-Service "actions.runner.*"
+</span></code></pre>
+</div>
+<div class="ghd-tool mac">
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">./svc.sh status
+</span></code></pre>
+</div>
+<p>For more information on viewing the status of your self-hosted runner, see <a href="monitor-and-troubleshoot.html">Monitoring and troubleshooting self-hosted runners</a>.</p>
+<h2 title="Stopping the service"><a href="#stopping-the-service" aria-hidden="true" class="anchor" id="stopping-the-service"></a>Stopping the service</h2>
+<p>Stop the service with the following command:</p>
+<div class="ghd-tool linux">
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">sudo ./svc.sh stop
+</span></code></pre>
+</div>
+<div class="ghd-tool windows">
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Stop-Service "actions.runner.*"
+</span></code></pre>
+</div>
+<div class="ghd-tool mac">
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">./svc.sh stop
+</span></code></pre>
+</div>
+<h2 title="Uninstalling the service"><a href="#uninstalling-the-service" aria-hidden="true" class="anchor" id="uninstalling-the-service"></a>Uninstalling the service</h2>
+<ol>
+<li>
+<p>Stop the service if it is currently running.</p>
+</li>
+<li>
+<p>Uninstall the service with the following command:</p>
+ <div class="ghd-tool linux">
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">sudo ./svc.sh uninstall
+</span></code></pre>
+ </div>
+ <div class="ghd-tool windows">
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Remove-Service "actions.runner.*"
+</span></code></pre>
+ </div>
+ <div class="ghd-tool mac">
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">./svc.sh uninstall
+</span></code></pre>
+ </div>
+</li>
+</ol>
+<div class="ghd-tool linux">
+<h2 title="Customizing the self-hosted runner service"><a href="#customizing-the-self-hosted-runner-service" aria-hidden="true" class="anchor" id="customizing-the-self-hosted-runner-service"></a>Customizing the self-hosted runner service</h2>
+<p>If you don't want to use the above default <code>systemd</code> service configuration, you can create a customized service or use whichever service mechanism you prefer. Consider using the <code>serviced</code> template at <code>actions-runner/bin/actions.runner.service.template</code> as a reference. If you use a customized service, the self-hosted runner service must always be invoked using the <code>runsvc.sh</code> entry point.</p>
+</div>
+<div class="ghd-tool mac">
+<h2 title="Customizing the self-hosted runner service"><a href="#customizing-the-self-hosted-runner-service-1" aria-hidden="true" class="anchor" id="customizing-the-self-hosted-runner-service-1"></a>Customizing the self-hosted runner service</h2>
+<p>If you don't want to use the above default launchd service configuration, you can create a customized service or use whichever service mechanism you prefer. Consider using the <code>plist</code> template at <code>actions-runner/bin/actions.runner.plist.template</code> as a reference. If you use a customized service, the self-hosted runner service must always be invoked using the <code>runsvc.sh</code> entry point.</p>
+</div>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

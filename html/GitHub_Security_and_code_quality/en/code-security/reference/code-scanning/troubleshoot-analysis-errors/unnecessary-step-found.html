@@ -1,0 +1,33 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Warning: "1 issue was detected with this workflow: git checkout HEAD^2 is no longer necessary"</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">Reference</a> / <a href="../index.html">Code scanning</a> / <a href="index.html">Troubleshoot analysis errors</a> / </nav><h1><a href="#warning-1-issue-was-detected-with-this-workflow-git-checkout-head2-is-no-longer-necessary" aria-hidden="true" class="anchor" id="warning-1-issue-was-detected-with-this-workflow-git-checkout-head2-is-no-longer-necessary"></a>Warning: "1 issue was detected with this workflow: git checkout HEAD^2 is no longer necessary"</h1>
+<p>If you see this warning, you should update your workflow to follow current best practice.</p>
+<h2 title="About this warning"><a href="#about-this-warning" aria-hidden="true" class="anchor" id="about-this-warning"></a>About this warning</h2>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Warning: 1 issue was detected with this workflow: git checkout HEAD^2 is no longer
+</span><span style="color:#c0c5ce;">necessary. Please remove this step as Code Scanning recommends analyzing the merge
+</span><span style="color:#c0c5ce;">commit for best results.
+</span></code></pre>
+<p>If you're using an old CodeQL workflow you may receive this warning from the "Initialize CodeQL" action.</p>
+<h2 title="Confirm the cause of the problem"><a href="#confirm-the-cause-of-the-problem" aria-hidden="true" class="anchor" id="confirm-the-cause-of-the-problem"></a>Confirm the cause of the problem</h2>
+<p>Check for the following lines from the CodeQL workflow. These lines were included in the <code>steps</code> section of the <code>Analyze</code> job in initial versions of the CodeQL workflow.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#65737e;"># We must fetch at least the immediate parents so that if this is
+</span><span style="color:#c0c5ce;">          </span><span style="color:#65737e;"># a pull request then we can checkout the head.
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">fetch-depth</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># If this run was triggered by a pull request event, then checkout
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># the head of the pull request instead of the merge commit.
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">git checkout HEAD^2
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ github.event_name == 'pull_request' }}
+</span></code></pre>
+<h2 title="Fixing the problem"><a href="#fixing-the-problem" aria-hidden="true" class="anchor" id="fixing-the-problem"></a>Fixing the problem</h2>
+<p>Remove the lines from the CodeQL workflow. The revised <code>steps</code> section of the workflow should now look like this:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Checkout repository
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Initializes the CodeQL tools for scanning.
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Initialize CodeQL
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/init@v4
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># ...
+</span></code></pre>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

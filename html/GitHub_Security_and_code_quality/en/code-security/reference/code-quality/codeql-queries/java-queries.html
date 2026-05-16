@@ -1,0 +1,467 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Java CodeQL queries for Code Quality</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">Reference</a> / <a href="../index.html">Code quality</a> / <a href="index.html">CodeQL queries</a> / </nav><h1><a href="#java-codeql-queries-for-code-quality" aria-hidden="true" class="anchor" id="java-codeql-queries-for-code-quality"></a>Java CodeQL queries for Code Quality</h1>
+<p>Explore the queries that CodeQL uses to analyze code quality for code written in Java.</p>
+<p>Code Quality uses the following CodeQL queries to analyze Java code and detect code quality issues on:</p>
+<ul>
+<li>Your <strong>default branch</strong>, with results shown on the repository's "Standard findings" dashboard</li>
+<li><strong>Pull requests</strong>, with findings shown as comments made by <code>github-code-quality[bot]</code></li>
+</ul>
+<p>Copilot Autofix suggestions are provided for findings where possible.</p>
+<div class="ghd-tool rowheaders">
+<table>
+<thead>
+<tr>
+<th>Query name</th>
+<th>Category</th>
+<th>Severity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-jdk-internal-api-access/" class="external">Access to unsupported JDK-internal API</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-non-null-boxed-variable/" class="external">Boxed variable is never null</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-abstract-to-concrete-cast/" class="external">Cast from abstract to concrete collection</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-class-name-matches-super-class/" class="external">Class has same name as super class</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-confusing-method-name/" class="external">Confusing method names because of capitalization</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-confusing-method-signature/" class="external">Confusing overloading of methods</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-constants-only-interface/" class="external">Constant interface anti-pattern</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-unused-container/" class="external">Container contents are never accessed</a></td>
+<td>Maintainability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-inefficient-empty-string-test/" class="external">Inefficient empty string test</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-inefficient-string-constructor/" class="external">Inefficient String constructor</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-non-static-nested-class/" class="external">Inner class could be static</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-unimplementable-interface/" class="external">Interface cannot be implemented</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-inconsistent-javadoc-throws/" class="external">Javadoc has impossible 'throws' tag</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-misleading-indentation/" class="external">Misleading indentation</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-missing-override-annotation/" class="external">Missing Override annotation</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-missing-space-in-concatenation/" class="external">Missing space in string literal</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-excessive-public-method-mocking/" class="external">Mocking all public methods of a class may indicate the unit test is testing too much</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-label-in-switch/" class="external">Non-case label in switch statement</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-non-explicit-control-and-whitespace-chars-in-literals/" class="external">Non-explicit control and whitespace characters</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-local-shadows-field/" class="external">Possible confusion of local and field</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-unknown-javadoc-parameter/" class="external">Spurious Javadoc @param tags</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-subtle-inherited-call/" class="external">Subtle call to inherited method</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-underscore-identifier/" class="external">Underscore used as identifier</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-local-variable-is-never-read/" class="external">Unread local variable</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-unused-reference-type/" class="external">Unused classes and interfaces</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-unused-format-argument/" class="external">Unused format argument</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-unused-label/" class="external">Unused label</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-visible-for-testing-abuse/" class="external">Use of VisibleForTesting in production code</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-useless-null-check/" class="external">Useless null check</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-unused-parameter/" class="external">Useless parameter</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-useless-tostring-call/" class="external">Useless toString on String</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-useless-type-test/" class="external">Useless type test</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-index-out-of-bounds/" class="external">Array index out of bounds</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-string-buffer-char-init/" class="external">Character passed to StringBuffer or StringBuilder constructor</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-comparison-of-identical-expressions/" class="external">Comparison of identical values</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-constant-loop-condition/" class="external">Constant loop condition</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-empty-container/" class="external">Container contents are never initialized</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-test-for-negative-container-size/" class="external">Container size compared to zero</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-continue-in-false-loop/" class="external">Continue statement that does not continue</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-contradictory-type-checks/" class="external">Contradictory type checks</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-dereferenced-expr-may-be-null/" class="external">Dereferenced expression may be null</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-dereferenced-value-is-always-null/" class="external">Dereferenced variable is always null</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-dereferenced-value-may-be-null/" class="external">Dereferenced variable may be null</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-call-to-thread-run/" class="external">Direct call to a run() method</a></td>
+<td>Reliability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-do-not-call-finalize/" class="external">Do not call <code>finalize()</code></a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-unsafe-double-checked-locking/" class="external">Double-checked locking is not thread-safe</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-unchecked-cast-in-equals/" class="external">Equals method does not inspect argument type</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-equals-on-unrelated-types/" class="external">Equals on incomparable types</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-equals-on-arrays/" class="external">Equals or hashCode on arrays</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-escaping/" class="external">Escaping</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-internal-representation-exposure/" class="external">Exposing internal representation</a></td>
+<td>Reliability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-evaluation-to-constant/" class="external">Expression always evaluates to the same value</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-hashing-without-hashcode/" class="external">Hashed value without hashCode definition</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-ignored-error-status-of-call/" class="external">Ignored error status of call</a></td>
+<td>Reliability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-ignored-serialization-member-of-record-class/" class="external">Ignored serialization member of record class</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-print-array/" class="external">Implicit conversion from array to string</a></td>
+<td>Reliability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-inconsistent-equals-and-hashcode/" class="external">Inconsistent equals and hashCode</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-unsynchronized-getter/" class="external">Inconsistent synchronization of getter and setter</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-inefficient-output-stream/" class="external">Inefficient output stream</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-inefficient-boxed-constructor/" class="external">Inefficient primitive constructor</a></td>
+<td>Reliability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-inefficient-key-set-iterator/" class="external">Inefficient use of key set iterator</a></td>
+<td>Reliability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-iterable-wraps-iterator/" class="external">Iterable wrapping an iterator</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-iterator-implements-iterable/" class="external">Iterator implementing Iterable</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-lshift-larger-than-type-width/" class="external">Left shift by more than the type width</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-junit5-missing-nested-annotation/" class="external">Missing <code>@Nested</code> annotation on JUnit 5 inner test class</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-uncaught-number-format-exception/" class="external">Missing catch of NumberFormatException</a></td>
+<td>Reliability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-missing-format-argument/" class="external">Missing format argument</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-non-final-call-in-constructor/" class="external">Non-final method invocation in constructor</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-non-sync-override/" class="external">Non-synchronized override of synchronized method</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-not-threadsafe/" class="external">Not thread-safe</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-database-resource-leak/" class="external">Potential database resource leak</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-input-resource-leak/" class="external">Potential input resource leak</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-output-resource-leak/" class="external">Potential output resource leak</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-unsafe-double-checked-locking-init-order/" class="external">Race condition in double-checked locking object initialization</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-reference-equality-of-boxed-types/" class="external">Reference equality test of boxed types</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-integer-multiplication-cast-to-long/" class="external">Result of multiplication cast to wider type</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-safe-publication/" class="external">Safe publication</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-redundant-assignment/" class="external">Self assignment</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-suspicious-date-format/" class="external">Suspicious date format</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-sync-on-boxed-types/" class="external">Synchronization on boxed types or strings</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-type-mismatch-access/" class="external">Type mismatch on container access</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-type-mismatch-modification/" class="external">Type mismatch on container modification</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-unreachable-catch-clause/" class="external">Unreachable catch clause</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-string-replace-all-with-non-regex/" class="external">Use of <code>String#replaceAll</code> with a first argument which is not a regular expression</a></td>
+<td>Reliability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-call-to-object-tostring/" class="external">Use of default toString()</a></td>
+<td>Reliability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-constant-comparison/" class="external">Useless comparison test</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-whitespace-contradicts-precedence/" class="external">Whitespace contradicts operator precedence</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-comparison-with-nan/" class="external">Wrong NaN comparison</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/java/java-java-util-concurrent-scheduledthreadpoolexecutor/" class="external">Zero threads set for <code>java.util.concurrent.ScheduledThreadPoolExecutor</code></a></td>
+<td>Reliability</td>
+<td>Recommendation</td>
+</tr>
+</tbody>
+</table>
+</div>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

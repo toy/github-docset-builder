@@ -1,0 +1,154 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Dependabot alert filters</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Reference</a> / <a href="index.html">Supply chain security</a> / </nav><h1><a href="#dependabot-alert-filters" aria-hidden="true" class="anchor" id="dependabot-alert-filters"></a>Dependabot alert filters</h1>
+<p>Dependabot alerts filters help you prioritize and manage alerts for vulnerable dependencies in your repositories.</p>
+<p>You can sort and filter Dependabot alerts by typing filters as <code>key:value</code> pairs into the search bar.</p>
+<table>
+<thead>
+<tr>
+<th align="left">Option</th>
+<th align="left">Description</th>
+<th align="left">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><code>artifact-registry</code></td>
+<td align="left">Displays alerts only for dependencies that have been promoted to production in the specified repository manager.</td>
+<td align="left"><code>artifact-registry:jfrog-artifactory</code> will show any alerts for dependencies that have been promoted to production in JFrog Artifactory.</td>
+</tr>
+<tr>
+<td align="left"><code>artifact-registry-url</code></td>
+<td align="left">Displays alerts related to artifacts present in a production-approved registry URL.</td>
+<td align="left"><code>artifact-registry-url:my-registry.example.com</code> will show any alerts for vulnerabilities affecting artifacts stored in the <code>my-registry.example.com</code> registry URL.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><code>assignee</code></td>
+<td align="left">Displays alerts assigned to the specified users</td>
+<td align="left">Use <code>assignee:octocat,hubot</code> to show all alerts assigned to <code>octocat</code> or <code>hubot</code>. Use <code>assignee:*</code> to list alerts with at least one assignee or <code>assignee:none</code> to list alerts with no assignees.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><code>CVE-ID</code></td>
+<td align="left">Displays alerts associated with this <code>CVE-ID</code></td>
+<td align="left"><code>CVE-2020-28482</code> will show any alerts whose underlying advisory has this CVE ID number.</td>
+</tr>
+<tr>
+<td align="left"><code>ecosystem</code></td>
+<td align="left">Displays alerts for the selected ecosystem</td>
+<td align="left">Use <code>ecosystem:npm</code> to show Dependabot alerts for npm</td>
+</tr>
+<tr>
+<td align="left"><code>GHSA-ID</code></td>
+<td align="left">Displays alerts associated with this <code>GHSA-ID</code></td>
+<td align="left"><code>GHSA-49wp-qq6x-g2rf</code> will show any alerts whose underlying advisory has this GitHub Advisory Database ID.</td>
+</tr>
+<tr>
+<td align="left"><code>has</code></td>
+<td align="left">Displays alerts meeting the selected filter criteria</td>
+<td align="left">Use <code>has:patch</code> to show alerts related to advisories that have a patch</td>
+</tr>
+<tr>
+<td align="left"><code>is</code></td>
+<td align="left">Displays alerts based on their state</td>
+<td align="left">Use <code>is:open</code> to show open alerts</td>
+</tr>
+<tr>
+<td align="left"><code>manifest</code></td>
+<td align="left">Displays alerts for the selected manifest</td>
+<td align="left">Use <code>manifest:webwolf/pom.xml</code> to show alerts on the pom.xml file of the webwolf application</td>
+</tr>
+<tr>
+<td align="left"><code>package</code></td>
+<td align="left">Displays alerts for the selected package</td>
+<td align="left">Use <code>package:django</code> to show alerts for django</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><code>relationship</code></td>
+<td align="left">Displays alerts of the selected relationship status<br>Note that this filter is only available for ecosystems with transitive support.</td>
+<td align="left">Use <code>relationship:direct</code> to show alerts for direct dependencies (marked with the <code>Direct</code> label).</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><code>resolution</code></td>
+<td align="left">Displays alerts of the selected resolution status</td>
+<td align="left">Use <code>resolution:no-bandwidth</code> to show alerts previously parked due to lack of resources or time to fix them</td>
+</tr>
+<tr>
+<td align="left"><code>repo</code></td>
+<td align="left">Displays alerts based on the repository they relate to<br>Note that this filter is only available for security overview. For more information, see <a href="../../concepts/security-at-scale/about-security-overview.html">About security overview</a></td>
+<td align="left">Use <code>repo:octocat-repo</code> to show alerts in the repository called <code>octocat-repo</code></td>
+</tr>
+<tr>
+<td align="left"><code>scope</code></td>
+<td align="left">Displays alerts based on the scope of the dependency they relate to</td>
+<td align="left">Use <code>scope:development</code> to show alerts for dependencies that are only used during development</td>
+</tr>
+<tr>
+<td align="left"><code>severity</code></td>
+<td align="left">Displays alerts based on their level of severity</td>
+<td align="left">Use <code>severity:high</code> to show alerts with a severity of High</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><code>epss_percentage</code></td>
+<td align="left">Displays alerts based on their EPSS-predicted probability of exploitation</td>
+<td align="left">Use <code>epss_percentage:&gt;0.01</code> to see alerts with an EPSS percentage greater than 1%</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><code>sort</code></td>
+<td align="left">Displays alerts according to the selected sort order</td>
+<td align="left">The default sorting option for alerts is <code>sort:most-important</code>, which ranks alerts by importance<br>Use <code>sort:newest</code> to show the latest alerts reported by Dependabot<br>Use <code>sort:epss-percentage</code> to show alerts ordered by descending EPSS score.</td>
+</tr>
+<tr>
+<td align="left"><code>team</code></td>
+<td align="left">Display data for all repositories that the specified team has write access or admin access to. For more information on repository roles, see <a href="https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/managing-repository-roles/repository-roles-for-an-organization" class="external">Repository roles for an organization</a>.</td>
+<td align="left">Use <code>team:octo-team</code> to show alerts for repositories that the <code>octo-team</code> team has write access to.</td>
+</tr>
+<tr>
+<td align="left"><code>topic</code></td>
+<td align="left">Display data for all repositories that are classified with a specific topic. For more information on repository topics, see <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/classifying-your-repository-with-topics" class="external">Classifying your repository with topics</a>.</td>
+<td align="left">Use <code>topic:nextjs</code> to show alerts for repositories that are classified with the <code>nextjs</code> topic.</td>
+</tr>
+</tbody>
+</table>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The Exploit Prediction Scoring System, or EPSS, provides a <strong>score</strong> (from 0 to 100%) or probability of the vulnerability to be exploited in the next 30 days, and a <strong>percentile</strong> (nth percentile) or relative measure of threat. This score comes from the Forum of Incident Response and Security Teams (FIRST) and is updated daily. To learn more, see <a href="https://www.first.org/epss/" class="external">Exploit Prediction Scoring System</a> in the FIRST documentation.</p>
+</div>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

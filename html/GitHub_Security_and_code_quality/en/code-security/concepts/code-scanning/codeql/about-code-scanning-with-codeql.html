@@ -1,0 +1,69 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>About code scanning with CodeQL</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">Concepts</a> / <a href="../index.html">Code scanning</a> / <a href="index.html">CodeQL</a> / </nav><h1><a href="#about-code-scanning-with-codeql" aria-hidden="true" class="anchor" id="about-code-scanning-with-codeql"></a>About code scanning with CodeQL</h1>
+<p>You can use CodeQL to identify vulnerabilities and errors in your code. The results are shown as code scanning alerts in GitHub.</p>
+<p>CodeQL is the code analysis engine developed by GitHub to automate security checks. You can analyze your code using CodeQL and display the results as code scanning alerts.</p>
+<p>There are three main ways to use CodeQL analysis for code scanning:</p>
+<ul>
+<li>
+<p>Use default setup to quickly configure CodeQL analysis for code scanning on your repository. Default setup automatically chooses the languages to analyze, query suite to run, and events that trigger scans. If you prefer, you can manually select the query suite to run and languages to analyze. After you enable CodeQL, GitHub Actions will execute workflow runs to scan your code. For more information, see <a href="../../../how-tos/find-and-fix-code-vulnerabilities/configure-code-scanning/configuring-default-setup-for-code-scanning.html">Configuring default setup for code scanning</a>.</p>
+</li>
+<li>
+<p>Use advanced setup to add the CodeQL workflow to your repository. This generates a customizable workflow file which uses the <a href="https://github.com/github/codeql-action/" class="external">github/codeql-action</a> to run the CodeQL CLI. For more information, see <a href="../../../how-tos/find-and-fix-code-vulnerabilities/configure-code-scanning/configuring-advanced-setup-for-code-scanning.html#configuring-advanced-setup-for-code-scanning-with-codeql">Configuring advanced setup for code scanning</a>.</p>
+</li>
+<li>
+<p>Run the CodeQL CLI directly in an external CI system and upload the results to GitHub. For more information, see <a href="../../../how-tos/find-and-fix-code-vulnerabilities/integrate-with-existing-tools/using-code-scanning-with-your-existing-ci-system.html">Using code scanning with your existing CI system</a>.</p>
+</li>
+</ul>
+<p>For information about code scanning alerts, see <a href="../about-code-scanning-alerts.html">About code scanning alerts</a>.</p>
+<h2 title="About CodeQL"><a href="#about-codeql" aria-hidden="true" class="anchor" id="about-codeql"></a>About CodeQL</h2>
+<p>CodeQL is a programming language and associated tools that treat code like data. It was created explicitly to make it easier to analyze code and find potential vulnerabilities in your code with greater confidence than traditional static analyzers.</p>
+<ol>
+<li>You generate a CodeQL database to represent your codebase.</li>
+<li>Then you run CodeQL queries on that database to identify problems in the codebase.</li>
+<li>The query results are shown as code scanning alerts in GitHub when you use CodeQL with code scanning.</li>
+</ol>
+<p>CodeQL supports both compiled and interpreted languages, and can find vulnerabilities and errors in code that's written in the supported languages.</p>
+<p>CodeQL supports the following languages:</p>
+<!-- If you update the list of supported languages for CodeQL, update docs-internal/content/get-started/learning-about-github/github-language-support.md to reflect the changes. -->
+<ul>
+<li>C/C++</li>
+<li>C#</li>
+<li>Go</li>
+<li>Java/Kotlin</li>
+<li>JavaScript/TypeScript</li>
+<li>Python</li>
+<li>Ruby</li>
+<li>Rust</li>
+<li>Swift</li>
+<li>GitHub Actions workflows</li>
+</ul>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<ul>
+<li>Use <code>java-kotlin</code> to analyze code written in Java, Kotlin or both.</li>
+<li>Use <code>javascript-typescript</code> to analyze code written in JavaScript, TypeScript or both.</li>
+</ul>
+</div>
+<p>For more information, see the documentation on the CodeQL website: <a href="https://codeql.github.com/docs/codeql-overview/supported-languages-and-frameworks/" class="external">Supported languages and frameworks</a>.</p>
+<div class="markdown-alert markdown-alert-important">
+<p class="markdown-alert-title">Important</p>
+<p>CodeQL does <strong>not</strong> support languages that are not listed above. This includes, but is not limited to, <strong>PHP</strong>, <strong>Scala</strong>, and others. Attempting to use CodeQL with unsupported languages may result in no alerts being generated and incomplete analysis.</p>
+</div>
+<h2 title="Modeling custom or niche frameworks"><a href="#modeling-custom-or-niche-frameworks" aria-hidden="true" class="anchor" id="modeling-custom-or-niche-frameworks"></a>Modeling custom or niche frameworks</h2>
+<p>GitHub experts, security researchers, and community contributors write libraries to model the flow of data in popular frameworks and libraries. If you use custom dependencies that aren't modeled, then you can use the CodeQL extension for Visual Studio Code to create models for these dependencies and use them to extend your analysis. For more information, see <a href="../../../how-tos/find-and-fix-code-vulnerabilities/scan-from-vs-code/using-the-codeql-model-editor.html">Using the CodeQL model editor</a>.</p>
+<h2 title="CodeQL queries"><a href="#codeql-queries" aria-hidden="true" class="anchor" id="codeql-queries"></a>CodeQL queries</h2>
+<p>GitHub experts, security researchers, and community contributors write and maintain the default CodeQL queries used for code scanning. The queries are regularly updated to improve analysis and reduce any false positive results.</p>
+<h3 title="CodeQL queries / Writing your own queries"><a href="#writing-your-own-queries" aria-hidden="true" class="anchor" id="writing-your-own-queries"></a>Writing your own queries</h3>
+<p>The queries are open source, so you can view and contribute to the queries in the <a href="https://github.com/github/codeql" class="external">github/codeql</a> repository. For more information, see <a href="https://codeql.github.com/docs/writing-codeql-queries/about-codeql-queries/" class="external">About CodeQL queries</a> in the CodeQL documentation.</p>
+<h3 title="CodeQL queries / Running additional queries"><a href="#running-additional-queries" aria-hidden="true" class="anchor" id="running-additional-queries"></a>Running additional queries</h3>
+<p>If you are scanning your code with advanced setup or an external CI system, you can run additional queries as part of your analysis.</p>
+<p>These queries must belong to a published CodeQL query pack or a CodeQL pack in a repository.</p>
+<ul>
+<li>
+<p>When a CodeQL query pack is published to the GitHub Container registry, all the transitive dependencies required by the queries and a compilation cache are included in the package. This improves performance and ensures that running the queries in the pack gives identical results every time until you upgrade to a new version of the pack or the CLI.</p>
+</li>
+<li>
+<p>CodeQL query packs can be downloaded from multiple GitHub container registries. For more information, see <a href="../../../reference/code-scanning/workflow-configuration-options.html#downloading-codeql-packs-from-github-enterprise-server">Workflow configuration options for code scanning</a>.</p>
+</li>
+</ul>
+<p>For more information, see <a href="../../../tutorials/customize-code-scanning/customizing-analysis-with-codeql-packs.html">Customizing analysis with CodeQL packs</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

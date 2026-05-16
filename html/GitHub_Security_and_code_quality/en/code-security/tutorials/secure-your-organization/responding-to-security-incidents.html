@@ -1,0 +1,247 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Responding to a security incident</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Secure your organization</a> / </nav><h1><a href="#responding-to-a-security-incident" aria-hidden="true" class="anchor" id="responding-to-a-security-incident"></a>Responding to a security incident</h1>
+<p>Respond strategically to a security incident affecting organizations or repositories in your GitHub enterprise.</p>
+<p>The guidance in this article is aimed at enterprise owners, organization owners, security managers and security teams. However, you will need to have the enterprise owner role to perform several of the actions outlined in this article. Some steps may require coordination with organization owners or repository administrators.</p>
+<h2 title="Introduction"><a href="#introduction" aria-hidden="true" class="anchor" id="introduction"></a>Introduction</h2>
+<p>This guide walks you through how to respond to a security incident, outlining the GitHub surfaces you can use to validate and investigate a threat, and the tools you can use to contain and remediate it.</p>
+<div class="markdown-alert markdown-alert-important">
+<p class="markdown-alert-title">Important</p>
+<p>The steps here are general guidelines. Every incident is unique and may require different approaches based on the specific circumstances.</p>
+<p>While GitHub Support can assist with platform-specific questions, you are best placed to investigate and respond to a security incident affecting your systems and resources.</p>
+</div>
+<h3 title="Introduction / Prerequisites"><a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h3>
+<p>Ideally, you have <strong>audit log streaming</strong> and <strong>source IP address visibility</strong> already enabled for the enterprise (streaming the data to a security information and event management (SIEM) system) and you have access to that data. See <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/streaming-the-audit-log-for-your-enterprise" class="external">Streaming the audit log for your enterprise</a>.</p>
+<h3 title="Introduction / Throughout your response"><a href="#throughout-your-response" aria-hidden="true" class="anchor" id="throughout-your-response"></a>Throughout your response</h3>
+<p>As you progress through your response, make sure that you:</p>
+<ul>
+<li><strong>Preserve evidence</strong>: Take screenshots of suspicious activity, export logs or query results, and save copies of affected files or code before cleanup.</li>
+<li><strong>Keep a record</strong>: Document your findings (for example, times, dates, Indicators of Compromise (IoCs), repositories affected) and record each decision you take.</li>
+<li><strong>Communicate</strong>: Notify relevant stakeholders (such as security leads and engineering managers, as well as legal and privacy teams if sensitive data is at risk) and keep them updated.</li>
+</ul>
+<h2 title="Step 1: Assess the signal and validate quickly"><a href="#step-1-assess-the-signal-and-validate-quickly" aria-hidden="true" class="anchor" id="step-1-assess-the-signal-and-validate-quickly"></a>Step 1: Assess the signal and validate quickly</h2>
+<p>The goal is to quickly determine whether the signal you're seeing is likely to be a real and active threat.</p>
+<h3 title="Step 1: Assess the signal and validate quickly / 1. Identify"><a href="#1-identify" aria-hidden="true" class="anchor" id="1-identify"></a>1. Identify</h3>
+<p>Try to identify the nature of the signal you're seeing. For example, does the signal show indications of:</p>
+<ul>
+<li><strong>Credential compromise</strong> (alert for a leaked secret, reports of credentials found on an external site)</li>
+<li><strong>Unauthorized access or account compromise</strong> (reports of suspicious logins, unfamiliar commits or changes)</li>
+<li><strong>Data exfiltration</strong> (reports of suspicious file changes or additions, unexpected workflow runs, unusual API activity, unknown repository creations, or unexpected repository visibility changes)</li>
+<li><strong>Malicious code injection</strong> (reports of suspicious code changes, unexpected workflow runs, new files added)</li>
+<li><strong>Supply chain attack</strong> (reports of suspicious package versions, alerts for vulnerable dependencies)</li>
+</ul>
+<p>For help identifying these threat signals across your organization or enterprise, consult <a href="../../reference/security-incident-response/investigation-areas.html">Common security incident investigation areas</a>.</p>
+<p>We suggest you don't spend too much time on deep inspection in the earlier stages of your investigation, since the initial goal is to <strong>identify</strong> the threat signal in order to <strong>validate</strong> it and strategize your response.</p>
+<h3 title="Step 1: Assess the signal and validate quickly / 2. Validate"><a href="#2-validate" aria-hidden="true" class="anchor" id="2-validate"></a>2. Validate</h3>
+<p>Check for evidence to validate that the potential threat is real, and whether or not it's currently active.</p>
+<p>The following GitHub tools and surfaces can help.</p>
+<table>
+<thead>
+<tr>
+<th>Tool / surface</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../reference/security-incident-response/investigation-tools.html#security-overview-and-security-alerts">Security overview and security alerts</a></td>
+<td>Review security alerts across your organization or enterprise</td>
+</tr>
+<tr>
+<td><a href="../../reference/security-incident-response/investigation-tools.html#audit-logs">Audit logs</a></td>
+<td>Search for events related to the signal you're investigating, such as token creation, permission changes, or repository visibility changes</td>
+</tr>
+<tr>
+<td><a href="../../reference/security-incident-response/investigation-tools.html#activity-view">Activity view</a></td>
+<td>View a timeline of pushes, commits, and branch activity for a specific repository</td>
+</tr>
+<tr>
+<td><a href="../../reference/security-incident-response/investigation-tools.html#github-code-search">GitHub code search</a></td>
+<td>Search for known indicators of compromise, such as specific filenames or code patterns, across repositories</td>
+</tr>
+<tr>
+<td><a href="../../reference/security-incident-response/investigation-tools.html#dependency-graph">Dependency graph</a></td>
+<td>Check whether repositories depend on a specific package or package version</td>
+</tr>
+<tr>
+<td><a href="../../reference/security-incident-response/investigation-tools.html#workflow-runs-and-logs">Workflow runs and logs</a></td>
+<td>Review workflow execution history and inspect log output for suspicious activity</td>
+</tr>
+</tbody>
+</table>
+<p>For details on each tool, see <a href="../../reference/security-incident-response/investigation-tools.html">Investigation tools for security incidents</a>.</p>
+<p>The validation phase can be <strong>quick</strong>:</p>
+<ul>
+<li>Aim to gather enough evidence to determine whether the signal is likely to be a <strong>real</strong> and <strong>active</strong> threat.</li>
+<li>If you can't quickly rule out the signal as a false positive, assume it's real.</li>
+<li>Deep investigation can be performed later.</li>
+</ul>
+<h3 title="Step 1: Assess the signal and validate quickly / 3. Decide"><a href="#3-decide" aria-hidden="true" class="anchor" id="3-decide"></a>3. Decide</h3>
+<p>Based on the evidence gathered, determine three things:</p>
+<ol>
+<li><strong>Is this a real threat?</strong> If you cannot quickly and confidently rule the signal out as a false positive, treat it as real and proceed to containment.</li>
+<li><strong>Is the threat still active?</strong> If the attacker appears to still have access or activity is ongoing, prioritize immediate containment actions first. If the compromise appears historical, you still need to investigate and remediate, but you may have more time to plan your response.</li>
+<li><strong>What is the potential scope?</strong> Consider how far the compromise could reach—a single credential, a repository, an organization, or the entire enterprise. This will help you scale your response appropriately.</li>
+</ol>
+<p>If in doubt, treat the threat as real, and scale back your response as evidence allows.</p>
+<h2 title="Step 2: Contain the threat"><a href="#step-2-contain-the-threat" aria-hidden="true" class="anchor" id="step-2-contain-the-threat"></a>Step 2: Contain the threat</h2>
+<p>The next step assumes you are dealing with a real and active threat. The goal now is to <strong>immediately reduce ongoing risk</strong> using what you know so far.</p>
+<p>There are several containment actions you can choose to perform to limit the attacker's access and capabilities.</p>
+<div class="markdown-alert markdown-alert-important">
+<p class="markdown-alert-title">Important</p>
+<p>You should base your choice of actions on the nature of the threat, the potential scope, and the evidence you have at this point. We don't recommend taking all of these actions for every incident. Some actions are more disruptive or destructive than others, so you must weigh the risks and benefits of each action based on your assessment of the nature of the threat above.</p>
+</div>
+<h3 title="Step 2: Contain the threat / Revoke compromised credentials"><a href="#revoke-compromised-credentials" aria-hidden="true" class="anchor" id="revoke-compromised-credentials"></a>Revoke compromised credentials</h3>
+<p>For exposed or exploited credentials, the most immediate action you can take is to revoke the affected credentials to prevent further misuse.</p>
+<ul>
+<li>
+<p><strong>Revoke via the API</strong></p>
+<p>If the token is one of the following types, and the literal value of the token is known, you (or anybody) can revoke it by <strong>submitting a request via the REST API</strong>. See <a href="https://docs.github.com/en/rest/credentials/revoke?apiVersion=2022-11-28#revoke-a-list-of-credentials" class="external">Revocation</a>.</p>
+<ul>
+<li>Personal access token (classic)</li>
+<li>Fine-grained personal access token</li>
+<li>OAuth app access token</li>
+<li>GitHub App user access token</li>
+<li>GitHub App refresh token</li>
+</ul>
+</li>
+<li>
+<p><strong>Revocation and containment options</strong></p>
+<p>There are additional options for blocking credential access. For a full list by credential type, see <a href="https://docs.github.com/en/organizations/managing-programmatic-access-to-your-organization/github-credential-types" class="external">GitHub credential types reference</a>.</p>
+</li>
+<li>
+<p><strong>Emergency actions (major incident)</strong></p>
+<p>Enterprise owners on GitHub Enterprise Cloud can take bulk emergency actions to lock down access across their enterprise. For enterprises with Enterprise Managed Users, this includes <strong>deleting all user tokens and keys</strong>. These are high-impact actions that will break automations and should be reserved for major incidents. See <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/respond-to-incidents" class="external">Responding to security incidents in your enterprise</a>.</p>
+</li>
+</ul>
+<h3 title="Step 2: Contain the threat / Restrict access"><a href="#restrict-access" aria-hidden="true" class="anchor" id="restrict-access"></a>Restrict access</h3>
+<p>To restrict access to the enterprise, organization or repository, there are several immediate actions you can take.</p>
+<ul>
+<li>
+<p><strong>Configure IP allowlists</strong></p>
+<p>Block unknown or suspicious IP addresses from accessing the organization or enterprise. See <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/configuring-settings/hardening-security-for-your-enterprise/restricting-network-traffic-to-your-enterprise-with-an-ip-allow-list" class="external">Restricting network traffic to your enterprise with an IP allow list</a> (enterprise admins) and <a href="https://docs.github.com/en/enterprise-cloud@latest/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/managing-allowed-ip-addresses-for-your-organization" class="external">Managing allowed IP addresses for your organization</a> (organization owners).</p>
+</li>
+<li>
+<p><strong>Remove compromised or suspicious users</strong></p>
+<p>Remove the user or suspend the account. See <a href="https://docs.github.com/en/organizations/managing-membership-in-your-organization/removing-a-member-from-your-organization" class="external">Removing a member from your organization</a> (organization owners).</p>
+</li>
+<li>
+<p><strong>Change repository visibility to private</strong></p>
+<p>Change the affected repository's visibility to private, and restrict the ability of others to make further changes. For example, if sensitive code was exposed in a public repository belonging to the organization, or if a malicious actor changed the repository's visibility setting from private to public, you can change the visibility of the repository. See <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/managing-repository-settings/setting-repository-visibility" class="external">Setting repository visibility</a> (repository administrators and organization owners) and <a href="https://docs.github.com/en/organizations/managing-organization-settings/restricting-repository-visibility-changes-in-your-organization" class="external">Restricting repository visibility changes in your organization</a> (organization owners).</p>
+</li>
+<li>
+<p><strong>Emergency actions (major incident)</strong></p>
+<p>Enterprise owners on GitHub Enterprise Cloud can take bulk emergency actions to lock down access across their enterprise. These include <strong>locking down SSO</strong> to block all non-owner access and <strong>revoking all user SSO authorizations across organizations</strong>. These are high-impact actions that will break automations and should be reserved for major incidents. See <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/respond-to-incidents" class="external">Responding to security incidents in your enterprise</a>.</p>
+</li>
+</ul>
+<h3 title="Step 2: Contain the threat / Disable malicious artifacts and activity"><a href="#disable-malicious-artifacts-and-activity" aria-hidden="true" class="anchor" id="disable-malicious-artifacts-and-activity"></a>Disable malicious artifacts and activity</h3>
+<ul>
+<li>
+<p><strong>Stop malicious workflow runs</strong></p>
+<p>If you suspect that a GitHub Actions workflow or runner is being used as part of an active attack, you can take the following actions:</p>
+<ul>
+<li>Cancel in-progress workflow runs for an affected repository. See <a href="https://docs.github.com/en/actions/how-tos/manage-workflow-runs/cancel-a-workflow-run" class="external">Canceling a workflow run</a>.</li>
+<li>Disable GitHub Actions for an affected repository in an organization, or for a specific organization. See <a href="https://docs.github.com/en/organizations/managing-organization-settings/disabling-or-limiting-github-actions-for-your-organization" class="external">Disabling or limiting GitHub Actions for your organization</a> (organization owners) and <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-github-actions-in-your-enterprise" class="external">Enforcing policies for GitHub Actions in your enterprise</a> (enterprise administrators).</li>
+<li>Remove self-hosted runners. See <a href="https://docs.github.com/en/actions/how-tos/manage-runners/self-hosted-runners/remove-runners" class="external">Removing self-hosted runners</a>.</li>
+</ul>
+</li>
+<li>
+<p><strong>Disable webhooks</strong></p>
+<p>If you suspect that a compromised repository or organization webhook is being used as a live data exfiltration channel, you can disable it. See <a href="https://docs.github.com/en/webhooks/using-webhooks/disabling-webhooks" class="external">Disabling webhooks</a>.</p>
+</li>
+<li>
+<p><strong>Delete malicious branches</strong></p>
+<p>If you've identified branches that contain malicious code or workflows, delete them immediately to prevent execution. See <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-and-deleting-branches-within-your-repository#deleting-a-branch" class="external">Creating and deleting branches within your repository</a>.</p>
+</li>
+</ul>
+<h2 title="Step 3: Investigate fully"><a href="#step-3-investigate-fully" aria-hidden="true" class="anchor" id="step-3-investigate-fully"></a>Step 3: Investigate fully</h2>
+<p>After immediate containment, the goal now is to understand the full scope and impact of the incident, identify all IoCs and persistence mechanisms, and gather the evidence you need to contain and fully remediate the threat.</p>
+<div class="markdown-alert markdown-alert-important">
+<p class="markdown-alert-title">Important</p>
+<p>Incident response is not a linear process. You may need to iterate between investigation, containment, and remediation as you discover new IoCs or understand more about the attack.</p>
+</div>
+<ol>
+<li>
+<p>Based on the signals you've seen and the evidence gathered so far, develop a <strong>working hypothesis</strong> of what has happened and decide what additional evidence you will need to prove or disprove that hypothesis.</p>
+</li>
+<li>
+<p>Consider the different <strong>investigation areas</strong> outlined in <a href="../../reference/security-incident-response/investigation-areas.html">Common security incident investigation areas</a> to help guide your investigation.</p>
+<p>Don't limit your investigation to a single line of inquiry. Many attacks use a combination of techniques, such as malicious package installation combined with credential exploitation, workflow file injections, and data exfiltration. Ensure that you are investigating all potential attack vectors.</p>
+</li>
+<li>
+<p><strong>Document</strong> all known IoCs so far, searching for traces across all surfaces of GitHub.</p>
+</li>
+<li>
+<p><strong>Inventory</strong> all the affected workflows, repositories, and organizations to capture the scope of the incident systematically.</p>
+<ul>
+<li>Include the repository name, what was affected (code, secrets, workflows), and the timeline of compromise.</li>
+<li>Create a list of all affected accounts and credentials. Note which tokens, SSH keys, or other credentials may have been exposed or misused.</li>
+</ul>
+</li>
+<li>
+<p><strong>Validate</strong> your working theory against the evidence.</p>
+<ul>
+<li>Review the evidence you've gathered. Does it support your initial hypothesis?</li>
+<li>Consider alternative explanations. Could there be a different cause for the activity you've observed?</li>
+<li>If your hypothesis is disproved, form a new hypothesis based on the evidence and repeat the investigation steps as needed.</li>
+</ul>
+</li>
+<li>
+<p><strong>Circle back to containment</strong> if you discover new IoCs or evidence of ongoing activity that requires immediate action.</p>
+</li>
+</ol>
+<p>Once you have high confidence in your understanding of what's happened and the root cause, document your findings and proceed to remediation.</p>
+<h2 title="Step 4: Remediate"><a href="#step-4-remediate" aria-hidden="true" class="anchor" id="step-4-remediate"></a>Step 4: Remediate</h2>
+<p>The goal now is to remove all traces of compromise, fix the root cause, and restore systems to a secure state. Remediation actions will depend on the exploitation you have faced, but some good practices are as follows.</p>
+<h3 title="Step 4: Remediate / Rotate tokens and secrets"><a href="#rotate-tokens-and-secrets" aria-hidden="true" class="anchor" id="rotate-tokens-and-secrets"></a>Rotate tokens and secrets</h3>
+<p>Even if you're not certain a credential was compromised, rotate it if there's any possibility of exposure.</p>
+<ul>
+<li>Generate new tokens and secrets to replace any that were revoked or may have been exposed. <!-- Add link here to new credentials reference article (https://github.com/github/docs-internal/pull/59624). "For a full list of credentials to consider, see NEW ARTICLE".--></li>
+<li>Rotate secrets stored in GitHub at the repository, environment, and organization levels.</li>
+<li>Update any credentials in external systems that may have been accessed using compromised tokens.</li>
+<li>Consider enabling token expiration policies to encourage regular rotation going forward. See <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-personal-access-tokens-in-your-enterprise" class="external">Enforcing policies for personal access tokens in your enterprise</a>.</li>
+</ul>
+<h3 title="Step 4: Remediate / Audit for persistence mechanisms"><a href="#audit-for-persistence-mechanisms" aria-hidden="true" class="anchor" id="audit-for-persistence-mechanisms"></a>Audit for persistence mechanisms</h3>
+<p>You will need to check for persistence mechanisms that the attacker may have established to maintain access even after your initial containment actions.</p>
+<p>This includes, but isn't limited to, checking for things like:</p>
+<ul>
+<li>Suspicious or unfamiliar workflow files that may have been added or modified.</li>
+<li>New webhooks pointing to unfamiliar domains.</li>
+<li>New self-hosted runners.</li>
+<li>Modifications to self-hosted runners.</li>
+<li>Newly installed GitHub Apps or OAuth app authorizations.</li>
+<li>New deploy keys added to repositories.</li>
+<li>New binary files or executables.</li>
+</ul>
+<h3 title="Step 4: Remediate / Audit and reinstall dependencies"><a href="#audit-and-reinstall-dependencies" aria-hidden="true" class="anchor" id="audit-and-reinstall-dependencies"></a>Audit and reinstall dependencies</h3>
+<p>Compromised dependencies can serve as an attack vector. Make sure you undertake a full audit of your dependencies and reinstall them from trusted sources.</p>
+<ul>
+<li>Review Dependabot alerts for vulnerable dependencies and, where available, Dependabot malware alerts for malicious packages. (Dependabot malware alerts are currently available for the npm ecosystem.) To investigate additional malware advisories, search for <code>type:malware</code> in the GitHub Advisory Database and audit your dependency graph for matches.</li>
+<li>Pin dependencies to known-good versions or commit SHAs, and reinstall from your package registry.</li>
+</ul>
+<h3 title="Step 4: Remediate / Verify remediation"><a href="#verify-remediation" aria-hidden="true" class="anchor" id="verify-remediation"></a>Verify remediation</h3>
+<p>Confirm that your remediation efforts have been successful.</p>
+<ul>
+<li>Review code scanning alerts to confirm that code vulnerabilities have been resolved, and no new vulnerabilities have been introduced.</li>
+<li>Review secret scanning alerts to confirm that no secrets remain exposed in any repositories, and that all alerts have been resolved.</li>
+<li>Continue to review and monitor audit logs and other relevant surfaces in the coming days and weeks post-incident.</li>
+</ul>
+<h2 title="Step 5. Document"><a href="#step-5-document" aria-hidden="true" class="anchor" id="step-5-document"></a>Step 5. Document</h2>
+<p>Thorough documentation is essential for the remaining phases and for future reference.</p>
+<ul>
+<li>Record all IoCs discovered during the investigation.</li>
+<li>Document all remediation steps taken, including timestamps and who performed each action.</li>
+<li>Maintain inventories of affected repositories, workflows, and accounts.</li>
+<li>Document decisions made and the reasoning behind them.</li>
+<li>Note any compliance, legal, or privacy implications. Consider whether this incident constitutes a data breach that requires notification.</li>
+</ul>
+<h2 title="Step 6: Reflect and harden"><a href="#step-6-reflect-and-harden" aria-hidden="true" class="anchor" id="step-6-reflect-and-harden"></a>Step 6: Reflect and harden</h2>
+<p>The goal now is to learn from the incident and strengthen your security posture to prevent similar incidents.</p>
+<ol>
+<li>Write an <strong>incident summary</strong>. This should include a timeline of events from first indication to resolution, as well as the root cause analysis, decisions and actions taken, and lessons learned.</li>
+<li>Track any <strong>outstanding action items</strong> from the security incident as issues, such as remaining remediation tasks and any security improvements that need to be implemented based on lessons learned. Copilot can help create these, and you can assign well-scoped issues to Copilot to work on independently. See <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/create-a-pr#assigning-an-issue-to-copilot" class="external">Starting GitHub Copilot sessions</a>.</li>
+<li>If you don't already have one, ensure your company or team has an up-to-date <strong>Security Incident Response Plan</strong>. This should include defined roles and responsibilities, escalation paths, communication protocols, severity classification criteria, and step-by-step response procedures for common threat types. Copilot can help generate and refine this plan based on your specific needs and resources. For additional guidance, see <a href="https://github.com/resources/articles/what-is-incident-response#what-is-incident-response" class="external">What is incident response</a>.</li>
+</ol>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<ul>
+<li>If you haven't already, consider hardening your security posture to reduce the risk of future incidents. See <a href="protect-against-threats.html">Protecting against security threats</a>.</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Exploring data flow with path queries</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Find and fix code vulnerabilities</a> / <a href="index.html">Scan from VS Code</a> / </nav><h1><a href="#exploring-data-flow-with-path-queries" aria-hidden="true" class="anchor" id="exploring-data-flow-with-path-queries"></a>Exploring data flow with path queries</h1>
+<p>Detect potential vulnerabilities by running path queries and analyzing your data flow.</p>
+<h2 title="Prerequisites"><a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<p>Before you can effectively use path queries, you should understand the basics of data flow analysis. See <a href="https://codeql.github.com/docs/writing-codeql-queries/about-data-flow-analysis/" class="external">About data flow analysis</a> in the CodeQL documentation.</p>
+<h2 title="Running path queries in VS Code locally"><a href="#running-path-queries-in-vs-code-locally" aria-hidden="true" class="anchor" id="running-path-queries-in-vs-code-locally"></a>Running path queries in VS Code locally</h2>
+<ol>
+<li>Open a path query in VS Code. A path query is a CodeQL query with the property <code>@kind path-problem</code>.</li>
+<li>Right-click in the window with the query open, then select <strong>CodeQL: Run Query on Selected Database</strong>. Alternatively, you can also run this from the VS Code Command Palette.</li>
+<li>Once the query has finished running, you can see the results in the "Results" view (under <code>alerts</code> in the dropdown menu). Each query result describes the flow of information between a source and a sink.</li>
+<li>Expand the result to see the individual steps that the data follows.</li>
+<li>Click each step to jump to it in the source code and investigate the problem further.</li>
+</ol>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>You can use the "Variant Analysis Repositories" view to run a query against up to 1,000 repositories on GitHub.com. See <a href="running-codeql-queries-at-scale-with-multi-repository-variant-analysis.html">Running CodeQL queries at scale with multi-repository variant analysis</a>.</p>
+<p>To start writing your own path queries, see <a href="https://codeql.github.com/docs/writing-codeql-queries/creating-path-queries/#creating-path-queries" class="external">Creating path queries</a> in the CodeQL documentation.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

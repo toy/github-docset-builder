@@ -1,0 +1,59 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Monitoring alerts from secret scanning</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Manage security alerts</a> / <a href="index.html">Secret scanning alerts</a> / </nav><h1><a href="#monitoring-alerts-from-secret-scanning" aria-hidden="true" class="anchor" id="monitoring-alerts-from-secret-scanning"></a>Monitoring alerts from secret scanning</h1>
+<p>You can configure how  secret scanning notifies you about secret scanning alerts, and audit how your team responds to these alerts.</p>
+<p>When secret scanning detects a potential secret leak in your repository, staying informed about these alerts is crucial for maintaining your code's security. GitHub provides multiple notification channels to ensure you and your team are promptly alerted when secrets are found. You can customize how and when you receive these notifications based on your role and preferences.</p>
+<p>You can also audit responses to secret scanning alerts to track how your team manages security issues and maintain compliance with your organization's security policies.</p>
+<h2 title="Configuring notifications for secret scanning alerts"><a href="#configuring-notifications-for-secret-scanning-alerts" aria-hidden="true" class="anchor" id="configuring-notifications-for-secret-scanning-alerts"></a>Configuring notifications for secret scanning alerts</h2>
+<p>In addition to displaying an alert in the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab of the repository, GitHub can also send email notifications for alerts. These notifications are different for incremental scans and historical scans.</p>
+<h3 title="Configuring notifications for secret scanning alerts / Incremental scans"><a href="#incremental-scans" aria-hidden="true" class="anchor" id="incremental-scans"></a>Incremental scans</h3>
+<p>When a new secret is detected, GitHub notifies all users with access to security alerts for the repository according to their notification preferences. These users include:</p>
+<ul>
+<li>Repository administrators</li>
+<li>Security managers</li>
+<li>Users with custom roles with read/write access</li>
+<li>Organization owners and enterprise owners, if they are administrators of repositories where secrets were leaked</li>
+</ul>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Commit authors who've accidentally committed secrets will be notified, regardless of their notification preferences.</p>
+</div>
+<p>You will receive an email notification if:</p>
+<ul>
+<li>You are watching the repository.</li>
+<li>You have enabled notifications for "All Activity", or for custom "Security alerts" on the repository.</li>
+<li>In your notification settings, under "Subscriptions", then under "Watching", you have selected to receive notifications by email.</li>
+</ul>
+<p>In addition, you will receive a notification if someone assigns a code scanning or a secret scanning alert to you, see <a href="../../../concepts/security-at-scale/about-security-campaigns.html#assigning-alerts">Assigning alerts</a>.</p>
+<ol>
+<li>
+<p>On GitHub, navigate to the main page of the repository.</p>
+</li>
+<li>
+<p>To start watching the repository, select <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-eye" aria-label="eye" role="img"><path d="M8 2c1.981 0 3.671.992 4.933 2.078 1.27 1.091 2.187 2.345 2.637 3.023a1.62 1.62 0 0 1 0 1.798c-.45.678-1.367 1.932-2.637 3.023C11.67 13.008 9.981 14 8 14c-1.981 0-3.671-.992-4.933-2.078C1.797 10.83.88 9.576.43 8.898a1.62 1.62 0 0 1 0-1.798c.45-.677 1.367-1.931 2.637-3.022C4.33 2.992 6.019 2 8 2ZM1.679 7.932a.12.12 0 0 0 0 .136c.411.622 1.241 1.75 2.366 2.717C5.176 11.758 6.527 12.5 8 12.5c1.473 0 2.825-.742 3.955-1.715 1.124-.967 1.954-2.096 2.366-2.717a.12.12 0 0 0 0-.136c-.412-.621-1.242-1.75-2.366-2.717C10.824 4.242 9.473 3.5 8 3.5c-1.473 0-2.825.742-3.955 1.715-1.124.967-1.954 2.096-2.366 2.717ZM8 10a2 2 0 1 1-.001-3.999A2 2 0 0 1 8 10Z"></path></svg> Watch</strong>.</p>
+<p><img src="../../../../..//assets/images/help/repository/repository-watch-dropdown.png" alt="Screenshot of the repository's main page. A dropdown menu, titled &quot;Watch&quot;, is highlighted with an orange outline."></p>
+</li>
+<li>
+<p>In the dropdown menu, click <strong>All Activity</strong>. Alternatively, to only subscribe to security alerts, click <strong>Custom</strong>, then click <strong>Security alerts</strong>.</p>
+</li>
+<li>
+<p>Navigate to the notification settings for your personal account. These are available at <a href="https://github.com/settings/notifications?ref_product=secret-scanning&amp;ref_type=engagement&amp;ref_style=text" class="external">https://github.com/settings/notifications</a>.</p>
+</li>
+<li>
+<p>On your notification settings page, under "Subscriptions", then under "Watching", select the <strong>Notify me</strong> dropdown.</p>
+</li>
+<li>
+<p>Select "Email" as a notification option, then click <strong>Save</strong>.</p>
+<p><img src="../../../../..//assets/images/help/notifications/repository-watching-notification-options.png" alt="Screenshot of the notification settings for a user account. Under &quot;Subscriptions&quot; and &quot;Watching&quot; a checkbox, titled &quot;Email&quot;, is outlined in orange."></p>
+</li>
+</ol>
+<p>For more information about setting up notification preferences, see <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-security-and-analysis-settings-for-your-repository#granting-access-to-security-alerts" class="external">Managing security and analysis settings for your repository</a> and <a href="https://docs.github.com/en/account-and-profile/managing-subscriptions-and-notifications-on-github/setting-up-notifications/configuring-notifications#configuring-your-watch-settings-for-an-individual-repository" class="external">Configuring your watch settings for an individual repository</a>.</p>
+<h3 title="Configuring notifications for secret scanning alerts / Historical scans"><a href="#historical-scans" aria-hidden="true" class="anchor" id="historical-scans"></a>Historical scans</h3>
+<p>For historical scans, GitHub notifies the following users:</p>
+<ul>
+<li>Organization owners, enterprise owners, and security managers—whenever a historical scan is complete, even if no secrets are found.</li>
+<li>Repository administrators, security managers, and users with custom roles with read/write access—whenever a historical scan detects a secret, and according to their notification preferences.</li>
+</ul>
+<p>We do <em>not</em> notify commit authors.</p>
+<p>For more information about setting up notification preferences, see <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-security-and-analysis-settings-for-your-repository#granting-access-to-security-alerts" class="external">Managing security and analysis settings for your repository</a> and <a href="https://docs.github.com/en/account-and-profile/managing-subscriptions-and-notifications-on-github/setting-up-notifications/configuring-notifications#configuring-your-watch-settings-for-an-individual-repository" class="external">Configuring your watch settings for an individual repository</a>.</p>
+<h2 title="Auditing responses to secret scanning alerts"><a href="#auditing-responses-to-secret-scanning-alerts" aria-hidden="true" class="anchor" id="auditing-responses-to-secret-scanning-alerts"></a>Auditing responses to secret scanning alerts</h2>
+<p>You can audit the actions taken in response to secret scanning alerts using GitHub tools. For more information, see <a href="../../../concepts/security-at-scale/auditing-security-alerts.html">Auditing security alerts</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Troubleshooting code scanning analysis errors</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">Reference</a> / <a href="../index.html">Code scanning</a> / </nav><h1><a href="#troubleshooting-code-scanning-analysis-errors" aria-hidden="true" class="anchor" id="troubleshooting-code-scanning-analysis-errors"></a>Troubleshooting code scanning analysis errors</h1>
+<p>Identify and resolve errors that occur during code analysis, including build failures, incomplete scans, resource limits, and unexpected results.</p>
+<h2 title="Links"><a href="#links" aria-hidden="true" class="anchor" id="links"></a>Links</h2>
+<ul>
+<li>
+<p><a href="alerts-in-generated-code.html">Alerts found in generated code</a></p>
+<p>When analyzing your code with code scanning, you may wish to build only the code which you wish to analyze.</p>
+</li>
+<li>
+<p><a href="automatic-build-failed.html">Automatic build failed for a compiled language</a></p>
+<p>If automatic build fails, you can configure code scanning to use specific build steps for compiled languages.</p>
+</li>
+<li>
+<p><a href="c-sharp-compiler-unexpectedly-failing.html">C# compiler unexpectedly failing</a></p>
+<p>If your MSBuild C# compilation is unexpectedly failing, you may need to amend your application project file.</p>
+</li>
+<li>
+<p><a href="cannot-enable-codeql-in-a-private-repository.html">Cannot enable CodeQL in a private repository</a></p>
+<p>GitHub Code Security must be enabled in order to use code scanning on private repositories.</p>
+</li>
+<li>
+<p><a href="analysis-takes-too-long.html">Code scanning analysis takes too long</a></p>
+<p>You can fine tune your code scanning configuration to minimize analysis time.</p>
+</li>
+<li>
+<p><a href="fewer-lines-scanned-than-expected.html">CodeQL scanned fewer lines than expected</a></p>
+<p>If CodeQL analyzed less code than you expected, you may need to use a custom build command.</p>
+</li>
+<li>
+<p><a href="enabling-default-setup-takes-too-long.html">Enabling default setup takes too long</a></p>
+<p>If you think that enabling default setup has stalled, you can restart the process.</p>
+</li>
+<li>
+<p><a href="advanced-security-must-be-enabled.html">Error: "GitHub Code Security or GitHub Advanced Security must be enabled for this repository to use code scanning"</a></p>
+<p>If you see this error, make sure that GitHub Code Security is enabled.</p>
+</li>
+<li>
+<p><a href="out-of-disk-or-memory.html">"Out of disk" and "Out of memory" errors</a></p>
+<p>If you see one of these errors with GitHub Actions, you can try alternative runners.</p>
+</li>
+<li>
+<p><a href="resource-not-accessible.html">Error: 403 "Resource not accessible by integration"</a></p>
+<p>This error may be seen on pull requests created by Dependabot and can be resolved in a couple of different ways.</p>
+</li>
+<li>
+<p><a href="not-recognized.html">Error: "is not a .ql file, .qls file, a directory, or a query pack specification"</a></p>
+<p>CodeQL was unable to locate one of the queries or sets of queries that are specified for analysis.</p>
+</li>
+<li>
+<p><a href="no-source-code-seen-during-build.html">Error: "No source code was seen during the build"</a></p>
+<p>When CodeQL fails to find any source code, you need to resolve this problem to unblock code scanning analysis.</p>
+</li>
+<li>
+<p><a href="server-error.html">Error: "Server error"</a></p>
+<p>If you see this error, it may be transient. Check the current GitHub Actions service status, and try running your workflow again.</p>
+</li>
+<li>
+<p><a href="extraction-errors-in-the-database.html">Extraction errors in the database</a></p>
+<p>You can check whether or not extraction errors affect the health of the CodeQL database created.</p>
+</li>
+<li>
+<p><a href="logs-not-detailed-enough.html">Logs are not detailed enough</a></p>
+<p>Increase log verbosity and generate debugging artifacts when logs lack diagnostic detail.</p>
+</li>
+<li>
+<p><a href="results-different-than-expected.html">Results are different than expected</a></p>
+<p>If your code scanning results are different than you expected, you can check which configurations are active.</p>
+</li>
+<li>
+<p><a href="some-languages-not-analyzed.html">Some languages were not analyzed with CodeQL advanced setup</a></p>
+<p>If some languages were not analyzed, you can modify your code scanning workflow to add a matrix specifying the languages you want to analyze.</p>
+</li>
+<li>
+<p><a href="two-codeql-workflows.html">Two CodeQL workflows</a></p>
+<p>If you see two workflows named "CodeQL", one workflow may be a pre-existing CodeQL workflow file which has been disabled by default setup.</p>
+</li>
+<li>
+<p><a href="unclear-what-triggered-a-workflow.html">Unclear what triggered a workflow run</a></p>
+<p>If you don't know what triggered an analysis, investigate the tool status page or look at the log for the last scan.</p>
+</li>
+<li>
+<p><a href="unnecessary-step-found.html">Warning: "1 issue was detected with this workflow: git checkout HEAD^2 is no longer necessary"</a></p>
+<p>If you see this warning, you should update your workflow to follow current best practice.</p>
+</li>
+<li>
+<p><a href="kotlin-detected-in-no-build.html">Warning: Detected X Kotlin files in your project that could not be processed without a build</a></p>
+<p>CodeQL databases can be created for Java without building the code, but Kotlin files are excluded unless the code is built.</p>
+</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

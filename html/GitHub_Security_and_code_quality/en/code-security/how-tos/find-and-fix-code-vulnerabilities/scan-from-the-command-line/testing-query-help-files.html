@@ -1,0 +1,33 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Testing query help files</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Find and fix code vulnerabilities</a> / <a href="index.html">Scan from the command line</a> / </nav><h1><a href="#testing-query-help-files" aria-hidden="true" class="anchor" id="testing-query-help-files"></a>Testing query help files</h1>
+<p>Ensure your CodeQL query help files are valid by previewing them as Markdown.</p>
+<h2 title="Prerequisites"><a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<ul>
+<li>The query help (<code>.qhelp</code>) files must have accompanying query (<code>.ql</code>) files with identical base names.</li>
+<li>The query help files should follow the standard structure and style for query help documentation. For more information, see the <a href="https://github.com/github/codeql/blob/main/docs/query-help-style-guide.md" class="external">Query help style guide</a> in the CodeQL repository.</li>
+</ul>
+<h2 title="Previewing your query help files"><a href="#previewing-your-query-help-files" aria-hidden="true" class="anchor" id="previewing-your-query-help-files"></a>Previewing your query help files</h2>
+<ol>
+<li>
+<p>To render your query help files as Markdown, run the following command:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql generate query-help &lt;qhelp|query|dir|suite&gt; --format=markdown [--output=&lt;dir|file&gt;]
+</span></code></pre>
+<p>For information on the options available for this command, see <a href="../../../reference/code-scanning/codeql/codeql-cli-manual/generate-query-help.html">generate query-help</a>.</p>
+</li>
+<li>
+<p>If you receive any warning messages, review and fix them, then rerun the command. By default, the CodeQL CLI will print a warning message if:</p>
+<ul>
+<li>Any of the query help is invalid</li>
+<li>Any <code>.qhelp</code> files specified in the command don’t have the same base name as an accompanying <code>.ql</code> file</li>
+<li>Any <code>.ql</code> files specified in the command don’t have the same base name as an accompanying <code>.qhelp</code> file</li>
+</ul>
+</li>
+<li>
+<p>Review the rendered Markdown in your output directory, file, or terminal to check that your files appear as expected.</p>
+</li>
+</ol>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li><a href="https://codeql.github.com/docs/writing-codeql-queries/query-help-files/#query-help-files" class="external">Query help files</a></li>
+<li><a href="../../../reference/code-scanning/codeql/codeql-cli-manual/generate-query-help.html">generate query-help</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

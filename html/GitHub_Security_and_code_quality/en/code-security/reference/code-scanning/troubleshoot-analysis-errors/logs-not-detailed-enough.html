@@ -1,0 +1,38 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Logs are not detailed enough</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">Reference</a> / <a href="../index.html">Code scanning</a> / <a href="index.html">Troubleshoot analysis errors</a> / </nav><h1><a href="#logs-are-not-detailed-enough" aria-hidden="true" class="anchor" id="logs-are-not-detailed-enough"></a>Logs are not detailed enough</h1>
+<p>Increase log verbosity and generate debugging artifacts when logs lack diagnostic detail.</p>
+<p>If your logs are not detailed enough to troubleshoot a problem, there are several steps you can take to obtain extra information and make logs more useful.</p>
+<h2 title="Enabling step debug logging"><a href="#enabling-step-debug-logging" aria-hidden="true" class="anchor" id="enabling-step-debug-logging"></a>Enabling step debug logging</h2>
+<p>Step debug logging increases the verbosity of a job’s logs during and after execution.</p>
+<p>To enable step debug logging:</p>
+<ol>
+<li>In the repository that contains the workflow, set the following secret or variable: <code>ACTIONS_STEP_DEBUG</code> to <code>true</code>. If both the secret and variable are set, the value of the secret takes precedence over the variable.</li>
+<li>Re-run the workflow or trigger a new run.</li>
+</ol>
+<p>After setting the secret or variable, more debug events are shown in the step logs. See <a href="https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/using-workflow-run-logs#viewing-logs-to-diagnose-failures" class="external">Using workflow run logs</a>.</p>
+<p>You can also use the <code>runner.debug</code> context to conditionally run steps only when debug logging is enabled. See <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#runner-context" class="external">Contexts reference</a>.</p>
+<h2 title="Creating CodeQL debugging artifacts"><a href="#creating-codeql-debugging-artifacts" aria-hidden="true" class="anchor" id="creating-codeql-debugging-artifacts"></a>Creating CodeQL debugging artifacts</h2>
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>CodeQL debugging artifacts contain a copy of the source code being analyzed by CodeQL, therefore we suggest sharing these bundles only with people who are authorized to access that source code.</p>
+</div>
+<p>You can obtain artifacts to help you debug CodeQL.<br>
+The debug artifacts will be uploaded to the workflow run as artifacts with names starting with <code>debug-artifacts</code>. If CodeQL analyzes multiple languages concurrently as part of the workflow run, there will be one such artifact for every language. The data contains the CodeQL logs, CodeQL databases, extracted source code files, and any SARIF files produced by the workflow. For more information about downloading CodeQL artifacts, see <a href="https://docs.github.com/en/actions/managing-workflow-runs/downloading-workflow-artifacts" class="external">Downloading workflow artifacts</a>.</p>
+<p>These artifacts will help you debug problems with CodeQL code scanning. If you contact GitHub Support, they might ask for this data.</p>
+<h3 title="Creating CodeQL debugging artifacts for CodeQL default setup"><a href="#creating-codeql-debugging-artifacts-for-codeql-default-setup" aria-hidden="true" class="anchor" id="creating-codeql-debugging-artifacts-for-codeql-default-setup"></a>Creating CodeQL debugging artifacts for CodeQL default setup</h3>
+<p>You can create CodeQL debugging artifacts by enabling step debug logging (see <a href="#enabling-step-debug-logging">Enabling step debug logging</a>) and triggering a new CodeQL analysis, for example, by pushing a new commit to a pull request branch.</p>
+<p>If you have given CodeQL access to private registries, additional artifacts whose names start with <code>proxy-log-file</code> will be available. These contain logs of the authentication proxy that is used by CodeQL default setup to authenticate requests to private registries and may be used to troubleshoot private registry configurations. To learn more, see <a href="../../../how-tos/secure-at-scale/configure-organization-security/manage-usage-and-access/giving-org-access-private-registries.html">Giving security features access to private registries</a>.</p>
+<h3 title="Creating CodeQL debugging artifacts for CodeQL advanced setup"><a href="#creating-codeql-debugging-artifacts-for-codeql-advanced-setup" aria-hidden="true" class="anchor" id="creating-codeql-debugging-artifacts-for-codeql-advanced-setup"></a>Creating CodeQL debugging artifacts for CodeQL advanced setup</h3>
+<p>Debugging artifacts for CodeQL advanced setup can be obtained in several different ways.</p>
+<h4><a href="#re-running-jobs-with-debug-logging-enabled" aria-hidden="true" class="anchor" id="re-running-jobs-with-debug-logging-enabled"></a>Re-running jobs with debug logging enabled</h4>
+<p>The easiest option to create debugging artifacts for CodeQL advanced setup is by re-running jobs with debug logging enabled. For more information about re-running GitHub Actions workflows and jobs, see <a href="https://docs.github.com/en/actions/managing-workflow-runs/re-running-workflows-and-jobs" class="external">Re-running workflows and jobs</a>.</p>
+<p>You need to ensure that you select <strong>Enable debug logging</strong>. This option enables runner diagnostic logging and step debug logging for the run. You'll then be able to download CodeQL debugging artifacts to investigate further. You do not need to modify the workflow file when creating CodeQL debugging artifacts by re-running jobs.</p>
+<h4><a href="#using-a-workflow-flag" aria-hidden="true" class="anchor" id="using-a-workflow-flag"></a>Using a workflow flag</h4>
+<p>You can create CodeQL debugging artifacts by using a flag in your workflow. For this, you need to modify the <code>init</code> step of your CodeQL analysis workflow file and set <code>debug: true</code>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Initialize CodeQL
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/init@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">debug</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span></code></pre>
+<h4><a href="#using-github-actions-step-debug-logging" aria-hidden="true" class="anchor" id="using-github-actions-step-debug-logging"></a>Using GitHub Actions step debug logging</h4>
+<p>If you enable GitHub Actions step debug logging, CodeQL will also produce debugging artifacts and upload them as part of the workflow run. For instructions, see <a href="#enabling-step-debug-logging">Enabling step debug logging</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

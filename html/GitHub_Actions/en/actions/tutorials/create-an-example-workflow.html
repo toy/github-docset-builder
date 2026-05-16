@@ -1,0 +1,103 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Creating an example workflow</title><link rel="stylesheet" href="../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../index.html">GitHub Actions</a> / <a href="index.html">Tutorials</a> / </nav><h1><a href="#creating-an-example-workflow" aria-hidden="true" class="anchor" id="creating-an-example-workflow"></a>Creating an example workflow</h1>
+<p>In this tutorial, you'll learn how to create a basic workflow that is triggered by a push event.</p>
+<h2 title="Introduction"><a href="#introduction" aria-hidden="true" class="anchor" id="introduction"></a>Introduction</h2>
+<p>This guide shows you how to create a basic workflow that is triggered when code is pushed to your repository.</p>
+<p>To get started with preconfigured workflows, browse through the list of templates in the <a href="https://github.com/actions/starter-workflows" class="external">actions/starter-workflows</a> repository. For more information, see <a href="../how-tos/write-workflows/use-workflow-templates.html">Using workflow templates</a>.</p>
+<div class="markdown-alert markdown-alert-important">
+<p class="markdown-alert-title">Important</p>
+<p>For more information about best practices for securing your workflows and secure use of GitHub Actions features, see <a href="../reference/security/secure-use.html#writing-workflows">Secure use reference</a>.</p>
+</div>
+<h2 title="Creating an example workflow"><a href="#creating-an-example-workflow-1" aria-hidden="true" class="anchor" id="creating-an-example-workflow-1"></a>Creating an example workflow</h2>
+<p>GitHub Actions uses YAML syntax to define the workflow. Each workflow is stored as a separate YAML file in your code repository, in a directory named <code>.github/workflows</code>.</p>
+<p>You can create an example workflow in your repository that automatically triggers a series of commands whenever code is pushed. In this workflow, GitHub Actions checks out the pushed code, installs the <a href="https://www.npmjs.com/package/bats" class="external">bats</a> testing framework, and runs a basic command to output the bats version: <code>bats -v</code>.</p>
+<ol>
+<li>
+<p>In your repository, create the <code>.github/workflows/</code> directory to store your workflow files.</p>
+</li>
+<li>
+<p>In the <code>.github/workflows/</code> directory, create a new file called <code>learn-github-actions.yml</code> and add the following code.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">learn-github-actions
+</span><span style="color:#bf616a;">run-name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ github.actor }} is learning GitHub Actions
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">push</span><span style="color:#c0c5ce;">]
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">check-bats-version</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-node@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">node-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">20</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm install -g bats
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bats -v
+</span></code></pre>
+</li>
+<li>
+<p>Commit these changes and push them to your GitHub repository.</p>
+</li>
+</ol>
+<p>Your new GitHub Actions workflow file is now installed in your repository and will run automatically each time someone pushes a change to the repository. To see the details about a workflow's execution history, see <a href="#viewing-the-activity-for-a-workflow-run">Viewing the activity for a workflow run</a>.</p>
+<h2 title="Understanding the workflow file"><a href="#understanding-the-workflow-file" aria-hidden="true" class="anchor" id="understanding-the-workflow-file"></a>Understanding the workflow file</h2>
+<p>To help you understand how YAML syntax is used to create a workflow file, this section explains each line of the introduction's example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># Optional - The name of the workflow as it will appear in the "Actions" tab of the GitHub repository. If this field is omitted, the name of the workflow file will be used instead.
+</span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">learn-github-actions
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># Optional - The name for workflow runs generated from the workflow, which will appear in the list of workflow runs on your repository's "Actions" tab. This example uses an expression with the `github` context to display the username of the actor that triggered the workflow run. For more information, see [AUTOTITLE](/actions/using-workflows/workflow-syntax-for-github-actions#run-name).
+</span><span style="color:#bf616a;">run-name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ github.actor }} is learning GitHub Actions
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># Specifies the trigger for this workflow. This example uses the `push` event, so a workflow run is triggered every time someone pushes a change to the repository or merges a pull request. This is triggered by a push to every branch; for examples of syntax that runs only on pushes to specific branches, paths, or tags, see [AUTOTITLE](/actions/reference/workflow-syntax-for-github-actions#onpushpull_requestpull_request_targetpathspaths-ignore).
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">push</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># Groups together all the jobs that run in the `learn-github-actions` workflow.
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># Defines a job named `check-bats-version`. The child keys will define properties of the job.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">check-bats-version</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># Configures the job to run on the latest version of an Ubuntu Linux runner. This means that the job will execute on a fresh virtual machine hosted by GitHub. For syntax examples using other runners, see [AUTOTITLE](/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on)
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># Groups together all the steps that run in the `check-bats-version` job. Each item nested under this section is a separate action or shell script.
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># The `uses` keyword specifies that this step will run the `actions/checkout@v6` action. This is an action that checks out your repository onto the runner, allowing you to run scripts or other actions against your code (such as build and test tools). You should use the checkout action any time your workflow will use the repository's code.
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># This step uses the `actions/setup-node@v4` action to install the specified version of the Node.js. (This example uses version 20.) This puts both the `node` and `npm` commands in your `PATH`.
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-node@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">node-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">20</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># The `run` keyword tells the job to execute a command on the runner. In this case, you are using `npm` to install the `bats` software testing package.
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm install -g bats
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># Finally, you'll run the `bats` command with a parameter that outputs the software version.
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bats -v
+</span></code></pre>
+<h3 title="Understanding the workflow file / Visualizing the workflow file"><a href="#visualizing-the-workflow-file" aria-hidden="true" class="anchor" id="visualizing-the-workflow-file"></a>Visualizing the workflow file</h3>
+<p>In this diagram, you can see the workflow file you just created and how the GitHub Actions components are organized in a hierarchy. Each step executes a single action or shell script. Steps 1 and 2 run actions, while steps 3 and 4 run shell scripts. To find more prebuilt actions for your workflows, see <a href="../how-tos/write-workflows/choose-what-workflows-do/find-and-customize-actions.html">Using pre-written building blocks in your workflow</a>.</p>
+<p><img src="../../..//assets/images/help/actions/overview-actions-event.png" alt="Diagram showing the trigger, runner, and job of a workflow. The job is broken into 4 steps."></p>
+<h2 title="Viewing the activity for a workflow run"><a href="#viewing-the-activity-for-a-workflow-run" aria-hidden="true" class="anchor" id="viewing-the-activity-for-a-workflow-run"></a>Viewing the activity for a workflow run</h2>
+<p>When your workflow is triggered, a <em>workflow run</em> is created that executes the workflow. After a workflow run has started, you can see a visualization graph of the run's progress and view each step's activity on GitHub.</p>
+<ol>
+<li>
+<p>On GitHub, navigate to the main page of the repository.</p>
+</li>
+<li>
+<p>Under your repository name, click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-play" aria-label="play" role="img"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm4.879-2.773 4.264 2.559a.25.25 0 0 1 0 .428l-4.264 2.559A.25.25 0 0 1 6 10.559V5.442a.25.25 0 0 1 .379-.215Z"></path></svg> Actions</strong>.</p>
+<p><img src="../../..//assets/images/help/repository/actions-tab-global-nav-update.png" alt="Screenshot of the tabs for the &quot;github/docs&quot; repository. The &quot;Actions&quot; tab is highlighted with an orange outline."></p>
+</li>
+<li>
+<p>In the left sidebar, click the workflow you want to see.</p>
+<p><img src="../../..//assets/images/help/actions/superlinter-workflow-sidebar.png" alt="Screenshot of the left sidebar of the &quot;Actions&quot; tab. A workflow, &quot;CodeQL,&quot; is outlined in dark orange."></p>
+</li>
+<li>
+<p>From the list of workflow runs, click the name of the run to see the workflow run summary.</p>
+</li>
+<li>
+<p>In the left sidebar or in the visualization graph, click the job you want to see.</p>
+</li>
+<li>
+<p>To view the results of a step, click the step.</p>
+</li>
+</ol>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

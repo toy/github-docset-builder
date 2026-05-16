@@ -1,0 +1,279 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>database create</title><link rel="stylesheet" href="../../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../../index.html">Security and code quality</a> / <a href="../../../index.html">Reference</a> / <a href="../../index.html">Code scanning</a> / <a href="../index.html">CodeQL</a> / <a href="index.html">CodeQL CLI manual</a> / </nav><h1><a href="#database-create" aria-hidden="true" class="anchor" id="database-create"></a>database create</h1>
+<p>Create a CodeQL database for a source tree that can be analyzed using<br>
+one of the CodeQL products.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This content describes the most recent release of the CodeQL CLI. For more information about this release, see <a href="https://github.com/github/codeql-cli-binaries/releases" class="external">https://github.com/github/codeql-cli-binaries/releases</a>.</p>
+<p>To see details of the options available for this command in an earlier release, run the command with the <span style="white-space: nowrap;"><code>--help</code></span> option in your terminal.</p>
+</div>
+<h2 title="Synopsis"><a href="#synopsis" aria-hidden="true" class="anchor" id="synopsis"></a>Synopsis</h2>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql database create [--language=&lt;lang&gt;[,&lt;lang&gt;...]] [--github-auth-stdin] [--github-url=&lt;url&gt;] [--source-root=&lt;dir&gt;] [--threads=&lt;num&gt;] [--ram=&lt;MB&gt;] [--command=&lt;command&gt;] [--extractor-option=&lt;extractor-option-name=value&gt;] &lt;options&gt;... -- &lt;database&gt;
+</span></code></pre>
+<h2 title="Description"><a href="#description" aria-hidden="true" class="anchor" id="description"></a>Description</h2>
+<p>Create a CodeQL database for a source tree that can be analyzed using<br>
+one of the CodeQL products.</p>
+<h2 title="Options"><a href="#options" aria-hidden="true" class="anchor" id="options"></a>Options</h2>
+<h3 title="Primary Options"><a href="#primary-options" aria-hidden="true" class="anchor" id="primary-options"></a>Primary Options</h3>
+<h4><a href="#database" aria-hidden="true" class="anchor" id="database"></a><code>&lt;database&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Mandatory] Path to the CodeQL database to create. This directory will<br>
+be created, and <em>must not</em> already exist (but its parent must).</p>
+<p>If the <code>--db-cluster</code> option is given, this will not be a database<br>
+itself, but a directory that will <em>contain</em> databases for several<br>
+languages built from the same source root.</p>
+<p>It is important that this directory is not in a location that the build<br>
+process will interfere with. For instance, the <code>target</code> directory of a<br>
+Maven project would not be a suitable choice.</p>
+<h4><a href="#--no-overwrite" aria-hidden="true" class="anchor" id="--no-overwrite"></a><code>--[no-]overwrite</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] If the database already exists, delete it and proceed with<br>
+this command instead of failing. If the directory exists, but it does<br>
+not look like a database, an error will be thrown.</p>
+<h4><a href="#--no-force-overwrite" aria-hidden="true" class="anchor" id="--no-force-overwrite"></a><code>--[no-]force-overwrite</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] If the database already exists, delete it even if it does<br>
+not look like a database and proceed with this command instead of<br>
+failing. This option should be used with caution as it may recursively<br>
+delete the entire database directory.</p>
+<h4><a href="#--codescanning-configfile" aria-hidden="true" class="anchor" id="--codescanning-configfile"></a><code>--codescanning-config=&lt;file&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Read a Code Scanning configuration file specifying options<br>
+on how to create the CodeQL databases and what queries to run in later<br>
+steps. For more details on the format of this configuration file, refer<br>
+to <a href="../../workflow-configuration-options.html">Workflow configuration options for code scanning</a>. To run queries from<br>
+this file in a later step, invoke <a href="database-analyze.html">codeql database analyze</a> without any other queries specified.</p>
+<h4><a href="#--no-db-cluster" aria-hidden="true" class="anchor" id="--no-db-cluster"></a><code>--[no-]db-cluster</code></h4>
+<p>Instead of creating a single database, create a "cluster" of databases<br>
+for different languages, each of which is a subdirectory of the<br>
+directory given on the command line.</p>
+<h4><a href="#-l---languagelanglang" aria-hidden="true" class="anchor" id="-l---languagelanglang"></a><code>-l, --language=&lt;lang&gt;[,&lt;lang&gt;...]</code></h4>
+<p>The language that the new database will be used to analyze.</p>
+<p>Use <a href="resolve-languages.html">codeql resolve languages</a> to get a list of the pluggable language extractors found on the search path.</p>
+<p>When the <code>--db-cluster</code> option is given, this can appear multiple times,<br>
+or the value can be a comma-separated list of languages.</p>
+<p>If this option is omitted, and the source root being analysed is a<br>
+checkout of a GitHub repository, the CodeQL CLI will make a call to the<br>
+GitHub API to attempt to automatically determine what languages to<br>
+analyse. Note that to be able to do this, a GitHub PAT token must be<br>
+supplied either in the environment variable GITHUB<span data-escaped-char="">_</span>TOKEN or via standard<br>
+input using the <code>--github-auth-stdin</code> option.</p>
+<h4><a href="#--build-modemode" aria-hidden="true" class="anchor" id="--build-modemode"></a><code>--build-mode=&lt;mode&gt;</code></h4>
+<p>The build mode that will be used to create the database.</p>
+<p>Choose your build mode based on the language you are analyzing:</p>
+<p><code>none</code>: The database will be created without building the source root.<br>
+Available for C#, Java, JavaScript/TypeScript, Python, and Ruby.</p>
+<p><code>autobuild</code>: The database will be created by attempting to automatically<br>
+build the source root. Available for C/C++, C#, Go, Java/Kotlin, and<br>
+Swift.</p>
+<p><code>manual</code>: The database will be created by building the source root using<br>
+a manually specified build command. Available for C/C++, C#, Go,<br>
+Java/Kotlin, and Swift.</p>
+<p>When creating a database with <code>--command</code>, there is no need to<br>
+additionally specify '--build-mode manual'.</p>
+<p>Available since <code>v2.16.4</code>.</p>
+<h4><a href="#-s---source-rootdir" aria-hidden="true" class="anchor" id="-s---source-rootdir"></a><code>-s, --source-root=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Default: .] The root source code directory. In many cases, this will<br>
+be the checkout root. Files within it are considered to be the primary<br>
+source files for this database. In some output formats, files will be<br>
+referred to by their relative path from this directory.</p>
+<h4><a href="#-j---threadsnum" aria-hidden="true" class="anchor" id="-j---threadsnum"></a><code>-j, --threads=&lt;num&gt;</code></h4>
+<p>Use this many threads for the import operation, and pass it as a hint to<br>
+any invoked build commands.</p>
+<p>Defaults to 1. You can pass 0 to use one thread per core on the machine,<br>
+or -<em>N</em> to leave <em>N</em> cores unused (except still use at least one<br>
+thread).</p>
+<h4><a href="#-m---rammb" aria-hidden="true" class="anchor" id="-m---rammb"></a><code>-M, --ram=&lt;MB&gt;</code></h4>
+<p>Use this much memory for the import operation, and pass it as a hint to<br>
+any invoked build commands.</p>
+<h4><a href="#-c---commandcommand" aria-hidden="true" class="anchor" id="-c---commandcommand"></a><code>-c, --command=&lt;command&gt;</code></h4>
+<p>For compiled languages, build commands that will cause the compiler to<br>
+be invoked on the source code to analyze. These commands will be<br>
+executed under an instrumentation environment that allows analysis of<br>
+generated code and (in some cases) standard libraries.</p>
+<p>If no build command is specified, the command attempts to figure out<br>
+automatically how to build the source tree, based on heuristics from the<br>
+selected language pack.</p>
+<p>Beware that some combinations of multiple languages <em>require</em> an<br>
+explicit build command to be specified.</p>
+<h4><a href="#--no-cleanup" aria-hidden="true" class="anchor" id="--no-cleanup"></a><code>--no-cleanup</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Suppress all database cleanup after finalization. Useful<br>
+for debugging purposes.</p>
+<h4><a href="#--no-pre-finalize" aria-hidden="true" class="anchor" id="--no-pre-finalize"></a><code>--no-pre-finalize</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Skip any pre-finalize script specified by the active CodeQL<br>
+extractor.</p>
+<h4><a href="#--no-skip-empty" aria-hidden="true" class="anchor" id="--no-skip-empty"></a><code>--[no-]skip-empty</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Output a warning instead of failing if a database is empty<br>
+because no source code was seen during the build. The empty database<br>
+will be left unfinalized.</p>
+<h4><a href="#--no-linkage-aware-import" aria-hidden="true" class="anchor" id="--no-linkage-aware-import"></a><code>--[no-]linkage-aware-import</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Controls whether <a href="dataset-import.html">codeql dataset import</a> is linkage-aware <em>(default)</em> or not. On projects where this part of database creation<br>
+consumes too much memory, disabling this option may help them progress<br>
+at the expense of database completeness.</p>
+<p>Available since <code>v2.15.3</code>.</p>
+<h3 title="Options / Baseline calculation options"><a href="#baseline-calculation-options" aria-hidden="true" class="anchor" id="baseline-calculation-options"></a>Baseline calculation options</h3>
+<h4><a href="#--no-calculate-baseline" aria-hidden="true" class="anchor" id="--no-calculate-baseline"></a><code>--[no-]calculate-baseline</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Calculate baseline information about the code being<br>
+analyzed and add it to the database. By default, this is enabled unless<br>
+the source root is the root of a filesystem. This flag can be used to<br>
+either disable, or force the behavior to be enabled even in the root of<br>
+the filesystem.</p>
+<h4><a href="#--no-sublanguage-file-coverage" aria-hidden="true" class="anchor" id="--no-sublanguage-file-coverage"></a><code>--[no-]sublanguage-file-coverage</code></h4>
+<p><span data-escaped-char="">[</span>GitHub.com and GitHub Enterprise Server v3.12.0+ only] Use<br>
+sub-language file coverage information. This calculates, displays, and<br>
+exports separate file coverage information for languages which share a<br>
+CodeQL extractor like C and C++, Java and Kotlin, and JavaScript and<br>
+TypeScript.</p>
+<p>Available since <code>v2.15.2</code>.</p>
+<h3 title="Options / Extractor selection options"><a href="#extractor-selection-options" aria-hidden="true" class="anchor" id="extractor-selection-options"></a>Extractor selection options</h3>
+<h4><a href="#--search-pathdirdir" aria-hidden="true" class="anchor" id="--search-pathdirdir"></a><code>--search-path=&lt;dir&gt;[:&lt;dir&gt;...]</code></h4>
+<p>A list of directories under which extractor packs may be found. The<br>
+directories can either be the extractor packs themselves or directories<br>
+that contain extractors as immediate subdirectories.</p>
+<p>If the path contains multiple directory trees, their order defines<br>
+precedence between them: if the target language is matched in more than<br>
+one of the directory trees, the one given first wins.</p>
+<p>The extractors bundled with the CodeQL toolchain itself will always be<br>
+found, but if you need to use separately distributed extractors you need<br>
+to give this option (or, better yet, set up <code>--search-path</code> in a<br>
+per-user configuration file).</p>
+<p>(Note: On Windows the path separator is <code>;</code>).</p>
+<h3 title="Options to configure how to call the GitHub API to auto-detect languages."><a href="#options-to-configure-how-to-call-the-github-api-to-auto-detect-languages" aria-hidden="true" class="anchor" id="options-to-configure-how-to-call-the-github-api-to-auto-detect-languages"></a>Options to configure how to call the GitHub API to auto-detect languages.</h3>
+<h4><a href="#-a---github-auth-stdin" aria-hidden="true" class="anchor" id="-a---github-auth-stdin"></a><code>-a, --github-auth-stdin</code></h4>
+<p>Accept a GitHub Apps token or personal access token via standard input.</p>
+<p>This overrides the GITHUB<span data-escaped-char="">_</span>TOKEN environment variable.</p>
+<h4><a href="#-g---github-urlurl" aria-hidden="true" class="anchor" id="-g---github-urlurl"></a><code>-g, --github-url=&lt;url&gt;</code></h4>
+<p>URL of the GitHub instance to use. If omitted, the CLI will attempt to<br>
+autodetect this from the checkout path and if this is not possible<br>
+default to <a href="https://github.com/" class="external">https://github.com/</a></p>
+<h3 title="Options to configure the package manager."><a href="#options-to-configure-the-package-manager" aria-hidden="true" class="anchor" id="options-to-configure-the-package-manager"></a>Options to configure the package manager.</h3>
+<h4><a href="#--registries-auth-stdin" aria-hidden="true" class="anchor" id="--registries-auth-stdin"></a><code>--registries-auth-stdin</code></h4>
+<p>Authenticate to GitHub Enterprise Server Container registries by passing<br>
+a comma-separated list of <span data-escaped-char="">&lt;</span>registry<span data-escaped-char="">_</span>url&gt;=<span data-escaped-char="">&lt;</span>token&gt; pairs.</p>
+<p>For example, you can pass<br>
+<code>https://containers.GHEHOSTNAME1/v2/=TOKEN1,https://containers.GHEHOSTNAME2/v2/=TOKEN2</code><br>
+to authenticate to two GitHub Enterprise Server instances.</p>
+<p>This overrides the CODEQL<span data-escaped-char="">_</span>REGISTRIES<span data-escaped-char="">_</span>AUTH and GITHUB<span data-escaped-char="">_</span>TOKEN environment<br>
+variables. If you only need to authenticate to the github.com Container<br>
+registry, you can instead authenticate using the simpler<br>
+<code>--github-auth-stdin</code> option.</p>
+<h3 title="Options / Low-level dataset cleanup options"><a href="#low-level-dataset-cleanup-options" aria-hidden="true" class="anchor" id="low-level-dataset-cleanup-options"></a>Low-level dataset cleanup options</h3>
+<h4><a href="#--max-disk-cachemb" aria-hidden="true" class="anchor" id="--max-disk-cachemb"></a><code>--max-disk-cache=&lt;MB&gt;</code></h4>
+<p>Set the maximum amount of space that the disk cache for intermediate<br>
+query results can use.</p>
+<p>If this size is not configured explicitly, the evaluator will try to use<br>
+a "reasonable" amount of cache space, based on the size of the dataset<br>
+and the complexity of the queries. Explicitly setting a higher limit<br>
+than this default usage will enable additional caching which can speed<br>
+up later queries.</p>
+<h4><a href="#--min-disk-freemb" aria-hidden="true" class="anchor" id="--min-disk-freemb"></a><code>--min-disk-free=&lt;MB&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Set target amount of free space on file system.</p>
+<p>If <code>--max-disk-cache</code> is not given, the evaluator will try hard to<br>
+curtail disk cache usage if the free space on the file system drops<br>
+below this value.</p>
+<h4><a href="#--min-disk-free-pctpct" aria-hidden="true" class="anchor" id="--min-disk-free-pctpct"></a><code>--min-disk-free-pct=&lt;pct&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Set target fraction of free space on file system.</p>
+<p>If <code>--max-disk-cache</code> is not given, the evaluator will try hard to<br>
+curtail disk cache usage if the free space on the file system drops<br>
+below this percentage.</p>
+<h4><a href="#--cache-cleanupmode" aria-hidden="true" class="anchor" id="--cache-cleanupmode"></a><code>--cache-cleanup=&lt;mode&gt;</code></h4>
+<p>Select how aggressively to trim the cache. Choices include:</p>
+<p><code>clear</code>: Remove the entire cache, trimming down to the state of a<br>
+freshly extracted dataset</p>
+<p><code>trim</code> <em>(default)</em>: Trim everything except explicitly "cached"<br>
+predicates.</p>
+<p><code>fit</code>: Simply make sure the defined size limits for the disk cache are<br>
+observed, deleting as many intermediates as necessary.</p>
+<p><code>overlay</code>: Trim to just the data that will be useful when evaluating<br>
+against an overlay.</p>
+<h4><a href="#--cleanup-upgrade-backups" aria-hidden="true" class="anchor" id="--cleanup-upgrade-backups"></a><code>--cleanup-upgrade-backups</code></h4>
+<p>Delete any backup directories resulting from database upgrades.</p>
+<h3 title="Options / Tracing options"><a href="#tracing-options" aria-hidden="true" class="anchor" id="tracing-options"></a>Tracing options</h3>
+<h4><a href="#--no-tracing" aria-hidden="true" class="anchor" id="--no-tracing"></a><code>--no-tracing</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Do not trace the specified command, instead rely on it to<br>
+produce all necessary data directly.</p>
+<h4><a href="#--extra-tracing-configtracing-configlua" aria-hidden="true" class="anchor" id="--extra-tracing-configtracing-configlua"></a><code>--extra-tracing-config=&lt;tracing-config.lua&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] The path to a tracer configuration file. It may be used to<br>
+modify the behavior of the build tracer. It may be used to pick out<br>
+compiler processes that run as part of the build command, and trigger<br>
+the execution of other tools. The extractors will provide default tracer<br>
+configuration files that should work in most situations.</p>
+<h3 title="Options / Build command customization options"><a href="#build-command-customization-options" aria-hidden="true" class="anchor" id="build-command-customization-options"></a>Build command customization options</h3>
+<h4><a href="#--working-dirdir" aria-hidden="true" class="anchor" id="--working-dirdir"></a><code>--working-dir=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] The directory in which the specified command should be<br>
+executed. If this argument is not provided, the command is executed in<br>
+the value of <code>--source-root</code> passed to codeql database create, if one exists. If no <code>--source-root</code> argument is provided, the command is executed in the<br>
+current working directory.</p>
+<h4><a href="#--no-run-unnecessary-builds" aria-hidden="true" class="anchor" id="--no-run-unnecessary-builds"></a><code>--no-run-unnecessary-builds</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Only run the specified build command(s) if a database under<br>
+construction uses an extractor that depends on tracing a build process.<br>
+If this option is not given, the command will be executed even when<br>
+CodeQL doesn't need it, on the assumption that you need its side<br>
+effects for other reasons.</p>
+<h3 title="Options to control extractor behavior"><a href="#options-to-control-extractor-behavior" aria-hidden="true" class="anchor" id="options-to-control-extractor-behavior"></a>Options to control extractor behavior</h3>
+<h4><a href="#-o---extractor-optionextractor-option-namevalue" aria-hidden="true" class="anchor" id="-o---extractor-optionextractor-option-namevalue"></a><code>-O, --extractor-option=&lt;extractor-option-name=value&gt;</code></h4>
+<p>Set options for CodeQL extractors. <code>extractor-option-name</code> should be of<br>
+the form extractor<span data-escaped-char="">_</span>name.group1.group2.option<span data-escaped-char="">_</span>name or<br>
+group1.group2.option<span data-escaped-char="">_</span>name. If <code>extractor_option_name</code> starts with an<br>
+extractor name, the indicated extractor must declare the option<br>
+group1.group2.option<span data-escaped-char="">_</span>name. Otherwise, any extractor that declares the<br>
+option group1.group2.option<span data-escaped-char="">_</span>name will have the option set. <code>value</code> can<br>
+be any string that does not contain a newline.</p>
+<p>You can use this command-line option repeatedly to set multiple<br>
+extractor options. If you provide multiple values for the same extractor<br>
+option, the behavior depends on the type that the extractor option<br>
+expects. String options will use the last value provided. Array options<br>
+will use all the values provided, in order. Extractor options specified<br>
+using this command-line option are processed after extractor options<br>
+given via <code>--extractor-options-file</code>.</p>
+<p>When passed to <a href="database-init.html">codeql database init</a> or <code>codeql database begin-tracing</code>, the options will only be<br>
+applied to the indirect tracing environment. If your workflow also makes<br>
+calls to<br>
+<a href="database-trace-command.html">codeql database trace-command</a> then the options also need to be passed there if desired.</p>
+<p>See <a href="https://codeql.github.com/docs/codeql-cli/extractor-options" class="external">https://codeql.github.com/docs/codeql-cli/extractor-options</a> for<br>
+more information on CodeQL extractor options, including how to list the<br>
+options declared by each extractor.</p>
+<h4><a href="#--extractor-options-fileextractor-options-bundle-file" aria-hidden="true" class="anchor" id="--extractor-options-fileextractor-options-bundle-file"></a><code>--extractor-options-file=&lt;extractor-options-bundle-file&gt;</code></h4>
+<p>Specify extractor option bundle files. An extractor option bundle file<br>
+is a JSON file (extension <code>.json</code>) or YAML file (extension <code>.yaml</code> or<br>
+<code>.yml</code>) that sets extractor options. The file must have the top-level<br>
+map key 'extractor' and, under it, extractor names as second-level map<br>
+keys. Further levels of maps represent nested extractor groups, and<br>
+string and array options are map entries with string and array values.</p>
+<p>Extractor option bundle files are read in the order they are specified.<br>
+If different extractor option bundle files specify the same extractor<br>
+option, the behavior depends on the type that the extractor option<br>
+expects. String options will use the last value provided. Array options<br>
+will use all the values provided, in order. Extractor options specified<br>
+using this command-line option are processed before extractor options<br>
+given via <code>--extractor-option</code>.</p>
+<p>When passed to <a href="database-init.html">codeql database init</a> or <code>codeql database begin-tracing</code>, the options will only be<br>
+applied to the indirect tracing environment. If your workflow also makes<br>
+calls to<br>
+<a href="database-trace-command.html">codeql database trace-command</a> then the options also need to be passed there if desired.</p>
+<p>See <a href="https://codeql.github.com/docs/codeql-cli/extractor-options" class="external">https://codeql.github.com/docs/codeql-cli/extractor-options</a> for<br>
+more information on CodeQL extractor options, including how to list the<br>
+options declared by each extractor.</p>
+<h3 title="Options / Common options"><a href="#common-options" aria-hidden="true" class="anchor" id="common-options"></a>Common options</h3>
+<h4><a href="#-h---help" aria-hidden="true" class="anchor" id="-h---help"></a><code>-h, --help</code></h4>
+<p>Show this help text.</p>
+<h4><a href="#-jopt" aria-hidden="true" class="anchor" id="-jopt"></a><code>-J=&lt;opt&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Give option to the JVM running the command.</p>
+<p>(Beware that options containing spaces will not be handled correctly.)</p>
+<h4><a href="#-v---verbose" aria-hidden="true" class="anchor" id="-v---verbose"></a><code>-v, --verbose</code></h4>
+<p>Incrementally increase the number of progress messages printed.</p>
+<h4><a href="#-q---quiet" aria-hidden="true" class="anchor" id="-q---quiet"></a><code>-q, --quiet</code></h4>
+<p>Incrementally decrease the number of progress messages printed.</p>
+<h4><a href="#--verbositylevel" aria-hidden="true" class="anchor" id="--verbositylevel"></a><code>--verbosity=&lt;level&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Explicitly set the verbosity level to one of errors,<br>
+warnings, progress, progress+, progress++, progress+++. Overrides <code>-v</code><br>
+and <code>-q</code>.</p>
+<h4><a href="#--logdirdir" aria-hidden="true" class="anchor" id="--logdirdir"></a><code>--logdir=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Write detailed logs to one or more files in the given<br>
+directory, with generated names that include timestamps and the name of<br>
+the running subcommand.</p>
+<p>(To write a log file with a name you have full control over, instead<br>
+give <code>--log-to-stderr</code> and redirect stderr as desired.)</p>
+<h4><a href="#--common-cachesdir" aria-hidden="true" class="anchor" id="--common-cachesdir"></a><code>--common-caches=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Controls the location of cached data on disk that will<br>
+persist between several runs of the CLI, such as downloaded QL packs and<br>
+compiled query plans. If not set explicitly, this defaults to a<br>
+directory named <code>.codeql</code> in the user's home directory; it will be<br>
+created if it doesn't already exist.</p>
+<p>Available since <code>v2.15.2</code>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

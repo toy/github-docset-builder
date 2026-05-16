@@ -1,0 +1,59 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Custom patterns reference</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Reference</a> / <a href="index.html">Secret security</a> / </nav><h1><a href="#custom-patterns-reference" aria-hidden="true" class="anchor" id="custom-patterns-reference"></a>Custom patterns reference</h1>
+<p>Use specific regular expression syntax to define accurate custom patterns for secret scanning.</p>
+<h2 title="Regular expression library for custom patterns"><a href="#regular-expression-library-for-custom-patterns" aria-hidden="true" class="anchor" id="regular-expression-library-for-custom-patterns"></a>Regular expression library for custom patterns</h2>
+<p>Secret scanning custom patterns are defined using the <a href="https://github.com/intel/hyperscan" class="external">Hyperscan library</a> and only support Hyperscan regex constructs, which are a subset of PCRE syntax. Hyperscan option modifiers are not supported. For more information on Hyperscan pattern constructs, see <a href="https://intel.github.io/hyperscan/dev-reference/compilation.html#pattern-support" class="external">Pattern support</a> in the Hyperscan documentation.</p>
+<h2 title="Syntax for manually defining custom patterns"><a href="#syntax-for-manually-defining-custom-patterns" aria-hidden="true" class="anchor" id="syntax-for-manually-defining-custom-patterns"></a>Syntax for manually defining custom patterns</h2>
+<p>The <strong>More options <svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-chevron-down" aria-label="chevron-down" role="img"><path d="M12.78 5.22a.749.749 0 0 1 0 1.06l-4.25 4.25a.749.749 0 0 1-1.06 0L3.22 6.28a.749.749 0 1 1 1.06-1.06L8 8.939l3.72-3.719a.749.749 0 0 1 1.06 0Z"></path></svg></strong> section in the UI helps you write regular expressions manually.</p>
+<ul>
+<li><strong>Secret format:</strong> an expression that describes the format of the secret itself.</li>
+<li><strong>Before secret:</strong> an expression that describes the characters that come before the secret. By default, this is set to <code>\A|[^0-9A-Za-z]</code> which means that the secret must be at the start of a line or be preceded by a non-alphanumeric character.</li>
+<li><strong>After secret:</strong> an expression that describes the characters that come after the secret. By default, this is set to <code>\z|[^0-9A-Za-z]</code> which means that the secret must be followed by a new line or a non-alphanumeric character.</li>
+<li><strong>Additional match requirements:</strong> one or more optional expressions that the secret itself must or must not match.</li>
+</ul>
+<p>For simple tokens you will usually only need to specify a secret format. The other fields provide flexibility so that you can specify more complex secrets without creating complex regular expressions.</p>
+<h3 title="Syntax for manually defining custom patterns / Example custom pattern"><a href="#example-custom-pattern" aria-hidden="true" class="anchor" id="example-custom-pattern"></a>Example custom pattern</h3>
+<p>A company has an internal token with five characteristics. They use the different fields to specify how to identify tokens as follows:</p>
+<table>
+<thead>
+<tr>
+<th><strong>Characteristic</strong></th>
+<th><strong>Field and regular expression</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Length between 5 and 10 characters</td>
+<td>Secret format: <code>[$#%@AA-Za-z0-9]{5,10}</code></td>
+</tr>
+<tr>
+<td>Does not end in a <code>.</code></td>
+<td>After secret: <code>[^\.]</code></td>
+</tr>
+<tr>
+<td>Contains numbers and uppercase letters</td>
+<td>Additional requirements: secret must match <code>[A-Z]</code> and <code>[0-9]</code></td>
+</tr>
+<tr>
+<td>Does not include more than one lowercase letter in a row</td>
+<td>Additional requirements: secret must not match <code>[a-z]{2,}</code></td>
+</tr>
+<tr>
+<td>Contains one of <code>$%@!</code></td>
+<td>Additional requirements: secret must match <code>[$%@!]</code></td>
+</tr>
+</tbody>
+</table>
+<p>These tokens would match the custom pattern described above:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">a9@AAfT!         # Secret string match: a9@AAfT
+</span><span style="color:#c0c5ce;">ee95GG@ZA942@aa  # Secret string match: @ZA942@a
+</span><span style="color:#c0c5ce;">a9@AA!ee9        # Secret string match: a9@AA
+</span></code></pre>
+<p>These strings would not match the custom pattern described above:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">a9@AA.!
+</span><span style="color:#c0c5ce;">a@AAAAA
+</span><span style="color:#c0c5ce;">aa9@AA!ee9
+</span><span style="color:#c0c5ce;">aAAAe9
+</span></code></pre>
+<h2 title="Limits"><a href="#limits" aria-hidden="true" class="anchor" id="limits"></a>Limits</h2>
+<p>Secret scanning supports up to 500 custom patterns for each organization or enterprise account, and up to 100 custom patterns per repository.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

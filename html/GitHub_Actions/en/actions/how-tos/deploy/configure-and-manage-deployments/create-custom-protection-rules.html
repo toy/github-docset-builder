@@ -1,0 +1,69 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Creating custom deployment protection rules</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Deploy</a> / <a href="index.html">Configure and manage deployments</a> / </nav><h1><a href="#creating-custom-deployment-protection-rules" aria-hidden="true" class="anchor" id="creating-custom-deployment-protection-rules"></a>Creating custom deployment protection rules</h1>
+<p>Use GitHub Apps to automate protecting deployments with third-party systems.</p>
+<h2 title="Prerequisites"><a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Custom deployment protection rules are currently in public preview and subject to change.</p>
+</div>
+<p>For general information about deployment protection rules, see <a href="control-deployments.html#using-custom-deployment-protection-rules">Deploying with GitHub Actions</a>.</p>
+<h2 title="Creating a custom deployment protection rule with GitHub Apps"><a href="#creating-a-custom-deployment-protection-rule-with-github-apps" aria-hidden="true" class="anchor" id="creating-a-custom-deployment-protection-rule-with-github-apps"></a>Creating a custom deployment protection rule with GitHub Apps</h2>
+<ol>
+<li>
+<p>Create a GitHub App. For more information, see <a href="https://docs.github.com/en/apps/creating-github-apps/creating-github-apps/creating-a-github-app" class="external">Registering a GitHub App</a>. Configure the GitHub App as follows.</p>
+<ol>
+<li>Optionally, in the <strong>Callback URL</strong> text field under "Identifying and authorizing users," enter the callback URL. For more information, see <a href="https://docs.github.com/en/apps/creating-github-apps/creating-github-apps/about-the-user-authorization-callback-url" class="external">About the user authorization callback URL</a>.</li>
+<li>Under "Permissions," select <strong>Repository permissions</strong>.</li>
+<li>To the right of "Actions," click the drop down menu and select <strong>Access: Read-only</strong>.<br>
+<img src="../../../../..//assets/images/help/actions/actions-repo-permissions-read-only.png" alt="Screenshot of the &quot;Repository permissions&quot; section for a new GitHub App. The Actions permission shows &quot;Read-only&quot; and is outlined in orange."></li>
+<li>To the right of "Deployments," click the drop down menu and select <strong>Access: Read and write</strong>.<br>
+<img src="../../../../..//assets/images/help/actions/actions-deployments-repo-permissions-read-and-write.png" alt="Screenshot of the &quot;Repository permissions&quot; section for a new GitHub App. The Deployments permission shows &quot;Read and write&quot; and is outlined in orange."></li>
+<li>Under "Subscribe to events," select <strong>Deployment protection rule</strong>.<br>
+<img src="../../../../..//assets/images/help/actions/actions-subscribe-to-events-deployment-protection-rules.png" alt="Screenshot of the &quot;Subscribe to events section&quot; section for a new GitHub App. The checkbox for the Deployment protection rule is outlined in orange."></li>
+</ol>
+</li>
+<li>
+<p>Install the custom deployment protection rule in your repositories and enable it for use. For more information, see <a href="configure-custom-protection-rules.html">Configuring custom deployment protection rules</a>.</p>
+</li>
+</ol>
+<h2 title="Approving or rejecting deployments"><a href="#approving-or-rejecting-deployments" aria-hidden="true" class="anchor" id="approving-or-rejecting-deployments"></a>Approving or rejecting deployments</h2>
+<p>Once a workflow reaches a job that references an environment that has the custom deployment protection rule enabled, GitHub sends a <code>POST</code> request to a URL you configure containing the <code>deployment_protection_rule</code> payload. You can write your deployment protection rule to automatically send REST API requests that approve or reject the deployment based on the <code>deployment_protection_rule</code> payload. Configure your REST API requests as follows.</p>
+<p>Custom deployment protection rules are not compatible when a workflow job's environment is set to <code>deployment: false</code>. For more information, see <a href="control-deployments.html#interaction-with-protection-rules">Deploying with GitHub Actions</a>.</p>
+<ol>
+<li>
+<p>Validate the incoming <code>POST</code> request. For more information, see <a href="https://docs.github.com/en/webhooks-and-events/webhooks/securing-your-webhooks#validating-payloads-from-github" class="external">Validating webhook deliveries</a>.</p>
+</li>
+<li>
+<p>Use a JSON Web Token to authenticate as a GitHub App. For more information, see <a href="https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-as-a-github-app#about-authentication-as-a-github-app" class="external">Authenticating as a GitHub App</a>.</p>
+</li>
+<li>
+<p>Using the installation ID from the <code>deployment_protection_rule</code> webhook payload, generate an install token. For more information, see <a href="https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#authenticating-as-a-github-app" class="external">About authentication with a GitHub App</a>.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl --request POST \
+</span><span style="color:#c0c5ce;">--url "https://api.github.com/app/installations/INSTALLATION_ID/ACCESS_TOKENS" \
+</span><span style="color:#c0c5ce;">--header "Accept: application/vnd.github+json" \
+</span><span style="color:#c0c5ce;">--header "Authorization: Bearer {jwt}" \
+</span><span style="color:#c0c5ce;">--header "Content-Type: application/json" \
+</span><span style="color:#c0c5ce;">--data \
+</span><span style="color:#c0c5ce;">'{ \
+</span><span style="color:#c0c5ce;">   "repository_ids": [321], \
+</span><span style="color:#c0c5ce;">   "permissions": { \
+</span><span style="color:#c0c5ce;">      "deployments": "write" \
+</span><span style="color:#c0c5ce;">   } \
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+</li>
+<li>
+<p>Optionally, to add a status report without taking any other action to GitHub, send a <code>POST</code> request to <code>/repos/OWNER/REPO/actions/runs/RUN_ID/deployment_protection_rule</code>. In the request body, omit the <code>state</code>. For more information, see <a href="https://docs.github.com/en/rest/actions/workflow-runs#review-custom-deployment-protection-rules-for-a-workflow-run" class="external">REST API endpoints for workflow runs</a>. You can post a status report on the same deployment up to 10 times. Status reports support Markdown formatting and can be up to 1024 characters long.</p>
+</li>
+<li>
+<p>To approve or reject a request, send a <code>POST</code> request to <code>/repos/OWNER/REPO/actions/runs/RUN_ID/deployment_protection_rule</code>. In the request body, set the <code>state</code> property to either <code>approved</code> or <code>rejected</code>. For more information, see <a href="https://docs.github.com/en/rest/actions/workflow-runs#review-custom-deployment-protection-rules-for-a-workflow-run" class="external">REST API endpoints for workflow runs</a>.</p>
+</li>
+<li>
+<p>Optionally, request the status of an approval for a workflow run by sending a <code>GET</code> request to <code>/repos/OWNER/REPOSITORY_ID/actions/runs/RUN_ID/approvals</code>. For more information, see <a href="https://docs.github.com/en/rest/actions/workflow-runs#get-the-review-history-for-a-workflow-run" class="external">REST API endpoints for workflow runs</a>.</p>
+</li>
+<li>
+<p>Optionally, review the deployment on GitHub. For more information, see <a href="review-deployments.html">Reviewing deployments</a>.</p>
+</li>
+</ol>
+<h2 title="Publishing custom deployment protection rules in the GitHub Marketplace"><a href="#publishing-custom-deployment-protection-rules-in-the-github-marketplace" aria-hidden="true" class="anchor" id="publishing-custom-deployment-protection-rules-in-the-github-marketplace"></a>Publishing custom deployment protection rules in the GitHub Marketplace</h2>
+<p>You can publish your GitHub App to the GitHub Marketplace to allow developers to discover suitable protection rules and install it across their GitHub repositories. Or you can browse existing custom deployment protection rules to suit your needs. For more information, see <a href="https://docs.github.com/en/apps/publishing-apps-to-github-marketplace/github-marketplace-overview/about-github-marketplace" class="external">About GitHub Marketplace for apps</a> and <a href="https://docs.github.com/en/apps/publishing-apps-to-github-marketplace/listing-an-app-on-github-marketplace" class="external">Listing an app on GitHub Marketplace</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Adding content to your GitHub Pages site using Jekyll</title><link rel="stylesheet" href="../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../index.html">GitHub Pages</a> / <a href="index.html">Set up site with Jekyll</a> / </nav><h1><a href="#adding-content-to-your-github-pages-site-using-jekyll" aria-hidden="true" class="anchor" id="adding-content-to-your-github-pages-site-using-jekyll"></a>Adding content to your GitHub Pages site using Jekyll</h1>
+<p>You can add a new page or post to your Jekyll site on GitHub Pages.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>While the <code>github-pages</code> gem remains supported for some workflows, GitHub Actions is now the recommended approach for deploying and automating GitHub Pages sites.</p>
+</div>
+<p>People with write permissions for a repository can add content to a GitHub Pages site using Jekyll.</p>
+<h2 title="About content in Jekyll sites"><a href="#about-content-in-jekyll-sites" aria-hidden="true" class="anchor" id="about-content-in-jekyll-sites"></a>About content in Jekyll sites</h2>
+<p>Before you can add content to a Jekyll site on GitHub Pages, you must create a Jekyll site. For more information, see <a href="creating-a-github-pages-site-with-jekyll.html">Creating a GitHub Pages site with Jekyll</a>.</p>
+<p>The main types of content for Jekyll sites are pages and posts. A page is for standalone content that isn't associated with a specific date, such as an "About" page. The default Jekyll site contains a file called <code>about.md</code>, which renders as a page on your site at <code>YOUR-SITE-URL/about</code>. You can edit the contents of that file to personalize your "About" page, and you can use the "About" page as a template to create new pages. For more information, see <a href="https://jekyllrb.com/docs/pages/" class="external">Pages</a> in the Jekyll documentation.</p>
+<p>A post is a blog post. The default Jekyll site contains a directory named <code>_posts</code> that contains a default post file. You can edit the contents of that post, and you can use the default post as a template to create new posts. For more information, see <a href="https://jekyllrb.com/docs/posts/" class="external">Posts</a> in the Jekyll documentation.</p>
+<p>Your theme includes default layouts and stylesheets that will automatically be applied to new pages and posts on your site, but you can override any of these defaults. For more information, see <a href="about-github-pages-and-jekyll.html#themes">About GitHub Pages and Jekyll</a>.</p>
+<p>To set variables and metadata, such as a title and layout, for a page or post on your site, you can add YAML front matter to the top of any Markdown or HTML file. For more information, see <a href="https://jekyllrb.com/docs/front-matter/" class="external">Front Matter</a> in the Jekyll documentation.</p>
+<p>If you are publishing from a branch, changes to your site are published automatically when the changes are merged into your site's publishing source. If you are publishing from a custom GitHub Actions workflow, changes are published whenever your workflow is triggered (typically by a push to the default branch). If you want to preview your changes first, you can make the changes locally instead of on GitHub. Then, test your site locally. For more information, see <a href="testing-your-github-pages-site-locally-with-jekyll.html">Testing your GitHub Pages site locally with Jekyll</a>.</p>
+<h2 title="Adding a new page to your site"><a href="#adding-a-new-page-to-your-site" aria-hidden="true" class="anchor" id="adding-a-new-page-to-your-site"></a>Adding a new page to your site</h2>
+<ol>
+<li>
+<p>On GitHub, navigate to your site's repository.</p>
+</li>
+<li>
+<p>Navigate to the publishing source for your site. For more information, see <a href="../getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site.html">Configuring a publishing source for your GitHub Pages site</a>.</p>
+</li>
+<li>
+<p>In the root of your publishing source, create a new file for your page called <code>PAGE-NAME.md</code>, replacing PAGE-NAME with a meaningful filename for the page.</p>
+</li>
+<li>
+<p>Add the following YAML frontmatter to the top of the file, replacing PAGE-TITLE with the page's title and URL-PATH with a path you want for the page's URL. For example, if the base URL of your site is <code>https://octocat.github.io</code> and your URL-PATH is <code>/about/contact/</code>, your page will be located at <code>https://octocat.github.io/about/contact</code>.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">layout: page
+</span><span style="color:#c0c5ce;">title: "PAGE-TITLE"
+</span><span style="color:#c0c5ce;">permalink: /URL-PATH
+</span></code></pre>
+</li>
+<li>
+<p>Below the frontmatter, add content for your page.</p>
+</li>
+<li>
+<p>Click <strong>Commit changes...</strong></p>
+</li>
+<li>
+<p>In the "Commit message" field, type a short, meaningful commit message that describes the change you made to the file. You can attribute the commit to more than one author in the commit message. For more information, see <a href="https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/creating-a-commit-with-multiple-authors" class="external">Creating a commit with multiple authors</a>.</p>
+</li>
+<li>
+<p>If you have more than one email address associated with your account on GitHub, click the email address drop-down menu and select the email address to use as the Git author email address. Only verified email addresses appear in this drop-down menu. If you enabled email address privacy, then a no-reply will be the default commit author email address. For more information about the exact form the no-reply email address can take, see <a href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-email-preferences/setting-your-commit-email-address" class="external">Setting your commit email address</a>.</p>
+<p><img src="../../..//assets/images/help/repository/choose-commit-email-address.png" alt="Screenshot of a GitHub pull request showing a dropdown menu with options to choose the commit author email address. octocat@github.com is selected."></p>
+</li>
+<li>
+<p>Below the commit message fields, decide whether to add your commit to the current branch or to a new branch. If your current branch is the default branch, you should choose to create a new branch for your commit and then create a pull request. For more information, see <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request" class="external">Creating a pull request</a>.</p>
+<p><img src="../../..//assets/images/help/repository/choose-commit-branch.png" alt="Screenshot of a GitHub pull request showing a radio button to commit directly to the main branch or to create a new branch. New branch is selected."></p>
+</li>
+<li>
+<p>Click <strong>Commit changes</strong> or <strong>Propose changes</strong>.</p>
+</li>
+<li>
+<p>Create a pull request for your proposed changes.</p>
+</li>
+<li>
+<p>In the "Pull Requests" list, click the pull request you would like to merge.</p>
+</li>
+<li>
+<p>Click <strong>Merge pull request</strong>. For more information, see <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/merging-a-pull-request" class="external">Merging a pull request</a>.</p>
+</li>
+<li>
+<p>If prompted, type a commit message, or accept the default message.</p>
+</li>
+<li>
+<p>Click <strong>Confirm merge</strong>.</p>
+</li>
+<li>
+<p>Optionally, delete the branch. For more information, see <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-and-deleting-branches-within-your-repository" class="external">Creating and deleting branches within your repository</a>.</p>
+</li>
+</ol>
+<h2 title="Adding a new post to your site"><a href="#adding-a-new-post-to-your-site" aria-hidden="true" class="anchor" id="adding-a-new-post-to-your-site"></a>Adding a new post to your site</h2>
+<ol>
+<li>
+<p>On GitHub, navigate to your site's repository.</p>
+</li>
+<li>
+<p>Navigate to the publishing source for your site. For more information, see <a href="../getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site.html">Configuring a publishing source for your GitHub Pages site</a>.</p>
+</li>
+<li>
+<p>Navigate to the <code>_posts</code> directory.</p>
+</li>
+<li>
+<p>Create a new file called <code>YYYY-MM-DD-NAME-OF-POST.md</code>, replacing YYYY-MM-DD with the date of your post and NAME-OF-POST with the name of your post.</p>
+</li>
+<li>
+<p>Add the following YAML frontmatter to the top of the file, including the post's title enclosed in quotation marks, the date and time for the post in YYYY-MM-DD hh:mm:ss -0000 format, and as many categories as you want for your post.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">layout: post
+</span><span style="color:#c0c5ce;">title: "POST-TITLE"
+</span><span style="color:#c0c5ce;">date: YYYY-MM-DD hh:mm:ss -0000
+</span><span style="color:#c0c5ce;">categories: CATEGORY-1 CATEGORY-2
+</span></code></pre>
+</li>
+<li>
+<p>Below the frontmatter, add content for your post.</p>
+</li>
+<li>
+<p>Click <strong>Commit changes...</strong></p>
+</li>
+<li>
+<p>In the "Commit message" field, type a short, meaningful commit message that describes the change you made to the file. You can attribute the commit to more than one author in the commit message. For more information, see <a href="https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/creating-a-commit-with-multiple-authors" class="external">Creating a commit with multiple authors</a>.</p>
+</li>
+<li>
+<p>If you have more than one email address associated with your account on GitHub, click the email address drop-down menu and select the email address to use as the Git author email address. Only verified email addresses appear in this drop-down menu. If you enabled email address privacy, then a no-reply will be the default commit author email address. For more information about the exact form the no-reply email address can take, see <a href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-email-preferences/setting-your-commit-email-address" class="external">Setting your commit email address</a>.</p>
+<p><img src="../../..//assets/images/help/repository/choose-commit-email-address.png" alt="Screenshot of a GitHub pull request showing a dropdown menu with options to choose the commit author email address. octocat@github.com is selected."></p>
+</li>
+<li>
+<p>Below the commit message fields, decide whether to add your commit to the current branch or to a new branch. If your current branch is the default branch, you should choose to create a new branch for your commit and then create a pull request. For more information, see <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request" class="external">Creating a pull request</a>.</p>
+<p><img src="../../..//assets/images/help/repository/choose-commit-branch.png" alt="Screenshot of a GitHub pull request showing a radio button to commit directly to the main branch or to create a new branch. New branch is selected."></p>
+</li>
+<li>
+<p>Click <strong>Commit changes</strong> or <strong>Propose changes</strong>.</p>
+</li>
+<li>
+<p>Create a pull request for your proposed changes.</p>
+</li>
+<li>
+<p>In the "Pull Requests" list, click the pull request you would like to merge.</p>
+</li>
+<li>
+<p>Click <strong>Merge pull request</strong>. For more information, see <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/merging-a-pull-request" class="external">Merging a pull request</a>.</p>
+</li>
+<li>
+<p>If prompted, type a commit message, or accept the default message.</p>
+</li>
+<li>
+<p>Click <strong>Confirm merge</strong>.</p>
+</li>
+<li>
+<p>Optionally, delete the branch. For more information, see <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-and-deleting-branches-within-your-repository" class="external">Creating and deleting branches within your repository</a>.</p>
+</li>
+</ol>
+<p>Your post should now be up on your site! If the base URL of your site is <code>https://octocat.github.io</code>, then your new post will be located at <code>https://octocat.github.io/YYYY/MM/DD/TITLE.html</code>.</p>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>You can add a Jekyll theme to your GitHub Pages site to customize the look and feel of your site. For more information, see <a href="adding-a-theme-to-your-github-pages-site-using-jekyll.html">Adding a theme to your GitHub Pages site using Jekyll</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

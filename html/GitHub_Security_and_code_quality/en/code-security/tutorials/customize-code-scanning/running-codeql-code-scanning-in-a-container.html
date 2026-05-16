@@ -1,0 +1,60 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Running CodeQL code scanning in a container</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Customize code scanning</a> / </nav><h1><a href="#running-codeql-code-scanning-in-a-container" aria-hidden="true" class="anchor" id="running-codeql-code-scanning-in-a-container"></a>Running CodeQL code scanning in a container</h1>
+<p>You can run code scanning in a container by ensuring that all processes run in the same container.</p>
+<h2 title="About code scanning with a containerized build"><a href="#about-code-scanning-with-a-containerized-build" aria-hidden="true" class="anchor" id="about-code-scanning-with-a-containerized-build"></a>About code scanning with a containerized build</h2>
+<p>If you're configuring code scanning for a compiled language, and you're building the code in a containerized environment, the analysis may fail with the error message "No source code was seen during the build." This indicates that CodeQL was unable to monitor your code as it was compiled.</p>
+<p>You must run CodeQL inside the container in which you build your code. This applies whether you are using the CodeQL CLI or GitHub Actions. For the CodeQL CLI, see <a href="../../how-tos/find-and-fix-code-vulnerabilities/integrate-with-existing-tools/using-code-scanning-with-your-existing-ci-system.html">Using code scanning with your existing CI system</a> for more information. If you're using GitHub Actions, configure your workflow to run all the actions in the same container. For more information, see <a href="#example-workflow">Example workflow</a>.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The CodeQL CLI is currently not compatible with non-glibc Linux distributions such as (musl-based) Alpine Linux.</p>
+</div>
+<h2 title="Dependencies for CodeQL code scanning"><a href="#dependencies-for-codeql-code-scanning" aria-hidden="true" class="anchor" id="dependencies-for-codeql-code-scanning"></a>Dependencies for CodeQL code scanning</h2>
+<p>You may have difficulty running code scanning if the container you're using is missing certain dependencies (for example, Git must be installed and added to the PATH variable). If you encounter dependency issues, review the list of software typically included on GitHub's runner images. For more information, see the version-specific <code>readme</code> files in these locations:</p>
+<ul>
+<li>Linux: <a href="https://github.com/actions/runner-images/tree/main/images/ubuntu" class="external">https://github.com/actions/runner-images/tree/main/images/ubuntu</a></li>
+<li>macOS: <a href="https://github.com/actions/runner-images/tree/main/images/macos" class="external">https://github.com/actions/runner-images/tree/main/images/macos</a></li>
+<li>Windows: <a href="https://github.com/actions/runner-images/tree/main/images/windows" class="external">https://github.com/actions/runner-images/tree/main/images/windows</a></li>
+</ul>
+<h2 title="Example workflow"><a href="#example-workflow" aria-hidden="true" class="anchor" id="example-workflow"></a>Example workflow</h2>
+<p>This sample workflow uses GitHub Actions to run CodeQL analysis in a containerized environment. The value of <code>container.image</code> identifies the container to use. In this example the image is named <code>codeql-container</code>, with a tag of <code>f0f91db</code>. For more information, see <a href="https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idcontainer" class="external">Workflow syntax for GitHub Actions</a>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">CodeQL</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">main</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">pull_request</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">main</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">cron</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">15 5 * * 3</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">analyze</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Analyze
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">permissions</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">security-events</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">actions</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">strategy</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">fail-fast</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">matrix</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">language</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">java-kotlin</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Specify the container in which actions will run
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">container</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">image</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">codeql-container:f0f91db
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Checkout repository
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Initialize CodeQL
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/init@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">languages</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ matrix.language }}
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Build
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          ./configure
+</span><span style="color:#a3be8c;">          make
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Perform CodeQL Analysis
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/analyze@v4
+</span></code></pre>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

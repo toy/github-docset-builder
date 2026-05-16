@@ -1,0 +1,500 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Configuring access to private registries for Dependabot</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Secure your supply chain</a> / <a href="index.html">Manage your dependency security</a> / </nav><h1><a href="#configuring-access-to-private-registries-for-dependabot" aria-hidden="true" class="anchor" id="configuring-access-to-private-registries-for-dependabot"></a>Configuring access to private registries for Dependabot</h1>
+<p>You can configure Dependabot to access dependencies stored in private registries. You can store authentication information, like passwords and access tokens, as encrypted secrets and then reference these in the Dependabot configuration file. If you have registries on private networks, you can also configure Dependabot access when running Dependabot on self-hosted runners.</p>
+<h2 title="About private registries"><a href="#about-private-registries" aria-hidden="true" class="anchor" id="about-private-registries"></a>About private registries</h2>
+<p>Dependabot version updates keeps your dependencies up-to-date and Dependabot security updates updates vulnerable dependencies. Dependabot can access public registries. In addition, you can give Dependabot access to private package registries and private GitHub repositories so that you can keep your private and innersource dependencies as up-to-date and secure as your public dependencies.</p>
+<p>In most ecosystems, private dependencies are usually published to private package registries. These private registries are similar to their public equivalents, but they require authentication.</p>
+<p>For specific ecosystems, you can configure Dependabot to access <em>only</em> private registries by removing calls to public registries. For more information, see <a href="removing-dependabot-access-to-public-registries.html">Removing Dependabot access to public registries</a>.</p>
+<p>To allow Dependabot access to registries hosted privately or restricted to internal networks, configure Dependabot to run on GitHub Actions self-hosted runners. For more information, see <a href="configure-on-self-hosted-runners.html">Configuring Dependabot on self-hosted runners</a>.</p>
+<h2 title="Configuring private registries"><a href="#configuring-private-registries" aria-hidden="true" class="anchor" id="configuring-private-registries"></a>Configuring private registries</h2>
+<p>You can configure Dependabot's access to private registries at the org-level.</p>
+<p>Organization-level registries support <strong>Token</strong>, <strong>Username and password</strong>, and <strong>OIDC</strong> authentication.</p>
+<p>For more information about configuration, see <a href="../../secure-at-scale/configure-organization-security/manage-usage-and-access/giving-org-access-private-registries.html">Giving security features access to private registries</a>.</p>
+<p>You can also configure Dependabot's access to private registries in the <code>dependabot.yml</code> file.<br>
+The top-level <code>registries</code> key is optional and specifies authentication details.</p>
+<p>There are 2 locations in the <code>dependabot.yml</code> file where you can use the <code>registries</code> key:</p>
+<ul>
+<li>At the top level, where you define the registries and their access information, if needed.</li>
+<li>Within the <code>updates</code> blocks, where you can use <code>registries: "*"</code> to tell Dependabot to use any or all of the registries you defined at the top level.</li>
+</ul>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># registries: gradle-artifactory - provides access details for the gradle-artifactory registry
+</span><span style="color:#65737e;"># registries: "*" - allows Dependabot to use all the defined registries specified at the top level
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">gradle-artifactory</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">maven-repository
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://acme.jfrog.io/artifactory/my-gradle-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octocat
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_ARTIFACTORY_PASSWORD}}
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">gradle</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">*</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">monthly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">
+</span></code></pre>
+<p>You use the following options to specify access settings. Registry settings must contain a <code>type</code> and a <code>url</code>, and typically either a <code>username</code> and <code>password</code> combination or a <code>token</code>.</p>
+<table>
+<thead>
+<tr>
+<th align="left">Parameters</th>
+<th align="left">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>REGISTRY_NAME</code></td>
+<td align="left"><strong>Required:</strong> Defines an identifier for the registry.</td>
+</tr>
+<tr>
+<td align="left"><code>type</code></td>
+<td align="left"><strong>Required:</strong> Identifies the type of registry.</td>
+</tr>
+<tr>
+<td align="left">Authentication details</td>
+<td align="left"><strong>Required:</strong> The parameters supported for supplying authentication details vary for registries of different types.</td>
+</tr>
+<tr>
+<td align="left"><code>url</code></td>
+<td align="left"><strong>Required:</strong> The URL to use to access the dependencies in this registry. The protocol is optional. If not specified, <code>https://</code> is assumed. Dependabot adds or ignores trailing slashes as required.</td>
+</tr>
+<tr>
+<td align="left"><code>replaces-base</code></td>
+<td align="left">If the boolean value is <code>true</code>, Dependabot resolves dependencies using the specified <code>url</code> rather than the base URL of that ecosystem.</td>
+</tr>
+</tbody>
+</table>
+<p>For more information about the configuration options that are available and about the supported types, see <a href="../../../reference/supply-chain-security/dependabot-options-reference.html#top-level-registries-key">Dependabot options reference</a>.</p>
+<h2 title="Storing credentials for Dependabot to use"><a href="#storing-credentials-for-dependabot-to-use" aria-hidden="true" class="anchor" id="storing-credentials-for-dependabot-to-use"></a>Storing credentials for Dependabot to use</h2>
+<p>To give Dependabot access to the private registries supported by GitHub, you store the registry’s access token or secret in the secret store for your repository or organization.</p>
+<h3 title="Storing credentials for Dependabot to use / About encrypted secrets for Dependabot"><a href="#about-encrypted-secrets-for-dependabot" aria-hidden="true" class="anchor" id="about-encrypted-secrets-for-dependabot"></a>About encrypted secrets for Dependabot</h3>
+<p>Dependabot secrets are encrypted credentials that you create at either the organization level or the repository level.<br>
+When you add a secret at the organization level, you can specify which repositories can access the secret. You can use secrets to allow Dependabot to update dependencies located in private package registries. When you add a secret, it's encrypted before it reaches GitHub and it remains encrypted until it's used by Dependabot to access a private package registry.</p>
+<p>Dependabot secrets also include secrets that are used by GitHub Actions workflows triggered by Dependabot pull requests. Dependabot itself may not use these secrets, but the workflows require them. For more information, see <a href="../../../reference/supply-chain-security/troubleshoot-dependabot/troubleshooting-dependabot-on-github-actions.html#accessing-secrets">Troubleshooting Dependabot on GitHub Actions</a>.</p>
+<p>After you add a Dependabot secret, you can reference it in the <code>dependabot.yml</code> configuration file like this: <code>${{secrets.NAME}}</code>, where "NAME" is the name you chose for the secret. For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_ARTIFACTORY_PASSWORD}}
+</span></code></pre>
+<h4><a href="#naming-your-secrets" aria-hidden="true" class="anchor" id="naming-your-secrets"></a>Naming your secrets</h4>
+<p>The name of a Dependabot secret:</p>
+<ul>
+<li>Can only contain alphanumeric characters (<code>[A-Z]</code>, <code>[0-9]</code>) or underscores (<code>_</code>). Spaces are not allowed. If you enter lowercase letters these are changed to uppercase.</li>
+<li>Must not start with the <code>GITHUB_</code> prefix.</li>
+<li>Must not start with a number.</li>
+</ul>
+<h3 title="Storing credentials for Dependabot to use / Adding a repository secret for Dependabot"><a href="#adding-a-repository-secret-for-dependabot" aria-hidden="true" class="anchor" id="adding-a-repository-secret-for-dependabot"></a>Adding a repository secret for Dependabot</h3>
+<p>To create secrets for a personal account repository, you must be the repository owner. To create secrets for an organization repository, you must have <code>admin</code> access.</p>
+<ol>
+<li>
+<p>On GitHub, navigate to the main page of the repository.</p>
+</li>
+<li>
+<p>Under your repository name, click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-gear" aria-label="gear" role="img"><path d="M8 0a8.2 8.2 0 0 1 .701.031C9.444.095 9.99.645 10.16 1.29l.288 1.107c.018.066.079.158.212.224.231.114.454.243.668.386.123.082.233.09.299.071l1.103-.303c.644-.176 1.392.021 1.82.63.27.385.506.792.704 1.218.315.675.111 1.422-.364 1.891l-.814.806c-.049.048-.098.147-.088.294.016.257.016.515 0 .772-.01.147.038.246.088.294l.814.806c.475.469.679 1.216.364 1.891a7.977 7.977 0 0 1-.704 1.217c-.428.61-1.176.807-1.82.63l-1.102-.302c-.067-.019-.177-.011-.3.071a5.909 5.909 0 0 1-.668.386c-.133.066-.194.158-.211.224l-.29 1.106c-.168.646-.715 1.196-1.458 1.26a8.006 8.006 0 0 1-1.402 0c-.743-.064-1.289-.614-1.458-1.26l-.289-1.106c-.018-.066-.079-.158-.212-.224a5.738 5.738 0 0 1-.668-.386c-.123-.082-.233-.09-.299-.071l-1.103.303c-.644.176-1.392-.021-1.82-.63a8.12 8.12 0 0 1-.704-1.218c-.315-.675-.111-1.422.363-1.891l.815-.806c.05-.048.098-.147.088-.294a6.214 6.214 0 0 1 0-.772c.01-.147-.038-.246-.088-.294l-.815-.806C.635 6.045.431 5.298.746 4.623a7.92 7.92 0 0 1 .704-1.217c.428-.61 1.176-.807 1.82-.63l1.102.302c.067.019.177.011.3-.071.214-.143.437-.272.668-.386.133-.066.194-.158.211-.224l.29-1.106C6.009.645 6.556.095 7.299.03 7.53.01 7.764 0 8 0Zm-.571 1.525c-.036.003-.108.036-.137.146l-.289 1.105c-.147.561-.549.967-.998 1.189-.173.086-.34.183-.5.29-.417.278-.97.423-1.529.27l-1.103-.303c-.109-.03-.175.016-.195.045-.22.312-.412.644-.573.99-.014.031-.021.11.059.19l.815.806c.411.406.562.957.53 1.456a4.709 4.709 0 0 0 0 .582c.032.499-.119 1.05-.53 1.456l-.815.806c-.081.08-.073.159-.059.19.162.346.353.677.573.989.02.03.085.076.195.046l1.102-.303c.56-.153 1.113-.008 1.53.27.161.107.328.204.501.29.447.222.85.629.997 1.189l.289 1.105c.029.109.101.143.137.146a6.6 6.6 0 0 0 1.142 0c.036-.003.108-.036.137-.146l.289-1.105c.147-.561.549-.967.998-1.189.173-.086.34-.183.5-.29.417-.278.97-.423 1.529-.27l1.103.303c.109.029.175-.016.195-.045.22-.313.411-.644.573-.99.014-.031.021-.11-.059-.19l-.815-.806c-.411-.406-.562-.957-.53-1.456a4.709 4.709 0 0 0 0-.582c-.032-.499.119-1.05.53-1.456l.815-.806c.081-.08.073-.159.059-.19a6.464 6.464 0 0 0-.573-.989c-.02-.03-.085-.076-.195-.046l-1.102.303c-.56.153-1.113.008-1.53-.27a4.44 4.44 0 0 0-.501-.29c-.447-.222-.85-.629-.997-1.189l-.289-1.105c-.029-.11-.101-.143-.137-.146a6.6 6.6 0 0 0-1.142 0ZM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM9.5 8a1.5 1.5 0 1 0-3.001.001A1.5 1.5 0 0 0 9.5 8Z"></path></svg> Settings</strong>. If you cannot see the "Settings" tab, select the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-kebab-horizontal" aria-label="More" role="img"><path d="M8 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM1.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm13 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path></svg></strong> dropdown menu, then click <strong>Settings</strong>.</p>
+<p><img src="../../../../..//assets/images/help/repository/repo-actions-settings.png" alt="Screenshot of a repository header showing the tabs. The &quot;Settings&quot; tab is highlighted by a dark orange outline."></p>
+</li>
+<li>
+<p>In the "Security" section of the sidebar, select <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-key-asterisk" aria-label="key-asterisk" role="img"><path d="M0 2.75A2.75 2.75 0 0 1 2.75 0h10.5A2.75 2.75 0 0 1 16 2.75v10.5A2.75 2.75 0 0 1 13.25 16H2.75A2.75 2.75 0 0 1 0 13.25ZM2.75 1.5c-.69 0-1.25.56-1.25 1.25v10.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25V2.75c0-.69-.56-1.25-1.25-1.25Z"></path><path d="M8 4a.75.75 0 0 1 .75.75V6.7l1.69-.975a.75.75 0 0 1 .75 1.3L9.5 8l1.69.976a.75.75 0 0 1-.75 1.298L8.75 9.3v1.951a.75.75 0 0 1-1.5 0V9.299l-1.69.976a.75.75 0 0 1-.75-1.3L6.5 8l-1.69-.975a.75.75 0 0 1 .75-1.3l1.69.976V4.75A.75.75 0 0 1 8 4Z"></path></svg> Secrets and variables</strong>, then click <strong>Dependabot</strong>.</p>
+</li>
+<li>
+<p>Click <strong>New repository secret</strong>.</p>
+</li>
+<li>
+<p>Type a name for your secret in the <strong>Name</strong> input box.</p>
+</li>
+<li>
+<p>Enter the value for your secret.</p>
+</li>
+<li>
+<p>Click <strong>Add secret</strong>.</p>
+<p>The name of the secret is listed on the Dependabot secrets page. You can click <strong>Update</strong> to change the secret value. You can click <strong>Remove</strong> to delete the secret.</p>
+</li>
+</ol>
+<h3 title="Storing credentials for Dependabot to use / Adding an organization secret for Dependabot"><a href="#adding-an-organization-secret-for-dependabot" aria-hidden="true" class="anchor" id="adding-an-organization-secret-for-dependabot"></a>Adding an organization secret for Dependabot</h3>
+<p>When creating a secret in an organization, you can use a policy to limit which repositories can access that secret. For example, you can grant access to all repositories, or limit access to only private repositories or a specified list of repositories.</p>
+<p>To create secrets at the organization level, you must have <code>admin</code> access.</p>
+<ol>
+<li>
+<p>On GitHub, navigate to the main page of the organization.</p>
+</li>
+<li>
+<p>Under your organization name, click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-gear" aria-label="gear" role="img"><path d="M8 0a8.2 8.2 0 0 1 .701.031C9.444.095 9.99.645 10.16 1.29l.288 1.107c.018.066.079.158.212.224.231.114.454.243.668.386.123.082.233.09.299.071l1.103-.303c.644-.176 1.392.021 1.82.63.27.385.506.792.704 1.218.315.675.111 1.422-.364 1.891l-.814.806c-.049.048-.098.147-.088.294.016.257.016.515 0 .772-.01.147.038.246.088.294l.814.806c.475.469.679 1.216.364 1.891a7.977 7.977 0 0 1-.704 1.217c-.428.61-1.176.807-1.82.63l-1.102-.302c-.067-.019-.177-.011-.3.071a5.909 5.909 0 0 1-.668.386c-.133.066-.194.158-.211.224l-.29 1.106c-.168.646-.715 1.196-1.458 1.26a8.006 8.006 0 0 1-1.402 0c-.743-.064-1.289-.614-1.458-1.26l-.289-1.106c-.018-.066-.079-.158-.212-.224a5.738 5.738 0 0 1-.668-.386c-.123-.082-.233-.09-.299-.071l-1.103.303c-.644.176-1.392-.021-1.82-.63a8.12 8.12 0 0 1-.704-1.218c-.315-.675-.111-1.422.363-1.891l.815-.806c.05-.048.098-.147.088-.294a6.214 6.214 0 0 1 0-.772c.01-.147-.038-.246-.088-.294l-.815-.806C.635 6.045.431 5.298.746 4.623a7.92 7.92 0 0 1 .704-1.217c.428-.61 1.176-.807 1.82-.63l1.102.302c.067.019.177.011.3-.071.214-.143.437-.272.668-.386.133-.066.194-.158.211-.224l.29-1.106C6.009.645 6.556.095 7.299.03 7.53.01 7.764 0 8 0Zm-.571 1.525c-.036.003-.108.036-.137.146l-.289 1.105c-.147.561-.549.967-.998 1.189-.173.086-.34.183-.5.29-.417.278-.97.423-1.529.27l-1.103-.303c-.109-.03-.175.016-.195.045-.22.312-.412.644-.573.99-.014.031-.021.11.059.19l.815.806c.411.406.562.957.53 1.456a4.709 4.709 0 0 0 0 .582c.032.499-.119 1.05-.53 1.456l-.815.806c-.081.08-.073.159-.059.19.162.346.353.677.573.989.02.03.085.076.195.046l1.102-.303c.56-.153 1.113-.008 1.53.27.161.107.328.204.501.29.447.222.85.629.997 1.189l.289 1.105c.029.109.101.143.137.146a6.6 6.6 0 0 0 1.142 0c.036-.003.108-.036.137-.146l.289-1.105c.147-.561.549-.967.998-1.189.173-.086.34-.183.5-.29.417-.278.97-.423 1.529-.27l1.103.303c.109.029.175-.016.195-.045.22-.313.411-.644.573-.99.014-.031.021-.11-.059-.19l-.815-.806c-.411-.406-.562-.957-.53-1.456a4.709 4.709 0 0 0 0-.582c-.032-.499.119-1.05.53-1.456l.815-.806c.081-.08.073-.159.059-.19a6.464 6.464 0 0 0-.573-.989c-.02-.03-.085-.076-.195-.046l-1.102.303c-.56.153-1.113.008-1.53-.27a4.44 4.44 0 0 0-.501-.29c-.447-.222-.85-.629-.997-1.189l-.289-1.105c-.029-.11-.101-.143-.137-.146a6.6 6.6 0 0 0-1.142 0ZM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM9.5 8a1.5 1.5 0 1 0-3.001.001A1.5 1.5 0 0 0 9.5 8Z"></path></svg> Settings</strong>. If you cannot see the "Settings" tab, select the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-kebab-horizontal" aria-label="More" role="img"><path d="M8 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM1.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm13 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path></svg></strong> dropdown menu, then click <strong>Settings</strong>.</p>
+<p><img src="../../../../..//assets/images/help/discussions/org-settings-global-nav-update.png" alt="Screenshot of the tabs in an organization's profile. The &quot;Settings&quot; tab is outlined in dark orange."></p>
+</li>
+<li>
+<p>In the "Security" section of the sidebar, select <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-key-asterisk" aria-label="key-asterisk" role="img"><path d="M0 2.75A2.75 2.75 0 0 1 2.75 0h10.5A2.75 2.75 0 0 1 16 2.75v10.5A2.75 2.75 0 0 1 13.25 16H2.75A2.75 2.75 0 0 1 0 13.25ZM2.75 1.5c-.69 0-1.25.56-1.25 1.25v10.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25V2.75c0-.69-.56-1.25-1.25-1.25Z"></path><path d="M8 4a.75.75 0 0 1 .75.75V6.7l1.69-.975a.75.75 0 0 1 .75 1.3L9.5 8l1.69.976a.75.75 0 0 1-.75 1.298L8.75 9.3v1.951a.75.75 0 0 1-1.5 0V9.299l-1.69.976a.75.75 0 0 1-.75-1.3L6.5 8l-1.69-.975a.75.75 0 0 1 .75-1.3l1.69.976V4.75A.75.75 0 0 1 8 4Z"></path></svg> Secrets and variables</strong>, then click <strong>Dependabot</strong>. Ignore the "Private Registries" option, this is used only by code scanning default setup.</p>
+</li>
+<li>
+<p>Click <strong>New organization secret</strong>.</p>
+</li>
+<li>
+<p>Type a name for your secret in the <strong>Name</strong> input box.</p>
+</li>
+<li>
+<p>Enter the <strong>Value</strong> for your secret.</p>
+</li>
+<li>
+<p>From the <strong>Repository access</strong> dropdown list, choose an access policy.</p>
+</li>
+<li>
+<p>If you chose <strong>Selected repositories</strong>:</p>
+<ul>
+<li>Click <svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-gear" aria-label="selected repositories" role="img"><path d="M8 0a8.2 8.2 0 0 1 .701.031C9.444.095 9.99.645 10.16 1.29l.288 1.107c.018.066.079.158.212.224.231.114.454.243.668.386.123.082.233.09.299.071l1.103-.303c.644-.176 1.392.021 1.82.63.27.385.506.792.704 1.218.315.675.111 1.422-.364 1.891l-.814.806c-.049.048-.098.147-.088.294.016.257.016.515 0 .772-.01.147.038.246.088.294l.814.806c.475.469.679 1.216.364 1.891a7.977 7.977 0 0 1-.704 1.217c-.428.61-1.176.807-1.82.63l-1.102-.302c-.067-.019-.177-.011-.3.071a5.909 5.909 0 0 1-.668.386c-.133.066-.194.158-.211.224l-.29 1.106c-.168.646-.715 1.196-1.458 1.26a8.006 8.006 0 0 1-1.402 0c-.743-.064-1.289-.614-1.458-1.26l-.289-1.106c-.018-.066-.079-.158-.212-.224a5.738 5.738 0 0 1-.668-.386c-.123-.082-.233-.09-.299-.071l-1.103.303c-.644.176-1.392-.021-1.82-.63a8.12 8.12 0 0 1-.704-1.218c-.315-.675-.111-1.422.363-1.891l.815-.806c.05-.048.098-.147.088-.294a6.214 6.214 0 0 1 0-.772c.01-.147-.038-.246-.088-.294l-.815-.806C.635 6.045.431 5.298.746 4.623a7.92 7.92 0 0 1 .704-1.217c.428-.61 1.176-.807 1.82-.63l1.102.302c.067.019.177.011.3-.071.214-.143.437-.272.668-.386.133-.066.194-.158.211-.224l.29-1.106C6.009.645 6.556.095 7.299.03 7.53.01 7.764 0 8 0Zm-.571 1.525c-.036.003-.108.036-.137.146l-.289 1.105c-.147.561-.549.967-.998 1.189-.173.086-.34.183-.5.29-.417.278-.97.423-1.529.27l-1.103-.303c-.109-.03-.175.016-.195.045-.22.312-.412.644-.573.99-.014.031-.021.11.059.19l.815.806c.411.406.562.957.53 1.456a4.709 4.709 0 0 0 0 .582c.032.499-.119 1.05-.53 1.456l-.815.806c-.081.08-.073.159-.059.19.162.346.353.677.573.989.02.03.085.076.195.046l1.102-.303c.56-.153 1.113-.008 1.53.27.161.107.328.204.501.29.447.222.85.629.997 1.189l.289 1.105c.029.109.101.143.137.146a6.6 6.6 0 0 0 1.142 0c.036-.003.108-.036.137-.146l.289-1.105c.147-.561.549-.967.998-1.189.173-.086.34-.183.5-.29.417-.278.97-.423 1.529-.27l1.103.303c.109.029.175-.016.195-.045.22-.313.411-.644.573-.99.014-.031.021-.11-.059-.19l-.815-.806c-.411-.406-.562-.957-.53-1.456a4.709 4.709 0 0 0 0-.582c-.032-.499.119-1.05.53-1.456l.815-.806c.081-.08.073-.159.059-.19a6.464 6.464 0 0 0-.573-.989c-.02-.03-.085-.076-.195-.046l-1.102.303c-.56.153-1.113.008-1.53-.27a4.44 4.44 0 0 0-.501-.29c-.447-.222-.85-.629-.997-1.189l-.289-1.105c-.029-.11-.101-.143-.137-.146a6.6 6.6 0 0 0-1.142 0ZM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM9.5 8a1.5 1.5 0 1 0-3.001.001A1.5 1.5 0 0 0 9.5 8Z"></path></svg>.</li>
+<li>In the dialog box, select the repositories that can access this secret.</li>
+<li>Click <strong>Update selection</strong>.</li>
+</ul>
+</li>
+<li>
+<p>Click <strong>Add secret</strong>.</p>
+<p>The name of the secret is listed on the Dependabot secrets page. You can click <strong>Update</strong> to change the secret value or its access policy. You can click <strong>Remove</strong> to delete the secret.</p>
+</li>
+</ol>
+<h2 title="Configuring firewall IP rules"><a href="#configuring-firewall-ip-rules" aria-hidden="true" class="anchor" id="configuring-firewall-ip-rules"></a>Configuring firewall IP rules</h2>
+<p>You can add Dependabot-related IP addresses to your registries IP allow list.</p>
+<p>If your private registry is configured with an IP allow list, you can find the IP addresses Dependabot uses to access the registry in the meta API endpoint, under the <code>actions</code> key. For more information, see <a href="https://docs.github.com/en/rest/meta/meta" class="external">REST API endpoints for meta data</a> and <a href="../../../concepts/supply-chain-security/about-dependabot-on-github-actions-runners.html">About Dependabot on GitHub Actions runners</a>.</p>
+<h2 title="Using OIDC for authentication"><a href="#using-oidc-for-authentication" aria-hidden="true" class="anchor" id="using-oidc-for-authentication"></a>Using OIDC for authentication</h2>
+<p>Dependabot can use OpenID Connect (OIDC) to authenticate with private registries, eliminating the need to store long-lived credentials as repository secrets.</p>
+<p>With OIDC-based authentication, Dependabot update jobs can dynamically obtain short-lived credentials from your cloud identity provider, just like GitHub Actions workflows using OIDC federation.</p>
+<div class="markdown-alert markdown-alert-tip">
+<p class="markdown-alert-title">Tip</p>
+<p>OIDC authentication is also available for <strong>organization-level</strong> private registries, which you can configure through the organization settings UI or the REST API. For more information, see <a href="../../secure-at-scale/configure-organization-security/manage-usage-and-access/giving-org-access-private-registries.html#configuring-oidc-authentication-for-a-private-registry">Giving security features access to private registries</a>.</p>
+</div>
+<p>Dependabot supports OIDC authentication for any registry type that uses <code>username</code> and <code>password</code> authentication, when the registry is hosted on one of the following providers:</p>
+<ul>
+<li>AWS CodeArtifact</li>
+<li>Azure DevOps Artifacts</li>
+<li>Cloudsmith</li>
+<li>Google Cloud Artifact Registry</li>
+<li>JFrog Artifactory</li>
+</ul>
+<p>To configure OIDC authentication, you need to specify different values instead of <code>username</code> and <code>password</code> in your registry configuration.</p>
+<h3 title="Using OIDC for authentication / AWS CodeArtifact"><a href="#aws-codeartifact" aria-hidden="true" class="anchor" id="aws-codeartifact"></a>AWS CodeArtifact</h3>
+<p>AWS CodeArtifact requires the values <code>aws-region</code>, <code>account-id</code>, <code>role-name</code>, <code>domain</code>, and <code>domain-owner</code>. The <code>audience</code> field is optional.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">my-aws-codeartifact-feed</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://MY_DOMAIN-MY-ACCOUNT_ID.d.codeartifact.REGION.amazonaws.com/npm/MY_REPOSITORY/
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">aws-region</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">REGION
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">account-id</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">123456789012</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">role-name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">MY_ROLE_NAME
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">domain</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">MY_DOMAIN
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">domain-owner</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">987654321098</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">audience</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">MY_AUDIENCE  </span><span style="color:#65737e;"># if required by your feed
+</span></code></pre>
+<h3 title="Using OIDC for authentication / Azure DevOps Artifacts"><a href="#azure-devops-artifacts" aria-hidden="true" class="anchor" id="azure-devops-artifacts"></a>Azure DevOps Artifacts</h3>
+<p>Azure DevOps Artifacts requires the values <code>tenant-id</code> and <code>client-id</code>:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">my-azure-devops-artifacts-feed</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://pkgs.dev.azure.com/MY-ORGANIZATION/MY-PROJECT/_packaging/MY-FEED/npm/registry/
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">tenant-id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.AZURE_TENANT_ID }}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">client-id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.AZURE_CLIENT_ID }}
+</span></code></pre>
+<h3 title="Using OIDC for authentication / Cloudsmith"><a href="#cloudsmith" aria-hidden="true" class="anchor" id="cloudsmith"></a>Cloudsmith</h3>
+<p>Cloudsmith requires the values <code>namespace</code>, <code>service-slug</code>, and <code>audience</code>. The <code>api-host</code> field is optional and defaults to <code>api.cloudsmith.io</code>:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">my-cloudsmith-feed</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://dl.cloudsmith.io/MY-NAMESPACE/MY-REPOSITORY/npm/
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">namespace</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">MY-NAMESPACE
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">service-slug</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">MY-SERVICE-SLUG
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">audience</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://github.com/GITHUB-ORG
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">api-host</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">api.cloudsmith.io  </span><span style="color:#65737e;"># if required by your feed
+</span></code></pre>
+<h3 title="Using OIDC for authentication / Google Cloud Artifact Registry"><a href="#google-cloud-artifact-registry" aria-hidden="true" class="anchor" id="google-cloud-artifact-registry"></a>Google Cloud Artifact Registry</h3>
+<p>Google Cloud Artifact Registry requires the values <code>url</code> and<br>
+<code>workload-identity-provider</code>. The values <code>service-account</code> and <code>audience</code> are<br>
+optional:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">my-gcp-artifact-registry</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">docker-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://REGION-docker.pkg.dev
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">workload-identity-provider</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">projects/PROJECT-NUMBER/locations/global/workloadIdentityPools/POOL/providers/PROVIDER
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">service-account</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">SA-NAME@PROJECT-ID.iam.gserviceaccount.com  </span><span style="color:#65737e;"># if required by your provider
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">audience</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">MY-AUDIENCE  </span><span style="color:#65737e;"># if required by your provider
+</span></code></pre>
+<h3 title="Using OIDC for authentication / JFrog Artifactory"><a href="#jfrog-artifactory" aria-hidden="true" class="anchor" id="jfrog-artifactory"></a>JFrog Artifactory</h3>
+<p>JFrog Artifactory requires the values <code>url</code> and <code>jfrog-oidc-provider-name</code>.  The values <code>audience</code> and <code>identity-mapping-name</code> are optional:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">my-jfrog-artifactory-feed</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://JFROG-PLATFORM-URL/artifactory/api/npm/MY-REPOSITORY
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">jfrog-oidc-provider-name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">MY-PROVIDER
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">audience</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">MY-AUDIENCE  </span><span style="color:#65737e;"># if required by your feed
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">identity-mapping-name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">MY-IDENTITY-MAPPING  </span><span style="color:#65737e;"># if required by your feed
+</span></code></pre>
+<p>For more information about how OIDC works, see <a href="https://docs.github.com/en/actions/concepts/security/openid-connect" class="external">OpenID Connect</a>.</p>
+<h2 title="Allowing external code execution"><a href="#allowing-external-code-execution" aria-hidden="true" class="anchor" id="allowing-external-code-execution"></a>Allowing external code execution</h2>
+<p>When you give Dependabot access to one or more registries, external code execution is automatically disabled to protect your code from compromised packages. However, some version updates may fail.</p>
+<p>If you need to allow Dependabot to access a private package registry and enable limited external code execution, you can set <code>insecure-external-code-execution</code> to <code>allow</code>. Allowing Dependabot to execute external code in the manifest during updates is not as scary as it sounds:</p>
+<ul>
+<li>Any external code execution will only have access to the package managers in the registries associated with the enclosing <code>updates</code> setting.</li>
+<li>There is no access allowed to any of the registries defined in the top level <code>registries</code> configuration.</li>
+</ul>
+<p>It is common for tooling, such as <code>bundler</code>, <code>mix</code>, <code>pip</code>, and <code>swift</code>, to allow the execution of external code by default.</p>
+<p>In this example, the configuration file allows Dependabot to access the <code>ruby-github</code> private package registry. In the same <code>updates</code>setting, <code>insecure-external-code-execution</code>is set to <code>allow</code>, which means that the code executed by dependencies will only access the <code>ruby-github</code> registry, and not the <code>dockerhub</code> registry.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># Allow external code execution when updating dependencies from private registries
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">ruby-github</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">rubygems-server
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://rubygems.pkg.github.com/octocat/github_api
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_GITHUB_PERSONAL_TOKEN}}
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">bundler</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/rubygems-server</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">insecure-external-code-execution</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">allow
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">*</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">monthly</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<h2 title="Supported private registries"><a href="#supported-private-registries" aria-hidden="true" class="anchor" id="supported-private-registries"></a>Supported private registries</h2>
+<p>Examples of how to configure access to the private registries supported by Dependabot.</p>
+<ul>
+<li><a href="#cargo-registry"><code>cargo-registry</code></a></li>
+<li><a href="#composer-repository"><code>composer-repository</code></a></li>
+<li><a href="#docker-registry"><code>docker-registry</code></a></li>
+<li><a href="#git"><code>git</code></a></li>
+<li><a href="#goproxy-server"><code>goproxy-server</code></a></li>
+<li><a href="#hex-organization"><code>hex-organization</code></a></li>
+<li><a href="#hex-repository"><code>hex-repository</code></a></li>
+<li><a href="#maven-repository"><code>maven-repository</code></a></li>
+<li><a href="#npm-registry"><code>npm-registry</code></a></li>
+<li><a href="#nuget-feed"><code>nuget-feed</code></a></li>
+<li><a href="#pub-repository"><code>pub-repository</code></a></li>
+<li><a href="#python-index"><code>python-index</code></a></li>
+<li><a href="#rubygems-server"><code>rubygems-server</code></a></li>
+<li><a href="#terraform-registry"><code>terraform-registry</code></a></li>
+</ul>
+<h3 title="Supported private registries / cargo-registry"><a href="#cargo-registry" aria-hidden="true" class="anchor" id="cargo-registry"></a><code>cargo-registry</code></h3>
+<p>The <code>cargo-registry</code> type supports a token.</p>
+<p>This registry type will prefix-match the path provided in the <code>url</code> option. This means you can provide multiple credentials to the same host, which can be used to access distinct paths. However, if you don't have multiple registries on the same host, we recommend that you omit the path from the <code>url</code>, so that all paths to the registry will receive credentials.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">cargo-example</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">cargo-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">registry</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">name-of-your-registry</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://cargo.cloudsmith.io/foobaruser/test/
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">token</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">Token ${{secrets.CARGO_TOKEN}}</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<p>We tested this configuration against the <code>https://cargo.cloudsmith.io</code> private registry.</p>
+<h3 title="Supported private registries / composer-repository"><a href="#composer-repository" aria-hidden="true" class="anchor" id="composer-repository"></a><code>composer-repository</code></h3>
+<p>The <code>composer-repository</code> type supports username and password. If the account is a GitHub account, you can use a GitHub personal access token in place of the password.</p>
+<p>This registry type will prefix-match the path provided in the <code>url</code> option. This means you can provide multiple credentials to the same host, which can be used to access distinct paths. However, if you don't have multiple registries on the same host, we recommend that you omit the path from the <code>url</code>, so that all paths to the registry will receive credentials.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">composer</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">composer-repository
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://repo.packagist.com/example-company/
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octocat
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_PACKAGIST_PASSWORD}}
+</span></code></pre>
+<h3 title="Supported private registries / docker-registry"><a href="#docker-registry" aria-hidden="true" class="anchor" id="docker-registry"></a><code>docker-registry</code></h3>
+<p>Dependabot works with any container registries that implement the OCI container registry spec. For more information, see <a href="https://github.com/opencontainers/distribution-spec/blob/main/spec.md" class="external">https://github.com/opencontainers/distribution-spec/blob/main/spec.md</a>. Dependabot supports authentication to private registries via a central token service or HTTP Basic Auth. For further details, see <a href="https://docs.docker.com/registry/spec/auth/token/" class="external">Token Authentication Specification</a> in the Docker documentation and <a href="https://en.wikipedia.org/wiki/Basic_access_authentication" class="external">Basic access authentication</a> on Wikipedia.</p>
+<p>The <code>docker-registry</code> type supports username and password. If the account is a GitHub account, you can use a GitHub personal access token in place of the password.</p>
+<p>This registry type will prefix-match the path provided in the <code>url</code> option. This means you can provide multiple credentials to the same host, which can be used to access distinct paths. However, if you don't have multiple registries on the same host, we recommend that you omit the path from the <code>url</code>, so that all paths to the registry will receive credentials.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">dockerhub</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">docker-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://registry.hub.docker.com
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octocat
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_DOCKERHUB_PASSWORD}}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">replaces-base</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span></code></pre>
+<p>The <code>docker-registry</code> type can also be used to pull from private Amazon ECR using static AWS credentials.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">ecr-docker</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">docker-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://1234567890.dkr.ecr.us-east-1.amazonaws.com
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.ECR_AWS_ACCESS_KEY_ID}}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.ECR_AWS_SECRET_ACCESS_KEY}}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">replaces-base</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span></code></pre>
+<h3 title="Supported private registries / git"><a href="#git" aria-hidden="true" class="anchor" id="git"></a><code>git</code></h3>
+<p>The <code>git</code> type supports username and password. If the account is a GitHub account, you can use a GitHub personal access token in place of the password.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">github-octocat</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">git
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://github.com
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">x-access-token
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_GITHUB_PERSONAL_TOKEN}}
+</span></code></pre>
+<h3 title="Supported private registries / goproxy-server"><a href="#goproxy-server" aria-hidden="true" class="anchor" id="goproxy-server"></a><code>goproxy-server</code></h3>
+<p>The <code>goproxy-server</code> type supports username and password. If the account is a GitHub account, you can use a GitHub personal access token in place of the password.</p>
+<p>This registry type will prefix-match the path provided in the <code>url</code> option. This means you can provide multiple credentials to the same host, which can be used to access distinct paths. However, if you don't have multiple registries on the same host, we recommend that you omit the path from the <code>url</code>, so that all paths to the registry will receive credentials.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">my-private-registry</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">goproxy-server
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://acme.jfrog.io/artifactory/api/go/my-repo
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octocat
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_GO_REGISTRY_TOKEN}}
+</span></code></pre>
+<h3 title="Supported private registries / helm-registry"><a href="#helm-registry" aria-hidden="true" class="anchor" id="helm-registry"></a><code>helm-registry</code></h3>
+<p>The <code>helm-registry</code> type only supports HTTP Basic Auth and does not support OCI-compliant registries. If you need to access an OCI-compliant registry for Helm charts, configure a <a href="#docker-registry"><code>docker-registry</code></a> instead.</p>
+<p>The <code>helm-registry</code> type supports username and password. If the account is a GitHub account, you can use a GitHub personal access token in place of the password.</p>
+<p>This registry type will prefix-match the path provided in the <code>url</code> option. This means you can provide multiple credentials to the same host, which can be used to access distinct paths. However, if you don't have multiple registries on the same host, we recommend that you omit the path from the <code>url</code>, so that all paths to the registry will receive credentials.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">helm_registry</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">helm-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://registry.example.com
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octocat
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_REGISTRY_PASSWORD}}
+</span></code></pre>
+<h3 title="Supported private registries / hex-organization"><a href="#hex-organization" aria-hidden="true" class="anchor" id="hex-organization"></a><code>hex-organization</code></h3>
+<p>The <code>hex-organization</code> type supports organization and key.</p>
+<p>This registry type will prefix-match the path provided in the <code>url</code> option. This means you can provide multiple credentials to the same host, which can be used to access distinct paths. However, if you don't have multiple registries on the same host, we recommend that you omit the path from the <code>url</code>, so that all paths to the registry will receive credentials.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">github-hex-org</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">hex-organization
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">organization</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">key</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_HEX_ORGANIZATION_KEY}}
+</span></code></pre>
+<h3 title="Supported private registries / hex-repository"><a href="#hex-repository" aria-hidden="true" class="anchor" id="hex-repository"></a><code>hex-repository</code></h3>
+<p>The <code>hex-repository</code> type supports an authentication key.</p>
+<p><code>repo</code> is a required field, which must match the name of the repository used in your dependency declaration.</p>
+<p>The <code>public-key-fingerprint</code> is an optional configuration field, representing the fingerprint of the public key for the Hex repository. <code>public-key-fingerprint</code> is used by Hex to establish trust with the private repository. The <code>public-key-fingerprint</code> field can be either listed in plaintext or stored as a Dependabot secret.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">   </span><span style="color:#bf616a;">github-hex-repository</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">     </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">hex-repository
+</span><span style="color:#c0c5ce;">     </span><span style="color:#bf616a;">repo</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">private-repo
+</span><span style="color:#c0c5ce;">     </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://private-repo.example.com
+</span><span style="color:#c0c5ce;">     </span><span style="color:#bf616a;">auth-key</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_AUTH_KEY}}
+</span><span style="color:#c0c5ce;">     </span><span style="color:#bf616a;">public-key-fingerprint</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_PUBLIC_KEY_FINGERPRINT}}
+</span></code></pre>
+<h3 title="Supported private registries / maven-repository"><a href="#maven-repository" aria-hidden="true" class="anchor" id="maven-repository"></a><code>maven-repository</code></h3>
+<p>The <code>maven-repository</code> type supports username, password and replaces-base. If the account is a GitHub account, you can use a GitHub personal access token in place of the password.</p>
+<p>This registry type will prefix-match the path provided in the <code>url</code> option. This means you can provide multiple credentials to the same host, which can be used to access distinct paths. However, if you don't have multiple registries on the same host, we recommend that you omit the path from the <code>url</code>, so that all paths to the registry will receive credentials.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">maven-artifactory</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">maven-repository
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://acme.jfrog.io/artifactory/my-maven-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octocat
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_ARTIFACTORY_PASSWORD}}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">replaces-base</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span></code></pre>
+<p>You can also use OIDC authentication to access JFrog Artifactory. With OIDC, Dependabot dynamically obtains short-lived credentials instead of using static credentials.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">maven-artifactory-oidc</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">maven-repository
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://acme.jfrog.io/artifactory/my-maven-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">tenant-id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.ARTIFACTORY_TENANT_ID}}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">client-id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.ARTIFACTORY_CLIENT_ID}}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">replaces-base</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span></code></pre>
+<h3 title="Supported private registries / npm-registry"><a href="#npm-registry" aria-hidden="true" class="anchor" id="npm-registry"></a><code>npm-registry</code></h3>
+<p>The <code>npm-registry</code> type supports username and password, or token. If the account is a GitHub account, you can use a GitHub personal access token in place of the password.</p>
+<p>When using username and password, your <code>.npmrc</code>'s auth token may contain a <code>base64</code> encoded <code>_password</code>; however, the password referenced in your Dependabot configuration file must be the original (unencoded) password.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>When using <code>npm.pkg.github.com</code>, don't include a path. Instead use the <code>https://npm.pkg.github.com</code> URL without a path.</p>
+</div>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">npm-npmjs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://registry.npmjs.org
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octocat
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_NPM_PASSWORD}}  </span><span style="color:#65737e;"># Must be an unencoded password
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">replaces-base</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span></code></pre>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">npm-github</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://npm.pkg.github.com
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_GITHUB_PERSONAL_TOKEN}}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">replaces-base</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span></code></pre>
+<p>For security reasons, Dependabot does not set environment variables. Yarn (v2 and later) requires that any accessed environment variables are set. When accessing environment variables in your <code>.yarnrc.yml</code> file, you should provide a fallback value such as <code>${ENV_VAR-fallback}</code> or <code>${ENV_VAR:-fallback}</code>. For more information, see <a href="https://yarnpkg.com/configuration/yarnrc" class="external">Yarnrc files</a> in the Yarn documentation.</p>
+<h3 title="Supported private registries / nuget-feed"><a href="#nuget-feed" aria-hidden="true" class="anchor" id="nuget-feed"></a><code>nuget-feed</code></h3>
+<p>The <code>nuget-feed</code> type supports username and password, or token. If the account is a GitHub account, you can use a GitHub personal access token in place of the password.</p>
+<p><code>nuget-feed</code> doesn't support the <code>replaces-base</code> parameter.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">nuget-example</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">nuget-feed
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://nuget.example.com/v3/index.json
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octocat@example.com
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_NUGET_PASSWORD}}
+</span></code></pre>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">nuget-azure-devops</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">nuget-feed
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://pkgs.dev.azure.com/.../_packaging/My_Feed/nuget/v3/index.json
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octocat@example.com
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_AZURE_DEVOPS_TOKEN}}
+</span></code></pre>
+<p>You can also use OIDC authentication to access Azure DevOps Artifacts. With OIDC, Dependabot dynamically obtains short-lived credentials instead of using static credentials.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">nuget-azure-devops-oidc</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">nuget-feed
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://pkgs.dev.azure.com/MyOrganization/MyProject/_packaging/MyArtifactFeedName/nuget/v3/index.json
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">tenant-id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.AZURE_TENANT_ID}}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">client-id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.AZURE_CLIENT_ID}}
+</span></code></pre>
+<p>The <code>AZURE_TENANT_ID</code> and <code>AZURE_CLIENT_ID</code> values can be obtained from the overview page of your Entra ID app registration.</p>
+<h3 title="Supported private registries / pub-repository"><a href="#pub-repository" aria-hidden="true" class="anchor" id="pub-repository"></a><code>pub-repository</code></h3>
+<p>The <code>pub-repository</code> type supports a URL and a token.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">my-pub-registry</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">pub-repository
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://example-private-pub-repo.dev/optional-path
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_PUB_TOKEN}}
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">pub</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">my-pub-registry
+</span></code></pre>
+<h3 title="Supported private registries / python-index"><a href="#python-index" aria-hidden="true" class="anchor" id="python-index"></a><code>python-index</code></h3>
+<p>The <code>python-index</code> type supports username and password, or token. If the account is a GitHub account, you can use a GitHub personal access token in place of the password.</p>
+<p>This registry type will prefix-match the path provided in the <code>url</code> option. This means you can provide multiple credentials to the same host, which can be used to access distinct paths. However, if you don't have multiple registries on the same host, we recommend that you omit the path from the <code>url</code>, so that all paths to the registry will receive credentials.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">python-example</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">python-index
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://example.com/_packaging/my-feed/pypi/example
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octocat
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_BASIC_AUTH_PASSWORD}}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">replaces-base</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span></code></pre>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">python-azure</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">python-index
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://pkgs.dev.azure.com/octocat/_packaging/my-feed/pypi/example
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octocat@example.com
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_AZURE_DEVOPS_TOKEN}}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">replaces-base</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span></code></pre>
+<p>You can also use OIDC authentication to access Azure DevOps Artifacts. With OIDC, Dependabot dynamically obtains short-lived credentials instead of using static credentials.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">python-azure-oidc</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">python-index
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://pkgs.dev.azure.com/octocat/_packaging/my-feed/pypi/example
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">tenant-id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.AZURE_TENANT_ID}}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">client-id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.AZURE_CLIENT_ID}}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">replaces-base</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span></code></pre>
+<h3 title="Supported private registries / rubygems-server"><a href="#rubygems-server" aria-hidden="true" class="anchor" id="rubygems-server"></a><code>rubygems-server</code></h3>
+<p>The <code>rubygems-server</code> type supports username and password, or token. If the account is a GitHub account, you can use a GitHub personal access token in place of the password.</p>
+<p>This registry type will prefix-match the path provided in the <code>url</code> option. This means you can provide multiple credentials to the same host, which can be used to access distinct paths. However, if you don't have multiple registries on the same host, we recommend that you omit the path from the <code>url</code>, so that all paths to the registry will receive credentials.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">ruby-example</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">rubygems-server
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://rubygems.example.com
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octocat@example.com
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_RUBYGEMS_PASSWORD}}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">replaces-base</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span></code></pre>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">ruby-github</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">rubygems-server
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://rubygems.pkg.github.com/octocat/github_api
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_GITHUB_PERSONAL_TOKEN}}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">replaces-base</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span></code></pre>
+<h3 title="Supported private registries / terraform-registry"><a href="#terraform-registry" aria-hidden="true" class="anchor" id="terraform-registry"></a><code>terraform-registry</code></h3>
+<p>The <code>terraform-registry</code> type supports a token.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">terraform-example</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">terraform-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://terraform.example.com
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_TERRAFORM_API_TOKEN}}
+</span></code></pre>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

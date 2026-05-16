@@ -1,0 +1,87 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Customizing settings</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Find and fix code vulnerabilities</a> / <a href="index.html">Scan from VS Code</a> / </nav><h1><a href="#customizing-settings" aria-hidden="true" class="anchor" id="customizing-settings"></a>Customizing settings</h1>
+<p>You can edit the settings for the CodeQL for Visual Studio Code extension to suit your needs.</p>
+<h2 title="About settings in the CodeQL for Visual Studio Code extension"><a href="#about-settings-in-the-codeql-for-visual-studio-code-extension" aria-hidden="true" class="anchor" id="about-settings-in-the-codeql-for-visual-studio-code-extension"></a>About settings in the CodeQL for Visual Studio Code extension</h2>
+<p>You can change numerous settings for the CodeQL for Visual Studio Code extension, including:</p>
+<ul>
+<li>Which version of the CodeQL CLI the extension uses.</li>
+<li>How the extension displays previous queries.</li>
+<li>How the extension runs queries.</li>
+</ul>
+<h2 title="Editing settings for the CodeQL extension"><a href="#editing-settings-for-the-codeql-extension" aria-hidden="true" class="anchor" id="editing-settings-for-the-codeql-extension"></a>Editing settings for the CodeQL extension</h2>
+<ol>
+<li>
+<p>Open the "Extensions" view and right-click <strong>CodeQL</strong>, then click <strong>Extension Settings</strong>.</p>
+<p><img src="../../../../..//assets/images/help/security/codeql-for-vs-code-extensions-view.png" alt="Screenshot of the &quot;Extensions&quot; view, with the right-click menu displayed and &quot;Extension Settings&quot; outlined in dark orange."></p>
+</li>
+<li>
+<p>In the Settings window, edit settings as desired. The new settings are saved automatically.</p>
+<p><img src="../../../../..//assets/images/help/security/codeql-for-vs-code-extension-settings.png" alt="Screenshot of the CodeQL for VS Code Extension Settings window displayed inside VS Code."></p>
+</li>
+</ol>
+<div class="markdown-alert markdown-alert-tip">
+<p class="markdown-alert-title">Tip</p>
+<p>Alternatively, you can edit the settings in JSON format by opening the VS Code Command Palette and selecting <strong>Preferences: Open User Settings (JSON)</strong>.</p>
+</div>
+<h3 title="Editing settings for the CodeQL extension / Choosing a version of the CodeQL CLI"><a href="#choosing-a-version-of-the-codeql-cli" aria-hidden="true" class="anchor" id="choosing-a-version-of-the-codeql-cli"></a>Choosing a version of the CodeQL CLI</h3>
+<p>To override the default behavior and use a specific version of the CodeQL CLI, you can specify the CodeQL CLI "Executable Path" in the extension settings, and point it to your existing copy of the CodeQL CLI. That is, the file named <code>codeql</code> (Linux and macOS), or <code>codeql.exe</code> (Windows). For more information about the default behavior, see <a href="configuring-access-to-the-codeql-cli.html">Managing the CodeQL CLI in the VS Code extension</a>.</p>
+<h3 title="Editing settings for the CodeQL extension / Changing the labels of query history items"><a href="#changing-the-labels-of-query-history-items" aria-hidden="true" class="anchor" id="changing-the-labels-of-query-history-items"></a>Changing the labels of query history items</h3>
+<p>The query history "Format" setting controls how the extension lists queries in the query history. By default, each item has a label with the following format:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">QUERY-NAME</span><span style="color:#c0c5ce;"> on DATABASE-NAME - QUERY-STATUS NUMBER-OF-RESULTS </span><span style="color:#b48ead;">[</span><span style="color:#c0c5ce;">QUERY-RUNTIME</span><span style="color:#b48ead;">]
+</span></code></pre>
+<p>To override the default label, you can specify a different format for the query history items.</p>
+<h3 title="Editing settings for the CodeQL extension / Changing the retention period for query history items"><a href="#changing-the-retention-period-for-query-history-items" aria-hidden="true" class="anchor" id="changing-the-retention-period-for-query-history-items"></a>Changing the retention period for query history items</h3>
+<p>By default, items in the "Query History" view are retained for 30 days. You can set a different time to live (TTL) by changing the "Query History: Ttl" setting. To retain items indefinitely, set the value to 0.</p>
+<h3 title="Editing settings for the CodeQL extension / Configuring settings for running queries locally"><a href="#configuring-settings-for-running-queries-locally" aria-hidden="true" class="anchor" id="configuring-settings-for-running-queries-locally"></a>Configuring settings for running queries locally</h3>
+<p>There are a number of settings under "Running Queries". For example, if your queries run too slowly and time out frequently, you may want to increase the memory by changing the "Running Queries: Memory" setting.</p>
+<p>If you want to examine query performance, enable the "Running Queries: Debug" setting to include timing and tuple counts. This will then be shown in the logs in the CodeQL "Query Server" tab of the "Output" view. The tuple count is useful because it indicates the size of the <a href="https://codeql.github.com/docs/ql-language-reference/predicates/#predicates" class="external">predicates</a> computed by the query.</p>
+<p>To save query server logs in a custom location, edit the "Running Queries: Custom Log Directory" setting. If you use a custom log directory, the extension saves the logs permanently, instead of deleting them automatically after each workspace session. This is useful if you want to investigate these logs to improve the performance of your queries.</p>
+<h3 title="Editing settings for the CodeQL extension / Configuring settings for variant analysis"><a href="#configuring-settings-for-variant-analysis" aria-hidden="true" class="anchor" id="configuring-settings-for-variant-analysis"></a>Configuring settings for variant analysis</h3>
+<p>There are a number of settings under "Variant Analysis" that you can use to define or edit lists of GitHub repositories for variant analysis, and change to a different controller repository. For information on the purpose and requirements for a controller repository, see <a href="running-codeql-queries-at-scale-with-multi-repository-variant-analysis.html">Running CodeQL queries at scale with multi-repository variant analysis</a>.</p>
+<p>You can also edit the items shown in the "Variant Analysis Repositories" view by editing a file in your Visual Studio Code workspace called <code>databases.json</code>. This file contains a JSON representation of all the items displayed in the view. To open your <code>databases.json</code> file in an editor window, click the <strong>{ }</strong> icon in the top right of the "Variant Analysis Repositories" view. You can then see a structured representation of the repositories, organizations and lists in your view. For example:</p>
+<pre lang="json" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">{
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">version</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">databases</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">variantAnalysis</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">repositoryLists</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">        {
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">name</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">My favorite JavaScript repos</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">repositories</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">facebook/react</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">babel/babel</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">angular/angular</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">          ]
+</span><span style="color:#c0c5ce;">        }
+</span><span style="color:#c0c5ce;">      ],
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">owners</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">microsoft</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      ],
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">repositories</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">apache/hadoop</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      ]
+</span><span style="color:#c0c5ce;">    }
+</span><span style="color:#c0c5ce;">  },
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">selected</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">kind</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">variantAnalysisSystemDefinedList</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">listName</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">top_10</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">  }
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+<p>You can change the items shown in the view or add new items by directly editing this file.</p>
+<h3 title="Editing settings for the CodeQL extension / Configuring settings for adding databases"><a href="#configuring-settings-for-adding-databases" aria-hidden="true" class="anchor" id="configuring-settings-for-adding-databases"></a>Configuring settings for adding databases</h3>
+<p>To automatically add database source folders to your workspace, you can enable the "Adding Databases: Add Database Source to Workspace" setting.</p>
+<p>This setting is disabled by default. You may want to enable the setting if you regularly browse the source code of databases (for example, to view the abstract syntax tree of the code). For more information, see <a href="exploring-the-structure-of-your-source-code.html">Exploring the structure of your source code</a>.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>If you are in a single-folder workspace, adding database source folders will cause the workspace to reload as a multi-root workspace. This may cause query history and database lists to reset.</p>
+<p>Before enabling this setting, we recommend that you save your workspace as a multi-root workspace. For more information, see <a href="https://code.visualstudio.com/docs/editing/workspaces/multi-root-workspaces" class="external">Multi-root Workspaces</a> in the Visual Studio Code documentation.</p>
+</div>
+<h3 title="Editing settings for the CodeQL extension / Configuring settings for testing queries locally"><a href="#configuring-settings-for-testing-queries-locally" aria-hidden="true" class="anchor" id="configuring-settings-for-testing-queries-locally"></a>Configuring settings for testing queries locally</h3>
+<p>To increase the number of threads used for testing queries, you can update the "Running Tests: Number Of Threads" setting.</p>
+<p>To pass additional arguments to the CodeQL CLI when running tests, you can update the "Running Tests: Additional Test Arguments" setting. For more information about the available arguments, see <a href="../../../reference/code-scanning/codeql/codeql-cli-manual/test-run.html">test run</a>.</p>
+<h3 title="Editing settings for the CodeQL extension / Configuring settings for telemetry and data collection"><a href="#configuring-settings-for-telemetry-and-data-collection" aria-hidden="true" class="anchor" id="configuring-settings-for-telemetry-and-data-collection"></a>Configuring settings for telemetry and data collection</h3>
+<p>You can configure whether the CodeQL extension collects telemetry data. This is disabled by default. For more information, see <a href="../../../reference/code-scanning/codeql/codeql-for-vs-code/telemetry-in-codeql-for-visual-studio-code.html">Telemetry in CodeQL for Visual Studio Code</a>.</p>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li><a href="https://code.visualstudio.com/docs/configure/settings" class="external">User and Workspace Settings</a> in the Visual Studio Code documentation</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

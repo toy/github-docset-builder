@@ -1,0 +1,33 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Code scanning merge protection</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Code scanning</a> / </nav><h1><a href="#code-scanning-merge-protection" aria-hidden="true" class="anchor" id="code-scanning-merge-protection"></a>Code scanning merge protection</h1>
+<p>Code scanning rules prevent pull requests with potential vulnerabilities from being merged.</p>
+<h2 title="Rulesets for code scanning merge protection"><a href="#rulesets-for-code-scanning-merge-protection" aria-hidden="true" class="anchor" id="rulesets-for-code-scanning-merge-protection"></a>Rulesets for code scanning merge protection</h2>
+<p>A ruleset is a named list of rules that control how people can interact with branches and tags in your repositories. You can add code scanning rules to rulesets to prevent pull requests from being merged when any of the following conditions are met:</p>
+<ul>
+<li>A required tool finds a code scanning alert of a severity that is defined in the ruleset.</li>
+<li>A required tool's analysis is still in progress.</li>
+<li>A required tool is not configured for the repository.</li>
+</ul>
+<p>Typically, you should use code scanning merge protection on long-lived feature branches, where you want to guarantee code has been analyzed before pull requests can be merged.</p>
+<p>Configuring a code scanning rule will not automatically enable code scanning. To learn how to enable code scanning, see <a href="../../how-tos/find-and-fix-code-vulnerabilities/configure-code-scanning/configuring-default-setup-for-code-scanning.html">Configuring default setup for code scanning</a>.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<ul>
+<li>Merge protection with rulesets is not related to status checks. For more information about status checks, see <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/collaborating-on-repositories-with-code-quality-features/about-status-checks" class="external">About status checks</a>.</li>
+</ul>
+</div>
+<h2 title="Availability"><a href="#availability" aria-hidden="true" class="anchor" id="availability"></a>Availability</h2>
+<p>You can set code scanning merge protection with rulesets:</p>
+<ul>
+<li>At the repository level</li>
+<li>At the organization level (GitHub Enterprise plans only)</li>
+</ul>
+<h2 title="Exceptions and limitations"><a href="#exceptions-and-limitations" aria-hidden="true" class="anchor" id="exceptions-and-limitations"></a>Exceptions and limitations</h2>
+<p>Merge protection with rulesets will <strong>not apply</strong> to:</p>
+<ul>
+<li>Merge queue groups</li>
+<li>Dependabot pull requests analyzed by default setup</li>
+</ul>
+<p>Additionally, all the lines of code identified by an alert must exist in the pull request diff. For more information, see <a href="../../reference/code-scanning/sarif-files/sarif-support-for-code-scanning.html#source-file-locations">SARIF support for code scanning</a>.</p>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>To configure a ruleset that requires code scanning results, see <a href="../../how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/set-code-scanning-merge-protection.html">Set code scanning merge protection</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

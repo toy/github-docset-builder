@@ -1,0 +1,24 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Some languages were not analyzed with CodeQL advanced setup</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">Reference</a> / <a href="../index.html">Code scanning</a> / <a href="index.html">Troubleshoot analysis errors</a> / </nav><h1><a href="#some-languages-were-not-analyzed-with-codeql-advanced-setup" aria-hidden="true" class="anchor" id="some-languages-were-not-analyzed-with-codeql-advanced-setup"></a>Some languages were not analyzed with CodeQL advanced setup</h1>
+<p>If some languages were not analyzed, you can modify your code scanning workflow to add a matrix specifying the languages you want to analyze.</p>
+<p>If you're using advanced setup and your workflow doesn't explicitly specify the languages to analyze, CodeQL implicitly detects the supported languages in your code base. In this configuration, out of the compiled languages C/C++, C#, Go, Java, Kotlin, Rust, and Swift, CodeQL only analyzes the language with the most source files. Edit the workflow and add a matrix specifying the languages you want to analyze. The default CodeQL analysis workflow uses such a matrix.</p>
+<p>The following extracts from a workflow show how you can use a matrix within the job strategy to specify languages, and then reference each language within the "Initialize CodeQL" step:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">analyze</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">permissions</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">security-events</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">actions</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># ...
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">strategy</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">fail-fast</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">matrix</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">language</span><span style="color:#c0c5ce;">: ['</span><span style="color:#a3be8c;">csharp</span><span style="color:#c0c5ce;">', '</span><span style="color:#a3be8c;">c-cpp</span><span style="color:#c0c5ce;">', '</span><span style="color:#a3be8c;">javascript-typescript</span><span style="color:#c0c5ce;">']
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># ...
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Initialize CodeQL
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/init@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">languages</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ matrix.language }}
+</span></code></pre>
+<p>For more information about editing the workflow, see <a href="../workflow-configuration-options.html">Workflow configuration options for code scanning</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

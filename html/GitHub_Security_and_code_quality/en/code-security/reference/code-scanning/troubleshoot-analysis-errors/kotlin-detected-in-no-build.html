@@ -1,0 +1,37 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Warning: Detected X Kotlin files in your project that could not be processed without a build</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">Reference</a> / <a href="../index.html">Code scanning</a> / <a href="index.html">Troubleshoot analysis errors</a> / </nav><h1><a href="#warning-detected-x-kotlin-files-in-your-project-that-could-not-be-processed-without-a-build" aria-hidden="true" class="anchor" id="warning-detected-x-kotlin-files-in-your-project-that-could-not-be-processed-without-a-build"></a>Warning: Detected X Kotlin files in your project that could not be processed without a build</h1>
+<p>CodeQL databases can be created for Java without building the code, but Kotlin files are excluded unless the code is built.</p>
+<h2 title="About this warning"><a href="#about-this-warning" aria-hidden="true" class="anchor" id="about-this-warning"></a>About this warning</h2>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Warning: Detected X Kotlin files in your project that could not be processed without a build. To process these files...
+</span></code></pre>
+<p>This warning is reported when Kotlin files are detected in a repository that ran CodeQL code scanning for Java using the build mode of <code>none</code> (default setup), or if you run the CodeQL CLI using <code>--build-mode none</code> for a repository containing Java and Kotlin files.</p>
+<h2 title="Confirming the cause of the warning"><a href="#confirming-the-cause-of-the-warning" aria-hidden="true" class="anchor" id="confirming-the-cause-of-the-warning"></a>Confirming the cause of the warning</h2>
+<p>This warning is only displayed when the build mode of <code>none</code> is used for a repository with both Java and Kotlin files.</p>
+<p>The CodeQL action and CodeQL CLI support a build mode of <code>none</code> for Java. This provides an easy way to enable analysis for Java code without building the codebase. However, Kotlin files are not included in the resulting CodeQL database.</p>
+<p>You can verify the presence of Kotlin files by looking at the repository or pull request that triggered the warning. The <code>none</code> build mode is used only in the following circumstances:</p>
+<ul>
+<li>Code scanning was enabled for the repository before Kotlin code was added and after the new mode was introduced (previously it would have used the <code>autobuild</code> mode).</li>
+<li>The CodeQL workflow specifies a build mode of <code>none</code> for the repository (check for <code>build-mode: none</code>).</li>
+<li>The CodeQL CLI is called without a <code>--command</code> and with <code>--build-mode none</code>.</li>
+</ul>
+<h2 title="Fixing the problem"><a href="#fixing-the-problem" aria-hidden="true" class="anchor" id="fixing-the-problem"></a>Fixing the problem</h2>
+<p>You may not want to analyze the Kotlin files, in which case you can ignore the warning message.</p>
+<p>If you want to update the analysis to also include Kotlin files, then CodeQL will need to build the Java and Kotlin code.</p>
+<h3 title="Fixing the problem / Code scanning default setup"><a href="#code-scanning-default-setup" aria-hidden="true" class="anchor" id="code-scanning-default-setup"></a>Code scanning default setup</h3>
+<ol>
+<li>Wait until the Kotlin code is merged into the default branch for the repository.</li>
+<li>Disable and then re-enable default setup on the "Settings" page for your repository.</li>
+</ol>
+<p>This will trigger a new analysis using automatic build detection. See <a href="../../../how-tos/find-and-fix-code-vulnerabilities/configure-code-scanning/configuring-default-setup-for-code-scanning.html">Configuring default setup for code scanning</a> and <a href="../../../how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/codeql-code-scanning-for-compiled-languages.html#building-java-and-kotlin">Building Java and Kotlin</a>.</p>
+<p>If the automatic build detection fails, you will need to use advanced setup with the correct build commands for the project to analyze both languages.</p>
+<h3 title="Fixing the problem / Code scanning advanced setup"><a href="#code-scanning-advanced-setup" aria-hidden="true" class="anchor" id="code-scanning-advanced-setup"></a>Code scanning advanced setup</h3>
+<p>If you already use advanced setup, you can edit the CodeQL workflow and change the build mode for <code>java-kotlin</code> from <code>none</code> to either <code>autobuild</code> to automatically build your project, or <code>manual</code> to specify your own build steps. <a href="../../../how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/codeql-code-scanning-for-compiled-languages.html#building-java-and-kotlin">Building Java and Kotlin</a>.</p>
+<p>If you need to convert from default setup to advanced setup, you need enable advanced setup on the on the "Settings" page for your repository and create a CodeQL workflow. Then you can define a <code>manual</code> build mode for <code>java-kotlin</code> and define the build commands for the project.</p>
+<h3 title="Fixing the problem / Running the CodeQL CLI directly"><a href="#running-the-codeql-cli-directly" aria-hidden="true" class="anchor" id="running-the-codeql-cli-directly"></a>Running the CodeQL CLI directly</h3>
+<p>Update your calls to run the CodeQL CLI for the repository and pull requests to replace <code>--build-mode none</code> by <code>--build-mode autobuild</code> to try the automatic build detection. If automatic build detection is unsuccessful, remove the <code>--build-mode</code> option and include one or more <code>--command</code> options detailing the build script or steps required to build the project.</p>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li><a href="../../../how-tos/find-and-fix-code-vulnerabilities/configure-code-scanning/configuring-advanced-setup-for-code-scanning.html">Configuring advanced setup for code scanning</a></li>
+<li><a href="../../../how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/codeql-code-scanning-for-compiled-languages.html#building-java-and-kotlin">Building Java and Kotlin</a></li>
+<li><a href="../../../how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/codeql-code-scanning-for-compiled-languages.html#codeql-build-modes">CodeQL build modes</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

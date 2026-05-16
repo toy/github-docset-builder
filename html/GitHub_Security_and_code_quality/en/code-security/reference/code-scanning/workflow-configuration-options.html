@@ -1,0 +1,559 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Workflow configuration options for code scanning</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Reference</a> / <a href="index.html">Code scanning</a> / </nav><h1><a href="#workflow-configuration-options-for-code-scanning" aria-hidden="true" class="anchor" id="workflow-configuration-options-for-code-scanning"></a>Workflow configuration options for code scanning</h1>
+<p>Edit your workflow file to configure how advanced setup scans the code in your project for vulnerabilities and errors.</p>
+<!--The CodeQL CLI man pages include a link to a section of the article. If you rename this article,
+make sure that you also update the MS short link: https://aka.ms/code-scanning-docs/config-file.-->
+<h2 title="Prerequisites"><a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<p>You must use advanced setup for code scanning and be able to edit the workflow file where your configuration is defined.</p>
+<p>The examples provided in this article relate to the CodeQL analysis workflow file. By default, this file is defined at <code>.github/workflows/codeql-analysis.yml</code>.</p>
+<h2 title="Scan frequency"><a href="#scan-frequency" aria-hidden="true" class="anchor" id="scan-frequency"></a>Scan frequency</h2>
+<p>You can configure the CodeQL analysis workflow to scan code on a schedule or when specific events occur in a repository.</p>
+<p>Scanning code when someone pushes a change, and whenever a pull request is created, prevents developers from introducing new vulnerabilities and errors into the code. Scanning code on a schedule informs you about the latest vulnerabilities and errors that GitHub, security researchers, and the community discover, even when developers aren't actively maintaining the repository.</p>
+<h3 title="Scan frequency / Scanning on push"><a href="#scanning-on-push" aria-hidden="true" class="anchor" id="scanning-on-push"></a>Scanning on push</h3>
+<p>By default, the CodeQL analysis workflow uses the <code>on:push</code> event to trigger a code scan on every push to the default branch of the repository and any protected branches. For code scanning to be triggered on a specified branch, the workflow must exist in that branch. For more information, see <a href="https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on" class="external">Workflow syntax for GitHub Actions</a>.</p>
+<p>If you scan on push, then the results appear in the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab for your repository. For more information, see <a href="../../how-tos/manage-security-alerts/manage-code-scanning-alerts/assessing-code-scanning-alerts-for-your-repository.html#viewing-the-alerts-for-a-repository">Assessing code scanning alerts for your repository</a>.</p>
+<p>Additionally, when an <code>on:push</code> scan returns results that can be mapped to an open pull request, these alerts will automatically appear on the pull request in the same places as other pull request alerts. The alerts are identified by comparing the existing analysis of the head of the branch to the analysis for the target branch. For more information on code scanning alerts in pull requests, see <a href="../../how-tos/manage-security-alerts/manage-code-scanning-alerts/triaging-code-scanning-alerts-in-pull-requests.html">Triaging code scanning alerts in pull requests</a>.</p>
+<h3 title="Scan frequency / Scanning pull requests"><a href="#scanning-pull-requests" aria-hidden="true" class="anchor" id="scanning-pull-requests"></a>Scanning pull requests</h3>
+<p>The default CodeQL analysis workflow uses the <code>pull_request</code> event to trigger a code scan on pull requests targeted against the default branch. If a pull request is from a private fork, the <code>pull_request</code> event will only be triggered if you've selected the "Run workflows from fork pull requests" option in the repository settings. For more information, see <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#enabling-workflows-for-private-repository-forks" class="external">Managing GitHub Actions settings for a repository</a>.</p>
+<p>For more information about the <code>pull_request</code> event, see <a href="https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request" class="external">Events that trigger workflows</a>.</p>
+<p>If you scan pull requests, then the results appear as alerts in a pull request check. For more information, see <a href="../../how-tos/manage-security-alerts/manage-code-scanning-alerts/triaging-code-scanning-alerts-in-pull-requests.html">Triaging code scanning alerts in pull requests</a>.</p>
+<p>Using the <code>pull_request</code> trigger, configured to scan the pull request's merge commit rather than the head commit, will produce more efficient and accurate results than scanning the head of the branch on each push. However, if you use a CI/CD system that cannot be configured to trigger on pull requests, you can still use the <code>on:push</code> trigger and code scanning will map the results to open pull requests on the branch and add the alerts as annotations on the pull request. For more information, see <a href="#scanning-on-push">Scanning on push</a>.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>If your repository is configured with a merge queue, you need to include the <code>merge_group</code> event as an additional trigger for code scanning. This will ensure that pull requests are also scanned when they are added to a merge queue. For more information, see <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue" class="external">Managing a merge queue</a>.</p>
+</div>
+<h3 title="Scan frequency / Avoiding unnecessary scans of pull requests"><a href="#avoiding-unnecessary-scans-of-pull-requests" aria-hidden="true" class="anchor" id="avoiding-unnecessary-scans-of-pull-requests"></a>Avoiding unnecessary scans of pull requests</h3>
+<p>You might want to avoid a code scan being triggered on specific pull requests targeted against the default branch, irrespective of which files have been changed. You can configure this by specifying <code>on:pull_request:paths-ignore</code> or <code>on:pull_request:paths</code> in the code scanning workflow. For example, if the only changes in a pull request are to files with the file extensions <code>.md</code> or <code>.txt</code> you can use the following <code>paths-ignore</code> array.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">main</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">protected</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">pull_request</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">main</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">paths-ignore</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">**/*.md</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">**/*.txt</span><span style="color:#c0c5ce;">'
+</span></code></pre>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p><code>on:pull_request:paths-ignore</code> and <code>on:pull_request:paths</code> set conditions that determine whether the actions in the workflow will run on a pull request. They don't determine what files will be analyzed when the actions <em>are</em> run. When a pull request contains any files that are not matched by <code>on:pull_request:paths-ignore</code> or <code>on:pull_request:paths</code>, the workflow runs the actions and scans all of the files changed in the pull request, including those matched by <code>on:pull_request:paths-ignore</code> or <code>on:pull_request:paths</code>, unless the files have been excluded. For information on how to exclude files from analysis, see <a href="#specifying-directories-to-scan">Specifying directories to scan</a>.</p>
+</div>
+<p>For more information about using <code>on:pull_request:paths-ignore</code> and <code>on:pull_request:paths</code> to determine when a workflow will run for a pull request, see <a href="https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onpushpull_requestpull_request_targetpathspaths-ignore" class="external">Workflow syntax for GitHub Actions</a>.</p>
+<h3 title="Scan frequency / Scanning on a schedule"><a href="#scanning-on-a-schedule" aria-hidden="true" class="anchor" id="scanning-on-a-schedule"></a>Scanning on a schedule</h3>
+<p>If you use the default CodeQL analysis workflow, the workflow will scan the code in your repository once a week, in addition to the scans triggered by events. To adjust this schedule, edit the <code>cron</code> value for the <code>on.schedule</code> event in the workflow. For more information, see <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onschedule" class="external">Workflow syntax for GitHub Actions</a>.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This event will only trigger a workflow run if the workflow file exists on the default branch.</p>
+</div>
+<h3 title="Scan frequency / Example"><a href="#example" aria-hidden="true" class="anchor" id="example"></a>Example</h3>
+<p>The following example shows a CodeQL analysis workflow for a particular repository that has a default branch called <code>main</code> and one protected branch called <code>protected</code>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">main</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">protected</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">pull_request</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">main</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">cron</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">20 14 * * 1</span><span style="color:#c0c5ce;">'
+</span></code></pre>
+<p>This workflow scans:</p>
+<ul>
+<li>Every push to the default branch and the protected branch</li>
+<li>Every pull request to the default branch</li>
+<li>The default branch every Monday at 14:20 UTC</li>
+</ul>
+<h2 title="Operating system"><a href="#operating-system" aria-hidden="true" class="anchor" id="operating-system"></a>Operating system</h2>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<ul>
+<li>
+<p>Code scanning of Swift code uses macOS runners by default. GitHub-hosted macOS runners are more expensive than Linux and Windows runners, so you should consider only scanning the build step. For more information about configuring code scanning for Swift, see <a href="../../how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/codeql-code-scanning-for-compiled-languages.html#considerations-for-building-swift">CodeQL code scanning for compiled languages</a>. For more information about pricing for GitHub-hosted runners, see <a href="https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions" class="external">GitHub Actions billing</a>.</p>
+</li>
+<li>
+<p>Code scanning of Swift code is not supported for runners that are part of an Actions Runner Controller (ARC), because ARC runners only use Linux and Swift requires macOS runners. However, you can have a mixture of both ARC runners and self-hosted macOS runners. For more information, see <a href="https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller/about-actions-runner-controller" class="external">Actions Runner Controller</a>.</p>
+</li>
+</ul>
+</div>
+<p>If your code requires a specific operating system to compile, you can configure the operating system in your CodeQL analysis workflow. Edit the value of <code>jobs.analyze.runs-on</code> to specify the operating system for the machine that runs your code scanning actions.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">analyze</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Analyze
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">ubuntu-latest</span><span style="color:#c0c5ce;">]
+</span></code></pre>
+<p>If you choose to use a self-hosted runner for code scanning, you can specify an operating system by using an appropriate label as the second element in a two-element array, after <code>self-hosted</code>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">analyze</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Analyze
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">self-hosted</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">ubuntu-latest</span><span style="color:#c0c5ce;">]
+</span></code></pre>
+<p>CodeQL code scanning supports the latest versions of Ubuntu, Windows, and macOS. Typical values for this setting are therefore: <code>ubuntu-latest</code>, <code>windows-latest</code>, and <code>macos-latest</code>. For more information, see <a href="https://docs.github.com/en/actions/using-jobs/choosing-the-runner-for-a-job" class="external">Choosing the runner for a job</a> and <a href="https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/using-labels-with-self-hosted-runners" class="external">Using labels with self-hosted runners</a>.</p>
+<p>If you use a self-hosted runner, you must ensure that Git is in the PATH variable. For more information, see <a href="https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners" class="external">Self-hosted runners</a> and <a href="https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/adding-self-hosted-runners" class="external">Adding self-hosted runners</a>.</p>
+<p>For recommended specifications (RAM, CPU cores, and disk) for running CodeQL analysis on self-hosted machines, see <a href="codeql/recommended-hardware-resources-for-running-codeql.html">Recommended hardware resources for running CodeQL</a>.</p>
+<h2 title="CodeQL database location"><a href="#codeql-database-location" aria-hidden="true" class="anchor" id="codeql-database-location"></a>CodeQL database location</h2>
+<p>In general, you do not need to worry about where the CodeQL analysis workflow places CodeQL databases since later steps will automatically find databases created by previous steps. However, if you are writing a custom workflow step that requires the CodeQL database to be in a specific disk location, for example to upload the database as a workflow artifact, you can specify that location using the <code>db-location</code> parameter under the <code>init</code> action.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/init@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">db-location</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">${{ github.runner_temp }}/my_location</span><span style="color:#c0c5ce;">'
+</span></code></pre>
+<p>The CodeQL analysis workflow will expect the path provided in <code>db-location</code> to be writable, and either not exist, or be an empty directory. When using this parameter in a job running on a self-hosted runner or using a Docker container, it's the responsibility of the user to ensure that the chosen directory is cleared between runs, or that the databases are removed once they are no longer needed. This is not necessary for jobs running on GitHub-hosted runners, which obtain a fresh instance and a clean filesystem each time they run. For more information, see <a href="https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners" class="external">GitHub-hosted runners</a>.</p>
+<p>If this parameter is not used, the CodeQL analysis workflow will create databases in a temporary location of its own choice. Currently the default value is <code>${{ github.runner_temp }}/codeql_databases</code>.</p>
+<h2 title="Languages to be analyzed"><a href="#languages-to-be-analyzed" aria-hidden="true" class="anchor" id="languages-to-be-analyzed"></a>Languages to be analyzed</h2>
+<p>CodeQL code scanning supports code written in the following languages:</p>
+<!-- If you update the list of supported languages for CodeQL, update docs-internal/content/get-started/learning-about-github/github-language-support.md to reflect the changes. -->
+<ul>
+<li>C/C++</li>
+<li>C#</li>
+<li>Go</li>
+<li>Java/Kotlin</li>
+<li>JavaScript/TypeScript</li>
+<li>Python</li>
+<li>Ruby</li>
+<li>Rust</li>
+<li>Swift</li>
+<li>GitHub Actions workflows</li>
+</ul>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<ul>
+<li>Use <code>java-kotlin</code> to analyze code written in Java, Kotlin or both.</li>
+<li>Use <code>javascript-typescript</code> to analyze code written in JavaScript, TypeScript or both.</li>
+</ul>
+</div>
+<p>For more information, see the documentation on the CodeQL website: <a href="https://codeql.github.com/docs/codeql-overview/supported-languages-and-frameworks/" class="external">Supported languages and frameworks</a>.</p>
+<p>CodeQL uses the following language identifiers:</p>
+<table>
+<thead>
+<tr>
+<th>Language</th>
+<th>Identifier</th>
+<th>Optional alternative identifiers (if any)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C/C++</td>
+<td><code>c-cpp</code></td>
+<td><code>c</code> or <code>cpp</code></td>
+</tr>
+<tr>
+<td>C#</td>
+<td><code>csharp</code></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>GitHub Actions workflows</td>
+<td><code>actions</code></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Go</td>
+<td><code>go</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Java/Kotlin</td>
+<td><code>java-kotlin</code></td>
+<td><code>java</code> or <code>kotlin</code></td>
+</tr>
+<tr>
+<td>JavaScript/TypeScript</td>
+<td><code>javascript-typescript</code></td>
+<td><code>javascript</code> or <code>typescript</code></td>
+</tr>
+<tr>
+<td>Python</td>
+<td><code>python</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Ruby</td>
+<td><code>ruby</code></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Rust</td>
+<td><code>rust</code></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Swift</td>
+<td><code>swift</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>If you specify one of the alternative identifiers, this is equivalent to using the standard language identifier. For example, specifying <code>javascript</code> instead of <code>javascript-typescript</code> will not exclude analysis of TypeScript code. Instead, you can use a custom configuration file to exclude files from analysis using the <code>paths-ignore</code> setting. For more information, see <a href="#custom-configuration-files">Using a custom configuration file</a> and <a href="#specifying-directories-to-scan">Specifying directories to scan</a>.</p>
+</div>
+<p>These language identifiers can be used as arguments to the <code>languages</code> input of the <code>init</code> action. We recommend that only one language is provided as an argument:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/init@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">languages</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">javascript-typescript
+</span></code></pre>
+<p>The default CodeQL analysis workflow file created after <a href="../../how-tos/find-and-fix-code-vulnerabilities/configure-code-scanning/configuring-advanced-setup-for-code-scanning.html#configuring-advanced-setup-for-code-scanning-with-codeql">configuring advanced setup for code scanning with CodeQL</a> defines a matrix containing a property named <code>language</code> which lists the languages in your repository that will be analyzed. This matrix has been automatically pre-populated with supported languages detected in your repository. Using the <code>language</code> matrix allows CodeQL to run each language analysis in parallel and to customize analysis for each language. In an individual analysis, the name of the language from the matrix is provided to the <code>init</code> action as the argument for the <code>languages</code> input. We recommend that all workflows adopt this configuration. For more information about matrices, see <a href="https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs" class="external">Running variations of jobs in a workflow</a>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/init@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">languages</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ matrix.language }}
+</span></code></pre>
+<p>If your workflow uses the <code>language</code> matrix, then CodeQL will only analyze the languages in the matrix. To change the languages you want to analyze, edit the matrix configuration. You can remove a language to prevent it from being analyzed. There are several reasons you might want to prevent a language being analyzed. For example, the project might have dependencies in a different language to the main body of your code, and you might prefer not to see alerts for those dependencies. You can also add a language that was not present in the repository when code scanning was configured. For example, if the repository initially only contained JavaScript when code scanning was configured, and you later added Python code, you will need to add <code>python</code> to the matrix.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">analyze</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Analyze
+</span><span style="color:#c0c5ce;">    </span><span style="color:#d08770;">...
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">strategy</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">fail-fast</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">matrix</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">include</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          - </span><span style="color:#bf616a;">language</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">javascript-typescript
+</span><span style="color:#c0c5ce;">            </span><span style="color:#bf616a;">build-mode</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">none
+</span><span style="color:#c0c5ce;">          - </span><span style="color:#bf616a;">language</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">python
+</span><span style="color:#c0c5ce;">            </span><span style="color:#bf616a;">build-mode</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">none
+</span></code></pre>
+<p>For compiled languages, the matrix can also be used to configure which build mode should be used for analysis by changing the value of the <code>build-mode</code> property. For more information about build modes, see <a href="../../how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/codeql-code-scanning-for-compiled-languages.html#about-build-mode-none-for-codeql">CodeQL code scanning for compiled languages</a>.</p>
+<p>If your workflow does not provide an argument to the <code>languages</code> input of the <code>init</code> action, then CodeQL is configured to run analyses sequentially. In this case, CodeQL automatically detects, and attempts to analyze, any supported languages in the repository. Depending on the size of the repository and the number of languages, this may take a long time. If analysis for one language fails in this mode, then the analysis for all languages fails. Therefore, we do not recommend this configuration.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>When analyzing languages sequentially, the default build-mode for every language will be used. Alternatively, if you provide an explicit <code>autobuild</code> step, then every language that supports the <code>autobuild</code> mode will use it while other languages use their default mode. If a more complex build-mode configuration than this is required, then you will need to configure a matrix.</p>
+</div>
+<h2 title="Alert severities for check failures"><a href="#alert-severities-for-check-failures" aria-hidden="true" class="anchor" id="alert-severities-for-check-failures"></a>Alert severities for check failures</h2>
+<p>You can use rulesets to prevent pull requests from being merged when one of the following conditions is met:</p>
+<ul>
+<li>A required tool finds a code scanning alert of a severity that is defined in the ruleset.</li>
+<li>A required tool's analysis is still in progress.</li>
+<li>A required tool is not configured for the repository.</li>
+</ul>
+<p>For more information, see <a href="../../how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/set-code-scanning-merge-protection.html">Set code scanning merge protection</a>. For more general information about rulesets, see <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets" class="external">About rulesets</a>.</p>
+<h2 title="Analysis category"><a href="#analysis-category" aria-hidden="true" class="anchor" id="analysis-category"></a>Analysis category</h2>
+<p>Use <code>category</code> to distinguish between multiple analyses for the same tool and commit, but performed on different languages or different parts of the code. The category you specify in your workflow will be included in the SARIF results file.</p>
+<p>This parameter is particularly useful if you work with monorepos and have multiple SARIF files for different components of the monorepo.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Perform CodeQL Analysis
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/analyze@v4
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># Optional. Specify a category to distinguish between multiple analyses
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># for the same tool and ref. If you don't use `category` in your workflow,
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># GitHub will generate a default category name for you
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">category</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">my_category</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<p>If you don't specify a <code>category</code> parameter in your workflow, GitHub will generate a category name for you, based on the name of the workflow file triggering the action, the action name, and any matrix variables. For example:</p>
+<ul>
+<li>The <code>.github/workflows/codeql-analysis.yml</code> workflow and the <code>analyze</code> action will produce the category <code>.github/workflows/codeql.yml:analyze</code>.</li>
+<li>The <code>.github/workflows/codeql-analysis.yml</code> workflow, the <code>analyze</code> action, and the <code>{language: javascript-typescript, os: linux}</code> matrix variables will produce the category <code>.github/workflows/codeql-analysis.yml:analyze/language:javascript-typescript/os:linux</code>.</li>
+</ul>
+<p>The <code>category</code> value will appear as the <code>&lt;run&gt;.automationDetails.id</code> property in SARIF v2.1.0. For more information, see <a href="sarif-files/sarif-support-for-code-scanning.html#runautomationdetails-object">SARIF support for code scanning</a>.</p>
+<p>Your specified category will not overwrite the details of the <code>runAutomationDetails</code> object in the SARIF file, if included.</p>
+<h2 title="CodeQL model packs"><a href="#codeql-model-packs" aria-hidden="true" class="anchor" id="codeql-model-packs"></a>CodeQL model packs</h2>
+<p>If your codebase depends on a library or framework that is not recognized by the standard queries in CodeQL, you can extend the CodeQL coverage in your code scanning workflow by specifying published CodeQL model packs. For more information about creating your own model packs, see <a href="../../tutorials/customize-code-scanning/creating-and-working-with-codeql-packs.html#creating-a-model-pack">Creating and working with CodeQL packs</a>.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>CodeQL model packs are currently in public preview and subject to change. Model packs are supported for C/C++, C#, Java/Kotlin, Python, Ruby, and Rust analysis.</p>
+<p>The CodeQL model editor in the CodeQL extension for Visual Studio Code supports modeling dependencies for C#, Java/Kotlin, Python, and Ruby.</p>
+</div>
+<h3 title="Using CodeQL model packs"><a href="#using-codeql-model-packs" aria-hidden="true" class="anchor" id="using-codeql-model-packs"></a>Using CodeQL model packs</h3>
+<p>To add one or more published CodeQL model packs, specify them inside the <code>with: packs:</code> entry within the <code>uses: github/codeql-action/init@v4</code> section of the workflow. Within <code>packs</code> you specify one or more packages to use and, optionally, which version to download. Where you don't specify a version, the latest version is downloaded. If you want to use packages that are not publicly available, you need to set the <code>GITHUB_TOKEN</code> environment variable to a secret that has access to the packages. For more information, see <a href="https://docs.github.com/en/actions/security-guides/automatic-token-authentication" class="external">Use GITHUB<span data-escaped-char="">_</span>TOKEN for authentication in workflows</a> and <a href="https://docs.github.com/en/actions/security-guides/encrypted-secrets" class="external">Using secrets in GitHub Actions</a>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/init@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">config-file</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">./.github/codeql/codeql-config.yml
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">queries</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">security-extended
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">packs</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">my-company/my-java-queries@~7.8.9,my-repo/my-java-model-pack
+</span></code></pre>
+<p>In this example, the default queries will be run for Java, as well as the queries from a version greater than or equal to <code>7.8.9</code> and less than <code>7.9.0</code> of the query pack <code>my-company/my-java-queries</code>. The dependencies modeled in the latest version of the model pack <code>my-repo/my-java-model-pack</code> will be available to both the default queries and those in <code>my-company/my-java-queries</code>.</p>
+<h2 title="Non-default queries"><a href="#non-default-queries" aria-hidden="true" class="anchor" id="non-default-queries"></a>Non-default queries</h2>
+<p>When you use CodeQL to scan code, the CodeQL analysis engine generates a database from the code and runs queries on it. CodeQL analysis uses a default set of queries, but you can specify more queries to run, in addition to the default queries.</p>
+<div class="markdown-alert markdown-alert-tip">
+<p class="markdown-alert-title">Tip</p>
+<p>You can also specify the queries you want to exclude from analysis, or include in the analysis. This requires the use of a custom configuration file. For more information, see <a href="#custom-configuration-files">Custom configuration files</a> and <a href="#excluding-specific-queries-from-analysis">Excluding specific queries from analysis</a> below.</p>
+</div>
+<p>You can run extra queries if they are part of a CodeQL pack published to the GitHub Container registry or a CodeQL pack stored in a repository. For more information, see <a href="../../concepts/code-scanning/codeql/about-code-scanning-with-codeql.html#about-codeql-queries">About code scanning with CodeQL</a>.</p>
+<p>The options available to specify the additional queries you want to run are:</p>
+<ul>
+<li><code>packs</code> to install one or more CodeQL query packs and run the default query suite or queries for those packs.</li>
+<li><code>queries</code> to specify a single <em>.ql</em> file, a directory containing multiple <em>.ql</em> files, a <em>.qls</em> query suite definition file, or any combination. For more information about query suite definitions, see <a href="https://codeql.github.com/docs/codeql-cli/creating-codeql-query-suites/" class="external">Creating CodeQL query suites</a>.</li>
+</ul>
+<p>You can use both <code>packs</code> and <code>queries</code> in the same workflow.</p>
+<p>We don't recommend referencing query suites directly from the <code>github/codeql</code> repository, for example, <code>github/codeql/cpp/ql/src@main</code>. Such queries would have to be recompiled, and may not be compatible with the version of CodeQL currently active on GitHub Actions, which could lead to errors during analysis.</p>
+<h3 title="Non-default queries / Using query packs"><a href="#using-query-packs" aria-hidden="true" class="anchor" id="using-query-packs"></a>Using query packs</h3>
+<p>To add one or more CodeQL query packs, add a <code>with: packs:</code> entry within the <code>uses: github/codeql-action/init@v4</code> section of the workflow. Within <code>packs</code> you specify one or more packages to use and, optionally, which version to download. Where you don't specify a version, the latest version is downloaded. If you want to use packages that are not publicly available, you need to set the <code>GITHUB_TOKEN</code> environment variable to a secret that has access to the packages. For more information, see <a href="https://docs.github.com/en/actions/security-guides/automatic-token-authentication" class="external">Use GITHUB<span data-escaped-char="">_</span>TOKEN for authentication in workflows</a> and <a href="https://docs.github.com/en/actions/security-guides/encrypted-secrets" class="external">Using secrets in GitHub Actions</a>.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>For workflows that generate CodeQL databases for multiple languages, you must instead specify the CodeQL query packs in a configuration file. For more information, see <a href="#specifying-codeql-query-packs">Specifying CodeQL query packs</a> below.</p>
+</div>
+<p>In the example below, <code>scope</code> is the organization or personal account that published the package. When the workflow runs, the four CodeQL query packs are downloaded from GitHub and the default queries or query suite for each pack run:</p>
+<ul>
+<li>The latest version of <code>pack1</code> is downloaded and all default queries are run.</li>
+<li>Version 1.2.3 of <code>pack2</code> is downloaded and all default queries are run.</li>
+<li>The latest version of <code>pack3</code> that is compatible with version 3.2.1 is downloaded and all queries are run.</li>
+<li>Version 4.5.6 of <code>pack4</code> is downloaded and only the queries found in <code>path/to/queries</code> are run.</li>
+</ul>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/init@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Comma-separated list of packs to download
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">packs</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">scope/pack1,scope/pack2@1.2.3,scope/pack3@~3.2.1,scope/pack4@4.5.6:path/to/queries
+</span></code></pre>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>If you specify a particular version of a query pack to use, beware that the version you specify may eventually become too old to be used efficiently by the default CodeQL engine used by the CodeQL action. To ensure optimal performance, if you need to specify exact query pack versions, you should consider reviewing periodically whether the pinned version of the query pack needs to be moved forward.</p>
+<p>For more information about pack compatibility, see <a href="codeql/codeql-cli/codeql-query-packs.html#codeql-pack-compatibility">CodeQL query packs reference</a>.</p>
+</div>
+<h3 title="Non-default queries / Downloading CodeQL packs from GitHub Enterprise Server"><a href="#downloading-codeql-packs-from-github-enterprise-server" aria-hidden="true" class="anchor" id="downloading-codeql-packs-from-github-enterprise-server"></a>Downloading CodeQL packs from GitHub Enterprise Server</h3>
+<p>If your workflow uses packs that are published on a GitHub Enterprise Server installation, you need to tell your workflow where to find them. You can do this by using the <code>registries</code> input of the github/codeql-action/init<span data-escaped-char="">@</span>v4 action. This input accepts a list of <code>url</code>, <code>packages</code>, and <code>token</code> properties as shown below.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/init@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">      # URL to the container registry, usually in this format
+</span><span style="color:#a3be8c;">      - url: https://containers.GHEHOSTNAME1/v2/
+</span><span style="color:#a3be8c;">
+</span><span style="color:#a3be8c;">        # List of package glob patterns to be found at this registry
+</span><span style="color:#a3be8c;">        packages:
+</span><span style="color:#a3be8c;">          - my-company/*
+</span><span style="color:#a3be8c;">          - my-company2/*
+</span><span style="color:#a3be8c;">
+</span><span style="color:#a3be8c;">        # Token, which should be stored as a secret
+</span><span style="color:#a3be8c;">        token: ${{ secrets.GHEHOSTNAME1_TOKEN }}
+</span><span style="color:#a3be8c;">
+</span><span style="color:#a3be8c;">      # URL to the default container registry
+</span><span style="color:#a3be8c;">      - url: https://ghcr.io/v2/
+</span><span style="color:#a3be8c;">        # Packages can also be a string
+</span><span style="color:#a3be8c;">        packages: "*/*"
+</span><span style="color:#a3be8c;">        token: ${{ secrets.GHCR_TOKEN }}
+</span><span style="color:#a3be8c;">
+</span><span style="color:#a3be8c;">    
+</span></code></pre>
+<p>The package patterns in the registries list are examined in order, so you should generally place the most specific package patterns first. The values for <code>token</code> must be a personal access token (classic) generated by the GitHub instance you are downloading from with the <code>read:packages</code> permission.</p>
+<p>Notice the <code>|</code> after the <code>registries</code> property name. This is important since GitHub Actions inputs can only accept strings. Using the <code>|</code> converts the subsequent text to a string, which is parsed later by the github/codeql-action/init<span data-escaped-char="">@</span>v4 action.</p>
+<h3 title="Non-default queries / Using queries in QL packs"><a href="#using-queries-in-ql-packs" aria-hidden="true" class="anchor" id="using-queries-in-ql-packs"></a>Using queries in QL packs</h3>
+<p>To add one or more queries, add a <code>with: queries:</code> entry within the <code>uses: github/codeql-action/init@v4</code> section of the workflow. If the queries are in a private repository, use the <code>external-repository-token</code> parameter to specify a token that has access to checkout the private repository.</p>
+<p>You can also specify query suites in the value of <code>queries</code>. Query suites are collections of queries, usually grouped by purpose or language.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/init@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Comma-separated list of queries / packs / suites to run.
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># This may include paths or a built in suite, for example:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># security-extended or security-and-quality.
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">queries</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">security-extended
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Optional. Provide a token to access queries stored in private repositories.
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">external-repository-token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.ACCESS_TOKEN }}
+</span></code></pre>
+<p>The following query suites are built into CodeQL code scanning and are available for use.</p>
+<table>
+<thead>
+<tr>
+<th align="left">Query suite</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code class="keyword">security-extended</code></td>
+<td align="left">Queries from the default suite, plus lower severity and precision queries</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">security-and-quality</code></td>
+<td align="left">Queries from <code>security-extended</code>, plus maintainability and reliability queries</td>
+</tr>
+</tbody>
+</table>
+<p>For more information, see: <a href="../../concepts/code-scanning/codeql/codeql-query-suites.html">CodeQL query suites</a>.</p>
+<p>Each of these query suites contains a different subset of the queries included in the built-in CodeQL query pack for that language. The query suites are automatically generated using the metadata for each query. For more information, see <a href="https://codeql.github.com/docs/writing-codeql-queries/metadata-for-codeql-queries/" class="external">Metadata for CodeQL queries</a>.</p>
+<!--See lists of query tables linked in the reusable above.-->
+<p>When you specify a query suite, the CodeQL analysis engine will run the default set of queries and any extra queries defined in the additional query suite.</p>
+<h3 title="Non-default queries / Working with custom configuration files"><a href="#working-with-custom-configuration-files" aria-hidden="true" class="anchor" id="working-with-custom-configuration-files"></a>Working with custom configuration files</h3>
+<p>If you also use a configuration file for custom settings, any additional packs or queries specified in your workflow are used instead of those specified in the configuration file. If you want to run the combined set of additional packs or queries, prefix the value of <code>packs</code> or <code>queries</code> in the workflow with the <code>+</code> symbol. For more information, see <a href="#custom-configuration-files">Custom configuration files</a>.</p>
+<p>In the following example, the <code>+</code> symbol ensures that the specified additional packs and queries are used together with any specified in the referenced configuration file.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/init@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">config-file</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">./.github/codeql/codeql-config.yml
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">queries</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">+security-and-quality,octo-org/python-qlpack/show_ifs.ql@main
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">packs</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">+scope/pack1,scope/pack2@1.2.3,scope/pack3@4.5.6:path/to/queries
+</span></code></pre>
+<!-- Anchor to maintain the current CodeQL CLI manual pages link: https://aka.ms/code-scanning-docs/config-file -->
+<h2 title="Custom configuration files"><a href="#custom-configuration-files" aria-hidden="true" class="anchor" id="custom-configuration-files"></a>Custom configuration files</h2>
+<p>A custom configuration file is an alternative way to specify additional packs and queries to run. You can also use the file to disable the default queries, exclude or include specific queries, and to specify which directories to scan during analysis.</p>
+<p>In the workflow file, use the <code>config-file</code> parameter of the <code>init</code> action to specify the path to the configuration file you want to use. This example loads the configuration file <em>./.github/codeql/codeql-config.yml</em>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/init@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">config-file</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">./.github/codeql/codeql-config.yml
+</span></code></pre>
+<p>The configuration file can be located within the repository you are analyzing, or in an external repository. Using an external repository allows you to specify configuration options for multiple repositories in a single place. When you reference a configuration file located in an external repository, you can use the <em>OWNER/REPOSITORY/FILENAME<span data-escaped-char="">@</span>BRANCH</em> syntax. For example, <em>octo-org/shared/codeql-config.yml<span data-escaped-char="">@</span>main</em>.</p>
+<p>If the configuration file is located in an external private repository, use the <code>external-repository-token</code> parameter of the <code>init</code> action to specify a token that has access to the private repository.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/init@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">external-repository-token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.ACCESS_TOKEN }}
+</span></code></pre>
+<p>The settings in the configuration file are written in YAML format.</p>
+<h3 title="Custom configuration files / Specifying CodeQL query packs"><a href="#specifying-codeql-query-packs" aria-hidden="true" class="anchor" id="specifying-codeql-query-packs"></a>Specifying CodeQL query packs</h3>
+<p>You specify CodeQL query packs in an array. Note that the format is different from the format used by the workflow file.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">packs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Use the latest version of 'pack1' published by 'scope'
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#a3be8c;">scope/pack1
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Use version 1.2.3 of 'pack2'
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#a3be8c;">scope/pack2@1.2.3
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Use the latest version of 'pack3' compatible with 3.2.1
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#a3be8c;">scope/pack3@~3.2.1
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Use pack4 and restrict it to queries found in the 'path/to/queries' directory
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#a3be8c;">scope/pack4:path/to/queries
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Use pack5 and restrict it to the query 'path/to/single/query.ql'
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#a3be8c;">scope/pack5:path/to/single/query.ql
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Use pack6 and restrict it to the query suite 'path/to/suite.qls'
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#a3be8c;">scope/pack6:path/to/suite.qls
+</span></code></pre>
+<p>The full format for specifying a query pack is <code>scope/name[@version][:path]</code>. Both <code>version</code> and <code>path</code> are optional. <code>version</code> is semver version range. If it is missing, the latest version is used. For more information about semver ranges, see the <a href="https://docs.npmjs.com/cli/v6/using-npm/semver#ranges" class="external">semver docs on npm</a>.</p>
+<p>If you have a workflow that generates more than one CodeQL database, you can specify any CodeQL query packs to run in a custom configuration file using a nested map of packs.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">packs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Use these packs for JavaScript and TypeScript analysis
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">javascript</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">scope/js-pack1
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">scope/js-pack2
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Use these packs for Java and Kotlin analysis
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">java</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">scope/java-pack1
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">scope/java-pack2@v1.0.0
+</span></code></pre>
+<h3 title="Custom configuration files / Extending CodeQL coverage with threat models"><a href="#extending-codeql-coverage-with-threat-models" aria-hidden="true" class="anchor" id="extending-codeql-coverage-with-threat-models"></a>Extending CodeQL coverage with threat models</h3>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Threat models are currently in public preview and subject to change. During the public preview, threat models are supported only by analysis for Java/Kotlin and C#.</p>
+</div>
+<p>The default threat model includes remote sources of untrusted data. You can extend the CodeQL threat model to include local sources of untrusted data (for example: command-line arguments, environment variables, file systems, and databases) by specifying <code>threat-models: local</code> in a custom configuration file. If you extend the threat model, the default threat model will also be used.</p>
+<h3 title="Custom configuration files / Specifying additional queries"><a href="#specifying-additional-queries" aria-hidden="true" class="anchor" id="specifying-additional-queries"></a>Specifying additional queries</h3>
+<p>You specify additional queries in a <code>queries</code> array. Each element of the array contains a <code>uses</code> parameter with a value that identifies a single query file, a directory containing query files, or a query suite definition file.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">queries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">./my-basic-queries/example-query.ql
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">./my-advanced-queries
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">./query-suites/my-security-queries.qls
+</span></code></pre>
+<p>Optionally, you can give each array element a name, as shown in the example configuration files below. For more information about additional queries, see <a href="#non-default-queries">Non-default queries</a> above.</p>
+<h3 title="Custom configuration files / Disabling the default queries"><a href="#disabling-the-default-queries" aria-hidden="true" class="anchor" id="disabling-the-default-queries"></a>Disabling the default queries</h3>
+<p>If you only want to run custom queries, you can disable the default security queries by using <code>disable-default-queries: true</code>.</p>
+<h3 title="Custom configuration files / Excluding specific queries from analysis"><a href="#excluding-specific-queries-from-analysis" aria-hidden="true" class="anchor" id="excluding-specific-queries-from-analysis"></a>Excluding specific queries from analysis</h3>
+<p>You can add <code>exclude</code> and <code>include</code> filters to your custom configuration file, to specify the queries you want to exclude or include in the analysis.</p>
+<p>This is useful if you want to exclude, for example:</p>
+<ul>
+<li>Specific queries from the default suites (<code>security</code>, <code>security-extended</code> and <code>security-and-quality</code>).</li>
+<li>Specific queries whose results do not interest you.</li>
+<li>All the queries that generate warnings and recommendations.</li>
+</ul>
+<p>You can use <code>exclude</code> filters similar to those in the configuration file below to exclude queries that you want to remove from the default analysis. In the example of configuration file below, both the <code>js/redundant-assignment</code> and the <code>js/useless-assignment-to-local</code> queries are excluded from analysis.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">query-filters</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">exclude</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">js/redundant-assignment
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">exclude</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">js/useless-assignment-to-local
+</span></code></pre>
+<p>To find the id of a query, you can click the alert in the list of alerts in the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab. This opens the alert details page. The <code>Rule ID</code> field contains the query id. For more information about the alert details page, see <a href="../../concepts/code-scanning/about-code-scanning-alerts.html#about-alert-details">About code scanning alerts</a>.</p>
+<div class="markdown-alert markdown-alert-tip">
+<p class="markdown-alert-title">Tip</p>
+<ul>
+<li>The order of the filters is important. The first filter instruction that appears after the instructions about the queries and query packs determines whether the queries are included or excluded by default.</li>
+<li>Subsequent instructions are executed in order and the instructions that appear later in the file take precedence over the earlier instructions.</li>
+</ul>
+</div>
+<p>You can find another example illustrating the use of these filters in the <a href="#example-configuration-files">Example configuration files</a> section.</p>
+<p>For more information about using <code>exclude</code> and <code>include</code> filters in your custom configuration file, see <a href="../../tutorials/customize-code-scanning/creating-codeql-query-suites.html#filtering-the-queries-in-a-query-suite">Creating CodeQL query suites</a>. For information on the query metadata you can filter on, see <a href="https://codeql.github.com/docs/writing-codeql-queries/metadata-for-codeql-queries/" class="external">Metadata for CodeQL queries</a>.</p>
+<h3 title="Custom configuration files / Specifying directories to scan"><a href="#specifying-directories-to-scan" aria-hidden="true" class="anchor" id="specifying-directories-to-scan"></a>Specifying directories to scan</h3>
+<p>When codebases are analyzed without building the code, you can restrict code scanning to files in specific directories by adding a <code>paths</code> array to the configuration file. You can also exclude the files in specific directories from analysis by adding a <code>paths-ignore</code> array. You can use this option when you run the CodeQL actions on an interpreted language (Python, Ruby, and JavaScript/TypeScript) or when you analyze a compiled language without building the code (currently supported for C/C++, C#, Java and Rust).</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">paths</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#a3be8c;">src
+</span><span style="color:#bf616a;">paths-ignore</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#a3be8c;">src/node_modules
+</span><span style="color:#c0c5ce;">  - '</span><span style="color:#a3be8c;">**/*.test.js</span><span style="color:#c0c5ce;">'
+</span></code></pre>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<ul>
+<li>The <code>paths</code> and <code>paths-ignore</code> keywords, used in the context of the code scanning configuration file, should not be confused with the same keywords when used for <code>on.&lt;push|pull_request&gt;.paths</code> in a workflow. When they are used to modify <code>on.&lt;push|pull_request&gt;</code> in a workflow, they determine whether the actions will be run when someone modifies code in the specified directories. For more information, see <a href="https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onpushpull_requestpull_request_targetpathspaths-ignore" class="external">Workflow syntax for GitHub Actions</a>.</li>
+<li>The filter pattern characters <code>?</code>, <code>+</code>, <code>[</code>, <code>]</code>, and <code>!</code> are not supported and will be matched literally.</li>
+<li><code>**</code> characters can only be at the start or end of a line, or surrounded by slashes, and you can't mix <code>**</code> and other characters. For example, <code>foo/**</code>, <code>**/foo</code>, and <code>foo/**/bar</code> are all allowed syntax, but <code>**foo</code> isn't. However you can use single stars along with other characters, as shown in the example. You'll need to quote anything that contains a <code>*</code> character.</li>
+</ul>
+</div>
+<p>For analysis where code is built, if you want to limit code scanning to specific directories in your project, you must specify appropriate build steps in the workflow. The commands you need to use to exclude a directory from the build will depend on your build system. For more information, see <a href="../../how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/codeql-code-scanning-for-compiled-languages.html#adding-build-steps-for-a-compiled-language">CodeQL code scanning for compiled languages</a>.</p>
+<p>You can quickly analyze small portions of a monorepo when you modify code in specific directories. You'll need to both exclude directories in your build steps and use the <code>paths-ignore</code> and <code>paths</code> keywords for <a href="https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onpushpull_requestpull_request_targetpathspaths-ignore" class="external"><code>on.&lt;push|pull_request&gt;</code></a> in your workflow.</p>
+<!-- Anchor to maintain the old CodeQL CLI manual pages link: https://aka.ms/docs-config-file -->
+<h3 title="Custom configuration files / Example configuration files"><a href="#example-configuration-files" aria-hidden="true" class="anchor" id="example-configuration-files"></a>Example configuration files</h3>
+<p>This configuration file adds the <code>security-and-quality</code> query suite to the list of queries run by CodeQL when scanning your code. For more information about the query suites available for use, see <a href="#non-default-queries">Non-default queries</a>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">My CodeQL config</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">queries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">security-and-quality
+</span></code></pre>
+<p>The following configuration file disables the default queries and specifies a set of custom queries to run instead. It also configures CodeQL to scan files in the <em>src</em> directory (relative to the root), except for the <em>src/node<span data-escaped-char="">_</span>modules</em> directory, and except for files whose name ends in <em>.test.js</em>. Files in <em>src/node<span data-escaped-char="">_</span>modules</em> and files with names ending <em>.test.js</em> are therefore excluded from analysis.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">My CodeQL config</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">disable-default-queries</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">queries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Use an in-repository CodeQL pack (run queries in the my-queries directory)
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">./my-queries
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Use an external JavaScript CodeQL pack (run queries from an external repo)
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octo-org/javascript-codeql-pack@main
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Use an external query (run a single query from an external CodeQL pack)
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octo-org/python-codeql-pack/show_ifs.ql@main
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Use a query suite file (run queries from a query suite in this repo)
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">./codeql-packs/complex-python-codeql-pack/rootAndBar.qls
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">paths</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#a3be8c;">src
+</span><span style="color:#bf616a;">paths-ignore</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#a3be8c;">src/node_modules
+</span><span style="color:#c0c5ce;">  - '</span><span style="color:#a3be8c;">**/*.test.js</span><span style="color:#c0c5ce;">'
+</span></code></pre>
+<p>The following configuration file only runs queries that generate alerts of severity error. The configuration first selects all the default queries, all queries in <code>./my-queries</code>, and the default suite in <code>codeql/java-queries</code>, then excludes all the queries that generate warnings or recommendations.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">queries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Use an in-repository CodeQL query pack (run queries in the my-queries directory)
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">./my-queries
+</span><span style="color:#bf616a;">packs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#a3be8c;">codeql/java-queries
+</span><span style="color:#bf616a;">query-filters</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">exclude</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">problem.severity</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">warning
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">recommendation
+</span></code></pre>
+<h2 title="Configuration details"><a href="#configuration-details" aria-hidden="true" class="anchor" id="configuration-details"></a>Configuration details</h2>
+<p>If you'd prefer to specify additional configuration details in the workflow file, you can use the <code>config</code> input of the <code>init</code> command of the CodeQL action. The value of this input must be a YAML string that follows the configuration file format documented at <a href="#custom-configuration-files">Custom configuration files</a> above.</p>
+<h3 title="Configuration details / Example configuration"><a href="#example-configuration" aria-hidden="true" class="anchor" id="example-configuration"></a>Example configuration</h3>
+<p>This step in a GitHub Actions workflow file uses a <code>config</code> input to disable the default queries, add the <code>security-extended</code> query suite, and exclude queries that are tagged with <code>cwe-020</code>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/init@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">languages</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ matrix.language }}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">config</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">      disable-default-queries: true
+</span><span style="color:#a3be8c;">      threat-models: local
+</span><span style="color:#a3be8c;">      queries:
+</span><span style="color:#a3be8c;">        - uses: security-extended
+</span><span style="color:#a3be8c;">      query-filters:
+</span><span style="color:#a3be8c;">        - exclude:
+</span><span style="color:#a3be8c;">            tags: /cwe-020/
+</span></code></pre>
+<p>You can use the same approach to specify any valid configuration options in the workflow file.</p>
+<div class="markdown-alert markdown-alert-tip">
+<p class="markdown-alert-title">Tip</p>
+<p>You can share one configuration across multiple repositories using GitHub Actions variables. One benefit of this approach is that you can update the configuration in a single place without editing the workflow file.</p>
+<p>In the following example, <code>vars.CODEQL_CONF</code> is a GitHub Actions variable. Its value can be the contents of any valid configuration file. For more information, see <a href="https://docs.github.com/en/actions/learn-github-actions/variables#defining-configuration-variables-for-multiple-workflows" class="external">Store information in variables</a>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/init@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">languages</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ matrix.language }}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">config</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ vars.CODEQL_CONF }}
+</span></code></pre>
+</div>
+<h2 title="Compiled languages"><a href="#compiled-languages" aria-hidden="true" class="anchor" id="compiled-languages"></a>Compiled languages</h2>
+<p>For compiled languages, you can decide how the CodeQL action creates a CodeQL database for analysis. For information about the build options available, see <a href="../../how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/codeql-code-scanning-for-compiled-languages.html">CodeQL code scanning for compiled languages</a>.</p>
+<h2 title="Data upload"><a href="#data-upload" aria-hidden="true" class="anchor" id="data-upload"></a>Data upload</h2>
+<p>GitHub can display code analysis data generated externally by a third-party tool. You can upload code analysis data with the <code>upload-sarif</code> action. For more information, see <a href="../../how-tos/find-and-fix-code-vulnerabilities/integrate-with-existing-tools/uploading-a-sarif-file-to-github.html">Uploading a SARIF file to GitHub</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

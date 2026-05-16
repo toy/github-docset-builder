@@ -1,0 +1,114 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Adding a theme to your GitHub Pages site using Jekyll</title><link rel="stylesheet" href="../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../index.html">GitHub Pages</a> / <a href="index.html">Set up site with Jekyll</a> / </nav><h1><a href="#adding-a-theme-to-your-github-pages-site-using-jekyll" aria-hidden="true" class="anchor" id="adding-a-theme-to-your-github-pages-site-using-jekyll"></a>Adding a theme to your GitHub Pages site using Jekyll</h1>
+<p>You can personalize your Jekyll site by adding and customizing a theme.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>While the <code>github-pages</code> gem remains supported for some workflows, GitHub Actions is now the recommended approach for deploying and automating GitHub Pages sites.</p>
+</div>
+<p>People with write permissions for a repository can add a theme to a GitHub Pages site using Jekyll.</p>
+<p>If you are publishing from a branch, changes to your site are published automatically when the changes are merged into your site's publishing source. If you are publishing from a custom GitHub Actions workflow, changes are published whenever your workflow is triggered (typically by a push to the default branch). If you want to preview your changes first, you can make the changes locally instead of on GitHub. Then, test your site locally. For more information, see <a href="testing-your-github-pages-site-locally-with-jekyll.html">Testing your GitHub Pages site locally with Jekyll</a>.</p>
+<h2 title="Supported themes"><a href="#supported-themes" aria-hidden="true" class="anchor" id="supported-themes"></a>Supported themes</h2>
+<p>Out of the box, the following themes are supported:</p>
+<ul>
+<li><a href="https://github.com/pages-themes/architect" class="external">Architect</a></li>
+<li><a href="https://github.com/pages-themes/cayman" class="external">Cayman</a></li>
+<li><a href="https://github.com/pages-themes/dinky" class="external">Dinky</a></li>
+<li><a href="https://github.com/pages-themes/hacker" class="external">Hacker</a></li>
+<li><a href="https://github.com/pages-themes/leap-day" class="external">Leap day</a></li>
+<li><a href="https://github.com/pages-themes/merlot" class="external">Merlot</a></li>
+<li><a href="https://github.com/pages-themes/midnight" class="external">Midnight</a></li>
+<li><a href="https://github.com/jekyll/minima" class="external">Minima</a></li>
+<li><a href="https://github.com/pages-themes/minimal" class="external">Minimal</a></li>
+<li><a href="https://github.com/pages-themes/modernist" class="external">Modernist</a></li>
+<li><a href="https://github.com/pages-themes/slate" class="external">Slate</a></li>
+<li><a href="https://github.com/pages-themes/tactile" class="external">Tactile</a></li>
+<li><a href="https://github.com/pages-themes/time-machine" class="external">Time machine</a></li>
+</ul>
+<p>The <a href="https://github.com/benbalter/jekyll-remote-theme" class="external"><code>jekyll-remote-theme</code></a> Jekyll plugin is also available and lets you load other themes.</p>
+<h2 title="Adding a theme"><a href="#adding-a-theme" aria-hidden="true" class="anchor" id="adding-a-theme"></a>Adding a theme</h2>
+<ol>
+<li>
+<p>On GitHub, navigate to your site's repository.</p>
+</li>
+<li>
+<p>Navigate to the publishing source for your site. For more information, see <a href="../getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site.html">Configuring a publishing source for your GitHub Pages site</a>.</p>
+</li>
+<li>
+<p>Navigate to <code>_config.yml</code>.</p>
+</li>
+<li>
+<p>In the upper right corner of the file view, click <svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-pencil" aria-label="Edit file" role="img"><path d="M11.013 1.427a1.75 1.75 0 0 1 2.474 0l1.086 1.086a1.75 1.75 0 0 1 0 2.474l-8.61 8.61c-.21.21-.47.364-.756.445l-3.251.93a.75.75 0 0 1-.927-.928l.929-3.25c.081-.286.235-.547.445-.758l8.61-8.61Zm.176 4.823L9.75 4.81l-6.286 6.287a.253.253 0 0 0-.064.108l-.558 1.953 1.953-.558a.253.253 0 0 0 .108-.064Zm1.238-3.763a.25.25 0 0 0-.354 0L10.811 3.75l1.439 1.44 1.263-1.263a.25.25 0 0 0 0-.354Z"></path></svg> to open the file editor.<br>
+<img src="../../..//assets/images/help/repository/edit-file-edit-button.png" alt="Screenshot of a file. In the header, a button, labeled with a pencil icon, is outlined in dark orange."></p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Instead of editing and committing the file using the default file editor, you can optionally choose to use the <a href="https://docs.github.com/en/codespaces/the-githubdev-web-based-editor" class="external">github.dev code editor</a> by selecting the <svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-triangle-down" aria-label="More edit options" role="img"><path d="m4.427 7.427 3.396 3.396a.25.25 0 0 0 .354 0l3.396-3.396A.25.25 0 0 0 11.396 7H4.604a.25.25 0 0 0-.177.427Z"></path></svg> dropdown menu and clicking <strong>github.dev</strong>. You can also clone the repository and edit the file locally via GitHub Desktop by clicking <strong>GitHub Desktop</strong>.</p>
+<p><img src="../../..//assets/images/help/repository/edit-file-edit-dropdown.png" alt="Screenshot of a file. In the header, a downwards-facing triangle icon is outlined in dark orange."></p>
+</div>
+</li>
+<li>
+<p>Add a new line to the file for the theme name.</p>
+<ul>
+<li>To use a supported theme, type <code>theme: THEME-NAME</code>, replacing THEME-NAME with the name of the theme as shown in the <code>_config.yml</code> of the theme's repository (most themes follow a <code>jekyll-theme-NAME</code> naming convention). For a list of supported themes, see <a href="#supported-themes">Supported themes</a> on the GitHub Pages site. For example, to select the Minimal theme, type <code>theme: jekyll-theme-minimal</code>.</li>
+<li>To use any other Jekyll theme hosted on GitHub, type <code>remote_theme: THEME-NAME</code>, replacing THEME-NAME with the name of the theme as shown in the README of the theme's repository.</li>
+</ul>
+</li>
+<li>
+<p>Click <strong>Commit changes...</strong></p>
+</li>
+<li>
+<p>In the "Commit message" field, type a short, meaningful commit message that describes the change you made to the file. You can attribute the commit to more than one author in the commit message. For more information, see <a href="https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/creating-a-commit-with-multiple-authors" class="external">Creating a commit with multiple authors</a>.</p>
+</li>
+<li>
+<p>If you have more than one email address associated with your account on GitHub, click the email address drop-down menu and select the email address to use as the Git author email address. Only verified email addresses appear in this drop-down menu. If you enabled email address privacy, then a no-reply will be the default commit author email address. For more information about the exact form the no-reply email address can take, see <a href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-email-preferences/setting-your-commit-email-address" class="external">Setting your commit email address</a>.</p>
+<p><img src="../../..//assets/images/help/repository/choose-commit-email-address.png" alt="Screenshot of a GitHub pull request showing a dropdown menu with options to choose the commit author email address. octocat@github.com is selected."></p>
+</li>
+<li>
+<p>Below the commit message fields, decide whether to add your commit to the current branch or to a new branch. If your current branch is the default branch, you should choose to create a new branch for your commit and then create a pull request. For more information, see <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request" class="external">Creating a pull request</a>.</p>
+<p><img src="../../..//assets/images/help/repository/choose-commit-branch.png" alt="Screenshot of a GitHub pull request showing a radio button to commit directly to the main branch or to create a new branch. New branch is selected."></p>
+</li>
+<li>
+<p>Click <strong>Commit changes</strong> or <strong>Propose changes</strong>.</p>
+</li>
+</ol>
+<h2 title="Customizing your theme's CSS"><a href="#customizing-your-themes-css" aria-hidden="true" class="anchor" id="customizing-your-themes-css"></a>Customizing your theme's CSS</h2>
+<p>These instructions work best with themes that are officially supported by GitHub Pages. For a complete list of supported themes, see <a href="#supported-themes">Supported themes</a> on the GitHub Pages site.</p>
+<p>Your theme's source repository may offer some help in customizing your theme. For example, see <a href="https://github.com/pages-themes/minimal#customizing" class="external">Minimal's README</a>.</p>
+<ol>
+<li>
+<p>On GitHub, navigate to your site's repository.</p>
+</li>
+<li>
+<p>Navigate to the publishing source for your site. For more information, see <a href="../getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site.html">Configuring a publishing source for your GitHub Pages site</a>.</p>
+</li>
+<li>
+<p>Create a new file called <code>/assets/css/style.scss</code>.</p>
+</li>
+<li>
+<p>Add the following content to the top of the file:</p>
+<pre lang="scss" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">---
+</span><span style="color:#c0c5ce;">---
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">@import "{{ site.theme }}";
+</span></code></pre>
+</li>
+<li>
+<p>Add any custom CSS or Sass (including imports) you'd like immediately after the <code>@import</code> line.</p>
+</li>
+</ol>
+<h2 title="Customizing your theme's HTML layout"><a href="#customizing-your-themes-html-layout" aria-hidden="true" class="anchor" id="customizing-your-themes-html-layout"></a>Customizing your theme's HTML layout</h2>
+<p>These instructions work best with themes that are officially supported by GitHub Pages. For a complete list of supported themes, see <a href="#supported-themes">Supported themes</a> on the GitHub Pages site.</p>
+<p>Your theme's source repository may offer some help in customizing your theme. For example, see <a href="https://github.com/pages-themes/minimal#customizing" class="external">Minimal's README</a>.</p>
+<ol>
+<li>On GitHub, navigate to your theme's source repository. For example, the source repository for Minimal is <code>https://github.com/pages-themes/minimal</code>.</li>
+<li>In the <code>_layouts</code> folder, navigate to your theme's <code>_default.html</code> file.</li>
+<li>Copy the contents of the file.</li>
+<li>On GitHub, navigate to your site's repository.</li>
+<li>Navigate to the publishing source for your site. For more information, see <a href="../getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site.html">Configuring a publishing source for your GitHub Pages site</a>.</li>
+<li>Create a file called <code>_layouts/default.html</code>.</li>
+<li>Paste the default layout content you copied earlier.</li>
+<li>Customize the layout as you'd like.</li>
+</ol>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li><a href="https://docs.github.com/en/repositories/working-with-files/managing-files/creating-new-files" class="external">Creating new files</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

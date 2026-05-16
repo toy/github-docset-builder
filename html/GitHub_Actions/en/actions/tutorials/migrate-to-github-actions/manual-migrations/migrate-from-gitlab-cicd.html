@@ -1,0 +1,262 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Migrating from GitLab CI/CD to GitHub Actions</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">Tutorials</a> / <a href="../index.html">Migrate to GitHub Actions</a> / <a href="index.html">Manual migrations</a> / </nav><h1><a href="#migrating-from-gitlab-cicd-to-github-actions" aria-hidden="true" class="anchor" id="migrating-from-gitlab-cicd-to-github-actions"></a>Migrating from GitLab CI/CD to GitHub Actions</h1>
+<p>GitHub Actions and GitLab CI/CD share several configuration similarities, which makes migrating to GitHub Actions relatively straightforward.</p>
+<h2 title="Introduction"><a href="#introduction" aria-hidden="true" class="anchor" id="introduction"></a>Introduction</h2>
+<p>GitLab CI/CD and GitHub Actions both allow you to create workflows that automatically build, test, publish, release, and deploy code. GitLab CI/CD and GitHub Actions share some similarities in workflow configuration:</p>
+<ul>
+<li>Workflow configuration files are written in YAML and are stored in the code's repository.</li>
+<li>Workflows include one or more jobs.</li>
+<li>Jobs include one or more steps or individual commands.</li>
+<li>Jobs can run on either managed or self-hosted machines.</li>
+</ul>
+<p>There are a few differences, and this guide will show you the important differences so that you can migrate your workflow to GitHub Actions.</p>
+<h2 title="Jobs"><a href="#jobs" aria-hidden="true" class="anchor" id="jobs"></a>Jobs</h2>
+<p>Jobs in GitLab CI/CD are very similar to jobs in GitHub Actions. In both systems, jobs have the following characteristics:</p>
+<ul>
+<li>Jobs contain a series of steps or scripts that run sequentially.</li>
+<li>Jobs can run on separate machines or in separate containers.</li>
+<li>Jobs run in parallel by default, but can be configured to run sequentially.</li>
+</ul>
+<p>You can run a script or a shell command in a job. In GitLab CI/CD, script steps are specified using the <code>script</code> key. In GitHub Actions, all scripts are specified using the <code>run</code> key.</p>
+<p>Below is an example of the syntax for each system.</p>
+<h3 title="Jobs / GitLab CI/CD syntax for jobs"><a href="#gitlab-cicd-syntax-for-jobs" aria-hidden="true" class="anchor" id="gitlab-cicd-syntax-for-jobs"></a>GitLab CI/CD syntax for jobs</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">job1</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">variables</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">GIT_CHECKOUT</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">true</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">echo "Run your script here"
+</span></code></pre>
+<h3 title="Jobs / GitHub Actions syntax for jobs"><a href="#github-actions-syntax-for-jobs" aria-hidden="true" class="anchor" id="github-actions-syntax-for-jobs"></a>GitHub Actions syntax for jobs</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">job1</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "Run your script here"
+</span></code></pre>
+<h2 title="Runners"><a href="#runners" aria-hidden="true" class="anchor" id="runners"></a>Runners</h2>
+<p>Runners are machines on which the jobs run. Both GitLab CI/CD and GitHub Actions offer managed and self-hosted variants of runners. In GitLab CI/CD, <code>tags</code> are used to run jobs on different platforms, while in GitHub Actions it is done with the <code>runs-on</code> key.</p>
+<p>Below is an example of the syntax for each system.</p>
+<h3 title="Runners / GitLab CI/CD syntax for runners"><a href="#gitlab-cicd-syntax-for-runners" aria-hidden="true" class="anchor" id="gitlab-cicd-syntax-for-runners"></a>GitLab CI/CD syntax for runners</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">windows_job</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">tags</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">windows
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">echo Hello, %USERNAME%!
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">linux_job</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">tags</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">linux
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">echo "Hello, $USER!"
+</span></code></pre>
+<h3 title="Runners / GitHub Actions syntax for runners"><a href="#github-actions-syntax-for-runners" aria-hidden="true" class="anchor" id="github-actions-syntax-for-runners"></a>GitHub Actions syntax for runners</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">windows_job</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">windows-latest
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo Hello, %USERNAME%!
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">linux_job</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "Hello, $USER!"
+</span></code></pre>
+<p>For more information, see <a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idruns-on">Workflow syntax for GitHub Actions</a>.</p>
+<h2 title="Docker images"><a href="#docker-images" aria-hidden="true" class="anchor" id="docker-images"></a>Docker images</h2>
+<p>Both GitLab CI/CD and GitHub Actions support running jobs in a Docker image. In GitLab CI/CD, Docker images are defined with an <code>image</code> key, while in GitHub Actions it is done with the <code>container</code> key.</p>
+<p>Below is an example of the syntax for each system.</p>
+<h3 title="GitLab CI/CD syntax for Docker images"><a href="#gitlab-cicd-syntax-for-docker-images" aria-hidden="true" class="anchor" id="gitlab-cicd-syntax-for-docker-images"></a>GitLab CI/CD syntax for Docker images</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">my_job</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">image</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">node:20-bookworm-slim
+</span></code></pre>
+<h3 title="GitHub Actions syntax for Docker images"><a href="#github-actions-syntax-for-docker-images" aria-hidden="true" class="anchor" id="github-actions-syntax-for-docker-images"></a>GitHub Actions syntax for Docker images</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">my_job</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">container</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">node:20-bookworm-slim
+</span></code></pre>
+<p>For more information, see <a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idcontainer">Workflow syntax for GitHub Actions</a>.</p>
+<h2 title="Condition and expression syntax"><a href="#condition-and-expression-syntax" aria-hidden="true" class="anchor" id="condition-and-expression-syntax"></a>Condition and expression syntax</h2>
+<p>GitLab CI/CD uses <code>rules</code> to determine if a job will run for a specific condition. GitHub Actions uses the <code>if</code> keyword to prevent a job from running unless a condition is met.</p>
+<p>Below is an example of the syntax for each system.</p>
+<h3 title="Condition and expression syntax / GitLab CI/CD syntax for conditions and expressions"><a href="#gitlab-cicd-syntax-for-conditions-and-expressions" aria-hidden="true" class="anchor" id="gitlab-cicd-syntax-for-conditions-and-expressions"></a>GitLab CI/CD syntax for conditions and expressions</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">deploy_prod</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">stage</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">deploy
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">echo "Deploy to production server"
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">rules</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">$CI_COMMIT_BRANCH == "master"</span><span style="color:#c0c5ce;">'
+</span></code></pre>
+<h3 title="Condition and expression syntax / GitHub Actions syntax for conditions and expressions"><a href="#github-actions-syntax-for-conditions-and-expressions" aria-hidden="true" class="anchor" id="github-actions-syntax-for-conditions-and-expressions"></a>GitHub Actions syntax for conditions and expressions</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">deploy_prod</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">contains( github.ref, 'master')
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "Deploy to production server"
+</span></code></pre>
+<p>For more information, see <a href="../../../reference/workflows-and-actions/expressions.html">Evaluate expressions in workflows and actions</a>.</p>
+<h2 title="Dependencies between Jobs"><a href="#dependencies-between-jobs" aria-hidden="true" class="anchor" id="dependencies-between-jobs"></a>Dependencies between Jobs</h2>
+<p>Both GitLab CI/CD and GitHub Actions allow you to set dependencies for a job. In both systems, jobs run in parallel by default, but job dependencies in GitHub Actions can be specified explicitly with the <code>needs</code> key. GitLab CI/CD also has a concept of <code>stages</code>, where jobs in a stage run concurrently, but the next stage will start when all the jobs in the previous stage have completed. You can recreate this scenario in GitHub Actions with the <code>needs</code> key.</p>
+<p>Below is an example of the syntax for each system. The workflows start with two jobs named <code>build_a</code> and <code>build_b</code> running in parallel, and when those jobs complete, another job called <code>test_ab</code> will run. Finally, when <code>test_ab</code> completes, the <code>deploy_ab</code> job will run.</p>
+<h3 title="Dependencies between Jobs / GitLab CI/CD syntax for dependencies between jobs"><a href="#gitlab-cicd-syntax-for-dependencies-between-jobs" aria-hidden="true" class="anchor" id="gitlab-cicd-syntax-for-dependencies-between-jobs"></a>GitLab CI/CD syntax for dependencies between jobs</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">stages</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#a3be8c;">build
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#a3be8c;">test
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#a3be8c;">deploy
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">build_a</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">stage</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">build
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">echo "This job will run first."
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">build_b</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">stage</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">build
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">echo "This job will run first, in parallel with build_a."
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">test_ab</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">stage</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">test
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">echo "This job will run after build_a and build_b have finished."
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">deploy_ab</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">stage</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">deploy
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">echo "This job will run after test_ab is complete"
+</span></code></pre>
+<h3 title="Dependencies between Jobs / GitHub Actions syntax for dependencies between jobs"><a href="#github-actions-syntax-for-dependencies-between-jobs" aria-hidden="true" class="anchor" id="github-actions-syntax-for-dependencies-between-jobs"></a>GitHub Actions syntax for dependencies between jobs</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build_a</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "This job will be run first."
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build_b</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "This job will be run first, in parallel with build_a"
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">test_ab</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">needs</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">build_a</span><span style="color:#c0c5ce;">,</span><span style="color:#a3be8c;">build_b</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "This job will run after build_a and build_b have finished"
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">deploy_ab</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">needs</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">test_ab</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "This job will run after test_ab is complete"
+</span></code></pre>
+<p>For more information, see <a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idneeds">Workflow syntax for GitHub Actions</a>.</p>
+<h2 title="Scheduling workflows"><a href="#scheduling-workflows" aria-hidden="true" class="anchor" id="scheduling-workflows"></a>Scheduling workflows</h2>
+<p>Both GitLab CI/CD and GitHub Actions allow you to run workflows at a specific interval. In GitLab CI/CD, pipeline schedules are configured with the UI, while in GitHub Actions you can trigger a workflow on a scheduled interval with the "on" key.</p>
+<p>For more information, see <a href="../../../reference/workflows-and-actions/events-that-trigger-workflows.html#scheduled-events">Events that trigger workflows</a>.</p>
+<h2 title="Variables and secrets"><a href="#variables-and-secrets" aria-hidden="true" class="anchor" id="variables-and-secrets"></a>Variables and secrets</h2>
+<p>GitLab CI/CD and GitHub Actions support setting variables in the pipeline or workflow configuration file, and creating secrets using the GitLab or GitHub UI.</p>
+<p>For more information, see <a href="../../../how-tos/write-workflows/choose-what-workflows-do/use-variables.html">Store information in variables</a> and <a href="../../../concepts/security/secrets.html">Secrets</a>.</p>
+<h2 title="Caching"><a href="#caching" aria-hidden="true" class="anchor" id="caching"></a>Caching</h2>
+<p>GitLab CI/CD and GitHub Actions provide a method in the configuration file to manually cache workflow files.</p>
+<p>Below is an example of the syntax for each system.</p>
+<h3 title="Caching / GitLab CI/CD syntax for caching"><a href="#gitlab-cicd-syntax-for-caching" aria-hidden="true" class="anchor" id="gitlab-cicd-syntax-for-caching"></a>GitLab CI/CD syntax for caching</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">image</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">node:latest
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">cache</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">key</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">$CI_COMMIT_REF_SLUG
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">paths</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">.npm/
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">before_script</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#a3be8c;">npm ci --cache .npm --prefer-offline
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">test_async</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">node ./specs/start.js ./specs/async.spec.js
+</span></code></pre>
+<h3 title="Caching / GitHub Actions syntax for caching"><a href="#github-actions-syntax-for-caching" aria-hidden="true" class="anchor" id="github-actions-syntax-for-caching"></a>GitHub Actions syntax for caching</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">test_async</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Cache node modules
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/cache@v4
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">~/.npm
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">key</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">v1-npm-deps-${{ hashFiles('**/package-lock.json') }}
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">restore-keys</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">v1-npm-deps-
+</span></code></pre>
+<h2 title="Artifacts"><a href="#artifacts" aria-hidden="true" class="anchor" id="artifacts"></a>Artifacts</h2>
+<p>Both GitLab CI/CD and GitHub Actions can upload files and directories created by a job as artifacts. In GitHub Actions, artifacts can be used to persist data across multiple jobs.</p>
+<p>Below is an example of the syntax for each system.</p>
+<h3 title="Artifacts / GitLab CI/CD syntax for artifacts"><a href="#gitlab-cicd-syntax-for-artifacts" aria-hidden="true" class="anchor" id="gitlab-cicd-syntax-for-artifacts"></a>GitLab CI/CD syntax for artifacts</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">:
+</span><span style="color:#bf616a;">artifacts</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">paths</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">math-homework.txt
+</span></code></pre>
+<h3 title="Artifacts / GitHub Actions syntax for artifacts"><a href="#github-actions-syntax-for-artifacts" aria-hidden="true" class="anchor" id="github-actions-syntax-for-artifacts"></a>GitHub Actions syntax for artifacts</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Upload math result for job 1
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/upload-artifact@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">homework
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">math-homework.txt
+</span></code></pre>
+<p>For more information, see <a href="../../store-and-share-data.html">Store and share data with workflow artifacts</a>.</p>
+<h2 title="Databases and service containers"><a href="#databases-and-service-containers" aria-hidden="true" class="anchor" id="databases-and-service-containers"></a>Databases and service containers</h2>
+<p>Both systems enable you to include additional containers for databases, caching, or other dependencies.</p>
+<p>In GitLab CI/CD, a container for the job is specified with the <code>image</code> key, while GitHub Actions uses the <code>container</code> key. In both systems, additional service containers are specified with the <code>services</code> key.</p>
+<p>Below is an example of the syntax for each system.</p>
+<h3 title="Databases and service containers / GitLab CI/CD syntax for databases and service containers"><a href="#gitlab-cicd-syntax-for-databases-and-service-containers" aria-hidden="true" class="anchor" id="gitlab-cicd-syntax-for-databases-and-service-containers"></a>GitLab CI/CD syntax for databases and service containers</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">container-job</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">variables</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">POSTGRES_PASSWORD</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">postgres
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># The hostname used to communicate with the
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># PostgreSQL service container
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">POSTGRES_HOST</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">postgres
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># The default PostgreSQL port
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">POSTGRES_PORT</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">5432
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">image</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">node:20-bookworm-slim
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">services</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">postgres
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Performs a clean installation of all dependencies
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># in the `package.json` file
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">npm ci
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Runs a script that creates a PostgreSQL client,
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># populates the client with data, and retrieves data
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">node client.js
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">tags</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">docker
+</span></code></pre>
+<h3 title="Databases and service containers / GitHub Actions syntax for databases and service containers"><a href="#github-actions-syntax-for-databases-and-service-containers" aria-hidden="true" class="anchor" id="github-actions-syntax-for-databases-and-service-containers"></a>GitHub Actions syntax for databases and service containers</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">container-job</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">container</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">node:20-bookworm-slim
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">services</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">postgres</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">image</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">postgres
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">POSTGRES_PASSWORD</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">postgres
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Check out repository code
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Performs a clean installation of all dependencies
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># in the `package.json` file
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Install dependencies
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm ci
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Connect to PostgreSQL
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># Runs a script that creates a PostgreSQL client,
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># populates the client with data, and retrieves data
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">node client.js
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#65737e;"># The hostname used to communicate with the
+</span><span style="color:#c0c5ce;">          </span><span style="color:#65737e;"># PostgreSQL service container
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">POSTGRES_HOST</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">postgres
+</span><span style="color:#c0c5ce;">          </span><span style="color:#65737e;"># The default PostgreSQL port
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">POSTGRES_PORT</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">5432
+</span></code></pre>
+<p>For more information, see <a href="../../use-containerized-services/use-docker-service-containers.html">Communicating with Docker service containers</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

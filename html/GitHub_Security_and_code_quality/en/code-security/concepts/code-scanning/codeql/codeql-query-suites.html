@@ -1,0 +1,29 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>CodeQL query suites</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">Concepts</a> / <a href="../index.html">Code scanning</a> / <a href="index.html">CodeQL</a> / </nav><h1><a href="#codeql-query-suites" aria-hidden="true" class="anchor" id="codeql-query-suites"></a>CodeQL query suites</h1>
+<p>You can choose from different built-in CodeQL query suites to use in your CodeQL code scanning setup.</p>
+<h2 title="What are query suites?"><a href="#what-are-query-suites" aria-hidden="true" class="anchor" id="what-are-query-suites"></a>What are query suites?</h2>
+<p>Query suites allow you to pass multiple queries to CodeQL without having to specify the path to each query file individually. They provide a way of selecting queries based on their filename, metadata properties, or location on disk or in a CodeQL pack.</p>
+<p>You should use query suites for the queries that you want to frequently use in your CodeQL analyses. You can use a built-in query suite available through GitHub, or you can create your own.</p>
+<h2 title="Built-in CodeQL query suites"><a href="#built-in-codeql-query-suites" aria-hidden="true" class="anchor" id="built-in-codeql-query-suites"></a>Built-in CodeQL query suites</h2>
+<p>The built-in CodeQL query suites, <code>default</code> and <code>security-extended</code>, are created and maintained by GitHub. Both of these query suites are available with default setup for every CodeQL-supported language.</p>
+<p>Organization owners and security managers can recommend a query suite for use with default setup throughout their organization. For more information, see <a href="../../../how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/configuring-default-setup-for-code-scanning-at-scale.html">Configuring default setup for code scanning at scale</a>.</p>
+<p>For a complete list of queries included in each query suite for every language, see <a href="../../../reference/code-scanning/codeql/codeql-queries/index.html">Queries for CodeQL analysis</a>.</p>
+<h3 title="Built-in CodeQL query suites / default query suite"><a href="#default-query-suite" aria-hidden="true" class="anchor" id="default-query-suite"></a><code>default</code> query suite</h3>
+<ul>
+<li>The <code>default</code> query suite is the group of queries run by default in CodeQL code scanning on GitHub.</li>
+<li>The queries in the <code>default</code> query suite are highly precise and return few false positive code scanning results. Relative to the <code>security-extended</code> query suite, the <code>default</code> suite returns fewer low-confidence code scanning results.</li>
+<li>This query suite is available for use with default setup for code scanning.</li>
+</ul>
+<h3 title="Built-in CodeQL query suites / security-extended query suite"><a href="#security-extended-query-suite" aria-hidden="true" class="anchor" id="security-extended-query-suite"></a><code>security-extended</code> query suite</h3>
+<ul>
+<li>The <code>security-extended</code> query suite consists of all the queries in the <code>default</code> query suite, plus additional queries with slightly lower precision and severity.</li>
+<li>Relative to the <code>default</code> query suite, the <code>security-extended</code> suite may return a greater number of false positive code scanning results.</li>
+<li>This query suite is available for use with default setup for code scanning, and is referred to as the "Extended" query suite on GitHub.</li>
+</ul>
+<h2 title="Custom query suites"><a href="#custom-query-suites" aria-hidden="true" class="anchor" id="custom-query-suites"></a>Custom query suites</h2>
+<p>To use a custom query suite, you must configure advanced setup for CodeQL code scanning. For more information, see <a href="../../../how-tos/find-and-fix-code-vulnerabilities/configure-code-scanning/configuring-advanced-setup-for-code-scanning.html">Configuring advanced setup for code scanning</a>.</p>
+<p>Query suite definitions are stored in YAML files with the extension <code>.qls</code>. A suite definition is a sequence of instructions, where each instruction is a YAML mapping with (usually) a single key. The instructions are executed in the order they appear in the query suite definition. After all the instructions in the suite definition have been executed, the result is a set of selected queries. For more information, see <a href="../../../tutorials/customize-code-scanning/creating-codeql-query-suites.html">Creating CodeQL query suites</a>.</p>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li><a href="../../../tutorials/customize-code-scanning/creating-codeql-query-suites.html">Creating CodeQL query suites</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

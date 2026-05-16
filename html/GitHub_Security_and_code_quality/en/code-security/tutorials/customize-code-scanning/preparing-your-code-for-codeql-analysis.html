@@ -1,0 +1,488 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Preparing your code for CodeQL analysis</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Customize code scanning</a> / </nav><h1><a href="#preparing-your-code-for-codeql-analysis" aria-hidden="true" class="anchor" id="preparing-your-code-for-codeql-analysis"></a>Preparing your code for CodeQL analysis</h1>
+<p>You can build a CodeQL database containing the data needed to analyze your code.</p>
+<!--The CodeQL CLI man pages include a link to a section in this article. If you rename this article,
+make sure that you also update the MS short link: https://aka.ms/codeql-docs/indirect-tracing.-->
+<h2 title="About preparing your code for analysis"><a href="#about-preparing-your-code-for-analysis" aria-hidden="true" class="anchor" id="about-preparing-your-code-for-analysis"></a>About preparing your code for analysis</h2>
+<p>Before you analyze your code using CodeQL, you need to create a CodeQL database containing all the data required to run queries on your code. You can create CodeQL databases yourself using the CodeQL CLI.</p>
+<p>CodeQL analysis relies on extracting relational data from your code, and using it to build a <a href="https://codeql.github.com/docs/codeql-overview/codeql-glossary/#codeql-database" class="external">CodeQL database</a>. CodeQL databases contain all of the important information about a codebase, which can be analyzed by executing CodeQL queries against it.</p>
+<p>Before you generate a CodeQL database, you need to:</p>
+<ol>
+<li>Install and set up the CodeQL CLI. For more information, see <a href="../../how-tos/find-and-fix-code-vulnerabilities/scan-from-the-command-line/setting-up-the-codeql-cli.html">Setting up the CodeQL CLI</a>.</li>
+<li>Check out the code that you want to analyze:
+<ul>
+<li>For a branch, check out the head of the branch that you want to analyze.</li>
+<li>For a pull request, check out either the head commit of the pull request, or check out a GitHub-generated merge commit of the pull request.</li>
+</ul>
+</li>
+<li>Set up the environment for the codebase, making sure that any dependencies are available.</li>
+<li>For the best results with compiled languages, find the build command, if any, for the codebase. Typically this is available in a configuration file in the CI system.</li>
+</ol>
+<p>Once the codebase is ready, you can run <code>codeql database create</code> to create the database. For more information, see <a href="#creating-databases-for-non-compiled-languages">Creating databases for non-compiled languages</a> and <a href="#creating-databases-for-compiled-languages">Creating databases for compiled languages</a>.</p>
+<h2 title="Running codeql database create"><a href="#running-codeql-database-create" aria-hidden="true" class="anchor" id="running-codeql-database-create"></a>Running <code>codeql database create</code></h2>
+<p>CodeQL databases are created by running the following command from the checkout root of your project:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql database create &lt;database&gt; --language=&lt;language-identifier&gt;
+</span></code></pre>
+<p>You must specify:</p>
+<ul>
+<li>
+<p><code>&lt;database&gt;</code>: a path to the new database to be created. This directory will be created when you execute the command—you cannot specify an existing directory.</p>
+</li>
+<li>
+<p><code>--language</code>: the identifier for the language to create a database for. When used with <code>--db-cluster</code>, the option accepts a comma-separated list, or can be specified more than once. CodeQL supports creating databases for the following languages:</p>
+<table>
+<thead>
+<tr>
+<th>Language</th>
+<th>Identifier</th>
+<th>Optional alternative identifiers (if any)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C/C++</td>
+<td><code>c-cpp</code></td>
+<td><code>c</code> or <code>cpp</code></td>
+</tr>
+<tr>
+<td>C#</td>
+<td><code>csharp</code></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>GitHub Actions workflows</td>
+<td><code>actions</code></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Go</td>
+<td><code>go</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Java/Kotlin</td>
+<td><code>java-kotlin</code></td>
+<td><code>java</code> or <code>kotlin</code></td>
+</tr>
+<tr>
+<td>JavaScript/TypeScript</td>
+<td><code>javascript-typescript</code></td>
+<td><code>javascript</code> or <code>typescript</code></td>
+</tr>
+<tr>
+<td>Python</td>
+<td><code>python</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Ruby</td>
+<td><code>ruby</code></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Rust</td>
+<td><code>rust</code></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Swift</td>
+<td><code>swift</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>If you specify one of the alternative identifiers, this is equivalent to using the standard language identifier. For example, specifying <code>javascript</code> instead of <code>javascript-typescript</code> will not exclude analysis of TypeScript code. Instead, you can use the <code>--codescanning-config</code> CLI option to load a configuration file that specifies files to exclude with the <code>paths-ignore</code> configuration key. See <a href="../../reference/code-scanning/workflow-configuration-options.html#custom-configuration-files">Workflow configuration options for code scanning</a>.</p>
+<p>Alternatively, for languages that support it, use a custom build command that only builds the files that you want to scan. See <a href="#creating-databases-for-compiled-languages">Creating databases for compiled languages</a>.</p>
+</div>
+</li>
+</ul>
+<p>If your codebase has a build command or script that invokes the build process, we recommend that you specify it as well:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">   codeql database create &lt;database&gt; --command &lt;build&gt; \
+</span><span style="color:#c0c5ce;">         --language=&lt;language-identifier&gt;
+</span></code></pre>
+<h3 title="Running codeql database create / Options for creating databases"><a href="#options-for-creating-databases" aria-hidden="true" class="anchor" id="options-for-creating-databases"></a>Options for creating databases</h3>
+<p>You can specify additional options depending on the location of your source file, if the code needs to be compiled, and if you want to create CodeQL databases for more than one language.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th align="center">Required</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">&lt;database&gt;</code></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Required" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>Specify the name and location of a directory to create for the CodeQL database. The command will fail if you try to overwrite an existing directory. If you also specify <code>--db-cluster</code>, this is the parent directory and a subdirectory is created for each language analyzed.</td>
+</tr>
+<tr>
+<td><code class="keyword"><span style="white-space: nowrap;">--language</span></code></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Required" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>Specify the identifier for the language to create a database for, one of: <code>c-cpp</code>, <code>csharp</code>, <code>go</code>, <code>java-kotlin</code>, <code>javascript-typescript</code>, <code>python</code>, <code>ruby</code>, <code>rust</code> and <code>swift</code>. When used with <code><span style="white-space: nowrap;">--db-cluster</span></code>, the option accepts a comma-separated list, or can be specified more than once.</td>
+</tr>
+<tr>
+<td><code class="keyword"><span style="white-space: nowrap;">--command</span></code></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td><strong>Recommended.</strong> Use to specify the build command or script that invokes the build process for the codebase. Commands are run from the current folder or, where it is defined, from <code><span style="white-space: nowrap;">--source-root</span></code>. Not needed for Python and JavaScript/TypeScript analysis.</td>
+</tr>
+<tr>
+<td><code class="keyword"><span style="white-space: nowrap;">--build-mode</span></code></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td><strong>Recommended.</strong> Use for C/C++, C#, Java and Rust when not providing a <code>--command</code> to specify whether to create a CodeQL database without a build (<code>none</code>) or by attempting to automatically detect a build command (<code>autobuild</code>). By default, autobuild detection is used. For a comparison of build modes, see <a href="../../how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/codeql-code-scanning-for-compiled-languages.html#codeql-build-modes">CodeQL build modes</a>.</td>
+</tr>
+<tr>
+<td><code class="keyword"><span style="white-space: nowrap;">--db-cluster</span></code></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>Use in multi-language codebases to generate one database for each language specified by <code><span style="white-space: nowrap;">--language</span></code>.</td>
+</tr>
+<tr>
+<td><code class="keyword"><span style="white-space: nowrap;">--no-run-unnecessary-builds</span></code></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td><strong>Recommended.</strong> Use to suppress the build command for languages where the CodeQL CLI does not need to monitor the build (for example, Python and JavaScript/TypeScript).</td>
+</tr>
+<tr>
+<td><code class="keyword"><span style="white-space: nowrap;">--source-root</span></code></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>Use if you run the CLI outside the checkout root of the repository. By default, the <code>database create</code> command assumes that the current directory is the root directory for the source files, use this option to specify a different location.</td>
+</tr>
+<tr>
+<td><code class="keyword"><span style="white-space: nowrap;">--codescanning-config</span></code></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>Advanced. Use if you have a configuration file that specifies how to create the CodeQL databases and what queries to run in later steps. For more information, see <a href="../../reference/code-scanning/workflow-configuration-options.html#custom-configuration-files">Workflow configuration options for code scanning</a> and <a href="../../reference/code-scanning/codeql/codeql-cli-manual/database-create.html#--codescanning-configfile">database create</a>.</td>
+</tr>
+</tbody>
+</table>
+<p>You can specify extractor options to customize the behavior of extractors that create CodeQL databases. For more information, see<br>
+<a href="../../reference/code-scanning/codeql/codeql-cli/extractor-options.html">Extractor options</a>.</p>
+<p>For full details of all the options you can use when creating databases, see <a href="../../reference/code-scanning/codeql/codeql-cli-manual/database-create.html">database create</a>.</p>
+<h3 title="Running codeql database create / Single language example"><a href="#single-language-example" aria-hidden="true" class="anchor" id="single-language-example"></a>Single language example</h3>
+<p>This example creates a single CodeQL database for the repository checked out at <code>/checkouts/example-repo</code>. It uses the JavaScript extractor to create a hierarchical representation of the JavaScript and TypeScript code in the repository. The resulting database is stored in <code>/codeql-dbs/example-repo</code>.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">$ codeql database create /codeql-dbs/example-repo --language=javascript-typescript \
+</span><span style="color:#c0c5ce;">    --source-root /checkouts/example-repo
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">&gt; Initializing database at /codeql-dbs/example-repo.
+</span><span style="color:#c0c5ce;">&gt; Running command [/codeql-home/codeql/javascript/tools/autobuild.cmd]
+</span><span style="color:#c0c5ce;">    in /checkouts/example-repo.
+</span><span style="color:#c0c5ce;">&gt; [build-stdout] Single-threaded extraction.
+</span><span style="color:#c0c5ce;">&gt; [build-stdout] Extracting
+</span><span style="color:#c0c5ce;">...
+</span><span style="color:#c0c5ce;">&gt; Finalizing database at /codeql-dbs/example-repo.
+</span><span style="color:#c0c5ce;">&gt; Successfully created database at /codeql-dbs/example-repo.
+</span></code></pre>
+<h3 title="Running codeql database create / Multiple language example"><a href="#multiple-language-example" aria-hidden="true" class="anchor" id="multiple-language-example"></a>Multiple language example</h3>
+<p>This example creates two CodeQL databases for the repository checked out at <code>/checkouts/example-repo-multi</code>. It uses:</p>
+<ul>
+<li><code>--db-cluster</code> to request analysis of more than one language.</li>
+<li><code>--language</code> to specify which languages to create databases for.</li>
+<li><code>--command</code> to tell the tool the build command for the codebase, here <code>make</code>.</li>
+<li><code>--no-run-unnecessary-builds</code> to tell the tool to skip the build command for languages where it is not needed (like Python).</li>
+</ul>
+<p>The resulting databases are stored in <code>python</code> and <code>cpp</code> subdirectories of <code>/codeql-dbs/example-repo-multi</code>.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">$ codeql database create /codeql-dbs/example-repo-multi \
+</span><span style="color:#c0c5ce;">    --db-cluster --language python,c-cpp \
+</span><span style="color:#c0c5ce;">    --command make --no-run-unnecessary-builds \
+</span><span style="color:#c0c5ce;">    --source-root /checkouts/example-repo-multi
+</span><span style="color:#c0c5ce;">Initializing databases at /codeql-dbs/example-repo-multi.
+</span><span style="color:#c0c5ce;">Running build command: [make]
+</span><span style="color:#c0c5ce;">[build-stdout] Calling python3 /codeql-bundle/codeql/python/tools/get_venv_lib.py
+</span><span style="color:#c0c5ce;">[build-stdout] Calling python3 -S /codeql-bundle/codeql/python/tools/python_tracer.py -v -z all -c /codeql-dbs/example-repo-multi/python/working/trap_cache -p ERROR: 'pip' not installed.
+</span><span style="color:#c0c5ce;">[build-stdout] /usr/local/lib/python3.6/dist-packages -R /checkouts/example-repo-multi
+</span><span style="color:#c0c5ce;">[build-stdout] [INFO] Python version 3.6.9
+</span><span style="color:#c0c5ce;">[build-stdout] [INFO] Python extractor version 5.16
+</span><span style="color:#c0c5ce;">[build-stdout] [INFO] [2] Extracted file /checkouts/example-repo-multi/hello.py in 5ms
+</span><span style="color:#c0c5ce;">[build-stdout] [INFO] Processed 1 modules in 0.15s
+</span><span style="color:#c0c5ce;">[build-stdout] &lt;output from calling 'make' to build the C/C++ code&gt;
+</span><span style="color:#c0c5ce;">Finalizing databases at /codeql-dbs/example-repo-multi.
+</span><span style="color:#c0c5ce;">Successfully created databases at /codeql-dbs/example-repo-multi.
+</span><span style="color:#c0c5ce;">$
+</span></code></pre>
+<h2 title="Progress and results"><a href="#progress-and-results" aria-hidden="true" class="anchor" id="progress-and-results"></a>Progress and results</h2>
+<p>Errors are reported if there are any problems with the options you have specified. For interpreted languages and when you specify <code>--build-mode none</code> for C/C++, C#, Java and Rust, the extraction progress is displayed in the console. For each source file, the console shows if extraction was successful or if it failed. When a compiled language is built, the console will display the output of the build system.</p>
+<p>When the database is successfully created, you’ll find a new directory at the path specified in the command. If you used the <code>--db-cluster</code> option to create more than one database, a subdirectory is created for each language. Each CodeQL database directory contains a number of subdirectories, including the relational data (required for analysis) and a source archive—a copy of the source files made at the time the database was created—which is used for displaying analysis results.</p>
+<h2 title="Creating databases for non-compiled languages"><a href="#creating-databases-for-non-compiled-languages" aria-hidden="true" class="anchor" id="creating-databases-for-non-compiled-languages"></a>Creating databases for non-compiled languages</h2>
+<p>The CodeQL CLI includes extractors to create databases for non-compiled languages—specifically, JavaScript (and TypeScript), Python, and Ruby. These extractors are automatically invoked when you specify JavaScript, Python, or Ruby as the <code>--language</code> option when executing <code>database create</code>. When creating databases for these languages you must ensure that all additional dependencies are available.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>When you run <code>database create</code> for JavaScript, TypeScript, Python, and Ruby, you should not specify a <code>--command</code> option. Otherwise this overrides the normal extractor invocation, which will create an empty database. If you create databases for multiple languages and one of them is a compiled language, use the <code>--no-run-unnecessary-builds</code> option to skip the command for the languages that don’t need to be compiled.</p>
+</div>
+<h3 title="Creating databases for non-compiled languages / JavaScript and TypeScript"><a href="#javascript-and-typescript" aria-hidden="true" class="anchor" id="javascript-and-typescript"></a>JavaScript and TypeScript</h3>
+<p>Creating databases for JavaScript requires no additional dependencies, but if the project includes TypeScript files, Node.js 14 or higher must be installed and available on the <code>PATH</code> as <code>node</code>. In the command line you can specify <code>--language=javascript-typescript</code> to extract both JavaScript and TypeScript files:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql database create --language=javascript-typescript --source-root &lt;folder-to-extract&gt; &lt;output-folder&gt;/javascript-database
+</span></code></pre>
+<p>Here, we have specified a <code>--source-root</code> path, which is the location where database creation is executed, but is not necessarily the checkout root of the codebase.</p>
+<p>By default, files in <code>node_modules</code> and <code>bower_components</code> directories are not extracted.</p>
+<h3 title="Creating databases for non-compiled languages / Python"><a href="#python" aria-hidden="true" class="anchor" id="python"></a>Python</h3>
+<p>When creating databases for Python you must ensure:</p>
+<ul>
+<li>You have Python 3 installed and available to the CodeQL extractor.</li>
+<li>You have the version of Python used by your code installed.</li>
+</ul>
+<p>In the command line you must specify <code>--language=python</code>. For example:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql database create --language=python &lt;output-folder&gt;/python-database
+</span></code></pre>
+<p>This executes the <code>database create</code> subcommand from the code’s checkout root, generating a new Python database at <code>&lt;output-folder&gt;/python-database</code>.</p>
+<h3 title="Creating databases for non-compiled languages / Ruby"><a href="#ruby" aria-hidden="true" class="anchor" id="ruby"></a>Ruby</h3>
+<p>Creating databases for Ruby requires no additional dependencies. In the command line you must specify <code>--language=ruby</code>. For example:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql database create --language=ruby --source-root &lt;folder-to-extract&gt; &lt;output-folder&gt;/ruby-database
+</span></code></pre>
+<p>Here, we have specified a <code>--source-root</code> path, which is the location where database creation is executed, but is not necessarily the checkout root of the codebase.</p>
+<h2 title="Creating databases for compiled languages"><a href="#creating-databases-for-compiled-languages" aria-hidden="true" class="anchor" id="creating-databases-for-compiled-languages"></a>Creating databases for compiled languages</h2>
+<p>For most compiled languages, CodeQL needs to invoke the required build system to generate a database, therefore the build method must be available to the CLI. This approach creates databases that include generated code. CodeQL has two methods for building codebases:</p>
+<ul>
+<li><a href="#automatically-detecting-the-build-system">Automatic build detection (autobuild)</a></li>
+<li><a href="#specifying-build-commands">User-specified build commands</a></li>
+</ul>
+<p>In addition, for C/C++, C#, Java and Rust, there is an option to generate a database without building the code. This is particularly useful when you want to enable code scanning for many repositories. For more information, see <a href="../../how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/codeql-code-scanning-for-compiled-languages.html#codeql-build-modes">CodeQL build modes</a>.</p>
+<h3 title="Creating databases for compiled languages / Automatically detecting the build system"><a href="#automatically-detecting-the-build-system" aria-hidden="true" class="anchor" id="automatically-detecting-the-build-system"></a>Automatically detecting the build system</h3>
+<p>The CodeQL CLI includes autobuilders for C/C++, C#, Go, Java, Kotlin, and Swift code. CodeQL autobuilders allow you to build projects for compiled languages without specifying any build commands. When an autobuilder is invoked, CodeQL examines the source for evidence of a build system and attempts to run the optimal set of commands required to extract a database. For more information, see <a href="../../how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/codeql-code-scanning-for-compiled-languages.html#about-autobuild">CodeQL code scanning for compiled languages</a>.</p>
+<p>An autobuilder is invoked automatically when you execute <code>codeql database create</code> for a compiled language if you don’t include a<br>
+<code>--command</code> option or set <code>--build-mode none</code>. For example, for a Swift codebase, you could simply run:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql database create --language=swift &lt;output-folder&gt;/swift-database
+</span></code></pre>
+<p>If a codebase uses a standard build system, relying on an autobuilder is often the simplest way to create a database. For sources that require non-standard build steps, you may need to explicitly define each step in the command line.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<ul>
+<li>If you are building a Go database, install the Go toolchain (version 1.11 or later) and, if there are dependencies, the appropriate dependency manager (such as <a href="https://golang.github.io/dep/" class="external">dep</a>).</li>
+<li>The Go autobuilder attempts to automatically detect code written in Go in a repository, and only runs build scripts in an attempt to fetch dependencies. To force CodeQL to limit extraction to the files compiled by your build script, set the environment variable <code>CODEQL_EXTRACTOR_GO_BUILD_TRACING=on</code> or use the <code>--command</code> option to specify a build command.</li>
+</ul>
+</div>
+<h3 title="Creating databases for compiled languages / Specifying build commands"><a href="#specifying-build-commands" aria-hidden="true" class="anchor" id="specifying-build-commands"></a>Specifying build commands</h3>
+<p>The following examples are designed to give you an idea of some of the build commands that you can specify for compiled languages.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The <code>--command</code> option accepts a single argument—if you need to use more than one command, specify <code>--command</code> multiple times. If you need to pass subcommands and options, the whole argument needs to be quoted to be interpreted correctly.</p>
+</div>
+<ul>
+<li>
+<p>C/C++ project built using <code>make</code>:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;"># Disable parallel execution via `-j1` or other techniques: https://www.gnu.org/software/make/manual/make.html#Parallel-Execution
+</span><span style="color:#c0c5ce;">codeql database create cpp-database --language=c-cpp --command=make
+</span></code></pre>
+</li>
+<li>
+<p>C# project built using <code>dotnet build</code>:</p>
+<p>It is a good idea to add <code>/t:rebuild</code> to ensure that all code will be built, or do a prior <code>dotnet clean</code> (code that is not built will not be included in the CodeQL database):</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql database create csharp-database --language=csharp --command='dotnet build /t:rebuild'
+</span></code></pre>
+</li>
+<li>
+<p>Go project built using the <code>CODEQL_EXTRACTOR_GO_BUILD_TRACING=on</code> environment variable:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">CODEQL_EXTRACTOR_GO_BUILD_TRACING=on codeql database create go-database --language=go
+</span></code></pre>
+</li>
+<li>
+<p>Go project built using a custom build script:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql database create go-database --language=go --command='./scripts/build.sh'
+</span></code></pre>
+</li>
+<li>
+<p>Java project built using Gradle:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;"># Use `--no-daemon` because a build delegated to an existing daemon cannot be detected by CodeQL.
+</span><span style="color:#c0c5ce;"># To ensure isolated builds without caching, add `--no-build-cache` on persistent machines.
+</span><span style="color:#c0c5ce;">codeql database create java-database --language=java-kotlin --command='gradle --no-daemon clean test'
+</span></code></pre>
+</li>
+<li>
+<p>Java project built using Maven:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql database create java-database --language=java-kotlin --command='mvn clean install'
+</span></code></pre>
+</li>
+<li>
+<p>Java project built using Ant:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql database create java-database --language=java-kotlin --command='ant -f build.xml'
+</span></code></pre>
+</li>
+<li>
+<p>Rust project built using Cargo:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql database create rust-database --language=rust
+</span></code></pre>
+</li>
+<li>
+<p>Swift project built from an Xcode project or workspace. By default, the largest Swift target is built:</p>
+<p>It's a good idea to ensure that the project is in a clean state and that there are no build artifacts available.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">xcodebuild clean -all
+</span><span style="color:#c0c5ce;">codeql database create -l swift swift-database
+</span></code></pre>
+</li>
+<li>
+<p>Swift project built with <code>swift build</code>:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql database create -l swift -c "swift build" swift-database
+</span></code></pre>
+</li>
+<li>
+<p>Swift project built with <code>xcodebuild</code>:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql database create -l swift -c "xcodebuild build -target your-target" swift-database
+</span></code></pre>
+<p>You can pass the <code>archive</code> and <code>test</code> options to <code>xcodebuild</code>. However, the standard <code>xcodebuild</code> command is recommended as it should be the fastest, and should be all that CodeQL requires for a successful scan.</p>
+</li>
+<li>
+<p>Swift project built using a custom build script:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql database create -l swift -c "./scripts/build.sh" swift-database
+</span></code></pre>
+</li>
+<li>
+<p>Project built using Bazel:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;"># Navigate to the Bazel workspace.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;"># Before building, remove cached objects
+</span><span style="color:#c0c5ce;"># and stop all running Bazel server processes.
+</span><span style="color:#c0c5ce;">bazel clean --expunge
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;"># Build using the following Bazel flags, to help CodeQL detect the build:
+</span><span style="color:#c0c5ce;"># `--spawn_strategy=local`: build locally, instead of using a distributed build
+</span><span style="color:#c0c5ce;"># `--nouse_action_cache`: turn off build caching, which might prevent recompilation of source code
+</span><span style="color:#c0c5ce;"># `--noremote_accept_cached`, `--noremote_upload_local_results`: avoid using a remote cache
+</span><span style="color:#c0c5ce;"># `--disk_cache=`: avoid using a disk cache. Note that a disk cache is no longer considered a remote cache as of Bazel 6.
+</span><span style="color:#c0c5ce;">codeql database create new-database --language=&lt;language&gt; \
+</span><span style="color:#c0c5ce;">--command='bazel build --spawn_strategy=local --nouse_action_cache --noremote_accept_cached --noremote_upload_local_results --disk_cache= //path/to/package:target'
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;"># After building, stop all running Bazel server processes.
+</span><span style="color:#c0c5ce;"># This ensures future build commands start in a clean Bazel server process
+</span><span style="color:#c0c5ce;"># without CodeQL attached.
+</span><span style="color:#c0c5ce;">bazel shutdown
+</span></code></pre>
+</li>
+</ul>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Bazel build for Go is currently not supported.</p>
+</div>
+<ul>
+<li>
+<p>Project built using a custom build script:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql database create new-database --language=&lt;language&gt; --command='./scripts/build.sh'
+</span></code></pre>
+</li>
+</ul>
+<p>This command runs a custom script that contains all of the commands required to build the project.</p>
+<!-- Anchor to maintain the CodeQL CLI manual pages link: https://aka.ms/codeql-docs/indirect-tracing -->
+<p><a name="using-indirect-build-tracing"></a></p>
+<h3 title="Creating databases for compiled languages / Using indirect build tracing"><a href="#using-indirect-build-tracing" aria-hidden="true" class="anchor" id="using-indirect-build-tracing"></a>Using indirect build tracing</h3>
+<p>If the CodeQL CLI autobuilders for compiled languages do not work with your CI workflow and you cannot wrap invocations of build commands with <code>codeql database trace-command</code>, you can use indirect build tracing to create a CodeQL database. To use indirect build tracing, your CI system must be able to set custom environment variables for each build action.</p>
+<p>To create a CodeQL database with indirect build tracing, run the following command from the checkout root of your project:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql database init ... --begin-tracing &lt;database&gt;
+</span></code></pre>
+<p>You must specify:</p>
+<ul>
+<li><code>&lt;database&gt;</code>: a path to the new database to be created. This directory will be created when you execute the command—you cannot specify an existing directory.</li>
+<li><code>--begin-tracing</code>: creates scripts that can be used to set up an environment in which build commands will be traced.</li>
+</ul>
+<p>You may specify other options for the <code>codeql database init</code> command as normal.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>If the build runs on Windows, you must set either <code>--trace-process-level &lt;number&gt;</code> or <code>--trace-process-name &lt;parent process name&gt;</code> so that the option points to a parent CI process that will observe all build steps for the code being analyzed.</p>
+</div>
+<p>The <code>codeql database init</code> command will output a message:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Created skeleton &lt;database&gt;. This in-progress database is ready to be populated by an extractor. In order to initialise tracing, some environment variables need to be set in the shell your build will run in. A number of scripts to do this have been created in &lt;database&gt;/temp/tracingEnvironment. Please run one of these scripts before invoking your build command.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">Based on your operating system, we recommend you run: ...
+</span></code></pre>
+<p>The <code>codeql database init</code> command creates <code>&lt;database&gt;/temp/tracingEnvironment</code> with files that contain environment variables and values that will enable CodeQL to trace a sequence of build steps. These files are named <code>start-tracing.{json,sh,bat,ps1}</code>. Use one of these files with your CI system’s mechanism for setting environment variables for future steps. You can:</p>
+<ul>
+<li>Read the JSON file, process it, and print out environment variables in the format expected by your CI system. For example, Azure DevOps expects <code>echo "##vso[task.setvariable variable=NAME]VALUE"</code>.</li>
+<li>Or, if your CI system persists the environment, source the appropriate <code>start-tracing</code> script to set the CodeQL variables in the shell environment of the CI system.</li>
+</ul>
+<p>Build your code; optionally, unset the environment variables using an <code>end-tracing.{json,sh,bat,ps1}</code> script from the directory where the <code>start-tracing</code> scripts are stored; and then run the command <code>codeql database finalize &lt;database&gt;</code>.</p>
+<p>Once you have created a CodeQL database using indirect build tracing, you can work with it like any other CodeQL database. For example, analyze the database, and upload the results to GitHub if you use code scanning.</p>
+<h3 title="Creating databases for compiled languages / Example of creating a CodeQL database using indirect build tracing"><a href="#example-of-creating-a-codeql-database-using-indirect-build-tracing" aria-hidden="true" class="anchor" id="example-of-creating-a-codeql-database-using-indirect-build-tracing"></a>Example of creating a CodeQL database using indirect build tracing</h3>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>If you use Azure DevOps pipelines, the simplest way to create a CodeQL database is to use GitHub Advanced Security for Azure DevOps. For documentation, see <a href="https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features" class="external">Configure GitHub Advanced Security for Azure DevOps</a> in Microsoft Learn.</p>
+</div>
+<p>The following example shows how you could use indirect build tracing in an Azure DevOps pipeline to create a CodeQL database:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Download the CodeQL CLI and query packs...
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Check out the repository ...
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Run any pre-build tasks, for example, restore NuGet dependencies...
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Initialize the CodeQL database.
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># In this example, the CodeQL CLI has been downloaded and placed on the PATH.
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">task</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">CmdLine@1
+</span><span style="color:#c0c5ce;">       </span><span style="color:#bf616a;">displayName</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Initialize CodeQL database
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">inputs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#65737e;"># Assumes the source code is checked out to the current working directory.
+</span><span style="color:#c0c5ce;">          </span><span style="color:#65737e;"># Creates a database at `&lt;current working directory&gt;/db`.
+</span><span style="color:#c0c5ce;">          </span><span style="color:#65737e;"># Running on Windows, so specifies a trace process level.
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">codeql database init --language csharp --trace-process-name Agent.Worker.exe --source-root . --begin-tracing db</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Read the generated environment variables and values,
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># and set them so they are available for subsequent commands
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># in the build pipeline. This is done in PowerShell in this example.
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">task</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">PowerShell@1
+</span><span style="color:#c0c5ce;">       </span><span style="color:#bf616a;">displayName</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set CodeQL environment variables
+</span><span style="color:#c0c5ce;">       </span><span style="color:#bf616a;">inputs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">targetType</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">inline
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">&gt;
+</span><span style="color:#a3be8c;">             $json = Get-Content $(System.DefaultWorkingDirectory)/db/temp/tracingEnvironment/start-tracing.json | ConvertFrom-Json
+</span><span style="color:#a3be8c;">             $json.PSObject.Properties | ForEach-Object {
+</span><span style="color:#a3be8c;">                 $template = "##vso[task.setvariable variable="
+</span><span style="color:#a3be8c;">                 $template += $_.Name
+</span><span style="color:#a3be8c;">                 $template += "]"
+</span><span style="color:#a3be8c;">                 $template += $_.Value
+</span><span style="color:#a3be8c;">                 echo "$template"
+</span><span style="color:#a3be8c;">             }
+</span><span style="color:#a3be8c;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Execute the pre-defined build step. Note the `msbuildArgs` variable.
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">task</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">VSBuild@1
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">inputs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">solution</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">**/*.sln</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">msbuildArgs</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">/p:OutDir=$(Build.ArtifactStagingDirectory)
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">platform</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Any CPU
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">configuration</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Release
+</span><span style="color:#c0c5ce;">          </span><span style="color:#65737e;"># Execute a clean build, in order to remove any existing build artifacts prior to the build.
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">clean</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">True
+</span><span style="color:#c0c5ce;">       </span><span style="color:#bf616a;">displayName</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Visual Studio Build
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Read and set the generated environment variables to end build tracing. This is done in PowerShell in this example.
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">task</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">PowerShell@1
+</span><span style="color:#c0c5ce;">       </span><span style="color:#bf616a;">displayName</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Clear CodeQL environment variables
+</span><span style="color:#c0c5ce;">       </span><span style="color:#bf616a;">inputs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">targetType</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">inline
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">&gt;
+</span><span style="color:#a3be8c;">             $json = Get-Content $(System.DefaultWorkingDirectory)/db/temp/tracingEnvironment/end-tracing.json | ConvertFrom-Json
+</span><span style="color:#a3be8c;">             $json.PSObject.Properties | ForEach-Object {
+</span><span style="color:#a3be8c;">                 $template = "##vso[task.setvariable variable="
+</span><span style="color:#a3be8c;">                 $template += $_.Name
+</span><span style="color:#a3be8c;">                 $template += "]"
+</span><span style="color:#a3be8c;">                 $template += $_.Value
+</span><span style="color:#a3be8c;">                 echo "$template"
+</span><span style="color:#a3be8c;">             }
+</span><span style="color:#a3be8c;">
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">task</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">CmdLine@2
+</span><span style="color:#c0c5ce;">       </span><span style="color:#bf616a;">displayName</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Finalize CodeQL database
+</span><span style="color:#c0c5ce;">       </span><span style="color:#bf616a;">inputs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">codeql database finalize db</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Other tasks go here, for example:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># `codeql database analyze`
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># then `codeql github upload-results` ...
+</span></code></pre>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<ul>
+<li>To learn how to use the CodeQL CLI to analyze the database you created from your code, see <a href="analyzing-your-code-with-codeql-queries.html">Analyzing your code with CodeQL queries</a>.</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>About the tool status page</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Code scanning</a> / </nav><h1><a href="#about-the-tool-status-page" aria-hidden="true" class="anchor" id="about-the-tool-status-page"></a>About the tool status page</h1>
+<p>The tool status page provides visibility into the health and performance of code scanning tools in your repository.</p>
+<h2 title="What is the tool status page?"><a href="#what-is-the-tool-status-page" aria-hidden="true" class="anchor" id="what-is-the-tool-status-page"></a>What is the tool status page?</h2>
+<p>The tool status page shows information about all of your code scanning tools and is a good starting point for debugging problems when code scanning isn't working as expected.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The tool status page shows tool status at the repository level for the default branch only, not at the organization level.</p>
+</div>
+<h2 title="Tool status indicators"><a href="#tool-status-indicators" aria-hidden="true" class="anchor" id="tool-status-indicators"></a>Tool status indicators</h2>
+<p>The tool status page displays one of three statuses:</p>
+<ul>
+<li><strong>All configurations are working</strong>: All tools are operating as expected</li>
+<li><strong>Some configurations need attention</strong>: Some tools have warnings or non-critical issues</li>
+<li><strong>Some configurations are not working</strong>: One or more tools have critical errors</li>
+</ul>
+<h2 title="What information is available"><a href="#what-information-is-available" aria-hidden="true" class="anchor" id="what-information-is-available"></a>What information is available</h2>
+<h3 title="What information is available / For all code scanning tools"><a href="#for-all-code-scanning-tools" aria-hidden="true" class="anchor" id="for-all-code-scanning-tools"></a>For all code scanning tools</h3>
+<ul>
+<li>Configuration status and health</li>
+<li>Scan scheduling</li>
+<li>First and most recent scan times</li>
+<li>Rules used in scans</li>
+</ul>
+<h3 title="What information is available / For integrated tools like CodeQL"><a href="#for-integrated-tools-like-codeql" aria-hidden="true" class="anchor" id="for-integrated-tools-like-codeql"></a>For integrated tools like CodeQL</h3>
+<p>In addition to the information listed above, the tool status page for integrated tools provides the following details:</p>
+<ul>
+<li>File coverage percentages by programming language</li>
+<li>Configuration details for each setup type</li>
+<li>Specific error messages</li>
+<li>Downloadable CSV reports of analyzed files</li>
+<li>Downloadable lists of rules used and alert counts</li>
+</ul>
+<h2 title="How CodeQL defines scanned files"><a href="#how-codeql-defines-scanned-files" aria-hidden="true" class="anchor" id="how-codeql-defines-scanned-files"></a>How CodeQL defines scanned files</h2>
+<p>CodeQL reports a file as scanned if some lines of code in that file were processed.</p>
+<h3 title="How CodeQL defines scanned files / Interpreted languages"><a href="#interpreted-languages" aria-hidden="true" class="anchor" id="interpreted-languages"></a>Interpreted languages</h3>
+<ul>
+<li><strong>Default setup</strong>: Scanned files include all source code files for languages CodeQL can analyze</li>
+<li><strong>Advanced setup</strong>: You can use <code>paths</code> and <code>paths-ignore</code> to define which files to scan. See <a href="codeql/about-code-scanning-with-codeql.html">About code scanning with CodeQL</a>.</li>
+</ul>
+<h3 title="How CodeQL defines scanned files / Compiled languages"><a href="#compiled-languages" aria-hidden="true" class="anchor" id="compiled-languages"></a>Compiled languages</h3>
+<p>The tool status page reports files present before running autobuild or manual build steps. Files generated during the build process are not shown. See <a href="../../how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/codeql-code-scanning-for-compiled-languages.html#about-autobuild-for-codeql">CodeQL code scanning for compiled languages</a>.</p>
+<h3 title="How CodeQL defines scanned files / Coverage calculation"><a href="#coverage-calculation" aria-hidden="true" class="anchor" id="coverage-calculation"></a>Coverage calculation</h3>
+<p>File coverage percentages respect any files excluded by <code>paths</code> and <code>paths-ignore</code> configuration properties.</p>
+<h2 title="Understanding file coverage percentages"><a href="#understanding-file-coverage-percentages" aria-hidden="true" class="anchor" id="understanding-file-coverage-percentages"></a>Understanding file coverage percentages</h2>
+<p>Use file coverage percentages to debug and improve your analysis:</p>
+<ul>
+<li><strong>High percentage</strong>: Code scanning is working as expected for that language</li>
+<li><strong>Low percentage</strong>: Investigate diagnostic output. See <a href="../../reference/code-scanning/troubleshoot-analysis-errors/fewer-lines-scanned-than-expected.html">CodeQL scanned fewer lines than expected</a></li>
+<li><strong>Zero percentage</strong>: You may have code in languages not currently being analyzed. Update your setup to include these languages. See <a href="../../reference/code-scanning/workflow-configuration-options.html#changing-the-languages-that-are-analyzed">Workflow configuration options for code scanning</a></li>
+</ul>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>If you set up both advanced setup and default setup, the tool status page only shows default setup.</p>
+</div>
+<h2 title="Troubleshooting features"><a href="#troubleshooting-features" aria-hidden="true" class="anchor" id="troubleshooting-features"></a>Troubleshooting features</h2>
+<p>The tool status page helps you troubleshoot issues through:</p>
+<ul>
+<li><strong>Error messages</strong>: Explains why tools aren't performing as expected with suggested actions</li>
+<li><strong>File coverage data</strong>: Shows which files and languages are being analyzed</li>
+<li><strong>Configuration details</strong>: Displays information about each analysis run</li>
+<li><strong>Downloadable reports</strong>: Provides CSV reports with detailed file and rule information</li>
+</ul>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li><a href="../../how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/use-the-tools-status-page-for-code-scanning.html">Use the tool status page for code scanning</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

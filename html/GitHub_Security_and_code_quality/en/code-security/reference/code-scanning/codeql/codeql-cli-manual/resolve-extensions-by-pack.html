@@ -1,0 +1,118 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>resolve extensions-by-pack</title><link rel="stylesheet" href="../../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../../index.html">Security and code quality</a> / <a href="../../../index.html">Reference</a> / <a href="../../index.html">Code scanning</a> / <a href="../index.html">CodeQL</a> / <a href="index.html">CodeQL CLI manual</a> / </nav><h1><a href="#resolve-extensions-by-pack" aria-hidden="true" class="anchor" id="resolve-extensions-by-pack"></a>resolve extensions-by-pack</h1>
+<p>[Experimental] [Deep plumbing] Determine accessible extensions for<br>
+the given paths to pack roots. This includes machine learning models and<br>
+data extensions.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This content describes the most recent release of the CodeQL CLI. For more information about this release, see <a href="https://github.com/github/codeql-cli-binaries/releases" class="external">https://github.com/github/codeql-cli-binaries/releases</a>.</p>
+<p>To see details of the options available for this command in an earlier release, run the command with the <span style="white-space: nowrap;"><code>--help</code></span> option in your terminal.</p>
+</div>
+<h2 title="Synopsis"><a href="#synopsis" aria-hidden="true" class="anchor" id="synopsis"></a>Synopsis</h2>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql resolve extensions-by-pack &lt;options&gt;... -- &lt;pack&gt;...
+</span></code></pre>
+<h2 title="Description"><a href="#description" aria-hidden="true" class="anchor" id="description"></a>Description</h2>
+<p><span data-escaped-char="">[</span>Deep plumbing] Determine accessible data extensions for the given<br>
+paths to pack roots.</p>
+<p>This plumbing command resolves the set of data extensions that are<br>
+available to the paths passed in as command line arguments.</p>
+<p>Available since <code>v2.13.3</code>.</p>
+<h2 title="Options"><a href="#options" aria-hidden="true" class="anchor" id="options"></a>Options</h2>
+<h3 title="Primary Options"><a href="#primary-options" aria-hidden="true" class="anchor" id="primary-options"></a>Primary Options</h3>
+<h4><a href="#pack" aria-hidden="true" class="anchor" id="pack"></a><code>&lt;pack&gt;...</code></h4>
+<p>The path to the root of the packs to resolve extensions for.</p>
+<h4><a href="#--search-pathdirdir" aria-hidden="true" class="anchor" id="--search-pathdirdir"></a><code>--search-path=&lt;dir&gt;[:&lt;dir&gt;...]</code></h4>
+<p>A list of directories under which QL packs may be found. Each directory<br>
+can either be a QL pack (or bundle of packs containing a<br>
+<code>.codeqlmanifest.json</code> file at the root) or the immediate parent of one<br>
+or more such directories.</p>
+<p>If the path contains more than one directory, their order defines<br>
+precedence between them: when a pack name that must be resolved is<br>
+matched in more than one of the directory trees, the one given first<br>
+wins.</p>
+<p>Pointing this at a checkout of the open-source CodeQL repository ought<br>
+to work when querying one of the languages that live there.</p>
+<p>If you have checked out the CodeQL repository as a sibling of the<br>
+unpacked CodeQL toolchain, you don't need to give this option; such<br>
+sibling directories will always be searched for QL packs that cannot be<br>
+found otherwise. (If this default does not work, it is strongly<br>
+recommended to set up <code>--search-path</code> once and for all in a per-user<br>
+configuration file).</p>
+<p>(Note: On Windows the path separator is <code>;</code>).</p>
+<h4><a href="#--additional-packsdirdir" aria-hidden="true" class="anchor" id="--additional-packsdirdir"></a><code>--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]</code></h4>
+<p>If this list of directories is given, they will be searched for packs<br>
+before the ones in <code>--search-path</code>. The order between these doesn't<br>
+matter; it is an error if a pack name is found in two different places<br>
+through this list.</p>
+<p>This is useful if you're temporarily developing a new version of a pack<br>
+that also appears in the default path. On the other hand, it is <em>not<br>
+recommended</em> to override this option in a config file; some internal<br>
+actions will add this option on the fly, overriding any configured<br>
+value.</p>
+<p>(Note: On Windows the path separator is <code>;</code>).</p>
+<h4><a href="#--model-packsnamerange" aria-hidden="true" class="anchor" id="--model-packsnamerange"></a><code>--model-packs=&lt;</code><a href="mailto:name@range" class="external">name@range</a>&gt;...</h4>
+<p>A list of CodeQL pack names, each with an optional version range, to be<br>
+used as model packs to customize the queries that are about to be<br>
+evaluated.</p>
+<h4><a href="#--threat-modelname" aria-hidden="true" class="anchor" id="--threat-modelname"></a><code>--threat-model=&lt;name&gt;...</code></h4>
+<p>A list of threat models to enable or disable.</p>
+<p>The argument is the name of a threat model, optionally preceded by a<br>
+'!'. If no '!' is present, the named threat model and all of its<br>
+descendants are enabled. If a '!' is present, the named threat model<br>
+and all of its descendants are disabled.</p>
+<p>The 'default' threat model is enabled by default, but can be disabled<br>
+by specifying '--threat-model !default'.</p>
+<p>The 'all' threat model can be used to enable or disable all threat<br>
+models.</p>
+<p>The --threat-model options are processed in order. For example,<br>
+'--threat-model local --threat-model !environment' enables all of<br>
+the threat models in the 'local' group except for the 'environment'<br>
+threat model.</p>
+<p>This option only has an effect for languages that support threat models.</p>
+<p>Available since <code>v2.15.3</code>.</p>
+<h3 title="Options for configuring the CodeQL package manager"><a href="#options-for-configuring-the-codeql-package-manager" aria-hidden="true" class="anchor" id="options-for-configuring-the-codeql-package-manager"></a>Options for configuring the CodeQL package manager</h3>
+<h4><a href="#--registries-auth-stdin" aria-hidden="true" class="anchor" id="--registries-auth-stdin"></a><code>--registries-auth-stdin</code></h4>
+<p>Authenticate to GitHub Enterprise Server Container registries by passing<br>
+a comma-separated list of <span data-escaped-char="">&lt;</span>registry<span data-escaped-char="">_</span>url&gt;=<span data-escaped-char="">&lt;</span>token&gt; pairs.</p>
+<p>For example, you can pass<br>
+<code>https://containers.GHEHOSTNAME1/v2/=TOKEN1,https://containers.GHEHOSTNAME2/v2/=TOKEN2</code><br>
+to authenticate to two GitHub Enterprise Server instances.</p>
+<p>This overrides the CODEQL<span data-escaped-char="">_</span>REGISTRIES<span data-escaped-char="">_</span>AUTH and GITHUB<span data-escaped-char="">_</span>TOKEN environment<br>
+variables. If you only need to authenticate to the github.com Container<br>
+registry, you can instead authenticate using the simpler<br>
+<code>--github-auth-stdin</code> option.</p>
+<h4><a href="#--github-auth-stdin" aria-hidden="true" class="anchor" id="--github-auth-stdin"></a><code>--github-auth-stdin</code></h4>
+<p>Authenticate to the github.com Container registry by passing a<br>
+github.com GitHub Apps token or personal access token via standard<br>
+input.</p>
+<p>To authenticate to GitHub Enterprise Server Container registries, pass<br>
+<code>--registries-auth-stdin</code> or use the CODEQL<span data-escaped-char="">_</span>REGISTRIES<span data-escaped-char="">_</span>AUTH environment<br>
+variable.</p>
+<p>This overrides the GITHUB<span data-escaped-char="">_</span>TOKEN environment variable.</p>
+<h3 title="Options / Common options"><a href="#common-options" aria-hidden="true" class="anchor" id="common-options"></a>Common options</h3>
+<h4><a href="#-h---help" aria-hidden="true" class="anchor" id="-h---help"></a><code>-h, --help</code></h4>
+<p>Show this help text.</p>
+<h4><a href="#-jopt" aria-hidden="true" class="anchor" id="-jopt"></a><code>-J=&lt;opt&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Give option to the JVM running the command.</p>
+<p>(Beware that options containing spaces will not be handled correctly.)</p>
+<h4><a href="#-v---verbose" aria-hidden="true" class="anchor" id="-v---verbose"></a><code>-v, --verbose</code></h4>
+<p>Incrementally increase the number of progress messages printed.</p>
+<h4><a href="#-q---quiet" aria-hidden="true" class="anchor" id="-q---quiet"></a><code>-q, --quiet</code></h4>
+<p>Incrementally decrease the number of progress messages printed.</p>
+<h4><a href="#--verbositylevel" aria-hidden="true" class="anchor" id="--verbositylevel"></a><code>--verbosity=&lt;level&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Explicitly set the verbosity level to one of errors,<br>
+warnings, progress, progress+, progress++, progress+++. Overrides <code>-v</code><br>
+and <code>-q</code>.</p>
+<h4><a href="#--logdirdir" aria-hidden="true" class="anchor" id="--logdirdir"></a><code>--logdir=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Write detailed logs to one or more files in the given<br>
+directory, with generated names that include timestamps and the name of<br>
+the running subcommand.</p>
+<p>(To write a log file with a name you have full control over, instead<br>
+give <code>--log-to-stderr</code> and redirect stderr as desired.)</p>
+<h4><a href="#--common-cachesdir" aria-hidden="true" class="anchor" id="--common-cachesdir"></a><code>--common-caches=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Controls the location of cached data on disk that will<br>
+persist between several runs of the CLI, such as downloaded QL packs and<br>
+compiled query plans. If not set explicitly, this defaults to a<br>
+directory named <code>.codeql</code> in the user's home directory; it will be<br>
+created if it doesn't already exist.</p>
+<p>Available since <code>v2.15.2</code>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

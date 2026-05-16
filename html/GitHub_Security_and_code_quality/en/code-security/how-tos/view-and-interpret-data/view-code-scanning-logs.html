@@ -1,0 +1,34 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Viewing code scanning logs from GitHub Actions</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">How-tos</a> / <a href="index.html">View and interpret data</a> / </nav><h1><a href="#viewing-code-scanning-logs-from-github-actions" aria-hidden="true" class="anchor" id="viewing-code-scanning-logs-from-github-actions"></a>Viewing code scanning logs from GitHub Actions</h1>
+<p>View the output from a code scanning analysis in GitHub Actions.</p>
+<p>After configuring code scanning using default setup or a custom GitHub Actions workflow, you can watch the output of the actions as they run. For information about logs for other code scanning setups, see <a href="../../reference/code-scanning/code-scanning-logs.html">Code scanning logs</a>.</p>
+<ol>
+<li>
+<p>Under your repository name, click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-play" aria-label="play" role="img"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm4.879-2.773 4.264 2.559a.25.25 0 0 1 0 .428l-4.264 2.559A.25.25 0 0 1 6 10.559V5.442a.25.25 0 0 1 .379-.215Z"></path></svg> Actions</strong>.</p>
+<p><img src="../../../..//assets/images/help/repository/actions-tab-global-nav-update.png" alt="Screenshot of the tabs for the &quot;github/docs&quot; repository. The &quot;Actions&quot; tab is highlighted with an orange outline."></p>
+<p>You'll see a list that includes an entry for running the code scanning workflow. The text of the entry is the title you gave your commit message.</p>
+<p><img src="../../../..//assets/images/help/repository/code-scanning-actions-list.png" alt="Screenshot of the &quot;All workflows&quot; page. In the list of workflow runs is a run labeled &quot;Create .github/workflows/codeql.yml.&quot;"></p>
+</li>
+<li>
+<p>Click the entry for the code scanning workflow.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>If you are looking for the CodeQL workflow run triggered by enabling default setup, the text of the entry is "CodeQL."</p>
+</div>
+</li>
+<li>
+<p>Click the job name on the left. For example, <strong>Analyze (LANGUAGE)</strong>.</p>
+<p><img src="../../../..//assets/images/help/repository/code-scanning-logging-analyze-action.png" alt="Screenshot of the log output for the &quot;Analyze (go)&quot; job. In the left sidebar, under the &quot;Jobs&quot; heading, &quot;Analyze (go)&quot; is listed."></p>
+</li>
+<li>
+<p>Review the logging output from the actions in this workflow as they run.</p>
+</li>
+<li>
+<p>Optionally, to see more detail about the commit that triggered the workflow run, click the short commit hash. The short commit hash is 7 lowercase characters immediately following the commit author's username.</p>
+</li>
+<li>
+<p>Once all jobs are complete, you can view the details of any code scanning alerts that were identified. For more information, see <a href="../manage-security-alerts/manage-code-scanning-alerts/assessing-code-scanning-alerts-for-your-repository.html#viewing-the-alerts-for-a-repository">Assessing code scanning alerts for your repository</a>.</p>
+</li>
+</ol>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<p>If you're looking for diagnostic information about whether code scanning accessed any private registries, see <a href="">Viewing code scanning logs from GitHub Actions</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>About setup types for code scanning</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Code scanning</a> / </nav><h1><a href="#about-setup-types-for-code-scanning" aria-hidden="true" class="anchor" id="about-setup-types-for-code-scanning"></a>About setup types for code scanning</h1>
+<p>Depending on your needs, GitHub offers a default or advanced setup for code scanning.</p>
+<h2 title="About default setup"><a href="#about-default-setup" aria-hidden="true" class="anchor" id="about-default-setup"></a>About default setup</h2>
+<p>Default setup for code scanning is the quickest, easiest, most low-maintenance way to enable code scanning for your repository. Based on the code in your repository, default setup will automatically create a custom code scanning configuration. After enabling default setup, the code written in CodeQL-supported languages in your repository will be scanned using CodeQL:</p>
+<ul>
+<li>On each push to the repository's default branch, or any protected branch. For more information on protected branches, see <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches" class="external">About protected branches</a>.</li>
+<li>When creating or committing to a pull request based against the repository's default branch, or any protected branch, excluding pull requests from forks.</li>
+<li>On a weekly schedule.</li>
+</ul>
+<h3 title="About default setup / Supported languages"><a href="#supported-languages" aria-hidden="true" class="anchor" id="supported-languages"></a>Supported languages</h3>
+<p>We recommend enabling default setup for eligible repositories if there is any chance the repositories will include at least one CodeQL-supported language in the future. If you enable default setup on a repository that does not include any CodeQL-supported languages, default setup will not run any scans or use any GitHub Actions minutes. If CodeQL-supported languages are added to the repository's default branch, default setup will automatically begin scanning CodeQL-supported languages and using GitHub Actions minutes. For more information on CodeQL-supported languages, see <a href="codeql/about-code-scanning-with-codeql.html#about-codeql">About code scanning with CodeQL</a>.</p>
+<p>If the code in a repository changes to include any CodeQL-supported languages, GitHub will automatically update the code scanning configuration to include the new language. If code scanning fails with the new configuration, GitHub will resume the previous configuration automatically so the repository does not lose code scanning coverage.</p>
+<h2 title="Customization of default setup"><a href="#customization-of-default-setup" aria-hidden="true" class="anchor" id="customization-of-default-setup"></a>Customization of default setup</h2>
+<p>After running an initial analysis of your code with default setup, you can make changes to your configuration to better meet your needs.</p>
+<h3 title="Customization of default setup / Configuration options"><a href="#configuration-options" aria-hidden="true" class="anchor" id="configuration-options"></a>Configuration options</h3>
+<p>For existing configurations of default setup, you can edit:</p>
+<ul>
+<li>Which languages default setup will analyze.</li>
+<li>The query suite run during analysis. For more information on the available query suites, see <a href="codeql/codeql-query-suites.html">CodeQL query suites</a>.</li>
+<li>The threat models (public preview) to use for analysis. Your choice of threat model determines which sources of tainted data are treated as a risk to your application. During the public preview, threat models are supported only for analysis of Java/Kotlin and C#. For more information about threat models, see <a href="../../how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/editing-your-configuration-of-default-setup.html#including-local-sources-of-tainted-data-in-default-setup">Including local sources of tainted data in default setup</a>.</li>
+</ul>
+<p>If your codebase depends on a library or framework that is not recognized by the standard libraries included with CodeQL, you can also extend the CodeQL coverage in default setup using CodeQL model packs. For more information, see <a href="../../how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/editing-your-configuration-of-default-setup.html#extending-codeql-coverage-with-codeql-model-packs-in-default-setup">Extending CodeQL coverage with CodeQL model packs in default setup</a>.</p>
+<p>Additional configuration options that are shared between all code scanning setup types are available. See <a href="repository-properties.html">Repository properties for code scanning</a>.</p>
+<h3 title="Customization of default setup / Available runners"><a href="#available-runners" aria-hidden="true" class="anchor" id="available-runners"></a>Available runners</h3>
+<p>You can use default setup for all CodeQL-supported languages on self-hosted runners or GitHub-hosted runners.</p>
+<p>You can assign self-hosted runners for default setup by giving the runners the default <code>code-scanning</code> label, or you can optionally give them custom labels so that individual repositories can use different runners.</p>
+<p>Unless you have a specific use case, we recommend that you only assign runners with the default <code>code-scanning</code> label. However, you may want to use custom labels to:</p>
+<ul>
+<li>Assign more powerful self-hosted runners to critical repositories for faster code scanning analysis.</li>
+<li>Run your code scanning analyses on a particular platform (for example, macOS).</li>
+<li>Have granular control over the workload for your GitHub-hosted runners and self-hosted runners.</li>
+</ul>
+<h2 title="About advanced setup"><a href="#about-advanced-setup" aria-hidden="true" class="anchor" id="about-advanced-setup"></a>About advanced setup</h2>
+<p>If you need more granular control over your code scanning configuration, you should instead configure advanced setup. Advanced setup for code scanning is helpful when you need to customize your code scanning. You can set up code scanning with GitHub Actions or an external continuous integration or continuous delivery/deployment (CI/CD) system.</p>
+<p>If you run code scanning using multiple configurations, an alert will sometimes have multiple analysis origins. If an alert has multiple analysis origins, you can view the status of the alert for each analysis origin on the alert page. For more information, see <a href="about-code-scanning-alerts.html#about-analysis-origins">About code scanning alerts</a>.</p>
+<h3 title="About advanced setup / With GitHub Actions"><a href="#with-github-actions" aria-hidden="true" class="anchor" id="with-github-actions"></a>With GitHub Actions</h3>
+<p>By creating and editing a GitHub Actions workflow file, you can define how to build compiled languages, choose which queries to run, select the languages to scan, use a matrix build, and more. You also have access to all the options for controlling workflows, for example: changing the scan schedule, defining workflow triggers, specifying specialist runners to use.</p>
+<h3 title="About advanced setup / With a third-party CI/CD system"><a href="#with-a-third-party-cicd-system" aria-hidden="true" class="anchor" id="with-a-third-party-cicd-system"></a>With a third-party CI/CD system</h3>
+<p>As an alternative to running code scanning within GitHub using GitHub Actions, you can analyze code in an external CI/CD system, then upload the results to GitHub.</p>
+<p>The CodeQL CLI is a standalone, command-line tool that you can use to analyze code. You can add the CodeQL CLI to your third-party system, or use another third-party static analysis tool that can produce results as Static Analysis Results Interchange Format (SARIF) 2.1.0 data. For more information, see <a href="codeql/about-the-codeql-cli.html">About the CodeQL CLI</a> and <a href="../../reference/code-scanning/sarif-files/sarif-support-for-code-scanning.html">SARIF support for code scanning</a>.</p>
+<p>Alerts for code scanning that you generate externally are displayed in the same way as those for code scanning that you generate within GitHub.</p>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>You can enable default setup for a single repository, multiple repositories, or all repositories in an organization at the same time.</p>
+<ul>
+<li>For a single repository, see <a href="../../how-tos/find-and-fix-code-vulnerabilities/configure-code-scanning/configuring-default-setup-for-code-scanning.html">Configuring default setup for code scanning</a>.</li>
+<li>For bulk enablement, see <a href="../../how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/configuring-default-setup-for-code-scanning-at-scale.html">Configuring default setup for code scanning at scale</a>.</li>
+</ul>
+<p>To configure advanced setup instead, see <a href="../../how-tos/find-and-fix-code-vulnerabilities/configure-code-scanning/configuring-advanced-setup-for-code-scanning.html">Configuring advanced setup for code scanning</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

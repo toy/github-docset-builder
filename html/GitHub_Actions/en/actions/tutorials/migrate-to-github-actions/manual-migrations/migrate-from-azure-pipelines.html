@@ -1,0 +1,183 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Migrating from Azure Pipelines to GitHub Actions</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">Tutorials</a> / <a href="../index.html">Migrate to GitHub Actions</a> / <a href="index.html">Manual migrations</a> / </nav><h1><a href="#migrating-from-azure-pipelines-to-github-actions" aria-hidden="true" class="anchor" id="migrating-from-azure-pipelines-to-github-actions"></a>Migrating from Azure Pipelines to GitHub Actions</h1>
+<p>GitHub Actions and Azure Pipelines share several configuration similarities, which makes migrating to GitHub Actions relatively straightforward.</p>
+<h2 title="Introduction"><a href="#introduction" aria-hidden="true" class="anchor" id="introduction"></a>Introduction</h2>
+<p>Azure Pipelines and GitHub Actions both allow you to create workflows that automatically build, test, publish, release, and deploy code. Azure Pipelines and GitHub Actions share some similarities in workflow configuration:</p>
+<ul>
+<li>Workflow configuration files are written in YAML and are stored in the code's repository.</li>
+<li>Workflows include one or more jobs.</li>
+<li>Jobs include one or more steps or individual commands.</li>
+<li>Steps or tasks can be reused and shared with the community.</li>
+</ul>
+<p>For more information, see <a href="../../../get-started/understand-github-actions.html">Understanding GitHub Actions</a>.</p>
+<h2 title="Key differences"><a href="#key-differences" aria-hidden="true" class="anchor" id="key-differences"></a>Key differences</h2>
+<p>When migrating from Azure Pipelines, consider the following differences:</p>
+<ul>
+<li>Azure Pipelines supports a legacy <em>classic editor</em>, which lets you define your CI configuration in a GUI editor instead of creating the pipeline definition in a YAML file. GitHub Actions uses YAML files to define workflows and does not support a graphical editor.</li>
+<li>Azure Pipelines allows you to omit some structure in job definitions. For example, if you only have a single job, you don't need to define the job and only need to define its steps. GitHub Actions requires explicit configuration, and YAML structure cannot be omitted.</li>
+<li>Azure Pipelines supports <em>stages</em> defined in the YAML file, which can be used to create deployment workflows. GitHub Actions requires you to separate stages into separate YAML workflow files.</li>
+<li>On-premises Azure Pipelines build agents can be selected with capabilities. GitHub Actions self-hosted runners can be selected with labels.</li>
+</ul>
+<h2 title="Migrating jobs and steps"><a href="#migrating-jobs-and-steps" aria-hidden="true" class="anchor" id="migrating-jobs-and-steps"></a>Migrating jobs and steps</h2>
+<p>Jobs and steps in Azure Pipelines are very similar to jobs and steps in GitHub Actions. In both systems, jobs have the following characteristics:</p>
+<ul>
+<li>Jobs contain a series of steps that run sequentially.</li>
+<li>Jobs run on separate virtual machines or in separate containers.</li>
+<li>Jobs run in parallel by default, but can be configured to run sequentially.</li>
+</ul>
+<h2 title="Migrating script steps"><a href="#migrating-script-steps" aria-hidden="true" class="anchor" id="migrating-script-steps"></a>Migrating script steps</h2>
+<p>You can run a script or a shell command as a step in a workflow. In Azure Pipelines, script steps can be specified using the <code>script</code> key, or with the <code>bash</code>, <code>powershell</code>, or <code>pwsh</code> keys. Scripts can also be specified as an input to the <a href="https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/bash?view=azure-devops" class="external">Bash task</a> or the <a href="https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/powershell?view=azure-devops" class="external">PowerShell task</a>.</p>
+<p>In GitHub Actions, all scripts are specified using the <code>run</code> key. To select a particular shell, you can specify the <code>shell</code> key when providing the script. For more information, see <a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idstepsrun">Workflow syntax for GitHub Actions</a>.</p>
+<p>Below is an example of the syntax for each system.</p>
+<h3 title="Migrating script steps / Azure Pipelines syntax for script steps"><a href="#azure-pipelines-syntax-for-script-steps" aria-hidden="true" class="anchor" id="azure-pipelines-syntax-for-script-steps"></a>Azure Pipelines syntax for script steps</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">job</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">scripts
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">pool</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">vmImage</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">windows-latest</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "This step runs in the default shell"
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">bash</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "This step runs in bash"
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">pwsh</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Write-Host "This step runs in PowerShell Core"
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">task</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">PowerShell@2
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">inputs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Write-Host "This step runs in PowerShell"
+</span></code></pre>
+<h3 title="Migrating script steps / GitHub Actions syntax for script steps"><a href="#github-actions-syntax-for-script-steps" aria-hidden="true" class="anchor" id="github-actions-syntax-for-script-steps"></a>GitHub Actions syntax for script steps</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">scripts</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">windows-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "This step runs in the default shell"
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "This step runs in bash"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">shell</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bash
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Write-Host "This step runs in PowerShell Core"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">shell</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">pwsh
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Write-Host "This step runs in PowerShell"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">shell</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">powershell
+</span></code></pre>
+<h2 title="Differences in script error handling"><a href="#differences-in-script-error-handling" aria-hidden="true" class="anchor" id="differences-in-script-error-handling"></a>Differences in script error handling</h2>
+<p>In Azure Pipelines, scripts can be configured to error if any output is sent to <code>stderr</code>. GitHub Actions does not support this configuration.</p>
+<p>GitHub Actions configures shells to "fail fast" whenever possible, which stops the script immediately if one of the commands in a script exits with an error code. In contrast, Azure Pipelines requires explicit configuration to exit immediately on an error. For more information, see <a href="../../../reference/workflows-and-actions/workflow-syntax.html#exit-codes-and-error-action-preference">Workflow syntax for GitHub Actions</a>.</p>
+<h2 title="Differences in the default shell on Windows"><a href="#differences-in-the-default-shell-on-windows" aria-hidden="true" class="anchor" id="differences-in-the-default-shell-on-windows"></a>Differences in the default shell on Windows</h2>
+<p>In Azure Pipelines, the default shell for scripts on Windows platforms is the Command shell (<em>cmd.exe</em>). In GitHub Actions, the default shell for scripts on Windows platforms is PowerShell. PowerShell has several differences in built-in commands, variable expansion, and flow control.</p>
+<p>If you're running a simple command, you might be able to run a Command shell script in PowerShell without any changes. But in most cases, you will either need to update your script with PowerShell syntax or instruct GitHub Actions to run the script with the Command shell instead of PowerShell. You can do this by specifying <code>shell</code> as <code>cmd</code>.</p>
+<p>Below is an example of the syntax for each system.</p>
+<h3 title="Differences in the default shell on Windows / Azure Pipelines syntax using CMD by default"><a href="#azure-pipelines-syntax-using-cmd-by-default" aria-hidden="true" class="anchor" id="azure-pipelines-syntax-using-cmd-by-default"></a>Azure Pipelines syntax using CMD by default</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">job</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">run_command
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">pool</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">vmImage</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">windows-latest</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "This step runs in CMD on Windows by default"
+</span></code></pre>
+<h3 title="Differences in the default shell on Windows / GitHub Actions syntax for specifying CMD"><a href="#github-actions-syntax-for-specifying-cmd" aria-hidden="true" class="anchor" id="github-actions-syntax-for-specifying-cmd"></a>GitHub Actions syntax for specifying CMD</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">run_command</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">windows-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "This step runs in PowerShell on Windows by default"
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "This step runs in CMD on Windows explicitly"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">shell</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">cmd
+</span></code></pre>
+<p>For more information, see <a href="../../../reference/workflows-and-actions/workflow-syntax.html#using-a-specific-shell">Workflow syntax for GitHub Actions</a>.</p>
+<h2 title="Migrating conditionals and expression syntax"><a href="#migrating-conditionals-and-expression-syntax" aria-hidden="true" class="anchor" id="migrating-conditionals-and-expression-syntax"></a>Migrating conditionals and expression syntax</h2>
+<p>Azure Pipelines and GitHub Actions can both run steps conditionally. In Azure Pipelines, conditional expressions are specified using the <code>condition</code> key. In GitHub Actions, conditional expressions are specified using the <code>if</code> key.</p>
+<p>Azure Pipelines uses functions within expressions to execute steps conditionally. In contrast, GitHub Actions uses an infix notation. For example, you must replace the <code>eq</code> function in Azure Pipelines with the <code>==</code> operator in GitHub Actions.</p>
+<p>Below is an example of the syntax for each system.</p>
+<h3 title="Migrating conditionals and expression syntax / Azure Pipelines syntax for conditional expressions"><a href="#azure-pipelines-syntax-for-conditional-expressions" aria-hidden="true" class="anchor" id="azure-pipelines-syntax-for-conditional-expressions"></a>Azure Pipelines syntax for conditional expressions</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">job</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">conditional
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">pool</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">vmImage</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">ubuntu-latest</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "This step runs with str equals 'ABC' and num equals 123"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">condition</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">and(eq(variables.str, 'ABC'), eq(variables.num, 123))
+</span></code></pre>
+<h3 title="Migrating conditionals and expression syntax / GitHub Actions syntax for conditional expressions"><a href="#github-actions-syntax-for-conditional-expressions" aria-hidden="true" class="anchor" id="github-actions-syntax-for-conditional-expressions"></a>GitHub Actions syntax for conditional expressions</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">conditional</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "This step runs with str equals 'ABC' and num equals 123"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ env.str == 'ABC' &amp;&amp; env.num == 123 }}
+</span></code></pre>
+<p>For more information, see <a href="../../../reference/workflows-and-actions/expressions.html">Evaluate expressions in workflows and actions</a>.</p>
+<h2 title="Dependencies between jobs"><a href="#dependencies-between-jobs" aria-hidden="true" class="anchor" id="dependencies-between-jobs"></a>Dependencies between jobs</h2>
+<p>Both Azure Pipelines and GitHub Actions allow you to set dependencies for a job. In both systems, jobs run in parallel by default, but job dependencies can be specified explicitly. In Azure Pipelines, this is done with the <code>dependsOn</code> key. In GitHub Actions, this is done with the <code>needs</code> key.</p>
+<p>Below is an example of the syntax for each system. The workflows start a first job named <code>initial</code>, and when that job completes, two jobs named <code>fanout1</code> and <code>fanout2</code> will run. Finally, when those jobs complete, the job <code>fanin</code> will run.</p>
+<h3 title="Dependencies between jobs / Azure Pipelines syntax for dependencies between jobs"><a href="#azure-pipelines-syntax-for-dependencies-between-jobs" aria-hidden="true" class="anchor" id="azure-pipelines-syntax-for-dependencies-between-jobs"></a>Azure Pipelines syntax for dependencies between jobs</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">job</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">initial
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">pool</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">vmImage</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">ubuntu-latest</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "This job will be run first."
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">job</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">fanout1
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">pool</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">vmImage</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">ubuntu-latest</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">dependsOn</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">initial
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "This job will run after the initial job, in parallel with fanout2."
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">job</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">fanout2
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">pool</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">vmImage</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">ubuntu-latest</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">dependsOn</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">initial
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "This job will run after the initial job, in parallel with fanout1."
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">job</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">fanin
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">pool</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">vmImage</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">ubuntu-latest</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">dependsOn</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">fanout1</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">fanout2</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "This job will run after fanout1 and fanout2 have finished."
+</span></code></pre>
+<h3 title="Dependencies between jobs / GitHub Actions syntax for dependencies between jobs"><a href="#github-actions-syntax-for-dependencies-between-jobs" aria-hidden="true" class="anchor" id="github-actions-syntax-for-dependencies-between-jobs"></a>GitHub Actions syntax for dependencies between jobs</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">initial</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "This job will be run first."
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">fanout1</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">needs</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">initial
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "This job will run after the initial job, in parallel with fanout2."
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">fanout2</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">needs</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">initial
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "This job will run after the initial job, in parallel with fanout1."
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">fanin</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">needs</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">fanout1</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">fanout2</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "This job will run after fanout1 and fanout2 have finished."
+</span></code></pre>
+<p>For more information, see <a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idneeds">Workflow syntax for GitHub Actions</a>.</p>
+<h2 title="Migrating tasks to actions"><a href="#migrating-tasks-to-actions" aria-hidden="true" class="anchor" id="migrating-tasks-to-actions"></a>Migrating tasks to actions</h2>
+<p>Azure Pipelines uses <em>tasks</em>, which are application components that can be re-used in multiple workflows. GitHub Actions uses <em>actions</em>, which can be used to perform tasks and customize your workflow. In both systems, you can specify the name of the task or action to run, along with any required inputs as key/value pairs.</p>
+<p>Below is an example of the syntax for each system.</p>
+<h3 title="Migrating tasks to actions / Azure Pipelines syntax for tasks"><a href="#azure-pipelines-syntax-for-tasks" aria-hidden="true" class="anchor" id="azure-pipelines-syntax-for-tasks"></a>Azure Pipelines syntax for tasks</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">job</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">run_python
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">pool</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">vmImage</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">ubuntu-latest</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">task</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">UsePythonVersion@0
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">inputs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">versionSpec</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">3.7</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">architecture</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">x64</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">python script.py
+</span></code></pre>
+<h3 title="Migrating tasks to actions / GitHub Actions syntax for actions"><a href="#github-actions-syntax-for-actions" aria-hidden="true" class="anchor" id="github-actions-syntax-for-actions"></a>GitHub Actions syntax for actions</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">run_python</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-python@v5
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">python-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">3.7</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">architecture</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">x64</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">python script.py
+</span></code></pre>
+<p>You can find actions that you can use in your workflow in <a href="https://github.com/marketplace?type=actions" class="external">GitHub Marketplace</a>, or you can create your own actions. For more information, see <a href="../../../how-tos/reuse-automations/index.html">Reusing automations</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

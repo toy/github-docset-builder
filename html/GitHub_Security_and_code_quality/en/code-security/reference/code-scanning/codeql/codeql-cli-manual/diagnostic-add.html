@@ -1,0 +1,90 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>diagnostic add</title><link rel="stylesheet" href="../../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../../index.html">Security and code quality</a> / <a href="../../../index.html">Reference</a> / <a href="../../index.html">Code scanning</a> / <a href="../index.html">CodeQL</a> / <a href="index.html">CodeQL CLI manual</a> / </nav><h1><a href="#diagnostic-add" aria-hidden="true" class="anchor" id="diagnostic-add"></a>diagnostic add</h1>
+<p>[Experimental] [Plumbing] Add a piece of diagnostic information.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This content describes the most recent release of the CodeQL CLI. For more information about this release, see <a href="https://github.com/github/codeql-cli-binaries/releases" class="external">https://github.com/github/codeql-cli-binaries/releases</a>.</p>
+<p>To see details of the options available for this command in an earlier release, run the command with the <span style="white-space: nowrap;"><code>--help</code></span> option in your terminal.</p>
+</div>
+<h2 title="Synopsis"><a href="#synopsis" aria-hidden="true" class="anchor" id="synopsis"></a>Synopsis</h2>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql diagnostic add (--diagnostic-dir=&lt;diagnosticDir&gt;) --source-id=&lt;id&gt; --source-name=&lt;name&gt; &lt;options&gt;...
+</span></code></pre>
+<h2 title="Description"><a href="#description" aria-hidden="true" class="anchor" id="description"></a>Description</h2>
+<p><span data-escaped-char="">[</span>Experimental] <span data-escaped-char="">[</span>Plumbing] Add a piece of diagnostic information.</p>
+<p>Available since <code>v2.12.6</code>.</p>
+<h2 title="Options"><a href="#options" aria-hidden="true" class="anchor" id="options"></a>Options</h2>
+<h3 title="Primary Options"><a href="#primary-options" aria-hidden="true" class="anchor" id="primary-options"></a>Primary Options</h3>
+<h4><a href="#--markdown-messagemarkdownmessage" aria-hidden="true" class="anchor" id="--markdown-messagemarkdownmessage"></a><code>--markdown-message=&lt;markdownMessage&gt;</code></h4>
+<p>Message for the diagnostic, in GitHub-flavored Markdown format.</p>
+<h4><a href="#--plaintext-messageplaintextmessage" aria-hidden="true" class="anchor" id="--plaintext-messageplaintextmessage"></a><code>--plaintext-message=&lt;plaintextMessage&gt;</code></h4>
+<p>Message for the diagnostic, in plain text. This option should only be<br>
+used when populating a Markdown message with --markdown-message is not<br>
+practical.</p>
+<h4><a href="#--severityseverity" aria-hidden="true" class="anchor" id="--severityseverity"></a><code>--severity=&lt;severity&gt;</code></h4>
+<p>Severity of the diagnostic. Can be "error", "warning", or "note".</p>
+<h4><a href="#--help-linkhelplinks" aria-hidden="true" class="anchor" id="--help-linkhelplinks"></a><code>--help-link=&lt;helpLinks&gt;</code></h4>
+<p>Help links relevant to the diagnostic.</p>
+<h4><a href="#--attributes-jsonattributesjson" aria-hidden="true" class="anchor" id="--attributes-jsonattributesjson"></a><code>--attributes-json=&lt;attributesJson&gt;</code></h4>
+<p>Structured metadata relevant to the diagnostic.</p>
+<h3 title="Options specifying where to save the diagnostic information"><a href="#options-specifying-where-to-save-the-diagnostic-information" aria-hidden="true" class="anchor" id="options-specifying-where-to-save-the-diagnostic-information"></a>Options specifying where to save the diagnostic information</h3>
+<p>Exactly one of these options must be given.</p>
+<h4><a href="#--diagnostic-dirdiagnosticdir" aria-hidden="true" class="anchor" id="--diagnostic-dirdiagnosticdir"></a><code>--diagnostic-dir=&lt;diagnosticDir&gt;</code></h4>
+<p>Directory to which we should add the diagnostic.</p>
+<h3 title="Options that indicate where the diagnostic message can be displayed"><a href="#options-that-indicate-where-the-diagnostic-message-can-be-displayed" aria-hidden="true" class="anchor" id="options-that-indicate-where-the-diagnostic-message-can-be-displayed"></a>Options that indicate where the diagnostic message can be displayed</h3>
+<h4><a href="#--ready-for-status-page" aria-hidden="true" class="anchor" id="--ready-for-status-page"></a><code>--ready-for-status-page</code></h4>
+<p>Indicate that the diagnostic is suitable for display on the status page.</p>
+<h4><a href="#--ready-for-cli-summary-table" aria-hidden="true" class="anchor" id="--ready-for-cli-summary-table"></a><code>--ready-for-cli-summary-table</code></h4>
+<p>Indicate that the diagnostic is suitable for display in the diagnostics<br>
+summary table printed by commands like <code>database analyze</code>.</p>
+<h3 title="Options describing the source of the diagnostic"><a href="#options-describing-the-source-of-the-diagnostic" aria-hidden="true" class="anchor" id="options-describing-the-source-of-the-diagnostic"></a>Options describing the source of the diagnostic</h3>
+<h4><a href="#--source-idid" aria-hidden="true" class="anchor" id="--source-idid"></a><code>--source-id=&lt;id&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Mandatory] An identifier for the source of this diagnostic.</p>
+<h4><a href="#--source-namename" aria-hidden="true" class="anchor" id="--source-namename"></a><code>--source-name=&lt;name&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Mandatory] A human-readable description of the source of this<br>
+diagnostic.</p>
+<h4><a href="#--extractor-nameextractorname" aria-hidden="true" class="anchor" id="--extractor-nameextractorname"></a><code>--extractor-name=&lt;extractorName&gt;</code></h4>
+<p>The name of the CodeQL extractor, if this diagnostic was produced by a<br>
+CodeQL extractor.</p>
+<h3 title="Options describing the diagnostic's location"><a href="#options-describing-the-diagnostics-location" aria-hidden="true" class="anchor" id="options-describing-the-diagnostics-location"></a>Options describing the diagnostic's location</h3>
+<h4><a href="#--file-pathfile" aria-hidden="true" class="anchor" id="--file-pathfile"></a><code>--file-path=&lt;file&gt;</code></h4>
+<p>The path of the file to which the diagnostic applies, relative to the<br>
+source root.</p>
+<h4><a href="#--start-linestartline" aria-hidden="true" class="anchor" id="--start-linestartline"></a><code>--start-line=&lt;startLine&gt;</code></h4>
+<p>The 1-based line number (inclusive) where the diagnostic's location<br>
+starts.</p>
+<h4><a href="#--start-columnstartcolumn" aria-hidden="true" class="anchor" id="--start-columnstartcolumn"></a><code>--start-column=&lt;startColumn&gt;</code></h4>
+<p>The 1-based column number (inclusive) where the diagnostic's location<br>
+starts.</p>
+<h4><a href="#--end-lineendline" aria-hidden="true" class="anchor" id="--end-lineendline"></a><code>--end-line=&lt;endLine&gt;</code></h4>
+<p>The 1-based line number (inclusive) where the diagnostic's location<br>
+ends.</p>
+<h4><a href="#--end-columnendcolumn" aria-hidden="true" class="anchor" id="--end-columnendcolumn"></a><code>--end-column=&lt;endColumn&gt;</code></h4>
+<p>The 1-based column number (inclusive) where the diagnostic's location<br>
+ends.</p>
+<h3 title="Options / Common options"><a href="#common-options" aria-hidden="true" class="anchor" id="common-options"></a>Common options</h3>
+<h4><a href="#-h---help" aria-hidden="true" class="anchor" id="-h---help"></a><code>-h, --help</code></h4>
+<p>Show this help text.</p>
+<h4><a href="#-jopt" aria-hidden="true" class="anchor" id="-jopt"></a><code>-J=&lt;opt&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Give option to the JVM running the command.</p>
+<p>(Beware that options containing spaces will not be handled correctly.)</p>
+<h4><a href="#-v---verbose" aria-hidden="true" class="anchor" id="-v---verbose"></a><code>-v, --verbose</code></h4>
+<p>Incrementally increase the number of progress messages printed.</p>
+<h4><a href="#-q---quiet" aria-hidden="true" class="anchor" id="-q---quiet"></a><code>-q, --quiet</code></h4>
+<p>Incrementally decrease the number of progress messages printed.</p>
+<h4><a href="#--verbositylevel" aria-hidden="true" class="anchor" id="--verbositylevel"></a><code>--verbosity=&lt;level&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Explicitly set the verbosity level to one of errors,<br>
+warnings, progress, progress+, progress++, progress+++. Overrides <code>-v</code><br>
+and <code>-q</code>.</p>
+<h4><a href="#--logdirdir" aria-hidden="true" class="anchor" id="--logdirdir"></a><code>--logdir=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Write detailed logs to one or more files in the given<br>
+directory, with generated names that include timestamps and the name of<br>
+the running subcommand.</p>
+<p>(To write a log file with a name you have full control over, instead<br>
+give <code>--log-to-stderr</code> and redirect stderr as desired.)</p>
+<h4><a href="#--common-cachesdir" aria-hidden="true" class="anchor" id="--common-cachesdir"></a><code>--common-caches=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Controls the location of cached data on disk that will<br>
+persist between several runs of the CLI, such as downloaded QL packs and<br>
+compiled query plans. If not set explicitly, this defaults to a<br>
+directory named <code>.codeql</code> in the user's home directory; it will be<br>
+created if it doesn't already exist.</p>
+<p>Available since <code>v2.15.2</code>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Assessing the impact of GitHub Secret Protection</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Remediate leaked secrets</a> / </nav><h1><a href="#assessing-the-impact-of-github-secret-protection" aria-hidden="true" class="anchor" id="assessing-the-impact-of-github-secret-protection"></a>Assessing the impact of GitHub Secret Protection</h1>
+<p>Measure how GitHub Secret Protection reduces secret exposure across your organization, so you can demonstrate value and identify areas to strengthen your security posture.</p>
+<h2 title="Introduction"><a href="#introduction" aria-hidden="true" class="anchor" id="introduction"></a>Introduction</h2>
+<p>After enabling GitHub Secret Protection (GHSP) for your organization, you'll want to assess its impact and understand how it's protecting your organization. This tutorial walks you through accessing secret-related data and interpreting the results to measure GHSP performance.</p>
+<p>In this tutorial, you'll learn how to:</p>
+<ul>
+<li>Access your organization's security overview to view secret scanning data</li>
+<li>Review the secret risk assessment (SRA) report</li>
+<li>Compare and analyze the data to assess GHSP's impact</li>
+</ul>
+<p>If you don't have a historic SRA report from before your GHSP rollout, you can still assess GHSP's effectiveness. Skip ahead to <a href="#step-4-analyze-security-overview-data-trends">Step 4: Analyze security overview data trends</a>.</p>
+<h2 title="Prerequisites"><a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<ul>
+<li>You need to have the organization owner or security manager role.</li>
+<li>Secret Protection must be enabled for your organization.</li>
+</ul>
+<h2 title="Step 1: Access the organization-level security overview"><a href="#step-1-access-the-organization-level-security-overview" aria-hidden="true" class="anchor" id="step-1-access-the-organization-level-security-overview"></a>Step 1: Access the organization-level security overview</h2>
+<p>The security overview provides real-time data about secret scanning alerts across your organization.</p>
+<ol>
+<li>On GitHub, navigate to the main page of the organization.</li>
+<li>Under your organization name, click the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab.</li>
+<li>On the security overview page, click the <strong>Risk</strong> tab to view secret scanning data.<br>
+The overview shows:
+<ul>
+<li>Total number of open secret scanning alerts</li>
+<li>Alert trends over time</li>
+<li>Breakdown by repository</li>
+<li>Alert severity distribution</li>
+</ul>
+</li>
+</ol>
+<h2 title="Step 2: View your secret risk assessment report"><a href="#step-2-view-your-secret-risk-assessment-report" aria-hidden="true" class="anchor" id="step-2-view-your-secret-risk-assessment-report"></a>Step 2: View your secret risk assessment report</h2>
+<p>If you previously ran a SRA report, you can access the report to establish a baseline.</p>
+<ol>
+<li>On GitHub, navigate to the main page of the organization.</li>
+<li>Under your organization name, click the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab.</li>
+<li>In the sidebar, under "Security", click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-key" aria-label="key" role="img"><path d="M10.5 0a5.499 5.499 0 1 1-1.288 10.848l-.932.932a.749.749 0 0 1-.53.22H7v.75a.749.749 0 0 1-.22.53l-.5.5a.749.749 0 0 1-.53.22H5v.75a.749.749 0 0 1-.22.53l-.5.5a.749.749 0 0 1-.53.22h-2A1.75 1.75 0 0 1 0 14.25v-2c0-.199.079-.389.22-.53l4.932-4.932A5.5 5.5 0 0 1 10.5 0Zm-4 5.5c-.001.431.069.86.205 1.269a.75.75 0 0 1-.181.768L1.5 12.56v1.69c0 .138.112.25.25.25h1.69l.06-.06v-1.19a.75.75 0 0 1 .75-.75h1.19l.06-.06v-1.19a.75.75 0 0 1 .75-.75h1.19l1.023-1.025a.75.75 0 0 1 .768-.18A4 4 0 1 0 6.5 5.5ZM11 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg> Assessments</strong>.</li>
+<li>Review the key metrics from the assessment, including:
+<ul>
+<li>Number of exposed secrets detected</li>
+<li>Types of secrets found</li>
+<li>Repositories with the highest risk</li>
+<li>Recommended remediation actions</li>
+</ul>
+</li>
+</ol>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The SRA report represents a point-in-time snapshot of your secret exposure before or during your GHSP implementation.</p>
+</div>
+<h2 title="Step 3: Compare SRA data with current security overview"><a href="#step-3-compare-sra-data-with-current-security-overview" aria-hidden="true" class="anchor" id="step-3-compare-sra-data-with-current-security-overview"></a>Step 3: Compare SRA data with current security overview</h2>
+<p>The SRA report is a <strong>point-in-time</strong> snapshot taken before or during your GHSP rollout, while the security overview shows <strong>real-time</strong> data that updates as alerts are opened and resolved. To make a meaningful comparison, you need to ensure both datasets cover the same secret types.</p>
+<h3 title="Step 3: Compare SRA data with current security overview / Filter to comparable pattern types"><a href="#filter-to-comparable-pattern-types" aria-hidden="true" class="anchor" id="filter-to-comparable-pattern-types"></a>Filter to comparable pattern types</h3>
+<p>The SRA report only detects <strong>provider patterns</strong> and <strong>generic patterns</strong>. The security overview, however, may also include results from custom patterns you've configured since enabling GHSP. To ensure an accurate comparison, filter the security overview to the same pattern types the SRA covers.</p>
+<h4><a href="#using-the-ui" aria-hidden="true" class="anchor" id="using-the-ui"></a>Using the UI</h4>
+<p>In the security overview <strong>Risk</strong> tab, use the filter bar to narrow results to provider and generic patterns only, excluding any custom patterns.</p>
+<h4><a href="#using-the-api" aria-hidden="true" class="anchor" id="using-the-api"></a>Using the API</h4>
+<p>Alternatively, you can use the REST API to programmatically retrieve alerts filtered by secret type. For example, to list only default (provider) secret scanning alerts for a repository:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh api \
+</span><span style="color:#c0c5ce;">  -H "Accept: application/vnd.github+json" \
+</span><span style="color:#c0c5ce;">  /orgs/ORG/secret-scanning/alerts --paginate
+</span></code></pre>
+<p>This returns alerts for default patterns only. To also include generic patterns in your results, pass the specific token names using the <code>secret_type</code> parameter.</p>
+<p>For more information, see <a href="https://docs.github.com/en/rest/secret-scanning/secret-scanning" class="external">REST API endpoints for secret scanning</a>.</p>
+<h3 title="Step 3: Compare SRA data with current security overview / Build your comparison"><a href="#build-your-comparison" aria-hidden="true" class="anchor" id="build-your-comparison"></a>Build your comparison</h3>
+<ol>
+<li>
+<p>Using the filtered data, create a comparison table with these key metrics:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>SRA report (Baseline)</th>
+<th>Current security overview (Filtered)</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Total exposed secrets</td>
+<td><span data-escaped-char="">[</span>SRA number]</td>
+<td><span data-escaped-char="">[</span>Current number]</td>
+<td><span data-escaped-char="">[</span>Difference]</td>
+</tr>
+<tr>
+<td>Critical alerts</td>
+<td><span data-escaped-char="">[</span>SRA number]</td>
+<td><span data-escaped-char="">[</span>Current number]</td>
+<td><span data-escaped-char="">[</span>Difference]</td>
+</tr>
+<tr>
+<td>Affected repositories</td>
+<td><span data-escaped-char="">[</span>SRA number]</td>
+<td><span data-escaped-char="">[</span>Current number]</td>
+<td><span data-escaped-char="">[</span>Difference]</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>Calculate the percentage change for each metric:</p>
+<ul>
+<li><strong>Positive impact indicators:</strong> Reduction in total exposed secrets, fewer critical alerts</li>
+<li><strong>Areas for improvement:</strong> New alerts appearing, specific repositories with increasing trends</li>
+</ul>
+</li>
+<li>
+<p>Note any significant differences in:</p>
+<ul>
+<li>Secret types being detected</li>
+<li>Repository coverage</li>
+<li>Alert resolution rates</li>
+</ul>
+</li>
+</ol>
+<h2 title="Step 4: Analyze security overview data trends"><a href="#step-4-analyze-security-overview-data-trends" aria-hidden="true" class="anchor" id="step-4-analyze-security-overview-data-trends"></a>Step 4: Analyze security overview data trends</h2>
+<p>Even without an SRA report, you can assess GHSP effectiveness by analyzing trends in the security overview.</p>
+<ol>
+<li>
+<p>On GitHub, navigate to the main page of the organization.</p>
+</li>
+<li>
+<p>Under your organization name, click the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab.</p>
+</li>
+<li>
+<p>In the security overview <strong>Risk</strong> tab, look at the trend graph showing secret scanning alerts over time.</p>
+</li>
+<li>
+<p>Identify patterns:</p>
+<ul>
+<li><strong>Declining trend:</strong> Indicates successful remediation and prevention</li>
+<li><strong>Plateau:</strong> May suggest steady state or need for increased awareness</li>
+<li><strong>Rising trend:</strong> May indicate increased detection coverage or new secret introduction</li>
+</ul>
+</li>
+<li>
+<p>Click on individual repositories to drill down into specific alert details.</p>
+</li>
+<li>
+<p>Review the alert resolution rate:</p>
+<ul>
+<li>Navigate to the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab for your organization.</li>
+<li>Under "Findings", Click <strong>Secret scanning</strong>.</li>
+<li>Check how many alerts have been closed versus the number of alerts that remain open.</li>
+<li>Select the alert type you're interested in.</li>
+<li>Assess average time to resolution.</li>
+</ul>
+</li>
+</ol>
+<h2 title="Step 5: Interpret the results and take action"><a href="#step-5-interpret-the-results-and-take-action" aria-hidden="true" class="anchor" id="step-5-interpret-the-results-and-take-action"></a>Step 5: Interpret the results and take action</h2>
+<p>Based on your analysis, determine the next steps.</p>
+<h3 title="Step 5: Interpret the results and take action / If you're seeing positive trends"><a href="#if-youre-seeing-positive-trends" aria-hidden="true" class="anchor" id="if-youre-seeing-positive-trends"></a>If you're seeing positive trends</h3>
+<ul>
+<li>Document the improvement to demonstrate GHSP value</li>
+<li>Identify successful practices to replicate across other repositories</li>
+<li>Consider expanding GHSP coverage to additional repositories or organizations</li>
+</ul>
+<h3 title="Step 5: Interpret the results and take action / If you're seeing areas for improvement"><a href="#if-youre-seeing-areas-for-improvement" aria-hidden="true" class="anchor" id="if-youre-seeing-areas-for-improvement"></a>If you're seeing areas for improvement</h3>
+<ul>
+<li>Review repositories with increasing alerts or slow resolution times</li>
+<li>Provide additional training to development teams</li>
+<li>Assess whether custom patterns need to be configured</li>
+<li>Check if push protection is enabled to prevent new secrets from being introduced</li>
+</ul>
+<h3 title="Step 5: Interpret the results and take action / Ongoing monitoring"><a href="#ongoing-monitoring" aria-hidden="true" class="anchor" id="ongoing-monitoring"></a>Ongoing monitoring</h3>
+<ul>
+<li>Schedule regular reviews (weekly or monthly) of the security overview</li>
+<li>Set up notifications for new secret scanning alerts</li>
+<li>Track metrics over time to demonstrate continuous improvement</li>
+</ul>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li>To understand secret scanning metrics in detail, see <a href="../../how-tos/view-and-interpret-data/analyze-organization-data/viewing-security-insights.html">Viewing security insights</a>.</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

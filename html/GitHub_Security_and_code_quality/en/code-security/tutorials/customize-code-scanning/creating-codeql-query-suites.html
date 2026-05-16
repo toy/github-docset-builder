@@ -1,0 +1,281 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Creating CodeQL query suites</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Customize code scanning</a> / </nav><h1><a href="#creating-codeql-query-suites" aria-hidden="true" class="anchor" id="creating-codeql-query-suites"></a>Creating CodeQL query suites</h1>
+<p>You can create query suites for queries you frequently use in your CodeQL analyses.</p>
+<p>You can create query suites for the queries that you want to frequently use in your CodeQL analyses. For more information, see <a href="../../concepts/code-scanning/codeql/codeql-query-suites.html">CodeQL query suites</a>.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Any custom queries that you want to add to a query suite must be in a <a href="customizing-analysis-with-codeql-packs.html">CodeQL pack</a> and contain the correct query metadata. For more information, see <a href="../../how-tos/find-and-fix-code-vulnerabilities/scan-from-the-command-line/write-custom-queries.html">Writing custom queries for the CodeQL CLI</a>.</p>
+</div>
+<h2 title="Locating queries to add to a query suite"><a href="#locating-queries-to-add-to-a-query-suite" aria-hidden="true" class="anchor" id="locating-queries-to-add-to-a-query-suite"></a>Locating queries to add to a query suite</h2>
+<p>When creating a query suite, you first need to specify the locations of the<br>
+queries that you want to select. You can define the location of one or more<br>
+queries using:</p>
+<ul>
+<li>
+<p>A <code>query</code> instruction: Tells CodeQL to look for one or more specified <code>.ql</code><br>
+files:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">query</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">&lt;path-to-query&gt;
+</span></code></pre>
+<p>The argument must be one or more file paths, relative to the CodeQL pack containing<br>
+the suite definition.</p>
+</li>
+<li>
+<p>A <code>queries</code> instruction: Tells CodeQL to recursively scan a directory<br>
+for <code>.ql</code> files:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">queries</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">&lt;path-to-subdirectory&gt;
+</span></code></pre>
+<p>The path of the directory must be relative to the root of the CodeQL pack that<br>
+contains the suite definition file. To find the queries relative to a<br>
+different CodeQL pack, add a <code>from</code> field:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">queries</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">&lt;path-to-subdirectory&gt;
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">from</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">&lt;ql-pack-name&gt;
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">^x.y.z
+</span></code></pre>
+<p>The <code>version</code> field is optional and specifies a range of compatible versions of this CodeQL pack.<br>
+If you don’t specify a version, then the most recent version of the pack is used.</p>
+</li>
+<li>
+<p>A <code>qlpack</code> instruction: Tells CodeQL to resolve queries in the default suite of the<br>
+named CodeQL pack:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">qlpack</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">&lt;qlpack-name&gt;
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">^x.y.z
+</span></code></pre>
+<p>The default suite of a query pack includes a recommended set of queries<br>
+inside of that query pack. Not all query packs have a default suite. If the given query pack does not define a default suite, the qlpack instruction will resolve to all of the queries within the pack.</p>
+<p>The <code>version</code> field is optional and specifies a range of compatible versions of this CodeQL pack.<br>
+If you don’t specify a version, then the most recent version of the pack is used.</p>
+</li>
+</ul>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>When pathnames appear in query suite definitions, they must always be given with a forward slash, <code>/</code>, as a directory separator. This ensures that query suite definitions work on all operating systems.</p>
+</div>
+<p>You must add at least one <code>query</code>, <code>queries</code>, or <code>qlpack</code> instruction to<br>
+your suite definition, otherwise no queries will be selected. If the suite<br>
+contains no further instructions, all the queries found from the list of files,<br>
+in the given directory, or in the named CodeQL pack are selected. If there are further<br>
+filtering instructions, only queries that match the constraints imposed by those<br>
+instructions will be selected.</p>
+<h2 title="Filtering the queries in a query suite"><a href="#filtering-the-queries-in-a-query-suite" aria-hidden="true" class="anchor" id="filtering-the-queries-in-a-query-suite"></a>Filtering the queries in a query suite</h2>
+<p>After you have defined the initial set of queries to add to your suite by<br>
+specifying <code>query</code>, <code>queries</code>, or <code>qlpack</code> instructions, you can add<br>
+<code>include</code> and <code>exclude</code> instructions. These instructions define selection<br>
+criteria based on specific properties:</p>
+<ul>
+<li>When you execute an <code>include</code> instruction on a set of queries, any<br>
+queries that match your conditions are retained in the selection, and queries<br>
+that don’t match are removed.</li>
+<li>When you execute an <code>exclude</code> instructions on a set of queries,<br>
+any queries that match your conditions are removed from the selection, and queries<br>
+that don’t match are retained.</li>
+</ul>
+<p>The order of your filter instructions is important. The first filter instruction<br>
+that appears after the locating instructions determines whether the queries are<br>
+included or excluded by default. If the first filter is an <code>include</code>, the<br>
+initially located queries will only be part of the suite if they match an<br>
+explicit <code>include</code> filter. If the first filter is an <code>exclude</code>, the initially<br>
+located queries are part of the suite unless they are explicitly excluded.</p>
+<p>Subsequent instructions are executed in order and the instructions that appear<br>
+later in the file take precedence over the earlier instructions. So, <code>include</code><br>
+instructions can be overridden by a later <code>exclude</code> instructions that match<br>
+the same query. Similarly, <code>exclude</code>s can be overridden by a later<br>
+<code>include</code>.</p>
+<p>For both instructions, the argument is a constraint block—that is, a YAML map<br>
+representing the constraints. Each constraint is a map entry, where the key is<br>
+typically a query metadata property. The value can be:</p>
+<ul>
+<li>A single string.</li>
+<li>A <code>/</code>-enclosed <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/regex/Pattern.html" class="external">regular expression</a>.</li>
+<li>A list containing strings, regular expressions, or both.</li>
+</ul>
+<p>To match a constraint, a metadata value must match one of the strings or<br>
+regular expressions. When there is more than one metadata key, each key must be matched.<br>
+The standard metadata keys available to match on are: <code>description</code>, <code>id</code>, <code>kind</code>,<br>
+<code>name</code>, <code>tags</code>, <code>precision</code>, and <code>problem.severity</code>.<br>
+For more information about query metadata properties, see<br>
+<a href="https://codeql.github.com/docs/writing-codeql-queries/metadata-for-codeql-queries/#metadata-for-codeql-queries" class="external">Metadata for CodeQL queries</a>.</p>
+<p>In addition to metadata tags, the keys in the constraint block can also be:</p>
+<ul>
+<li><code>query filename</code>: Matches on the last path component of the query file name.</li>
+<li><code>query path</code>: Matches on the path to the query file relative to its<br>
+enclosing CodeQL pack.</li>
+<li><code>tags contain</code>: One of the given match strings must match<br>
+one of the space-separated components of the value of the <code>@tags</code> metadata property.</li>
+<li><code>tags contain all</code>: Each of the given match strings must match one of the<br>
+components of the <code>@tags</code> metadata property.</li>
+</ul>
+<h3 title="Filtering the queries in a query suite / Examples of filtering which queries are run"><a href="#examples-of-filtering-which-queries-are-run" aria-hidden="true" class="anchor" id="examples-of-filtering-which-queries-are-run"></a>Examples of filtering which queries are run</h3>
+<p>A common use case is to create a query suite that runs all queries in a CodeQL pack,<br>
+except for a few specific queries that the user does not want to run. In general, we<br>
+recommend filtering on the query <code>id</code>, which is a unique and stable identifier for<br>
+each query. The following three query suite definitions are semantically identical and<br>
+filter by the query <code>id</code>:</p>
+<p>This filter matches all the queries in the default suite of <code>codeql/cpp-queries</code>, except for the two queries with the excluded identifiers:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">qlpack</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">codeql/cpp-queries
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">exclude</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">cpp/cleartext-transmission
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">cpp/cleartext-storage-file
+</span></code></pre>
+<p>In this example, a separate <code>exclude</code> instruction is used for each query:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">qlpack</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">codeql/cpp-queries
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">exclude</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">cpp/cleartext-transmission
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">exclude</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">cpp/cleartext-storage-file
+</span></code></pre>
+<p>In this example, a regular expression excludes the same two queries. It would also exclude any future queries added to the suite with identifiers that begin: <code>cpp/cleartext-</code>:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">qlpack</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">codeql/cpp-queries
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">exclude</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">/^cpp\/cleartext-.*/
+</span></code></pre>
+<p>To define a suite that selects all queries in the default suite of the<br>
+<code>codeql/cpp-queries</code> CodeQL pack, and then refines them to only include<br>
+security queries, use:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">qlpack</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">codeql/cpp-queries
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">include</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">tags contain</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">security
+</span></code></pre>
+<p>To define a suite that selects all queries with <code>@kind problem</code><br>
+and <code>@precision high</code> from the <code>my-custom-queries</code> directory, use:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">queries</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">my-custom-queries
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">include</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">kind</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">problem
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">precision</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">very-high
+</span></code></pre>
+<p>Note that the following query suite definition behaves differently from the definition above. This definition selects queries that are <code>@kind problem</code> <em>or</em><br>
+are <code>@precision very-high</code>:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">queries</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">my-custom-queries
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">include</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">kind</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">problem
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">include</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">precision</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">very-high
+</span></code></pre>
+<p>To create a suite that selects all queries with <code>@kind problem</code> from the<br>
+<code>my-custom-queries</code> directory except those with <code>@problem.severity recommendation</code>, use:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">queries</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">my-custom-queries
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">include</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">kind</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">problem
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">exclude</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">problem.severity</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">recommendation
+</span></code></pre>
+<p>To create a suite that selects all queries with <code>@tag security</code> and<br>
+<code>@precision high</code> or <code>very-high</code> from the <code>codeql/cpp-queries</code> CodeQL pack,<br>
+use:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">queries</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">from</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">codeql/cpp-queries
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">include</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">tags contain</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">security
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">precision</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">high
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">very-high
+</span></code></pre>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>You can use the <code>codeql resolve queries /path/to/suite.qls</code> command to see which queries are selected by a query suite definition. For more information, see <a href="../../reference/code-scanning/codeql/codeql-cli-manual/resolve-queries.html">resolve queries</a>.</p>
+</div>
+<h2 title="Reusing existing query suite definitions"><a href="#reusing-existing-query-suite-definitions" aria-hidden="true" class="anchor" id="reusing-existing-query-suite-definitions"></a>Reusing existing query suite definitions</h2>
+<p>Existing query suite definitions can be reused by specifying:</p>
+<ul>
+<li>
+<p>An <code>import</code> instruction: Adds the queries selected by a<br>
+previously defined <code>.qls</code> file to the current suite:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">import</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">&lt;path-to-query-suite&gt;
+</span></code></pre>
+<p>The path to the imported suite must be relative to the CodeQL pack containing the<br>
+current suite definition. If the imported query suite is in a different QL<br>
+pack you can use:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">import</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">&lt;path-to-query-suite&gt;
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">from</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">&lt;ql-pack&gt;
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">^x.y.z
+</span></code></pre>
+<p>The <code>version</code> field is optional and specifies a range of compatible versions of this CodeQL pack.<br>
+If you don’t specify a version, then the most recent version of the pack is used.</p>
+<p>Queries added using an <code>import</code> instruction can be filtered using subsequent<br>
+<code>exclude</code> instructions.</p>
+</li>
+<li>
+<p>An <code>apply</code> instruction: Adds all of the instructions from a<br>
+previously defined <code>.qls</code> file to the current suite. The instructions in the<br>
+applied <code>.qls</code> file are executed as if they appear in place of <code>apply</code>.<br>
+Any <code>include</code> and <code>exclude</code> instructions from the applied suite also act on<br>
+queries added by any earlier instructions:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">apply</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">&lt;path-to-query-suite&gt;
+</span></code></pre>
+<p>The <code>apply</code> instruction can also be used to apply a set of reusable<br>
+conditions, saved in a <code>.yml</code> file, to multiple query definitions. For more<br>
+information, see the <a href="#reusability-examples">examples</a> below.</p>
+</li>
+</ul>
+<h3 title="Reusing existing query suite definitions / Reusability Examples"><a href="#reusability-examples" aria-hidden="true" class="anchor" id="reusability-examples"></a>Reusability Examples</h3>
+<p>To use the same conditions in multiple query suite definitions, create a<br>
+separate <code>.yml</code> file containing your instructions. For example, save the<br>
+following in a file called <code>reusable-instructions.yml</code>:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">include</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">kind</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">problem
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">path-problem
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">tags contain</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">security
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">precision</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">high
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#a3be8c;">very-high
+</span></code></pre>
+<p>Add <code>reusable-instructions.yml</code> to the same CodeQL pack as your current query<br>
+suite. Then, in one or more query suites, use the <code>apply</code> instruction to apply<br>
+the reusable instructions to the current suite. For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">queries</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">queries/cpp/custom
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">apply</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">reusable-instructions.yml
+</span></code></pre>
+<p>This will filter the queries in <code>queries/cpp/custom</code> to only include those that match the reusable conditions.</p>
+<p>You can also create a suite definition using <code>reusable-instructions.yml</code> on<br>
+queries in a different CodeQL pack. If the <code>.qls</code> file is in the same CodeQL pack as<br>
+the queries, you can add a <code>from</code> field immediately after the <code>apply</code><br>
+instruction:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># load queries from the default suite of my-org/my-other-custom-queries
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">qlpack</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">my-org/my-other-custom-queries
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># apply the reusable instructions from the my-org/my-custom-instructions CodeQL pack
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">apply</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">reusable-instructions.yml
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">from</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">my-org/my-custom-instructions
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">^1.2.3 </span><span style="color:#65737e;"># optional
+</span></code></pre>
+<p>A common use case for an <code>import</code> instruction is to apply a further filter to queries from another<br>
+query suite. For example, this suite will further filter the <code>cpp-security-and-quality</code> suite<br>
+and exclude <code>low</code> and <code>medium</code> precision queries:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">import</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">codeql-suites/cpp-security-and-quality.qls
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">from</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">codeql/cpp-queries
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">exclude</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">precision</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">low
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">medium
+</span></code></pre>
+<p>If you want to <code>include</code> queries imported from another suite, the syntax is a little different:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">import</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">codeql-suites/cpp-security-and-quality.qls
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">from</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">codeql/cpp-queries
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">exclude</span><span style="color:#c0c5ce;">: {}
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">include</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">precision</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">very-high
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">high
+</span></code></pre>
+<p>Notice the empty <code>exclude</code> instruction. This is required to ensure that the subsequent <code>include</code><br>
+instruction is able to filter queries from the imported suite.</p>
+<h2 title="Naming a query suite"><a href="#naming-a-query-suite" aria-hidden="true" class="anchor" id="naming-a-query-suite"></a>Naming a query suite</h2>
+<p>You can provide a name for your query suite by specifying a <code>description</code><br>
+instruction:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">description</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">&lt;name-of-query-suite&gt;
+</span></code></pre>
+<h2 title="Saving a query suite"><a href="#saving-a-query-suite" aria-hidden="true" class="anchor" id="saving-a-query-suite"></a>Saving a query suite</h2>
+<p>Save your query suite in a file with a <code>.qls</code> extension and add it to a CodeQL<br>
+pack. For more information, see <a href="customizing-analysis-with-codeql-packs.html#custom-codeql-packs">Customizing analysis with CodeQL packs</a>.</p>
+<h2 title="Using query suites with CodeQL"><a href="#using-query-suites-with-codeql" aria-hidden="true" class="anchor" id="using-query-suites-with-codeql"></a>Using query suites with CodeQL</h2>
+<p>You can specify query suites on the command line for any command that accepts<br>
+<code>.qls</code> files. For example, you can compile the queries selected by a suite<br>
+definition using <code>query compile</code>, or use the queries in an analysis using<br>
+<code>database analyze</code>. For more information about analyzing CodeQL databases, see<br>
+<a href="analyzing-your-code-with-codeql-queries.html">Analyzing your code with CodeQL queries</a>.</p>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li><a href="https://codeql.github.com/docs/writing-codeql-queries/codeql-queries/#codeql-queries" class="external">CodeQL queries</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

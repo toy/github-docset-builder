@@ -1,0 +1,44 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Deploying to a specific environment</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Write workflows</a> / <a href="index.html">Choose what workflows do</a> / </nav><h1><a href="#deploying-to-a-specific-environment" aria-hidden="true" class="anchor" id="deploying-to-a-specific-environment"></a>Deploying to a specific environment</h1>
+<p>Specify a deployment environment in your workflow.</p>
+<h2 title="Prerequisites"><a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<p>You need to create an environment before you can use it in a workflow. See <a href="../../deploy/configure-and-manage-deployments/manage-environments.html#creating-an-environment">Managing environments for deployment</a>.</p>
+<h2 title="Using an environment in a workflow"><a href="#using-an-environment-in-a-workflow" aria-hidden="true" class="anchor" id="using-an-environment-in-a-workflow"></a>Using an environment in a workflow</h2>
+<ol>
+<li>
+<p>Open the workflow file you want to edit.</p>
+</li>
+<li>
+<p>Use the following syntax to add a <a href="../../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idenvironment"><code>jobs.&lt;job_id&gt;.environment</code></a> key to your workflow:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">JOB-ID</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">environment</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ENVIRONMENT-NAME
+</span></code></pre>
+<p>The chosen job will now be subject to any rules configured for the specified environment.</p>
+</li>
+<li>
+<p>Optionally, specify a deployment URL for the environment using the following syntax:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">JOB-ID</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">environment</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ENVIRONMENT-NAME
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">URL
+</span></code></pre>
+<p>The specified URL will appear:</p>
+<ul>
+<li>On the deployments page for the repository</li>
+<li>In the visualization graph for the workflow run</li>
+<li>(If a pull request triggers the workflow) As a "View deployment" button in the pull request timeline</li>
+</ul>
+</li>
+<li>
+<p>Optionally, prevent a deployment object from being created by adding the <code>deployment</code> property. When set to <code>false</code>, the job still has access to environment secrets and variables, but no GitHub deployment is created:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">JOB-ID</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">environment</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ENVIRONMENT-NAME
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">deployment</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">false
+</span></code></pre>
+<p>This is useful for CI or testing jobs that need environment secrets but aren't actually deploying anything. For more information, see <a href="../../deploy/configure-and-manage-deployments/control-deployments.html#using-environments-without-deployments">Deploying with GitHub Actions</a>.</p>
+</li>
+</ol>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

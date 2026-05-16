@@ -1,0 +1,335 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Actions limits</title><link rel="stylesheet" href="../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../index.html">GitHub Actions</a> / <a href="index.html">Reference</a> / </nav><h1><a href="#actions-limits" aria-hidden="true" class="anchor" id="actions-limits"></a>Actions limits</h1>
+<p>There are limits in GitHub Actions which you may hit as you scale up, some may be increased by contacting support.</p>
+<p>You may be rate limited by GitHub Actions when you scale your usage. Some limits can be increased by contacting us through the <a href="https://support.github.com" class="external">GitHub Support portal</a>.</p>
+<p>Unless otherwise stated, the expected behavior when a limit is reached is that the workflow/job will get cancelled.</p>
+<p>These limits are subject to change.</p>
+<h2 title="Existing system limits"><a href="#existing-system-limits" aria-hidden="true" class="anchor" id="existing-system-limits"></a>Existing system limits</h2>
+<table>
+<thead>
+<tr>
+<th align="left">Limit category</th>
+<th align="left">Limit</th>
+<th align="left">Threshold</th>
+<th align="left">Description</th>
+<th align="left">Can GitHub Support increase?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Workflow execution limit</td>
+<td align="left">Workflow run time</td>
+<td align="left">35 days / workflow run</td>
+<td align="left">If a workflow run reaches this limit, the workflow run is cancelled. This period includes execution duration, and time spent on waiting and approval.</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="No" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left">Workflow execution limit</td>
+<td align="left">Gate approval time</td>
+<td align="left">30 days</td>
+<td align="left">A workflow may wait for up to <a href="../how-tos/deploy/configure-and-manage-deployments/manage-environments.html#wait-timer">30 days on environment approvals</a>.</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="No" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left">Workflow execution limit</td>
+<td align="left">Job Matrix</td>
+<td align="left">256 jobs / workflow run</td>
+<td align="left">A job matrix can generate a maximum of 256 jobs per workflow run. This limit applies to both GitHub-hosted and self-hosted runners.</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="No" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left">Workflow execution limit</td>
+<td align="left">Re-run</td>
+<td align="left">50 re-runs</td>
+<td align="left">A workflow run can be re-run a maximum of 50 times. This limit includes both full re-runs and re-runs of a subset of jobs.</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Yes" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg> Support ticket</td>
+</tr>
+<tr>
+<td align="left">Checks</td>
+<td align="left">Check runs per check suite</td>
+<td align="left">50,000 check runs / check suite</td>
+<td align="left">A check suite can have a maximum of 50,000 check runs. This limit applies to check runs created through the Checks API and by GitHub Actions workflow runs. When a check suite reaches this limit, additional check runs cannot be created for that check suite.</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Yes" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg> Support ticket</td>
+</tr>
+<tr>
+<td align="left">Workflows queuing</td>
+<td align="left">Workflow trigger event rate limit</td>
+<td align="left">1500 events / 10 seconds / repository</td>
+<td align="left">Each repository is limited to events triggering a workflow run.</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Yes" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg> Support ticket</td>
+</tr>
+<tr>
+<td align="left">Workflows queuing</td>
+<td align="left">Workflow run queued</td>
+<td align="left">500 workflow runs / 10 seconds</td>
+<td align="left">When the limit is reached, the workflow runs that were supposed to be triggered by the webhook events will be blocked and will not be queued. Reusable workflows are viewed as a single entity. For example, a run with 30 reusable workflows counts as 1 in this instance.</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="No" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">Workflows queuing</td>
+<td align="left">Concurrency group queue</td>
+<td align="left">100 workflow runs / concurrency group</td>
+<td align="left">When using <code>queue: max</code> in the <code>concurrency</code> section, up to 100 jobs or workflow runs can be queued per concurrency group. Runs beyond this limit will be rejected.</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="No" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">Self-hosted</td>
+<td align="left">Runner registrations</td>
+<td align="left">1500 runners / 5 minutes / repository/org/enterprise</td>
+<td align="left">Runners can be registered per repository/organization/enterprise.</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Yes" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg> Support ticket</td>
+</tr>
+<tr>
+<td align="left">Self-hosted</td>
+<td align="left">Runners per runner group</td>
+<td align="left">10,000 runners</td>
+<td align="left">Runners registered at the same time per runner group.</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="No" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left">Self-hosted</td>
+<td align="left">Job execution time</td>
+<td align="left">5 days</td>
+<td align="left">Each job in a workflow can run for up to 5 days of execution time. If a job reaches this limit, the job is terminated and fails.</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="No" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left">Self-hosted</td>
+<td align="left">Job queue time</td>
+<td align="left">24 hours</td>
+<td align="left">A job can be in the queue for 24 hours before it is automatically cancelled.</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="No" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left">All GitHub-hosted runners</td>
+<td align="left">Job Concurrency</td>
+<td align="left">Varies</td>
+<td align="left">See <a href="#job-concurrency-limits-for-github-hosted-runners">Job concurrency limits for GitHub-hosted runners</a>.</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Yes" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg> Support ticket</td>
+</tr>
+<tr>
+<td align="left">All GitHub-hosted runners</td>
+<td align="left">Job execution time</td>
+<td align="left">6 hours</td>
+<td align="left">Each job in a workflow can run for up to 6 hours of execution time. If a job reaches this limit, the job is terminated and fails.</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="No" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">All GitHub-hosted runners</td>
+<td align="left">Storage limits</td>
+<td align="left">Varies</td>
+<td align="left">For more information, see <a href="#storage-limits-for-all-github-hosted-runners">Storage limits for all GitHub-hosted runners</a>.</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="No" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">Larger runners</td>
+<td align="left">Per runner concurrency limit</td>
+<td align="left">Varies by runner type</td>
+<td align="left">Established when setting up a runner. Normally 1,000 max for Linux CPU runners, but varies by type. See <a href="#job-concurrency-limits-for-github-hosted-runners">Job concurrency limits for GitHub-hosted runners</a>.</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Yes" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg> Support ticket</td>
+</tr>
+<tr>
+<td align="left">Larger runners</td>
+<td align="left">Static IP limits</td>
+<td align="left">10 IPs</td>
+<td align="left">10 IPs per enterprise and organization.</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Yes" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg> Support ticket</td>
+</tr>
+<tr>
+<td align="left">Larger runners</td>
+<td align="left">Private IP scaling for vnet injection</td>
+<td align="left">30% buffer</td>
+<td align="left">You need a buffer to accommodate the maximum job concurrency you anticipate. See <a href="#private-ip-scaling-for-vnet-injection-on-larger-runners">Private IP scaling for vnet injection on larger runners</a>.</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Yes" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg> Configurable Azure virtual network</td>
+</tr>
+<tr>
+<td align="left">Dependency caching</td>
+<td align="left">Uploads per minute</td>
+<td align="left">200 per minute</td>
+<td align="left">Each repository is limited to 200 cache entry uploads per minute. If this limit is exceeded, subsequent cache upload attempts will fail until the rate limit resets.</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="No" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left">Dependency caching</td>
+<td align="left">Downloads per minute</td>
+<td align="left">1500 per minute</td>
+<td align="left">Each repository is limited to 1500 cache entry downloads per minute. If this limit is exceeded, subsequent cache download attempts will fail until the rate limit resets.</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="No" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left">Dependency caching</td>
+<td align="left">Deletes per minute</td>
+<td align="left">400 per minute</td>
+<td align="left">Each repository is limited to 400 cache delete operations per minute. If this limit is exceeded, subsequent cache delete attempts will fail until the rate limit resets. Each request to delete caches either by key or by ID counts towards this limit.</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="No" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+</tr>
+</tbody>
+</table>
+<h3 title="Existing system limits / Job concurrency limits for GitHub-hosted runners"><a href="#job-concurrency-limits-for-github-hosted-runners" aria-hidden="true" class="anchor" id="job-concurrency-limits-for-github-hosted-runners"></a>Job concurrency limits for GitHub-hosted runners</h3>
+<p>GitHub Support <strong>can</strong> increase job concurrency limits for GitHub Actions. To request an increase, submit a support ticket.</p>
+<table>
+<thead>
+<tr>
+<th>Runner type</th>
+<th>GitHub plan</th>
+<th>Total concurrent jobs</th>
+<th>Maximum concurrent macOS jobs</th>
+<th>Maximum concurrent GPU jobs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Standard GitHub-hosted runner</td>
+<td>Free</td>
+<td>20</td>
+<td>5</td>
+<td>Not applicable</td>
+</tr>
+<tr>
+<td>Standard GitHub-hosted runner</td>
+<td>Pro</td>
+<td>40</td>
+<td>5</td>
+<td>Not applicable</td>
+</tr>
+<tr>
+<td>Standard GitHub-hosted runner</td>
+<td>Team</td>
+<td>60</td>
+<td>5</td>
+<td>Not applicable</td>
+</tr>
+<tr>
+<td>Standard GitHub-hosted runner</td>
+<td>Enterprise</td>
+<td>500</td>
+<td>50</td>
+<td>Not applicable</td>
+</tr>
+<tr>
+<td>Larger runner</td>
+<td>Team</td>
+<td>1000</td>
+<td>5</td>
+<td>100</td>
+</tr>
+<tr>
+<td>Larger runner</td>
+<td>Enterprise</td>
+<td>1000</td>
+<td>50</td>
+<td>100</td>
+</tr>
+</tbody>
+</table>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The maximum concurrent macOS jobs is shared across standard GitHub-hosted runners and GitHub-hosted larger runners.</p>
+</div>
+<h3 title="Existing system limits / Storage limits for all GitHub-hosted runners"><a href="#storage-limits-for-all-github-hosted-runners" aria-hidden="true" class="anchor" id="storage-limits-for-all-github-hosted-runners"></a>Storage limits for all GitHub-hosted runners</h3>
+<p>GitHub Support <strong>cannot</strong> increase storage limits for GitHub Actions.</p>
+<table>
+<thead>
+<tr>
+<th>Plan</th>
+<th>Artifact storage</th>
+<th>Minutes (per month)</th>
+<th>Cache storage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GitHub Free</td>
+<td>500 MB</td>
+<td>2,000</td>
+<td>10 GB</td>
+</tr>
+<tr>
+<td>GitHub Pro</td>
+<td>1 GB</td>
+<td>3,000</td>
+<td>10 GB</td>
+</tr>
+<tr>
+<td>GitHub Free for organizations</td>
+<td>500 MB</td>
+<td>2,000</td>
+<td>10 GB</td>
+</tr>
+<tr>
+<td>GitHub Team</td>
+<td>2 GB</td>
+<td>3,000</td>
+<td>10 GB</td>
+</tr>
+<tr>
+<td>GitHub Enterprise Cloud</td>
+<td>50 GB</td>
+<td>50,000</td>
+<td>10 GB</td>
+</tr>
+</tbody>
+</table>
+<p>For information about cache storage limits and how to increase them, see <a href="workflows-and-actions/dependency-caching.html#usage-limits-and-eviction-policy">Usage limits and eviction policy</a>.</p>
+<h3 title="Existing system limits / Private IP scaling for vnet injection on larger runners"><a href="#private-ip-scaling-for-vnet-injection-on-larger-runners" aria-hidden="true" class="anchor" id="private-ip-scaling-for-vnet-injection-on-larger-runners"></a>Private IP scaling for vnet injection on larger runners</h3>
+<p>When using larger runners with vnet injection, you need to determine the appropriate subnet IP address range, for which we recommend adding a buffer to the maximum job concurrency you anticipate. For instance, if the network configuration's runners are set to a maximum job concurrency of 300, utilize a subnet IP address range that can accommodate at least 390 runners. Note that Azure reserves 5 IPs in every subnet (first 4 and last 1), which sets a minimum practical subnet size depending on runner requirements. Very small subnets (like /29 or smaller) may not provide enough usable addresses for your needs.</p>
+<h2 title="Commonly hit dependent service limits"><a href="#commonly-hit-dependent-service-limits" aria-hidden="true" class="anchor" id="commonly-hit-dependent-service-limits"></a>Commonly hit dependent service limits</h2>
+<p>GitHub's <a href="https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api" class="external">REST API rate limits</a> apply to GitHub Actions users, those that are commonly hit are:</p>
+<ul>
+<li>
+<p><strong>Unauthenticated users</strong> - You can make unauthenticated requests if you are only fetching public data. Unauthenticated requests are associated with the originating IP address, not with the user or application that made the request.</p>
+<p>The primary rate limit for unauthenticated requests is 60 requests per hour.</p>
+</li>
+<li>
+<p><strong>Authenticated users</strong> - You can use a personal access token to make API requests. Additionally, you can authorize a GitHub App or OAuth app, which can then make API requests on your behalf.</p>
+<p>All of these requests count towards your personal rate limit of 5,000 requests per hour. Requests made on your behalf by a GitHub App that is owned by a GitHub Enterprise Cloud organization have a higher rate limit of 15,000 requests per hour. Similarly, requests made on your behalf by a OAuth app that is owned or approved by a GitHub Enterprise Cloud organization have a higher rate limit of 15,000 requests per hour if you are a member of the GitHub Enterprise Cloud organization. However, requests made by a higher-limit app reduce the remaining budget available for lower-limit authentication methods. For example, if an app with a 15,000 request limit makes 10,000 requests on your behalf, you will have exhausted the 5,000 request budget for your personal access tokens, even though the app has 5,000 requests remaining.</p>
+</li>
+<li>
+<p><strong>GitHub app installations</strong> - GitHub Apps authenticating with an installation access token use the installation's minimum rate limit of 5,000 requests per hour. If the installation is on a GitHub Enterprise Cloud organization, the installation has a rate limit of 15,000 requests per hour.</p>
+<p>For installations that are not on a GitHub Enterprise Cloud organization, the rate limit for the installation will scale with the number of users and repositories. Installations that have more than 20 repositories receive another 50 requests per hour for each repository. Installations that are on an organization that have more than 20 users receive another 50 requests per hour for each user. The rate limit cannot increase beyond 12,500 requests per hour.</p>
+<p>Primary rate limits for GitHub App user access tokens (as opposed to installation access tokens) are dictated by the primary rate limits for the authenticated user. This rate limit is combined with any requests that another GitHub App or OAuth app makes on that user's behalf and any requests that the user makes with a personal access token. For more information, see <a href="https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api#primary-rate-limit-for-authenticated-users" class="external">Rate limits for the REST API</a>.</p>
+</li>
+<li>
+<p><strong>OAuth apps -</strong> For these requests, the rate limit is 5,000 requests per hour per OAuth app. If the app is owned by a GitHub Enterprise Cloud organization, the rate limit is 15,000 requests per hour.</p>
+</li>
+<li>
+<p><strong>GITHUB TOKEN</strong> - The rate limit for <code>GITHUB_TOKEN</code> is 1,000 requests per hour per repository. For requests to resources that belong to a GitHub Enterprise Cloud account, the limit is 15,000 requests per hour per repository.</p>
+</li>
+<li>
+<p><strong>Secondary rate limits</strong> - In addition to primary rate limits, GitHub enforces secondary rate limits in order to prevent abuse and keep the API available for all users, these are not configurable with GHEC. For more information, see <a href="https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api?apiVersion=2022-11-28#about-secondary-rate-limits" class="external">Rate limits for the REST API</a>.</p>
+</li>
+</ul>
+<h3 title="Commonly hit dependent service limits / Docker Hub's rate limit for GitHub Actions"><a href="#docker-hubs-rate-limit-for-github-actions" aria-hidden="true" class="anchor" id="docker-hubs-rate-limit-for-github-actions"></a>Docker Hub's rate limit for GitHub Actions</h3>
+<ul>
+<li><strong>GitHub-hosted runners pulling public images:</strong> Docker Hub's rate limit is not applied.</li>
+<li><strong>GitHub-hosted runners pulling private images:</strong> Pulling private images from Docker Hub is subject to the rate limit.</li>
+<li><strong>Self-hosted runners pulling public or private images:</strong> Pulling images from Docker Hub is always subject to the rate limit.</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

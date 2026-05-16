@@ -1,0 +1,843 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Workflow commands for GitHub Actions</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Reference</a> / <a href="index.html">Workflows and actions</a> / </nav><h1><a href="#workflow-commands-for-github-actions" aria-hidden="true" class="anchor" id="workflow-commands-for-github-actions"></a>Workflow commands for GitHub Actions</h1>
+<p>You can use workflow commands when running shell commands in a workflow or in an action's code.</p>
+<h2 title="About workflow commands"><a href="#about-workflow-commands" aria-hidden="true" class="anchor" id="about-workflow-commands"></a>About workflow commands</h2>
+<p>Actions can communicate with the runner machine to set environment variables, output values used by other actions, add debug messages to the output logs, and other tasks.</p>
+<p>Most workflow commands use the <code>echo</code> command in a specific format, while others are invoked by writing to a file. For more information, see <a href="#environment-files">Environment files</a>.</p>
+<h3 title="About workflow commands / Example of a workflow command"><a href="#example-of-a-workflow-command" aria-hidden="true" class="anchor" id="example-of-a-workflow-command"></a>Example of a workflow command</h3>
+<div class="ghd-tool bash">
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#96b5b4;">echo </span><span style="color:#c0c5ce;">"</span><span style="color:#a3be8c;">::workflow-command parameter1={data},parameter2={data}::{command value}</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+</div>
+<div class="ghd-tool powershell">
+<pre lang="powershell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Write-Output "::workflow-command parameter1={data},parameter2={data}::{command value}"
+</span></code></pre>
+</div>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Workflow command and parameter names are case insensitive.</p>
+</div>
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>If you are using Command Prompt, omit double quote characters (<code>"</code>) when using workflow commands.</p>
+</div>
+<h2 title="Using workflow commands to access toolkit functions"><a href="#using-workflow-commands-to-access-toolkit-functions" aria-hidden="true" class="anchor" id="using-workflow-commands-to-access-toolkit-functions"></a>Using workflow commands to access toolkit functions</h2>
+<p>The <a href="https://github.com/actions/toolkit" class="external">actions/toolkit</a> includes a number of functions that can be executed as workflow commands. Use the <code>::</code> syntax to run the workflow commands within your YAML file; these commands are then sent to the runner over <code>stdout</code>.</p>
+<p>For example, instead of using code to create an error annotation, as below:</p>
+<pre lang="javascript" style="background-color:#2b303b;"><code><span style="color:#bf616a;">core</span><span style="color:#c0c5ce;">.</span><span style="color:#8fa1b3;">error</span><span style="color:#c0c5ce;">('</span><span style="color:#a3be8c;">Missing semicolon</span><span style="color:#c0c5ce;">', {file: '</span><span style="color:#a3be8c;">app.js</span><span style="color:#c0c5ce;">', startLine: </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">})
+</span></code></pre>
+<h3 title="Using workflow commands to access toolkit functions / Example: Creating an annotation for an error"><a href="#example-creating-an-annotation-for-an-error" aria-hidden="true" class="anchor" id="example-creating-an-annotation-for-an-error"></a>Example: Creating an annotation for an error</h3>
+<p>You can use the <code>error</code> command in your workflow to create the same error annotation:</p>
+<div class="ghd-tool bash">
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Create annotation for build error
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "::error file=app.js,line=1::Missing semicolon"
+</span></code></pre>
+</div>
+<div class="ghd-tool powershell">
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Create annotation for build error
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Write-Output "::error file=app.js,line=1::Missing semicolon"
+</span></code></pre>
+</div>
+<p>The following table shows which toolkit functions are available within a workflow:</p>
+<table>
+<thead>
+<tr>
+<th>Toolkit function</th>
+<th>Equivalent workflow command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">core.addPath</code></td>
+<td>Accessible using environment file <code>GITHUB_PATH</code></td>
+</tr>
+<tr>
+<td><code class="keyword">core.debug</code></td>
+<td><code>debug</code></td>
+</tr>
+<tr>
+<td><code class="keyword">core.notice</code></td>
+<td><code>notice</code></td>
+</tr>
+<tr>
+<td><code class="keyword">core.error</code></td>
+<td><code>error</code></td>
+</tr>
+<tr>
+<td><code class="keyword">core.endGroup</code></td>
+<td><code>endgroup</code></td>
+</tr>
+<tr>
+<td><code class="keyword">core.exportVariable</code></td>
+<td>Accessible using environment file <code>GITHUB_ENV</code></td>
+</tr>
+<tr>
+<td><code class="keyword">core.getInput</code></td>
+<td>Accessible using environment variable <code>INPUT_{NAME}</code></td>
+</tr>
+<tr>
+<td><code class="keyword">core.getState</code></td>
+<td>Accessible using environment variable <code>STATE_{NAME}</code></td>
+</tr>
+<tr>
+<td><code class="keyword">core.isDebug</code></td>
+<td>Accessible using environment variable <code>RUNNER_DEBUG</code></td>
+</tr>
+<tr>
+<td><code class="keyword">core.summary</code></td>
+<td>Accessible using environment file <code>GITHUB_STEP_SUMMARY</code></td>
+</tr>
+<tr>
+<td><code class="keyword">core.saveState</code></td>
+<td>Accessible using environment file <code>GITHUB_STATE</code></td>
+</tr>
+<tr>
+<td><code class="keyword">core.setCommandEcho</code></td>
+<td><code>echo</code></td>
+</tr>
+<tr>
+<td><code class="keyword">core.setFailed</code></td>
+<td>Used as a shortcut for <code>::error</code> and <code>exit 1</code></td>
+</tr>
+<tr>
+<td><code class="keyword">core.setOutput</code></td>
+<td>Accessible using environment file <code>GITHUB_OUTPUT</code></td>
+</tr>
+<tr>
+<td><code class="keyword">core.setSecret</code></td>
+<td><code>add-mask</code></td>
+</tr>
+<tr>
+<td><code class="keyword">core.startGroup</code></td>
+<td><code>group</code></td>
+</tr>
+<tr>
+<td><code class="keyword">core.warning</code></td>
+<td><code>warning</code></td>
+</tr>
+</tbody>
+</table>
+<h2 title="Setting a debug message"><a href="#setting-a-debug-message" aria-hidden="true" class="anchor" id="setting-a-debug-message"></a>Setting a debug message</h2>
+<p>Prints a debug message to the log. You must create a secret named <code>ACTIONS_STEP_DEBUG</code> with the value <code>true</code> to see the debug messages set by this command in the log. For more information, see <a href="../../how-tos/monitor-workflows/enable-debug-logging.html">Enabling debug logging</a>.</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">::debug::{message}
+</span></code></pre>
+<h3 title="Example: Setting a debug message"><a href="#example-setting-a-debug-message" aria-hidden="true" class="anchor" id="example-setting-a-debug-message"></a>Example: Setting a debug message</h3>
+<div class="ghd-tool bash">
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#96b5b4;">echo </span><span style="color:#c0c5ce;">"</span><span style="color:#a3be8c;">::debug::Set the Octocat variable</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+</div>
+<div class="ghd-tool powershell">
+<pre lang="powershell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Write-Output "::debug::Set the Octocat variable"
+</span></code></pre>
+</div>
+<h2 title="Setting a notice message"><a href="#setting-a-notice-message" aria-hidden="true" class="anchor" id="setting-a-notice-message"></a>Setting a notice message</h2>
+<p>Creates a notice message and prints the message to the log. This message will create an annotation, which can associate the message with a particular file in your repository. Optionally, your message can specify a position within the file.</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">::notice file={name},line={line},endLine={endLine},title={title}::{message}
+</span></code></pre>
+<table>
+<thead>
+<tr>
+<th align="left">Parameter</th>
+<th align="left">Value</th>
+<th align="left">Required</th>
+<th align="left">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code class="keyword">title</code></td>
+<td align="left">Custom title</td>
+<td align="left">No</td>
+<td align="left">None</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">file</code></td>
+<td align="left">Filename</td>
+<td align="left">No</td>
+<td align="left"><code>.github</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">col</code></td>
+<td align="left">Column number, starting at 1</td>
+<td align="left">No</td>
+<td align="left">None</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">endColumn</code></td>
+<td align="left">End column number</td>
+<td align="left">No</td>
+<td align="left">None</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">line</code></td>
+<td align="left">Line number, starting at 1</td>
+<td align="left">No</td>
+<td align="left"><code>1</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">endLine</code></td>
+<td align="left">End line number</td>
+<td align="left">No</td>
+<td align="left"><code>1</code></td>
+</tr>
+</tbody>
+</table>
+<h3 title="Example: Setting a notice message"><a href="#example-setting-a-notice-message" aria-hidden="true" class="anchor" id="example-setting-a-notice-message"></a>Example: Setting a notice message</h3>
+<div class="ghd-tool bash">
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#96b5b4;">echo </span><span style="color:#c0c5ce;">"</span><span style="color:#a3be8c;">::notice file=app.js,line=1,col=5,endColumn=7::Missing semicolon</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+</div>
+<div class="ghd-tool powershell">
+<pre lang="powershell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Write-Output "::notice file=app.js,line=1,col=5,endColumn=7,title=YOUR-TITLE::Missing semicolon"
+</span></code></pre>
+</div>
+<h2 title="Setting a warning message"><a href="#setting-a-warning-message" aria-hidden="true" class="anchor" id="setting-a-warning-message"></a>Setting a warning message</h2>
+<p>Creates a warning message and prints the message to the log. This message will create an annotation, which can associate the message with a particular file in your repository. Optionally, your message can specify a position within the file.</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">::warning file={name},line={line},endLine={endLine},title={title}::{message}
+</span></code></pre>
+<table>
+<thead>
+<tr>
+<th align="left">Parameter</th>
+<th align="left">Value</th>
+<th align="left">Required</th>
+<th align="left">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code class="keyword">title</code></td>
+<td align="left">Custom title</td>
+<td align="left">No</td>
+<td align="left">None</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">file</code></td>
+<td align="left">Filename</td>
+<td align="left">No</td>
+<td align="left"><code>.github</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">col</code></td>
+<td align="left">Column number, starting at 1</td>
+<td align="left">No</td>
+<td align="left">None</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">endColumn</code></td>
+<td align="left">End column number</td>
+<td align="left">No</td>
+<td align="left">None</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">line</code></td>
+<td align="left">Line number, starting at 1</td>
+<td align="left">No</td>
+<td align="left"><code>1</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">endLine</code></td>
+<td align="left">End line number</td>
+<td align="left">No</td>
+<td align="left"><code>1</code></td>
+</tr>
+</tbody>
+</table>
+<h3 title="Example: Setting a warning message"><a href="#example-setting-a-warning-message" aria-hidden="true" class="anchor" id="example-setting-a-warning-message"></a>Example: Setting a warning message</h3>
+<div class="ghd-tool bash">
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#96b5b4;">echo </span><span style="color:#c0c5ce;">"</span><span style="color:#a3be8c;">::warning file=app.js,line=1,col=5,endColumn=7,title=YOUR-TITLE::Missing semicolon</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+</div>
+<div class="ghd-tool powershell">
+<pre lang="powershell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Write-Output "::warning file=app.js,line=1,col=5,endColumn=7,title=YOUR-TITLE::Missing semicolon"
+</span></code></pre>
+</div>
+<h2 title="Setting an error message"><a href="#setting-an-error-message" aria-hidden="true" class="anchor" id="setting-an-error-message"></a>Setting an error message</h2>
+<p>Creates an error message and prints the message to the log. This message will create an annotation, which can associate the message with a particular file in your repository. Optionally, your message can specify a position within the file.</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">::error file={name},line={line},endLine={endLine},title={title}::{message}
+</span></code></pre>
+<table>
+<thead>
+<tr>
+<th align="left">Parameter</th>
+<th align="left">Value</th>
+<th align="left">Required</th>
+<th align="left">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code class="keyword">title</code></td>
+<td align="left">Custom title</td>
+<td align="left">No</td>
+<td align="left">None</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">file</code></td>
+<td align="left">Filename</td>
+<td align="left">No</td>
+<td align="left"><code>.github</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">col</code></td>
+<td align="left">Column number, starting at 1</td>
+<td align="left">No</td>
+<td align="left">None</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">endColumn</code></td>
+<td align="left">End column number</td>
+<td align="left">No</td>
+<td align="left">None</td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">line</code></td>
+<td align="left">Line number, starting at 1</td>
+<td align="left">No</td>
+<td align="left"><code>1</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">endLine</code></td>
+<td align="left">End line number</td>
+<td align="left">No</td>
+<td align="left"><code>1</code></td>
+</tr>
+</tbody>
+</table>
+<h3 title="Example: Setting an error message"><a href="#example-setting-an-error-message" aria-hidden="true" class="anchor" id="example-setting-an-error-message"></a>Example: Setting an error message</h3>
+<div class="ghd-tool bash">
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#96b5b4;">echo </span><span style="color:#c0c5ce;">"</span><span style="color:#a3be8c;">::error file=app.js,line=1,col=5,endColumn=7,title=YOUR-TITLE::Missing semicolon</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+</div>
+<div class="ghd-tool powershell">
+<pre lang="powershell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Write-Output "::error file=app.js,line=1,col=5,endColumn=7,title=YOUR-TITLE::Missing semicolon"
+</span></code></pre>
+</div>
+<h2 title="Grouping log lines"><a href="#grouping-log-lines" aria-hidden="true" class="anchor" id="grouping-log-lines"></a>Grouping log lines</h2>
+<p>Creates an expandable group in the log. To create a group, use the <code>group</code> command and specify a <code>title</code>. Anything you print to the log between the <code>group</code> and <code>endgroup</code> commands is nested inside an expandable entry in the log.</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">::group::{title}
+</span><span style="color:#c0c5ce;">::endgroup::
+</span></code></pre>
+<h3 title="Example: Grouping log lines"><a href="#example-grouping-log-lines" aria-hidden="true" class="anchor" id="example-grouping-log-lines"></a>Example: Grouping log lines</h3>
+<div class="ghd-tool bash">
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">bash-example</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Group of log lines
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">            echo "::group::My title"
+</span><span style="color:#a3be8c;">            echo "Inside group"
+</span><span style="color:#a3be8c;">            echo "::endgroup::"
+</span></code></pre>
+</div>
+<div class="ghd-tool powershell">
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">powershell-example</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">windows-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Group of log lines
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">            Write-Output "::group::My title"
+</span><span style="color:#a3be8c;">            Write-Output "Inside group"
+</span><span style="color:#a3be8c;">            Write-Output "::endgroup::"
+</span></code></pre>
+</div>
+<p><img src="../../../..//assets/images/help/actions/actions-log-group.png" alt="Screenshot of the log for the workflow step. The second line, &quot;My title&quot;, is an expanded group. The next line, &quot;Inside group&quot;, is indented below."></p>
+<h2 title="Masking a value in a log"><a href="#masking-a-value-in-a-log" aria-hidden="true" class="anchor" id="masking-a-value-in-a-log"></a>Masking a value in a log</h2>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">::add-mask::{value}
+</span></code></pre>
+<p>Masking a value prevents a string or variable from being printed in the log. Each masked word separated by whitespace is replaced with the <code>*</code> character. You can use an environment variable or string for the mask's <code>value</code>. This must be done once per value per job. When you mask a value, it is treated as a secret and will be redacted on the runner. For example, after you mask a value, you won't be able to set that value as an output.</p>
+<h3 title="Masking a value in a log / Example: Masking a string"><a href="#example-masking-a-string" aria-hidden="true" class="anchor" id="example-masking-a-string"></a>Example: Masking a string</h3>
+<p>When you print <code>"Mona The Octocat"</code> in the log, you'll see <code>"***"</code>.</p>
+<div class="ghd-tool bash">
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#96b5b4;">echo </span><span style="color:#c0c5ce;">"</span><span style="color:#a3be8c;">::add-mask::Mona The Octocat</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+</div>
+<div class="ghd-tool powershell">
+<pre lang="powershell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Write-Output "::add-mask::Mona The Octocat"
+</span></code></pre>
+</div>
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>Make sure you register the secret with 'add-mask' before outputting it in the build logs or using it in any other workflow commands.</p>
+</div>
+<h3 title="Masking a value in a log / Example: Masking an environment variable"><a href="#example-masking-an-environment-variable" aria-hidden="true" class="anchor" id="example-masking-an-environment-variable"></a>Example: Masking an environment variable</h3>
+<p>When you print the variable <code>MY_NAME</code> or the value <code>"Mona The Octocat"</code> in the log, you'll see <code>"***"</code> instead of <code>"Mona The Octocat"</code>.</p>
+<div class="ghd-tool bash">
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">bash-example</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">MY_NAME</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">Mona The Octocat</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bash-version
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "::add-mask::$MY_NAME"
+</span></code></pre>
+</div>
+<div class="ghd-tool powershell">
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">powershell-example</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">windows-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">MY_NAME</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">Mona The Octocat</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">powershell-version
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Write-Output "::add-mask::$env:MY_NAME"
+</span></code></pre>
+</div>
+<h3 title="Masking a value in a log / Example: Masking a generated output within a single job"><a href="#example-masking-a-generated-output-within-a-single-job" aria-hidden="true" class="anchor" id="example-masking-a-generated-output-within-a-single-job"></a>Example: Masking a generated output within a single job</h3>
+<p>If you do not need to pass your secret from one job to another job, you can:</p>
+<ol>
+<li>Generate the secret (without outputting it).</li>
+<li>Mask it with <code>add-mask</code>.</li>
+<li>Use <code>GITHUB_OUTPUT</code> to make the secret available to other steps within the job.</li>
+</ol>
+<div class="ghd-tool bash">
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">push
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">generate-a-secret-output</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">sets-a-secret
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Generate, mask, and output a secret
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          the_secret=$((RANDOM))
+</span><span style="color:#a3be8c;">          echo "::add-mask::$the_secret"
+</span><span style="color:#a3be8c;">          echo "secret-number=$the_secret" &gt;&gt; "$GITHUB_OUTPUT"
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Use that secret output (protected by a mask)
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          echo "the secret number is ${{ steps.sets-a-secret.outputs.secret-number }}"
+</span></code></pre>
+</div>
+<div class="ghd-tool powershell">
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">push
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">generate-a-secret-output</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">sets-a-secret
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Generate, mask, and output a secret
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">shell</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">pwsh
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          Set-Variable -Name TheSecret -Value (Get-Random)
+</span><span style="color:#a3be8c;">          Write-Output "::add-mask::$TheSecret"
+</span><span style="color:#a3be8c;">          "secret-number=$TheSecret" &gt;&gt; $env:GITHUB_OUTPUT
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Use that secret output (protected by a mask)
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">shell</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">pwsh
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          Write-Output "the secret number is ${{ steps.sets-a-secret.outputs.secret-number }}"
+</span></code></pre>
+</div>
+<h3 title="Masking a value in a log / Example: Masking and passing a secret between jobs or workflows"><a href="#example-masking-and-passing-a-secret-between-jobs-or-workflows" aria-hidden="true" class="anchor" id="example-masking-and-passing-a-secret-between-jobs-or-workflows"></a>Example: Masking and passing a secret between jobs or workflows</h3>
+<p>If you want to pass a masked secret between jobs or workflows, you should store the secret in a store and then retrieve it in the subsequent job or workflow.</p>
+<h4><a href="#setup" aria-hidden="true" class="anchor" id="setup"></a>Setup</h4>
+<ol>
+<li>Set up a secret store to store the secret that you will generate during your workflow. For example, Vault.</li>
+<li>Generate a key for reading and writing to that secret store. Store the key as a repository secret. In the following example workflow, the secret name is <code>SECRET_STORE_CREDENTIALS</code>. For more information, see <a href="../../how-tos/write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a>.</li>
+</ol>
+<h4><a href="#workflow" aria-hidden="true" class="anchor" id="workflow"></a>Workflow</h4>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This workflow uses an imaginary secret store, <code>secret-store</code>, which has imaginary commands <code>store-secret</code> and <code>retrieve-secret</code>. <code>some/secret-store@ 27b31702a0e7fc50959f5ad993c78deac1bdfc29</code> is an imaginary action that installs the <code>secret-store</code> application and configures it to connect to an <code>instance</code> with <code>credentials</code>.</p>
+</div>
+<div class="ghd-tool bash">
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">push
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">secret-generator</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">outputs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">handle</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ steps.generate-secret.outputs.handle }}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">some/secret-store@27b31702a0e7fc50959f5ad993c78deac1bdfc29
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">credentials</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.SECRET_STORE_CREDENTIALS }}
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">instance</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.SECRET_STORE_INSTANCE }}
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">generate secret
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">generate-secret
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">shell</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bash
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">        GENERATED_SECRET=$((RANDOM))
+</span><span style="color:#a3be8c;">        echo "::add-mask::$GENERATED_SECRET"
+</span><span style="color:#a3be8c;">        SECRET_HANDLE=$(secret-store store-secret "$GENERATED_SECRET")
+</span><span style="color:#a3be8c;">        echo "handle=$SECRET_HANDLE" &gt;&gt; "$GITHUB_OUTPUT"
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">secret-consumer</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">macos-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">needs</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">secret-generator
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">some/secret-store@27b31702a0e7fc50959f5ad993c78deac1bdfc29
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">credentials</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.SECRET_STORE_CREDENTIALS }}
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">instance</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.SECRET_STORE_INSTANCE }}
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">use secret
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">shell</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">bash
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">        SECRET_HANDLE="${{ needs.secret-generator.outputs.handle }}"
+</span><span style="color:#a3be8c;">        RETRIEVED_SECRET=$(secret-store retrieve-secret "$SECRET_HANDLE")
+</span><span style="color:#a3be8c;">        echo "::add-mask::$RETRIEVED_SECRET"
+</span><span style="color:#a3be8c;">        echo "We retrieved our masked secret: $RETRIEVED_SECRET"
+</span></code></pre>
+</div>
+<div class="ghd-tool powershell">
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">push
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">secret-generator</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">some/secret-store@27b31702a0e7fc50959f5ad993c78deac1bdfc29
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">credentials</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.SECRET_STORE_CREDENTIALS }}
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">instance</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.SECRET_STORE_INSTANCE }}
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">generate secret
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">shell</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">pwsh
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">        Set-Variable -Name Generated_Secret -Value (Get-Random)
+</span><span style="color:#a3be8c;">        Write-Output "::add-mask::$Generated_Secret"
+</span><span style="color:#a3be8c;">        Set-Variable -Name Secret_Handle -Value (Store-Secret "$Generated_Secret")
+</span><span style="color:#a3be8c;">        "handle=$Secret_Handle" &gt;&gt; $env:GITHUB_OUTPUT
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">secret-consumer</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">macos-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">needs</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">secret-generator
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">some/secret-store@27b31702a0e7fc50959f5ad993c78deac1bdfc29
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">credentials</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.SECRET_STORE_CREDENTIALS }}
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">instance</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.SECRET_STORE_INSTANCE }}
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">use secret
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">shell</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">pwsh
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">        Set-Variable -Name Secret_Handle -Value "${{ needs.secret-generator.outputs.handle }}"
+</span><span style="color:#a3be8c;">        Set-Variable -Name Retrieved_Secret -Value (Retrieve-Secret "$Secret_Handle")
+</span><span style="color:#a3be8c;">        echo "::add-mask::$Retrieved_Secret"
+</span><span style="color:#a3be8c;">        echo "We retrieved our masked secret: $Retrieved_Secret"
+</span></code></pre>
+</div>
+<h2 title="Stopping and starting workflow commands"><a href="#stopping-and-starting-workflow-commands" aria-hidden="true" class="anchor" id="stopping-and-starting-workflow-commands"></a>Stopping and starting workflow commands</h2>
+<p>Stops processing any workflow commands. This special command allows you to log anything without accidentally running a workflow command. For example, you could stop logging to output an entire script that has comments.</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">::stop-commands::{endtoken}
+</span></code></pre>
+<p>To stop the processing of workflow commands, pass a unique token to <code>stop-commands</code>. To resume processing workflow commands, pass the same token that you used to stop workflow commands.</p>
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>Make sure the token you're using is randomly generated and unique for each run.</p>
+</div>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">::{endtoken}::
+</span></code></pre>
+<h3 title="Example: Stopping and starting workflow commands"><a href="#example-stopping-and-starting-workflow-commands" aria-hidden="true" class="anchor" id="example-stopping-and-starting-workflow-commands"></a>Example: Stopping and starting workflow commands</h3>
+<div class="ghd-tool bash">
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">workflow-command-job</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Disable workflow commands
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          echo '::warning:: This is a warning message, to demonstrate that commands are being processed.'
+</span><span style="color:#a3be8c;">          stopMarker=$(uuidgen)
+</span><span style="color:#a3be8c;">          echo "::stop-commands::$stopMarker"
+</span><span style="color:#a3be8c;">          echo '::warning:: This will NOT be rendered as a warning, because stop-commands has been invoked.'
+</span><span style="color:#a3be8c;">          echo "::$stopMarker::"
+</span><span style="color:#a3be8c;">          echo '::warning:: This is a warning again, because stop-commands has been turned off.'
+</span></code></pre>
+</div>
+<div class="ghd-tool powershell">
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">workflow-command-job</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">windows-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Disable workflow commands
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          Write-Output '::warning:: This is a warning message, to demonstrate that commands are being processed.'
+</span><span style="color:#a3be8c;">          $stopMarker = New-Guid
+</span><span style="color:#a3be8c;">          Write-Output "::stop-commands::$stopMarker"
+</span><span style="color:#a3be8c;">          Write-Output '::warning:: This will NOT be rendered as a warning, because stop-commands has been invoked.'
+</span><span style="color:#a3be8c;">          Write-Output "::$stopMarker::"
+</span><span style="color:#a3be8c;">          Write-Output '::warning:: This is a warning again, because stop-commands has been turned off.'
+</span></code></pre>
+</div>
+<h2 title="Sending values to the pre and post actions"><a href="#sending-values-to-the-pre-and-post-actions" aria-hidden="true" class="anchor" id="sending-values-to-the-pre-and-post-actions"></a>Sending values to the pre and post actions</h2>
+<p>You can create environment variables for sharing with your workflow's <code>pre:</code> or <code>post:</code> actions by writing to the file located at <code>GITHUB_STATE</code>. For example, you can create a file with the <code>pre:</code> action, pass the file location to the <code>main:</code> action, and then use the <code>post:</code> action to delete the file. Alternatively, you could create a file with the <code>main:</code> action, pass the file location to the <code>post:</code> action, and also use the <code>post:</code> action to delete the file.</p>
+<p>If you have multiple <code>pre:</code> or <code>post:</code> actions, you can only access the saved value in the action where it was written to <code>GITHUB_STATE</code>. For more information on the <code>post:</code> action, see <a href="metadata-syntax.html#runspost">Metadata syntax reference</a>.</p>
+<p>The <code>GITHUB_STATE</code> file is only available within an action. The saved value is stored as an environment value with the <code>STATE_</code> prefix.</p>
+<p>This example uses JavaScript to write to the <code>GITHUB_STATE</code> file. The resulting environment variable is named <code>STATE_processID</code> with the value of <code>12345</code>:</p>
+<pre lang="javascript" style="background-color:#2b303b;"><code><span style="color:#b48ead;">import </span><span style="color:#d08770;">* </span><span style="color:#b48ead;">as </span><span style="color:#bf616a;">fs </span><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">'</span><span style="color:#a3be8c;">fs</span><span style="color:#c0c5ce;">'
+</span><span style="color:#b48ead;">import </span><span style="color:#d08770;">* </span><span style="color:#b48ead;">as </span><span style="color:#bf616a;">os </span><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">'</span><span style="color:#a3be8c;">os</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">fs</span><span style="color:#c0c5ce;">.</span><span style="color:#8fa1b3;">appendFileSync</span><span style="color:#c0c5ce;">(process.env.GITHUB_STATE, `</span><span style="color:#a3be8c;">processID=12345</span><span style="color:#c0c5ce;">${os.EOL}`, {
+</span><span style="color:#c0c5ce;">  encoding: '</span><span style="color:#a3be8c;">utf8</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">})
+</span></code></pre>
+<p>The <code>STATE_processID</code> variable is then exclusively available to the cleanup script running under the <code>main</code> action. This example runs in <code>main</code> and uses JavaScript to display the value assigned to the <code>STATE_processID</code> environment variable:</p>
+<pre lang="javascript" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">console.</span><span style="color:#96b5b4;">log</span><span style="color:#c0c5ce;">("</span><span style="color:#a3be8c;">The running PID from the main action is: </span><span style="color:#c0c5ce;">" + process.env.STATE_processID);
+</span></code></pre>
+<h2 title="Environment files"><a href="#environment-files" aria-hidden="true" class="anchor" id="environment-files"></a>Environment files</h2>
+<p>During the execution of a workflow, the runner generates temporary files that can be used to perform certain actions. The path to these files can be accessed and edited using GitHub's default environment variables. See <a href="variables.html#default-environment-variables">Variables reference</a>. You will need to use UTF-8 encoding when writing to these files to ensure proper processing of the commands. Multiple commands can be written to the same file, separated by newlines.<br>
+To use environment variables in a GitHub Action, you create or modify <code>.env</code> files using specific GitHub Actions commands.</p>
+<p>Here's how:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Example Workflow for Environment Files
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">push
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">set_and_use_env_vars</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set environment variable
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "MY_ENV_VAR=myValue" &gt;&gt; $GITHUB_ENV
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Use environment variable
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          echo "The value of MY_ENV_VAR is $MY_ENV_VAR"
+</span><span style="color:#a3be8c;">
+</span></code></pre>
+<p>Another example would be to use it to store metadata like build timestamps, commit SHAs, or artifact names:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Store build timestamp
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "BUILD_TIME=$(date +'%T')" &gt;&gt; $GITHUB_ENV
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Deploy using stored timestamp
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "Deploying at $BUILD_TIME"
+</span></code></pre>
+<div class="ghd-tool powershell">
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>PowerShell versions 5.1 and below (<code>shell: powershell</code>) do not use UTF-8 by default, so you must specify the UTF-8 encoding. For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">legacy-powershell-example</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">windows-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">shell</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">powershell
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          "mypath" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+</span></code></pre>
+<p>PowerShell Core versions 6 and higher (<code>shell: pwsh</code>) use UTF-8 by default. For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">powershell-core-example</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">windows-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">shell</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">pwsh
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          "mypath" &gt;&gt; $env:GITHUB_PATH
+</span></code></pre>
+</div>
+</div>
+<h2 title="Setting an environment variable"><a href="#setting-an-environment-variable" aria-hidden="true" class="anchor" id="setting-an-environment-variable"></a>Setting an environment variable</h2>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>To avoid issues, it's good practice to treat environment variables as case sensitive, irrespective of the behavior of the operating system and shell you are using.</p>
+</div>
+<div class="ghd-tool bash">
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#96b5b4;">echo </span><span style="color:#c0c5ce;">"</span><span style="color:#a3be8c;">{environment_variable_name}={value}</span><span style="color:#c0c5ce;">" &gt;&gt; "$</span><span style="color:#bf616a;">GITHUB_ENV</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+</div>
+<div class="ghd-tool powershell">
+<ul>
+<li>
+<p>Using PowerShell version 6 and higher:</p>
+<pre lang="powershell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">"{environment_variable_name}={value}" &gt;&gt; $env:GITHUB_ENV
+</span></code></pre>
+</li>
+<li>
+<p>Using PowerShell version 5.1 and below:</p>
+<pre lang="powershell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">"{environment_variable_name}={value}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+</span></code></pre>
+</li>
+</ul>
+</div>
+<p>You can make an environment variable available to any subsequent steps in a workflow job by defining or updating the environment variable and writing this to the <code>GITHUB_ENV</code> environment file. The step that creates or updates the environment variable does not have access to the new value, but all subsequent steps in a job will have access.</p>
+<p>You can't overwrite the value of the default environment variables named <code>GITHUB_*</code> and <code>RUNNER_*</code>. Currently you can overwrite the value of the <code>CI</code> variable. However, it's not guaranteed that this will always be possible. For more information about the default environment variables, see <a href="../../how-tos/write-workflows/choose-what-workflows-do/use-variables.html#default-environment-variables">Store information in variables</a>.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Due to security restrictions, <code>GITHUB_ENV</code> cannot be used to set the <code>NODE_OPTIONS</code> environment variable.</p>
+</div>
+<h3 title="Setting an environment variable / Example of writing an environment variable to GITHUB_ENV"><a href="#example-of-writing-an-environment-variable-to-github_env" aria-hidden="true" class="anchor" id="example-of-writing-an-environment-variable-to-github_env"></a>Example of writing an environment variable to <code>GITHUB_ENV</code></h3>
+<div class="ghd-tool bash">
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set the value
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">step_one
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">      echo "action_state=yellow" &gt;&gt; "$GITHUB_ENV"
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Use the value
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">step_two
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">      printf '%s\n' "$action_state" # This will output 'yellow'
+</span></code></pre>
+</div>
+<div class="ghd-tool powershell">
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set the value
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">step_one
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">      "action_state=yellow" &gt;&gt; $env:GITHUB_ENV
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Use the value
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">step_two
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">      Write-Output "$env:action_state" # This will output 'yellow'
+</span></code></pre>
+</div>
+<h3 title="Setting an environment variable / Multiline strings"><a href="#multiline-strings" aria-hidden="true" class="anchor" id="multiline-strings"></a>Multiline strings</h3>
+<p>For multiline strings, you may use a delimiter with the following syntax.</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">{name}&lt;&lt;{delimiter}
+</span><span style="color:#c0c5ce;">{value}
+</span><span style="color:#c0c5ce;">{delimiter}
+</span></code></pre>
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>Make sure the delimiter you're using won't occur on a line of its own within the value. If the value is completely arbitrary then you shouldn't use this format. Write the value to a file instead.</p>
+</div>
+<h4><a href="#example-of-a-multiline-string" aria-hidden="true" class="anchor" id="example-of-a-multiline-string"></a>Example of a multiline string</h4>
+<p>This example uses <code>EOF</code> as the delimiter, and sets the <code>JSON_RESPONSE</code> environment variable to the value of the <code>curl</code> response.</p>
+<div class="ghd-tool bash">
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set the value in bash
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">step_one
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">      {
+</span><span style="color:#a3be8c;">        echo 'JSON_RESPONSE&lt;&lt;EOF'
+</span><span style="color:#a3be8c;">        curl https://example.com
+</span><span style="color:#a3be8c;">        echo EOF
+</span><span style="color:#a3be8c;">      } &gt;&gt; "$GITHUB_ENV"
+</span></code></pre>
+</div>
+<div class="ghd-tool powershell">
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set the value in pwsh
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">step_one
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">      $EOF = (New-Guid).Guid
+</span><span style="color:#a3be8c;">      "JSON_RESPONSE&lt;&lt;$EOF" &gt;&gt; $env:GITHUB_ENV
+</span><span style="color:#a3be8c;">      (Invoke-WebRequest -Uri "https://example.com").Content &gt;&gt; $env:GITHUB_ENV
+</span><span style="color:#a3be8c;">      "$EOF" &gt;&gt; $env:GITHUB_ENV
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">shell</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">pwsh
+</span></code></pre>
+</div>
+<h2 title="Setting an output parameter"><a href="#setting-an-output-parameter" aria-hidden="true" class="anchor" id="setting-an-output-parameter"></a>Setting an output parameter</h2>
+<p>Sets a step's output parameter. Note that the step will need an <code>id</code> to be defined to later retrieve the output value. You can set multi-line output values with the same technique used in the <a href="#multiline-strings">Multiline strings</a> section to define multi-line environment variables.</p>
+<div class="ghd-tool bash">
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#96b5b4;">echo </span><span style="color:#c0c5ce;">"</span><span style="color:#a3be8c;">{name}={value}</span><span style="color:#c0c5ce;">" &gt;&gt; "$</span><span style="color:#bf616a;">GITHUB_OUTPUT</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+</div>
+<div class="ghd-tool powershell">
+<pre lang="powershell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">"{name}=value" &gt;&gt; $env:GITHUB_OUTPUT
+</span></code></pre>
+</div>
+<h3 title="Setting an output parameter / Example of setting an output parameter"><a href="#example-of-setting-an-output-parameter" aria-hidden="true" class="anchor" id="example-of-setting-an-output-parameter"></a>Example of setting an output parameter</h3>
+<div class="ghd-tool bash">
+<p>This example demonstrates how to set the <code>SELECTED_COLOR</code> output parameter and later retrieve it:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set color
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">color-selector
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "SELECTED_COLOR=green" &gt;&gt; "$GITHUB_OUTPUT"
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Get color
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">SELECTED_COLOR</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ steps.color-selector.outputs.SELECTED_COLOR }}
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "The selected color is $SELECTED_COLOR"
+</span></code></pre>
+</div>
+<div class="ghd-tool powershell">
+<p>This example demonstrates how to set the <code>SELECTED_COLOR</code> output parameter and later retrieve it:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Set color
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">color-selector
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">            "SELECTED_COLOR=green" &gt;&gt; $env:GITHUB_OUTPUT
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Get color
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">SELECTED_COLOR</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ steps.color-selector.outputs.SELECTED_COLOR }}
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Write-Output "The selected color is $env:SELECTED_COLOR"
+</span></code></pre>
+</div>
+<h2 title="Adding a job summary"><a href="#adding-a-job-summary" aria-hidden="true" class="anchor" id="adding-a-job-summary"></a>Adding a job summary</h2>
+<div class="ghd-tool bash">
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#96b5b4;">echo </span><span style="color:#c0c5ce;">"</span><span style="color:#a3be8c;">{markdown content}</span><span style="color:#c0c5ce;">" &gt;&gt; $</span><span style="color:#bf616a;">GITHUB_STEP_SUMMARY
+</span></code></pre>
+</div>
+<div class="ghd-tool powershell">
+<pre lang="powershell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">"{markdown content}" &gt;&gt; $env:GITHUB_STEP_SUMMARY
+</span></code></pre>
+</div>
+<p>You can set some custom Markdown for each job so that it will be displayed on the summary page of a workflow run. You can use job summaries to display and group unique content, such as test result summaries, so that someone viewing the result of a workflow run doesn't need to go into the logs to see important information related to the run, such as failures.</p>
+<p>Job summaries support <a href="https://github.github.com/gfm/" class="external">GitHub flavored Markdown</a>, and you can add your Markdown content for a step to the <code>GITHUB_STEP_SUMMARY</code> environment file. <code>GITHUB_STEP_SUMMARY</code> is unique for each step in a job. For more information about the per-step file that <code>GITHUB_STEP_SUMMARY</code> references, see <a href="#environment-files">Environment files</a>.</p>
+<p>When a job finishes, the summaries for all steps in a job are grouped together into a single job summary and are shown on the workflow run summary page. If multiple jobs generate summaries, the job summaries are ordered by job completion time.</p>
+<h3 title="Adding a job summary / Example of adding a job summary"><a href="#example-of-adding-a-job-summary" aria-hidden="true" class="anchor" id="example-of-adding-a-job-summary"></a>Example of adding a job summary</h3>
+<div class="ghd-tool bash">
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#96b5b4;">echo </span><span style="color:#c0c5ce;">"</span><span style="color:#a3be8c;">### Hello world! :rocket:</span><span style="color:#c0c5ce;">" &gt;&gt; $</span><span style="color:#bf616a;">GITHUB_STEP_SUMMARY
+</span></code></pre>
+</div>
+<div class="ghd-tool powershell">
+<pre lang="powershell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">"### Hello world! :rocket:" &gt;&gt; $env:GITHUB_STEP_SUMMARY
+</span></code></pre>
+</div>
+<p><img src="../../../..//assets/images/help/actions/actions-job-summary-simple-example.png" alt="Screenshot of the summary page of a workflow run. Under &quot;example summary&quot; is &quot;Hello world!&quot; and a rocket emoji."></p>
+<h3 title="Adding a job summary / Multiline Markdown content"><a href="#multiline-markdown-content" aria-hidden="true" class="anchor" id="multiline-markdown-content"></a>Multiline Markdown content</h3>
+<p>For multiline Markdown content, you can use <code>&gt;&gt;</code> to continuously append content for the current step. With every append operation, a newline character is automatically added.</p>
+<h4><a href="#example-of-multiline-markdown-content" aria-hidden="true" class="anchor" id="example-of-multiline-markdown-content"></a>Example of multiline Markdown content</h4>
+<div class="ghd-tool bash">
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Generate list using Markdown
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">    echo "This is the lead in sentence for the list" &gt;&gt; $GITHUB_STEP_SUMMARY
+</span><span style="color:#a3be8c;">    echo "" &gt;&gt; $GITHUB_STEP_SUMMARY # this is a blank line
+</span><span style="color:#a3be8c;">    echo "- Lets add a bullet point" &gt;&gt; $GITHUB_STEP_SUMMARY
+</span><span style="color:#a3be8c;">    echo "- Lets add a second bullet point" &gt;&gt; $GITHUB_STEP_SUMMARY
+</span><span style="color:#a3be8c;">    echo "- How about a third one?" &gt;&gt; $GITHUB_STEP_SUMMARY
+</span></code></pre>
+</div>
+<div class="ghd-tool powershell">
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Generate list using Markdown
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">    "This is the lead in sentence for the list" &gt;&gt; $env:GITHUB_STEP_SUMMARY
+</span><span style="color:#a3be8c;">    "" &gt;&gt; $env:GITHUB_STEP_SUMMARY # this is a blank line
+</span><span style="color:#a3be8c;">    "- Lets add a bullet point" &gt;&gt; $env:GITHUB_STEP_SUMMARY
+</span><span style="color:#a3be8c;">    "- Lets add a second bullet point" &gt;&gt; $env:GITHUB_STEP_SUMMARY
+</span><span style="color:#a3be8c;">    "- How about a third one?" &gt;&gt; $env:GITHUB_STEP_SUMMARY
+</span></code></pre>
+</div>
+<h3 title="Adding a job summary / Overwriting job summaries"><a href="#overwriting-job-summaries" aria-hidden="true" class="anchor" id="overwriting-job-summaries"></a>Overwriting job summaries</h3>
+<p>To clear all content for the current step, you can use <code>&gt;</code> to overwrite any previously added content in Bash, or remove <code>-Append</code> in PowerShell</p>
+<h4><a href="#example-of-overwriting-job-summaries" aria-hidden="true" class="anchor" id="example-of-overwriting-job-summaries"></a>Example of overwriting job summaries</h4>
+<div class="ghd-tool bash">
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Overwrite Markdown
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">    echo "Adding some Markdown content" &gt;&gt; $GITHUB_STEP_SUMMARY
+</span><span style="color:#a3be8c;">    echo "There was an error, we need to clear the previous Markdown with some new content." &gt; $GITHUB_STEP_SUMMARY
+</span></code></pre>
+</div>
+<div class="ghd-tool powershell">
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Overwrite Markdown
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">    "Adding some Markdown content" &gt;&gt; $env:GITHUB_STEP_SUMMARY
+</span><span style="color:#a3be8c;">    "There was an error, we need to clear the previous Markdown with some new content." &gt;&gt; $env:GITHUB_STEP_SUMMARY
+</span></code></pre>
+</div>
+<h3 title="Adding a job summary / Removing job summaries"><a href="#removing-job-summaries" aria-hidden="true" class="anchor" id="removing-job-summaries"></a>Removing job summaries</h3>
+<p>To completely remove a summary for the current step, the file that <code>GITHUB_STEP_SUMMARY</code> references can be deleted.</p>
+<h4><a href="#example-of-removing-job-summaries" aria-hidden="true" class="anchor" id="example-of-removing-job-summaries"></a>Example of removing job summaries</h4>
+<div class="ghd-tool bash">
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Delete all summary content
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">    echo "Adding Markdown content that we want to remove before the step ends" &gt;&gt; $GITHUB_STEP_SUMMARY
+</span><span style="color:#a3be8c;">    rm $GITHUB_STEP_SUMMARY
+</span></code></pre>
+</div>
+<div class="ghd-tool powershell">
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Delete all summary content
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">    "Adding Markdown content that we want to remove before the step ends" &gt;&gt; $env:GITHUB_STEP_SUMMARY
+</span><span style="color:#a3be8c;">    Remove-Item $env:GITHUB_STEP_SUMMARY
+</span></code></pre>
+</div>
+<p>After a step has completed, job summaries are uploaded and subsequent steps cannot modify previously uploaded Markdown content. Summaries automatically mask any secrets that might have been added accidentally. If a job summary contains sensitive information that must be deleted, you can delete the entire workflow run to remove all its job summaries. For more information see <a href="../../how-tos/manage-workflow-runs/delete-a-workflow-run.html">Deleting a workflow run</a>.</p>
+<h3 title="Adding a job summary / Step isolation and limits"><a href="#step-isolation-and-limits" aria-hidden="true" class="anchor" id="step-isolation-and-limits"></a>Step isolation and limits</h3>
+<p>Job summaries are isolated between steps and each step is restricted to a maximum size of 1MiB. Isolation is enforced between steps so that potentially malformed Markdown from a single step cannot break Markdown rendering for subsequent steps. If more than 1MiB of content is added for a step, then the upload for the step will fail and an error annotation will be created. Upload failures for job summaries do not affect the overall status of a step or a job. A maximum of 20 job summaries from steps are displayed per job.</p>
+<h2 title="Adding a system path"><a href="#adding-a-system-path" aria-hidden="true" class="anchor" id="adding-a-system-path"></a>Adding a system path</h2>
+<p>Prepends a directory to the system <code>PATH</code> variable and automatically makes it available to all subsequent actions in the current job; the currently running action cannot access the updated path variable. To see the currently defined paths for your job, you can use <code>echo "$PATH"</code> in a step or an action.</p>
+<h3 title="Adding a system path / Example of adding a system path"><a href="#example-of-adding-a-system-path" aria-hidden="true" class="anchor" id="example-of-adding-a-system-path"></a>Example of adding a system path</h3>
+<div class="ghd-tool bash">
+<p>This example demonstrates how to add the user <code>$HOME/.local/bin</code> directory to <code>PATH</code>:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#96b5b4;">echo </span><span style="color:#c0c5ce;">"$</span><span style="color:#bf616a;">HOME</span><span style="color:#a3be8c;">/.local/bin</span><span style="color:#c0c5ce;">" &gt;&gt; "$</span><span style="color:#bf616a;">GITHUB_PATH</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+</div>
+<div class="ghd-tool powershell">
+<p>This example demonstrates how to add the user <code>$env:HOMEPATH/.local/bin</code> directory to <code>PATH</code>:</p>
+<pre lang="powershell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">"$env:HOMEPATH/.local/bin" | Out-File -FilePath "$env:GITHUB_PATH" -Append
+</span></code></pre>
+</div>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>About CodeQL workspaces</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">Concepts</a> / <a href="../index.html">Code scanning</a> / <a href="index.html">CodeQL</a> / </nav><h1><a href="#about-codeql-workspaces" aria-hidden="true" class="anchor" id="about-codeql-workspaces"></a>About CodeQL workspaces</h1>
+<p>CodeQL workspaces let you develop and maintain multiple related CodeQL packs together, resolving dependencies between them directly from source.</p>
+<h2 title="About CodeQL workspaces"><a href="#about-codeql-workspaces-1" aria-hidden="true" class="anchor" id="about-codeql-workspaces-1"></a>About CodeQL workspaces</h2>
+<p>A CodeQL workspace is typically used to develop a set of library and query packs that depend on each other. When you use a CodeQL workspace, all the CodeQL packs in the workspace are available as <em>source dependencies</em> for each other when you run a CodeQL command that resolves queries. This makes it easier to develop, maintain, and publish multiple, related CodeQL packs. For more information on CodeQL packs, see <a href="../../../tutorials/customize-code-scanning/customizing-analysis-with-codeql-packs.html">Customizing analysis with CodeQL packs</a>.</p>
+<p>Workspaces are commonly stored in a single Git repository so that related packs can be developed and published together.</p>
+<h2 title="Source dependencies"><a href="#source-dependencies" aria-hidden="true" class="anchor" id="source-dependencies"></a>Source dependencies</h2>
+<p>In a CodeQL workspace, all packs included in the workspace are treated as <strong>source dependencies</strong> of each other. This means they are resolved directly from the local file system rather than from the CodeQL package cache.</p>
+<p>Because workspace packs resolve from source:</p>
+<ul>
+<li>Local changes in one pack are immediately visible to other packs in the workspace.</li>
+<li>Dependencies found in the workspace override versions in the package cache.</li>
+<li>Version constraints in <code>qlpack.yml</code> files are ignored for workspace dependencies, since the version is determined by the workspace content.</li>
+</ul>
+<p>This behavior is particularly useful when developing multiple related packs at the same time. For example:</p>
+<ul>
+<li>A dependency has not yet been published and exists only locally.</li>
+<li>You are making coordinated changes across several packs and need them to resolve against each other during testing.</li>
+</ul>
+<p>Outside of a workspace, dependencies are resolved from the package cache and must match the version constraints defined in <code>qlpack.yml</code>. Inside a workspace, resolution prioritizes local source content instead.</p>
+<h2 title="CodeQL workspaces and query resolution"><a href="#codeql-workspaces-and-query-resolution" aria-hidden="true" class="anchor" id="codeql-workspaces-and-query-resolution"></a>CodeQL workspaces and query resolution</h2>
+<p>The workspace dependency model affects how packs are installed and published.</p>
+<ul>
+<li>During installation, dependencies found in the workspace are not downloaded into the package cache and are not written to the <code>codeql-pack.lock.yml</code> file.</li>
+<li>During publishing, dependencies provided by the workspace are bundled using their local source content rather than versions from the package cache.</li>
+</ul>
+<p>For example, running <code>codeql pack install</code> in a pack directory within a workspace uses any dependencies found in the workspace instead of downloading them into the package cache or recording them in the <code>codeql-pack.lock.yml</code> file. See <a href="../../../tutorials/customize-code-scanning/creating-and-working-with-codeql-packs.html#adding-and-installing-dependencies">Creating and working with CodeQL packs</a>.</p>
+<h3 title="CodeQL workspaces and query resolution / Example"><a href="#example" aria-hidden="true" class="anchor" id="example"></a>Example</h3>
+<p>A CodeQL workspace is defined by a YAML file named <code>codeql-workspace.yml</code>. Consider the following <code>codeql-workspace.yml</code> file:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">provide</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - "</span><span style="color:#a3be8c;">**/qlpack.yml</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<p>And the following CodeQL library pack <code>qlpack.yml</code> file in the workspace:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">my-company/my-library
+</span><span style="color:#bf616a;">library</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">1.0.0
+</span></code></pre>
+<p>And the following CodeQL query pack <code>qlpack.yml</code> file in the workspace:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">my-company/my-queries
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">1.0.0
+</span><span style="color:#bf616a;">dependencies</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">my-company/my-library</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">*</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">codeql/cpp-all</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">~0.2.0
+</span></code></pre>
+<p>Notice that the <code>dependencies</code> block for the CodeQL query pack, <code>my-company/my-queries</code>, specifies <code>"*"</code> as the version of the library pack. Since the library pack is already defined as a source dependency in <code>codeql-workspace.yml</code>, the library pack’s content is always resolved from inside the workspace. Any version constraint you define will be ignored in this case. Using <code>"*"</code> for source dependencies makes it explicit that the version is inherited from the workspace.</p>
+<p>When you execute <code>codeql pack install</code> from the query pack directory, an appropriate version of <code>codeql/cpp-all</code> is downloaded to the local package cache. Also, a <code>codeql-pack.lock.yml</code> file is created that contains the resolved version of <code>codeql/cpp-all</code>. The lock file won’t contain an entry for <code>my-company/my-library</code> since it is resolved from source dependencies. The <code>codeql-pack.lock.yml</code> file will look something like this:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">dependencies</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">codeql/cpp-all</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">0.2.2
+</span></code></pre>
+<p>When you execute <code>codeql pack publish</code> from the query pack directory, the <code>codeql/cpp-all</code> dependency from the package cache and the <code>my-company/my-library</code> from the workspace are bundled with <code>my-company/my-queries</code> and published to the GitHub container registry.</p>
+<h2 title="Example of a codeql-workspace.yml file"><a href="#example-of-a-codeql-workspaceyml-file" aria-hidden="true" class="anchor" id="example-of-a-codeql-workspaceyml-file"></a>Example of a <code>codeql-workspace.yml</code> file</h2>
+<p>A CodeQL workspace is defined by a YAML file named <code>codeql-workspace.yml</code>. This file contains a <code>provide</code> block, and optionally <code>ignore</code> and <code>registries</code> blocks.</p>
+<ul>
+<li>
+<p>The <code>provide</code> block contains a list of glob patterns that define the CodeQL packs that are available in the workspace.</p>
+</li>
+<li>
+<p>The <code>ignore</code> block contains a list of glob patterns that define CodeQL packs that are not available in the workspace.</p>
+</li>
+<li>
+<p>The <code>registries</code> block contains a list of GHES URLs and package patterns that control which container registry is used for publishing CodeQL packs. See <a href="../../../how-tos/find-and-fix-code-vulnerabilities/scan-from-the-command-line/publish-and-use-packs.html#working-with-codeql-packs-on-ghes">Publishing and using CodeQL packs</a>.</p>
+</li>
+</ul>
+<p>Each entry in the <code>provide</code> or <code>ignore</code> section must map to the location of a <code>qlpack.yml</code> file. All glob patterns are defined relative to the directory that contains the workspace file. For a list of patterns accepted in this file, see <a href="https://github.com/actions/toolkit/tree/main/packages/glob#patterns" class="external">@actions/glob</a>.</p>
+<p>For example, the following <code>codeql-workspace.yml</code> file defines a workspace that contains all the CodeQL packs recursively found in the <code>codeql-packs</code> directory, except for the packs in the <code>experimental</code> directory. The <code>registries</code> block specifies that <code>codeql/\*</code> packs should be downloaded from <code>https://ghcr.io/v2/</code>, which is GitHub’s default container registry. All other packs should be downloaded from and published to the registry at <code>GHE_HOSTNAME</code>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">provide</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - "</span><span style="color:#a3be8c;">*/codeql-packs/**/qlpack.yml</span><span style="color:#c0c5ce;">"
+</span><span style="color:#bf616a;">ignore</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - "</span><span style="color:#a3be8c;">*/codeql-packs/**/experimental/**/qlpack.yml</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;"> - </span><span style="color:#bf616a;">packages</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">codeql/*</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">   </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://ghcr.io/v2/
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;"> - </span><span style="color:#bf616a;">packages</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">*</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">   </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://containers.GHE_HOSTNAME/v2/
+</span></code></pre>
+<p>You can list the packs included in a workspace by running <code>codeql pack ls</code> in the workspace directory.</p>
+<h2 title="Using ${workspace} as a version range in qlpack.yml files"><a href="#using-workspace-as-a-version-range-in-qlpackyml-files" aria-hidden="true" class="anchor" id="using-workspace-as-a-version-range-in-qlpackyml-files"></a>Using <code>${workspace}</code> as a version range in <code>qlpack.yml</code> files</h2>
+<p>CodeQL packs in a workspace can use the special <code>${workspace}</code>, <code>~${workspace}</code>, and <code>^${workspace}</code> version range placeholders. These placeholders indicate that this pack depends on the version of the specified pack that is currently in the workspace. This placeholder is typically used for dependencies inside of library packs to ensure that when they are published, the dependencies in their <code>qlpack.yml</code> file reflect the state of the workspace when they were published.</p>
+<h3 title="Using ${workspace} as a version range in qlpack.yml files / Example"><a href="#example-1" aria-hidden="true" class="anchor" id="example-1"></a>Example</h3>
+<p>Consider the following two library packs in the same workspace:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">my-company/my-library
+</span><span style="color:#bf616a;">library</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">1.2.3
+</span><span style="color:#bf616a;">dependencies</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">my-company/my-library2</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${workspace}
+</span></code></pre>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">my-company/my-library2
+</span><span style="color:#bf616a;">library</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">4.5.6
+</span></code></pre>
+<p>When <code>my-company/my-library</code> is published to the GitHub container registry, the version of the <code>my-company/my-library2</code> dependency in the published <code>qlpack.yml</code> file will be written as <code>4.5.6</code>.</p>
+<p>Similarly, if the dependency is <code>my-company/my-library2: ^${workspace}</code> in the source pack, and then the pack is published, the version of the <code>my-company/my-library2</code> dependency in the published <code>qlpack.yml</code> file will be written as <code>^4.5.6</code>, indicating that versions <code>&gt;= 4.5.6</code> and <code>&lt; 5.0.0</code> are all compatible with this library pack.</p>
+<p>If the dependency is <code>my-company/my-library2: ~${workspace}</code> in the source pack, and then the pack is published, the version of the <code>my-company/my-library2</code> dependency in the published <code>qlpack.yml</code> file will be written as <code>~4.5.6</code>, indicating that versions <code>&gt;= 4.5.6</code> and <code>&lt; 4.6.0</code> are all compatible with this library pack.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

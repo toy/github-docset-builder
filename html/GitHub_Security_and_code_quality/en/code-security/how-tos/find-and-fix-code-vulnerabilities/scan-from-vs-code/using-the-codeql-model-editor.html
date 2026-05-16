@@ -1,0 +1,161 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Using the CodeQL model editor</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Find and fix code vulnerabilities</a> / <a href="index.html">Scan from VS Code</a> / </nav><h1><a href="#using-the-codeql-model-editor" aria-hidden="true" class="anchor" id="using-the-codeql-model-editor"></a>Using the CodeQL model editor</h1>
+<p>You can view, write, and edit CodeQL model packs in Visual Studio Code.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>CodeQL model packs are currently in public preview and subject to change. Model packs are supported for C/C++, C#, Java/Kotlin, Python, Ruby, and Rust analysis.</p>
+<p>The CodeQL model editor in the CodeQL extension for Visual Studio Code supports modeling dependencies for C#, Java/Kotlin, Python, and Ruby.</p>
+</div>
+<h2 title="About the CodeQL model editor"><a href="#about-the-codeql-model-editor" aria-hidden="true" class="anchor" id="about-the-codeql-model-editor"></a>About the CodeQL model editor</h2>
+<p>With CodeQL model packs, you can expand your CodeQL code scanning analysis to recognize custom libraries and frameworks used by your codebase that are not supported by default. With the CodeQL model editor, you can create your own model packs. The model editor guides you through modeling the calls to external dependencies in your application, or fully modeling all the public entry and exit points in an external dependency.</p>
+<p>For more information about customizing code scanning analysis with model packs, see <a href="../manage-your-configuration/editing-your-configuration-of-default-setup.html#extending-codeql-coverage-with-codeql-model-packs-in-default-setup">Editing your configuration of default setup</a> and <a href="../../../reference/code-scanning/workflow-configuration-options.html#codeql-model-packs">Workflow configuration options for code scanning</a>.</p>
+<p>When you open the model editor, it analyzes the currently selected CodeQL database and identifies where the application uses external APIs and all public methods. An external (or third-party) API is any API that is not part of the CodeQL database you have selected.</p>
+<p>The model editor has two different modes:</p>
+<ul>
+<li>
+<p><strong>Application mode (default view)</strong>: The editor lists each external framework used by the selected CodeQL database. When you expand a framework, a list of all calls to and from the external API is shown with the options available to model dataflow through each call. This mode is most useful for improving the CodeQL results for a specific codebase.</p>
+</li>
+<li>
+<p><strong>Dependency mode:</strong> The editor identifies all of the publicly accessible APIs in the selected CodeQL database. This view guides you through modeling each public API that the codebase makes available. When you have finished modeling the entire API, you can save the model and use it to improve the CodeQL analysis for all codebases that use the dependency.</p>
+</li>
+</ul>
+<p>The rest of this article covers the practical aspects of modelling dependencies using the CodeQL model editor. For technical information, see <a href="https://codeql.github.com/docs/codeql-language-guides/customizing-library-models-for-java-and-kotlin/" class="external">Customizing library models for Java and Kotlin</a>, <a href="https://codeql.github.com/docs/codeql-language-guides/customizing-library-models-for-python/" class="external">Customizing Library Models for Python</a>, <a href="https://codeql.github.com/docs/codeql-language-guides/customizing-library-models-for-ruby/" class="external">Customizing Library Models for Ruby</a>, and <a href="https://codeql.github.com/docs/codeql-language-guides/customizing-library-models-for-csharp/" class="external">Customizing library models for C#</a> in the CodeQL language documentation.</p>
+<h2 title="Displaying the CodeQL model editor"><a href="#displaying-the-codeql-model-editor" aria-hidden="true" class="anchor" id="displaying-the-codeql-model-editor"></a>Displaying the CodeQL model editor</h2>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>To use this public preview functionality, install the latest version of the CodeQL extension for Visual Studio Code.</p>
+</div>
+<ol>
+<li>
+<p>Open your CodeQL workspace in VS Code. For example, the <a href="https://github.com/github/vscode-codeql-starter" class="external"><code>vscode-codeql-starter</code> workspace</a>. If you are using the starter workspace, update the <code>ql</code> submodule from <code>main</code> to ensure that you have the queries used to gather data for the model editor.</p>
+</li>
+<li>
+<p>In Visual Studio Code, click <strong>QL</strong> in the left sidebar to display the CodeQL extension.</p>
+</li>
+<li>
+<p>In the "Databases" view, select the CodeQL database that you want to model from.</p>
+</li>
+<li>
+<p>In the CodeQL "Method Modeling" view, click <strong>Start modeling</strong> to display the model editor. Alternatively, use the VS Code Command Palette to run the <strong>CodeQL: Open Model Editor (Beta)</strong> command. <!-- markdownlint-disable-line outdated-release-phase-terminology --> <!-- "Beta" is in the name of the command in the VS Code extension --></p>
+</li>
+<li>
+<p>The CodeQL model editor runs a series of telemetry queries to identify APIs in the code, and the editor is displayed in a new tab.</p>
+</li>
+<li>
+<p>When the telemetry queries are complete, the APIs that have been identified are shown in the editor.</p>
+</li>
+</ol>
+<div class="markdown-alert markdown-alert-tip">
+<p class="markdown-alert-title">Tip</p>
+<p>You can move the CodeQL "Method Modeling" view from the primary sidebar to the secondary sidebar, if you want more space while you are modeling calls or methods. If you close the view, you can reopen it from the "View" menu in VS Code and clicking <strong>Open View<span data-escaped-char="">.</span>..</strong>.</p>
+</div>
+<h2 title="Modeling the calls your codebase makes to external APIs"><a href="#modeling-the-calls-your-codebase-makes-to-external-apis" aria-hidden="true" class="anchor" id="modeling-the-calls-your-codebase-makes-to-external-apis"></a>Modeling the calls your codebase makes to external APIs</h2>
+<p>You typically use this approach when you are looking at a specific codebase where you want to improve the precision of CodeQL results. This is useful when the codebase uses frameworks or libraries that are not supported by CodeQL, and if the source code of the framework or library is not included in the analysis.</p>
+<p>This section uses an open source Java project called "sofa-jraft" as an example. The experience of modeling calls to external APIs written in other compiled languages is similar.</p>
+<ol>
+<li>
+<p>In Visual Studio Code, select the CodeQL database that you want to improve CodeQL coverage for.</p>
+</li>
+<li>
+<p>Display the CodeQL model editor. By default the editor runs in application mode, so the list of external APIs used by the selected codebase is shown.</p>
+<p><img src="../../../../..//assets/images/help/security/codeql-for-vs-code-model-application-mode.png" alt="Screenshot of the &quot;Application mode&quot; view showing two of the external Java frameworks used by the &quot;sofa-jraft&quot; codebase."></p>
+</li>
+<li>
+<p>Click to expand an external API and view the list of calls from the codebase to the external dependency.</p>
+<p><img src="../../../../..//assets/images/help/security/codeql-for-vs-code-model-application-mode-expanded.png" alt="Screenshot of  &quot;Application mode&quot; showing the calls to the &quot;rocksdbjni&quot; framework. The &quot;View&quot; option for the first call is outlined in orange."></p>
+</li>
+<li>
+<p>Click <strong>View</strong> associated with an API call or method to show where it is used in your codebase.</p>
+</li>
+<li>
+<p>The file containing the first call from your codebase to the API is opened, and a CodeQL "Methods Usage" view is displayed in VS Code (where the "Problems" and "Terminal" views are usually displayed). The CodeQL "Methods Usage" view lists of all the calls from your code to the API, grouped by method. You can click through each use to decide how to model your use of the method.</p>
+</li>
+<li>
+<p>When you have determined how to model your use of the method, you can select a different model type. Click the dropdown under "Model Type" in the CodeQL "Method Modeling" view of the CodeQL extension. This change is automatically reflected in the main model editor.</p>
+</li>
+<li>
+<p>The remaining fields in that row are updated with the options available for the chosen model type:</p>
+<ul>
+<li>"Source": choose the "Output" element to model.</li>
+<li>"Sink": choose the "Input" element to model.</li>
+<li>"Flow summary": choose the "Input" and "Output" elements to model.</li>
+</ul>
+</li>
+<li>
+<p>Define the "Kind" of dataflow for the model.</p>
+</li>
+<li>
+<p>When you have finished modeling, display the main model editor and click <strong>Save all</strong> or <strong>Save</strong> (shown at the bottom-right of each expanded list of methods). The percentage of methods modeled in the editor is updated.</p>
+</li>
+</ol>
+<p>The models are stored in your workspace at <code>.github/codeql/extensions/CODEQL-MODEl-PACK</code>, where <code>CODEQL-MODEL-PACK</code> is the name of the CodeQL database that you selected. That is, the name of the repository, hyphen, the language analyzed by CodeQL. For more information, see <a href="../../../tutorials/customize-code-scanning/creating-and-working-with-codeql-packs.html#creating-a-codeql-model-pack">Creating and working with CodeQL packs</a>.</p>
+<p>The models are stored in a series of YAML data extension files, one for each external API. For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#a3be8c;">.github/codeql/extensions/sofa-jraft-java </span><span style="color:#65737e;"># the model pack directory
+</span><span style="color:#c0c5ce;">    </span><span style="color:#a3be8c;">models
+</span><span style="color:#c0c5ce;">        </span><span style="color:#a3be8c;">jmh-core.model.yml                  </span><span style="color:#65737e;"># models calls to jmh-core@1.20
+</span><span style="color:#c0c5ce;">        </span><span style="color:#a3be8c;">rocksdbjni.model.yml                </span><span style="color:#65737e;"># models calls to rocksdbjni@7.7.3
+</span></code></pre>
+<h2 title="Modeling the public API of a codebase"><a href="#modeling-the-public-api-of-a-codebase" aria-hidden="true" class="anchor" id="modeling-the-public-api-of-a-codebase"></a>Modeling the public API of a codebase</h2>
+<p>You typically use this method when you want to model a framework or library that your organization uses in more than one codebase. Once you have finished creating and testing the model, you can publish the CodeQL model pack to the GitHub Container registry for your whole organization to use.</p>
+<p>This section uses an open source Java project called "sofa-jraft" as an example. The experience of modeling calls to external APIs written in other compiled languages is similar.</p>
+<ol>
+<li>
+<p>Select the CodeQL database that you want to model.</p>
+</li>
+<li>
+<p>Display the CodeQL model editor. By default the editor runs in application mode. Click <strong>Model as dependency</strong> to display dependency mode. The screen changes to show the public API of the framework or library.</p>
+<p><img src="../../../../..//assets/images/help/security/codeql-for-vs-code-model-dependency-mode.png" alt="Screenshot of the &quot;Dependency mode&quot; view showing three of the packages published by the &quot;sofa-jraft&quot; codebase."></p>
+</li>
+<li>
+<p>Click to expand a package and view the list of available methods.</p>
+</li>
+<li>
+<p>Click <strong>View</strong> associated with a method to show its definition.</p>
+<p><img src="../../../../..//assets/images/help/security/codeql-for-vs-code-model-dependency-mode-expanded.png" alt="Screenshot of &quot;Dependency mode&quot; with one model for &quot;com.alipay.sofa.jraft.option.BallotBoxOptions.getClosureQueue()&quot;. The &quot;+&quot; button is outlined."></p>
+</li>
+<li>
+<p>When you have determined how to model the method, define the "Model type".</p>
+</li>
+<li>
+<p>The remaining fields in that row are updated with the options available for the chosen model type:</p>
+<ul>
+<li>"Source": choose the "Output" element to model.</li>
+<li>"Sink": choose the "Input" element to model.</li>
+<li>"Flow summary": choose the "Input" and "Output" elements to model.</li>
+</ul>
+</li>
+<li>
+<p>Define the "Kind" of dataflow for the model.</p>
+</li>
+<li>
+<p>When you have finished modeling, click <strong>Save all</strong> or <strong>Save</strong> (shown at the bottom-right of each expanded list of calls). The percentage of calls modeled in the editor is updated.</p>
+</li>
+</ol>
+<p>The models are stored in your workspace at <code>.github/codeql/extensions/CODEQL-MODEL-PACK</code>, where <code>CODEQL-MODEL-PACK</code> is the name of the CodeQL database that you selected. That is, the name of the repository, hyphen, the language analyzed by CodeQL. For more information, see <a href="../../../tutorials/customize-code-scanning/creating-and-working-with-codeql-packs.html#creating-a-codeql-model-pack">Creating and working with CodeQL packs</a>.</p>
+<p>The models are stored in a series of YAML data extension files, one for each public method. For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#a3be8c;">.github/codeql/extensions/sofa-jraft-java          </span><span style="color:#65737e;"># the model pack directory
+</span><span style="color:#c0c5ce;">    </span><span style="color:#a3be8c;">models
+</span><span style="color:#c0c5ce;">        </span><span style="color:#a3be8c;">com.alipay.sofa.jraft.option.model.yml </span><span style="color:#65737e;"># models public methods in package
+</span><span style="color:#c0c5ce;">        </span><span style="color:#a3be8c;">com.alipay.sofa.jraft.rhea.options.model.yml
+</span></code></pre>
+<p>The editor will create a separate model file for each package that you model.</p>
+<h2 title="Modeling methods with multiple potential flows"><a href="#modeling-methods-with-multiple-potential-flows" aria-hidden="true" class="anchor" id="modeling-methods-with-multiple-potential-flows"></a>Modeling methods with multiple potential flows</h2>
+<p>Some methods support more than one data flow. It is important to model all the data flows for a method, otherwise you cannot detect all the potential problems associated with using the method. First you model one data flow for the method, and then use the <strong>+</strong> button in the method row to specify a second data flow model.</p>
+<p><img src="../../../../..//assets/images/help/security/codeql-for-vs-code-model-dependency-mode-plus.png" alt="Screenshot of the &quot;Dependency mode&quot; view with public methods available in &quot;com.alipay.soft.jraft.option&quot;. A &quot;View&quot; option is outlined in orange."></p>
+<h2 title="Testing CodeQL model packs in VS Code"><a href="#testing-codeql-model-packs-in-vs-code" aria-hidden="true" class="anchor" id="testing-codeql-model-packs-in-vs-code"></a>Testing CodeQL model packs in VS Code</h2>
+<p>You can test any CodeQL model packs you create in VS Code with the "Running Queries: Use Extension Packs" setting. For more information, see <a href="customizing-settings.html">Customizing settings</a>. This method works for both databases and for variant analysis repositories.</p>
+<ul>
+<li>
+<p>To run queries on a CodeQL database with any model packs that are stored within the <code>.github/codeql/extensions</code> directory of the workspace, update your <code>settings.json</code> file with: <code>"codeQL.runningQueries.useExtensionPacks": "all",</code></p>
+</li>
+<li>
+<p>To run queries on a CodeQL database without using model packs, update your <code>settings.json</code> file with: <code>"codeQL.runningQueries.useExtensionPacks": "none",</code></p>
+</li>
+</ul>
+<p>If your model is working well, you should see a difference in the results of the two different runs. If you don't see any differences in results, you may need to introduce a known bug to verify that the model behaves as expected.</p>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li><a href="../manage-your-configuration/editing-your-configuration-of-default-setup.html#extending-codeql-coverage-with-codeql-model-packs-in-default-setup">Editing your configuration of default setup</a></li>
+<li><a href="../../../reference/code-scanning/workflow-configuration-options.html#codeql-model-packs">Workflow configuration options for code scanning</a><br>
+<a href="../../../tutorials/customize-code-scanning/customizing-analysis-with-codeql-packs.html#using-model-packs-to-analyze-calls-to-custom-dependencies">Customizing analysis with CodeQL packs</a>.</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

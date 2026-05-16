@@ -1,0 +1,53 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Resolving a block on your pull request</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">How-tos</a> / <a href="index.html">Maintain quality code</a> / </nav><h1><a href="#resolving-a-block-on-your-pull-request" aria-hidden="true" class="anchor" id="resolving-a-block-on-your-pull-request"></a>Resolving a block on your pull request</h1>
+<p>Identify and resolve a code quality block on your pull request so you can merge your changes.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>GitHub Code Quality is currently in public preview and subject to change.<br>
+During public preview, Code Quality will not be billed, although Code Quality scans will consume GitHub Actions minutes.</p>
+</div>
+<h2 title="Understanding why your pull request is blocked"><a href="#understanding-why-your-pull-request-is-blocked" aria-hidden="true" class="anchor" id="understanding-why-your-pull-request-is-blocked"></a>Understanding why your pull request is blocked</h2>
+<p>Repository administrators can set code quality gates for maintainability and reliability using GitHub Code Quality. When you open a pull request, a scan automatically runs to check your changes against these standards.</p>
+<p>If your pull request introduces code that falls below the required quality threshold, you’ll see a merge block banner at the bottom of the pull request in the Checks section:<br>
+"Merging is blocked: Code quality findings were detected."</p>
+<p><img src="../../../..//assets/images/help/code-quality/code-quality-merge-block.png" alt="Screenshot of the merge block banner in the Checks section of a pull request."></p>
+<p>These checks help maintain a healthy, maintainable codebase and prevent technical debt from accumulating.</p>
+<h2 title="Viewing scan results and their severity levels"><a href="#viewing-scan-results-and-their-severity-levels" aria-hidden="true" class="anchor" id="viewing-scan-results-and-their-severity-levels"></a>Viewing scan results and their severity levels</h2>
+<p>The results of the scan are reported as comments on your pull request, left by the <code>github-code-quality[bot]</code>. Each comment corresponds to a specific code quality problem that was detected in your changes.</p>
+<p>Comments are labeled by severity (<strong>Error</strong>, <strong>Warning</strong>, <strong>Note</strong>). To learn more about what the severity levels mean, see <a href="../../reference/code-quality/metrics-and-ratings.html#severity-levels">Severity levels</a>.</p>
+<h2 title="Determining which findings are blocking your pull request"><a href="#determining-which-findings-are-blocking-your-pull-request" aria-hidden="true" class="anchor" id="determining-which-findings-are-blocking-your-pull-request"></a>Determining which findings are blocking your pull request</h2>
+<p>The quality gate set by repository administrators defines the <strong>minimum severity level</strong> that will block merging.</p>
+<p>The merge block banner may specify the minimum severity level. All findings at that severity level or higher must be addressed before you can merge your pull request.</p>
+<p><img src="../../../..//assets/images/help/code-quality/merge-block-warnings.png" alt="Screenshot of the merge block banner in the Checks section of a pull request."></p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>If you don't see a severity level defined in the merge block banner, it means that your repository is using the most stringent code quality thresholds, which require <strong>all findings</strong> to be addressed before merging.</p>
+</div>
+<h2 title="Fixing or dismissing each finding"><a href="#fixing-or-dismissing-each-finding" aria-hidden="true" class="anchor" id="fixing-or-dismissing-each-finding"></a>Fixing or dismissing each finding</h2>
+<p>In order to unblock your pull request, you need to resolve each required finding by deciding whether to <strong>fix</strong> the issue in your code or <strong>dismiss</strong> the comment.</p>
+<h3 title="Fixing or dismissing each finding / Leveraging Copilot Autofix and Copilot cloud agent to fix findings"><a href="#leveraging-copilot-autofix-and-copilot-cloud-agent-to-fix-findings" aria-hidden="true" class="anchor" id="leveraging-copilot-autofix-and-copilot-cloud-agent-to-fix-findings"></a>Leveraging Copilot Autofix and Copilot cloud agent to fix findings</h3>
+<h4><a href="#copilot-autofix" aria-hidden="true" class="anchor" id="copilot-autofix"></a>Copilot Autofix</h4>
+<p>Comments on the pull request include a suggested <strong>autofix</strong> that you can commit directly to your pull request. Carefully review the suggested autofix for logic, security, and style, then click <strong>Commit suggestion</strong>.</p>
+<p>You don't need a Copilot license to apply these suggestions.</p>
+<h4><a href="#copilot-cloud-agent" aria-hidden="true" class="anchor" id="copilot-cloud-agent"></a>Copilot cloud agent</h4>
+<p>Alternatively, if you have a Copilot license, you can delegate the remediation work to Copilot cloud agent. Comment on the pull request mentioning <code>@Copilot</code> and request that Copilot fix the detected issues.</p>
+<p><img src="../../../..//assets/images/help/code-quality/invoke-cloud-agent.png" alt="Screenshot showing a PR comment that invoked Copilot cloud agent."></p>
+<p>Copilot responds with an eyes emoji (👀) to your comment, starts a new agent session, and opens a pull request with the necessary fixes.</p>
+<p>You can track Copilot cloud agent's work:</p>
+<ul>
+<li>In the pull request, the summary is updated as work progresses.</li>
+<li>Using the <a href="https://github.com/copilot/agents?ref_product=copilot&amp;ref_type=engagement&amp;ref_style=text" class="external">agents page</a> or session logs, see <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/track-copilot-sessions" class="external">Tracking GitHub Copilot's sessions</a>.</li>
+</ul>
+<p>You need a Copilot license to invoke Copilot cloud agent. <br><a href="https://github.com/features/copilot/plans?ref_product=copilot&amp;ref_type=purchase&amp;ref_style=button" target="_blank" class="btn btn-primary mt-3 mr-3 no-underline external"><span>Sign up for Copilot</span> <svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-link-external" aria-label="link external icon" role="img"><path d="M3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2Zm6.854-1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1Z"></path></svg></a></p>
+<h3 title="Fixing or dismissing each finding / Dismissing the finding"><a href="#dismissing-the-finding" aria-hidden="true" class="anchor" id="dismissing-the-finding"></a>Dismissing the finding</h3>
+<p>You can dismiss a finding if it isn’t relevant or actionable in the context of your codebase. Common reasons to dismiss a finding include:</p>
+<ul>
+<li>The finding is in legacy code that’s no longer maintained.</li>
+<li>It’s a known exception to your team’s coding standards.</li>
+<li>It’s a false positive that doesn’t pose a real quality risk.</li>
+</ul>
+<p>Dismissing irrelevant alerts keeps your quality checks focused on meaningful issues.</p>
+<h2 title="Verifying that you've met the requirements"><a href="#verifying-that-youve-met-the-requirements" aria-hidden="true" class="anchor" id="verifying-that-youve-met-the-requirements"></a>Verifying that you've met the requirements</h2>
+<p>To see if you've met the code quality requirements, look at the "Checks" section at the bottom of your pull request. The merge block banner should no longer be present, and you should be able to merge your changes as usual.</p>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>Reduce technical debt by fixing findings in recently changed files. See <a href="../../tutorials/improve-code-quality/improve-recent-merges.html">Improving the quality of recently merged code with AI</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

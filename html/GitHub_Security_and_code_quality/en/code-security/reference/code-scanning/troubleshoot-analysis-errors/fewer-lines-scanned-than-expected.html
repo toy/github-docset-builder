@@ -1,0 +1,26 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>CodeQL scanned fewer lines than expected</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">Reference</a> / <a href="../index.html">Code scanning</a> / <a href="index.html">Troubleshoot analysis errors</a> / </nav><h1><a href="#codeql-scanned-fewer-lines-than-expected" aria-hidden="true" class="anchor" id="codeql-scanned-fewer-lines-than-expected"></a>CodeQL scanned fewer lines than expected</h1>
+<p>If CodeQL analyzed less code than you expected, you may need to use a custom build command.</p>
+<h2 title="About analysis of compiled languages"><a href="#about-analysis-of-compiled-languages" aria-hidden="true" class="anchor" id="about-analysis-of-compiled-languages"></a>About analysis of compiled languages</h2>
+<p>When compiled languages are analyzed using the <code>autobuild</code> or <code>manual</code> build mode, CodeQL only scans files that are built during the analysis. Therefore the number of lines of code scanned will be lower than expected if some of the source code isn't compiled correctly. This can happen for several reasons:</p>
+<ol>
+<li>
+<p>The CodeQL <code>autobuild</code> feature uses heuristics to build the code in a repository. However, sometimes this approach results in an incomplete analysis of a repository. For example, when multiple <code>build.sh</code> commands exist in a single repository, the analysis may not be complete since the <code>autobuild</code> step will only execute one of the commands, and therefore some source files may not be compiled.</p>
+</li>
+<li>
+<p>Some compilers do not work with CodeQL and can cause issues while analyzing the code. For example, most vendor-specific C compilers will not be recognized by CodeQL. C code will need to be compiled with a recognized compiler (for example GCC, Clang or MSVC) in order to be analyzed.</p>
+</li>
+</ol>
+<p>If your CodeQL analysis scans fewer lines of code than expected, you can try changing the build mode to <code>manual</code> and specifying build commands if your workflow specifies a build mode,  replacing the <code>autobuild</code> step with build commands if your workflow contains an <code>autobuild</code> step, or inspecting the copy of the source files in the CodeQL database.</p>
+<h2 title="Change to a manual build process"><a href="#change-to-a-manual-build-process" aria-hidden="true" class="anchor" id="change-to-a-manual-build-process"></a>Change to a <code>manual</code> build process</h2>
+<p>Replace the <code>autobuild</code> process with the same build commands you would use in production. This makes sure that CodeQL knows exactly how to compile all of the source files you want to scan.<br>
+For more information about defining build steps, see <a href="../../../how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/codeql-code-scanning-for-compiled-languages.html#using-build-mode-manual-and-specifying-build-steps">CodeQL code scanning for compiled languages</a>.</p>
+<h2 title="Inspect the copy of the source files in the CodeQL database"><a href="#inspect-the-copy-of-the-source-files-in-the-codeql-database" aria-hidden="true" class="anchor" id="inspect-the-copy-of-the-source-files-in-the-codeql-database"></a>Inspect the copy of the source files in the CodeQL database</h2>
+<p>You may be able to understand why some source files haven't been analyzed by inspecting the copy of the source code included with the CodeQL database. To obtain the database from your Actions workflow, modify the <code>init</code> step of your CodeQL workflow file and set <code>debug: true</code>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Initialize CodeQL
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/init@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">debug</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span></code></pre>
+<p>This uploads the database as an actions artifact that you can download to your local machine. For more information, see <a href="https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts" class="external">Store and share data with workflow artifacts</a>.</p>
+<p>The artifact will contain an archived copy of the source files scanned by CodeQL called <em>src.zip</em>. If you compare the source code files in the repository and the files in <em>src.zip</em>, you can see which types of file are missing. Once you know what types of file are not being analyzed, it is easier to understand how you may need to change the workflow for CodeQL analysis.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

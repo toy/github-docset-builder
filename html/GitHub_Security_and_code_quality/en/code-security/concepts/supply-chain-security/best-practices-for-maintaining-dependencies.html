@@ -1,0 +1,67 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Best practices for maintaining dependencies</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Supply chain security</a> / </nav><h1><a href="#best-practices-for-maintaining-dependencies" aria-hidden="true" class="anchor" id="best-practices-for-maintaining-dependencies"></a>Best practices for maintaining dependencies</h1>
+<p>Guidance and recommendations for maintaining the dependencies you use, including GitHub's security products that can help.</p>
+<h2 title="Best practices for maintaining dependencies"><a href="#best-practices-for-maintaining-dependencies-1" aria-hidden="true" class="anchor" id="best-practices-for-maintaining-dependencies-1"></a>Best practices for maintaining dependencies</h2>
+<p>Staying up to date on dependencies is crucial to maintaining a secure software environment. Here are some recommendations:</p>
+<p><strong>Adopt security-focused dependency management tools</strong></p>
+<ul>
+<li>Use and set up tools that scan your dependencies for vulnerabilities and automatically suggest updates.</li>
+<li>Ensure these tools are integrated into your CI/CD pipeline for continuous monitoring and updating.</li>
+<li>Set up your processes to follow semantic versioning to avoid breaking changes.</li>
+</ul>
+<p><strong>Perform regular vulnerability scans and audits</strong></p>
+<ul>
+<li>Schedule regular dependency audits and dependency scans to identify outdated or vulnerable dependencies.</li>
+</ul>
+<p><strong>Automate security patch management</strong></p>
+<ul>
+<li>Configure your dependency management tools to automatically apply security patches.</li>
+<li>Set up automated pull requests for critical security updates so they can be reviewed and merged quickly.</li>
+</ul>
+<p><strong>Enforce policies on the use of dependencies</strong></p>
+<ul>
+<li>Implement policies that enforce the use of secure versions of dependencies.</li>
+<li>Use tools that can block merging of pull requests if they introduce vulnerabilities or fail to update vulnerable dependencies.</li>
+</ul>
+<p><strong>Integrate security testing in CI/CD</strong></p>
+<ul>
+<li>Incorporate security testing tools into your CI/CD pipeline.</li>
+<li>Ensure that dependency updates are automatically tested for security compliance.</li>
+</ul>
+<p><strong>Use lock files and dependency pinning</strong></p>
+<ul>
+<li>Use lock files (for example, <code>package-lock.json</code>, <code>yarn.lock</code>, <code>Pipfile.lock</code>) to pin dependencies to known secure versions.</li>
+<li>Regularly update and review these lock files to ensure dependencies are up-to-date without unintended security issues.</li>
+</ul>
+<p><strong>Monitor security advisories</strong></p>
+<ul>
+<li>Subscribe to security advisories for the languages and frameworks you use.</li>
+<li>Automate the integration of advisories into your development workflow to stay informed of new vulnerabilities.</li>
+<li>Keep an eye on the dashboards provided by your dependency management tools.</li>
+<li>Be aware of critical updates, especially security patches, and prioritize them.</li>
+</ul>
+<p><strong>Version control and change management</strong></p>
+<ul>
+<li>Track dependency changes in version control (for example, through automated pull requests).</li>
+<li>Conduct regular code reviews to ensure updates do not introduce new vulnerabilities.</li>
+</ul>
+<p><strong>Training and awareness</strong></p>
+<ul>
+<li>Educate your development and operations teams about the importance of keeping dependencies secure and up-to-date.</li>
+<li>Provide training on how to use dependency management and security tools effectively.</li>
+</ul>
+<p><strong>Response plan for vulnerabilities</strong></p>
+<ul>
+<li>Have a clear incident response plan for when vulnerabilities are identified in dependencies.</li>
+<li>Ensure the team knows how to quickly address and remediate security issues.</li>
+</ul>
+<p>By following these practices, you can significantly reduce the risk posed by outdated and vulnerable dependencies and maintain a more secure environment.</p>
+<h2 title="How GitHub can help"><a href="#how-github-can-help" aria-hidden="true" class="anchor" id="how-github-can-help"></a>How GitHub can help</h2>
+<p>GitHub provides security features to help you maintain dependencies:</p>
+<p><strong>Dependency graph</strong>: Tracks your project dependencies and identifies vulnerabilities. See <a href="about-the-dependency-graph.html">About the dependency graph</a>.</p>
+<p><strong>Dependency review</strong>: Catches insecure dependencies in pull requests before they're merged. In addition, the dependency review action can fail checks and, when required by branch protection rules, prevent pull requests that introduce vulnerabilities from being merged. See <a href="about-dependency-review.html">About dependency review</a>.</p>
+<p><strong>Dependabot</strong>: Automatically scans for vulnerabilities, creates alerts, and opens pull requests to update vulnerable or outdated dependencies. You can group multiple updates into single pull requests to streamline reviews. See <a href="about-dependabot-alerts.html">About Dependabot alerts</a>.</p>
+<p><strong>GitHub Advisory Database</strong>: Provides security advisories that power Dependabot's vulnerability detection. See <a href="../vulnerability-reporting-and-management/about-the-github-advisory-database.html">About the GitHub Advisory database</a>.</p>
+<p><strong>Private vulnerability reporting</strong>: Enables maintainers to receive, discuss, and fix vulnerability reports in private before public disclosure.<br>
+<strong>Security overview</strong>: Shows your organization's security posture with dashboards for at-risk repositories, alert trends, and feature enablement status. See <a href="../security-at-scale/about-security-overview.html">About security overview</a>.</p>
+<p>For end-to-end supply chain guidance, see <a href="../../tutorials/implement-supply-chain-best-practices/end-to-end-supply-chain-overview.html">Securing your end-to-end supply chain</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

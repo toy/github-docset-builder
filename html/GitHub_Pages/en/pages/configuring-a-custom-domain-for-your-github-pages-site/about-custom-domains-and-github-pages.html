@@ -1,0 +1,66 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>About custom domains and GitHub Pages</title><link rel="stylesheet" href="../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../index.html">GitHub Pages</a> / <a href="index.html">Configure a custom domain</a> / </nav><h1><a href="#about-custom-domains-and-github-pages" aria-hidden="true" class="anchor" id="about-custom-domains-and-github-pages"></a>About custom domains and GitHub Pages</h1>
+<p>GitHub Pages supports using custom domains, or changing the root of your site's URL from the default, like octocat.github.io, to any domain you own.</p>
+<h2 title="Supported custom domains"><a href="#supported-custom-domains" aria-hidden="true" class="anchor" id="supported-custom-domains"></a>Supported custom domains</h2>
+<div class="markdown-alert markdown-alert-tip">
+<p class="markdown-alert-title">Tip</p>
+<p>We recommend verifying your custom domain prior to adding it to your repository, in order to improve security and avoid takeover attacks. For more information, see <a href="verifying-your-custom-domain-for-github-pages.html">Verifying your custom domain for GitHub Pages</a>.</p>
+</div>
+<p>GitHub Pages works with two types of domains: subdomains and apex domains. For a list of unsupported custom domains, see <a href="troubleshooting-custom-domains-and-github-pages.html#custom-domain-names-that-are-unsupported">Troubleshooting custom domains and GitHub Pages</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Supported custom domain type</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>www</code> subdomain</td>
+<td><code class="keyword">www.example.com</code></td>
+</tr>
+<tr>
+<td>Custom subdomain</td>
+<td><code class="keyword">blog.example.com</code></td>
+</tr>
+<tr>
+<td>Apex domain</td>
+<td><code class="keyword">example.com</code></td>
+</tr>
+</tbody>
+</table>
+<p>You can set up either or both of apex and <code>www</code> subdomain configurations for your site. For more information on apex domains, see <a href="#using-an-apex-domain-for-your-github-pages-site">Using an apex domain for your GitHub Pages site</a>.</p>
+<p>We recommend always using a <code>www</code> subdomain, even if you also use an apex domain. When you create a new site with an apex domain, we automatically attempt to secure the <code>www</code> subdomain for use when serving your site's content, but you need to make the DNS changes to use the <code>www</code> subdomain. If you configure a <code>www</code> subdomain, we automatically attempt to secure the associated apex domain. For more information, see <a href="managing-a-custom-domain-for-your-github-pages-site.html">Managing a custom domain for your GitHub Pages site</a>.</p>
+<h2 title="Using a custom domain across multiple repositories"><a href="#using-a-custom-domain-across-multiple-repositories" aria-hidden="true" class="anchor" id="using-a-custom-domain-across-multiple-repositories"></a>Using a custom domain across multiple repositories</h2>
+<p>If you set a custom domain for a user or organization site, by default, the same custom domain will be used for all project sites owned by the same account. For more information about site types, see <a href="../getting-started-with-github-pages/what-is-github-pages.html#types-of-github-pages-sites">What is GitHub Pages?</a>.</p>
+<p>For example, if the custom domain for your user site is <code>www.octocat.com</code>, and you have a project site with no custom domain configured that is published from a repository called <code>octo-project</code>, the GitHub Pages site for that repository will be available at <code>www.octocat.com/octo-project</code>.</p>
+<p>You can override the default custom domain by adding a custom domain to the individual repository.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The URLs for project sites that are privately published are not affected by the custom domain for your user or organization site. For more information about privately published sites, see <a href="https://docs.github.com/en/enterprise-cloud@latest/pages/getting-started-with-github-pages/changing-the-visibility-of-your-github-pages-site" class="external">Changing the visibility of your GitHub Pages site</a> in the GitHub Enterprise Cloud documentation.</p>
+</div>
+<p>To remove the default custom domain, you must remove the custom domain from your user or organization site.</p>
+<h2 title="Using a subdomain for your GitHub Pages site"><a href="#using-a-subdomain-for-your-github-pages-site" aria-hidden="true" class="anchor" id="using-a-subdomain-for-your-github-pages-site"></a>Using a subdomain for your GitHub Pages site</h2>
+<p>A subdomain is the part of a URL before the root domain. You can configure your subdomain as <code>www</code> or as a distinct section of your site, like <code>blog.example.com</code>.</p>
+<p>Subdomains are configured with a <code>CNAME</code> record through your DNS provider. For more information, see <a href="managing-a-custom-domain-for-your-github-pages-site.html#configuring-a-subdomain">Managing a custom domain for your GitHub Pages site</a>.</p>
+<h3 title="Using a subdomain for your GitHub Pages site / www subdomains"><a href="#www-subdomains" aria-hidden="true" class="anchor" id="www-subdomains"></a><code>www</code> subdomains</h3>
+<p>A <code>www</code> subdomain is the most commonly used type of subdomain. For example, <code>www.example.com</code> includes a <code>www</code> subdomain.</p>
+<p><code>www</code> subdomains are the most stable type of custom domain because <code>www</code> subdomains are not affected by changes to the IP addresses of GitHub's servers.</p>
+<h3 title="Using a subdomain for your GitHub Pages site / Custom subdomains"><a href="#custom-subdomains" aria-hidden="true" class="anchor" id="custom-subdomains"></a>Custom subdomains</h3>
+<p>A custom subdomain is a type of subdomain that doesn't use the standard <code>www</code> variant. Custom subdomains are mostly used when you want two distinct sections of your site. For example, you can create a site called <code>blog.example.com</code> and customize that section independently from <code>www.example.com</code>.</p>
+<h2 title="Using an apex domain for your GitHub Pages site"><a href="#using-an-apex-domain-for-your-github-pages-site" aria-hidden="true" class="anchor" id="using-an-apex-domain-for-your-github-pages-site"></a>Using an apex domain for your GitHub Pages site</h2>
+<p>An apex domain is a custom domain that does not contain a subdomain, such as <code>example.com</code>. Apex domains are also known as base, bare, naked, root apex, or zone apex domains.</p>
+<p>An apex domain is configured with an <code>A</code>, <code>ALIAS</code>, or <code>ANAME</code> record through your DNS provider. For more information, see <a href="managing-a-custom-domain-for-your-github-pages-site.html#configuring-an-apex-domain">Managing a custom domain for your GitHub Pages site</a>.</p>
+<p>If you are using an apex domain as your custom domain, we recommend also setting up a <code>www</code> subdomain. If you configure the correct records for each domain type through your DNS provider, GitHub Pages will automatically create redirects between the domains. For example, if you configure <code>www.example.com</code> as the custom domain for your site, and you have GitHub Pages DNS records set up for the apex and <code>www</code> domains, then <code>example.com</code> will redirect to <code>www.example.com</code>. If you instead configure <code>example.com</code> as the custom domain, then <code>www.example.com</code> will redirect to <code>example.com</code>. Automatic redirects also apply to other subdomains, as <code>www.blog.example.com</code> will redirect to <code>blog.example.com</code> or vice versa. It is not possible to configure a domain that starts with <code>www.www.</code>. For more information, see <a href="managing-a-custom-domain-for-your-github-pages-site.html#configuring-a-subdomain">Managing a custom domain for your GitHub Pages site</a>.</p>
+<h2 title="Securing the custom domain for your GitHub Pages site"><a href="#securing-the-custom-domain-for-your-github-pages-site" aria-hidden="true" class="anchor" id="securing-the-custom-domain-for-your-github-pages-site"></a>Securing the custom domain for your GitHub Pages site</h2>
+<p>If your GitHub Pages site is disabled but has a custom domain set up, it is at risk of a domain takeover. Having a custom domain configured with your DNS provider while your site is disabled could result in someone else hosting a site on one of your subdomains.</p>
+<p>Verifying your custom domain prevents other GitHub users from using your domain with their repositories. If your domain is not verified, and your GitHub Pages site is disabled, you should immediately update or remove your DNS records with your DNS provider. For more information, see <a href="verifying-your-custom-domain-for-github-pages.html">Verifying your custom domain for GitHub Pages</a> and <a href="managing-a-custom-domain-for-your-github-pages-site.html">Managing a custom domain for your GitHub Pages site</a>.</p>
+<p>There are a couple of reasons your site might be automatically disabled.</p>
+<ul>
+<li>If you downgrade from GitHub Pro to GitHub Free, any GitHub Pages sites that are currently published from private repositories in your account will be unpublished. For more information, see <a href="https://docs.github.com/en/billing/managing-the-plan-for-your-github-account/downgrading-your-accounts-plan" class="external">Downgrading your account's plan</a>.</li>
+<li>If you transfer a private repository to a personal account that is using GitHub Free, the repository will lose access to the GitHub Pages feature, and the currently published GitHub Pages site will be unpublished. For more information, see <a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/transferring-a-repository" class="external">Transferring a repository</a>.</li>
+</ul>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li><a href="troubleshooting-custom-domains-and-github-pages.html">Troubleshooting custom domains and GitHub Pages</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

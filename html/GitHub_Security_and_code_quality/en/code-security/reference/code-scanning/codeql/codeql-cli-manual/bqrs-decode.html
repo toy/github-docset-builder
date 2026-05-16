@@ -1,0 +1,91 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>bqrs decode</title><link rel="stylesheet" href="../../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../../index.html">Security and code quality</a> / <a href="../../../index.html">Reference</a> / <a href="../../index.html">Code scanning</a> / <a href="../index.html">CodeQL</a> / <a href="index.html">CodeQL CLI manual</a> / </nav><h1><a href="#bqrs-decode" aria-hidden="true" class="anchor" id="bqrs-decode"></a>bqrs decode</h1>
+<p>Convert result data from BQRS into other forms.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This content describes the most recent release of the CodeQL CLI. For more information about this release, see <a href="https://github.com/github/codeql-cli-binaries/releases" class="external">https://github.com/github/codeql-cli-binaries/releases</a>.</p>
+<p>To see details of the options available for this command in an earlier release, run the command with the <span style="white-space: nowrap;"><code>--help</code></span> option in your terminal.</p>
+</div>
+<h2 title="Synopsis"><a href="#synopsis" aria-hidden="true" class="anchor" id="synopsis"></a>Synopsis</h2>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql bqrs decode [--output=&lt;file&gt;] [--result-set=&lt;name&gt;] [--sort-key=&lt;col&gt;[,&lt;col&gt;...]] &lt;options&gt;... -- &lt;file&gt;
+</span></code></pre>
+<h2 title="Description"><a href="#description" aria-hidden="true" class="anchor" id="description"></a>Description</h2>
+<p>Convert result data from BQRS into other forms.</p>
+<p>The decoded output will be written to standard output, unless the<br>
+<code>--output</code> option is specified.</p>
+<h2 title="Options"><a href="#options" aria-hidden="true" class="anchor" id="options"></a>Options</h2>
+<h3 title="Primary Options"><a href="#primary-options" aria-hidden="true" class="anchor" id="primary-options"></a>Primary Options</h3>
+<h4><a href="#file" aria-hidden="true" class="anchor" id="file"></a><code>&lt;file&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Mandatory] BQRS file to decode.</p>
+<h4><a href="#-o---outputfile" aria-hidden="true" class="anchor" id="-o---outputfile"></a><code>-o, --output=&lt;file&gt;</code></h4>
+<p>The file to write the desired output to.</p>
+<h4><a href="#-r---result-setname" aria-hidden="true" class="anchor" id="-r---result-setname"></a><code>-r, --result-set=&lt;name&gt;</code></h4>
+<p>Select a particular result set from the BQRS file to decode. The<br>
+available results sets can be listed by <a href="bqrs-info.html">codeql bqrs info</a>.</p>
+<p>If no result set is selected, all result sets will be decoded, provided<br>
+the selected output format and processing options support that.<br>
+Otherwise an error results.</p>
+<h4><a href="#-k---sort-keycolcol" aria-hidden="true" class="anchor" id="-k---sort-keycolcol"></a><code>-k, --sort-key=&lt;col&gt;[,&lt;col&gt;...]</code></h4>
+<p>Sort the selected result set by the indicated columns.</p>
+<h4><a href="#--sort-directiondirectiondirection" aria-hidden="true" class="anchor" id="--sort-directiondirectiondirection"></a><code>--sort-direction=&lt;direction&gt;[,&lt;direction&gt;...]</code></h4>
+<p>Sort the selected result set using the indicated sort directions.</p>
+<p>If sort directions are not specified, then ascending order will be used<br>
+for all columns.</p>
+<h3 title="Options / Output format options"><a href="#output-format-options" aria-hidden="true" class="anchor" id="output-format-options"></a>Output format options</h3>
+<h4><a href="#--formatfmt" aria-hidden="true" class="anchor" id="--formatfmt"></a><code>--format=&lt;fmt&gt;</code></h4>
+<p>Select output format. Choices include:</p>
+<p><code>text</code> <em>(default)</em>: A human-readable plain text table.</p>
+<p><code>csv</code>: Comma-separated values.</p>
+<p><code>json</code>: Streaming JSON.</p>
+<p><code>bqrs</code>: BQRS. This must be used with <code>--output</code>. Most useful together<br>
+with <code>--sort-key</code>.</p>
+<h4><a href="#--no-titles" aria-hidden="true" class="anchor" id="--no-titles"></a><code>--no-titles</code></h4>
+<p>Omit column titles for <code>text</code> and <code>csv</code> formats</p>
+<h4><a href="#--entitiesfmtfmt" aria-hidden="true" class="anchor" id="--entitiesfmtfmt"></a><code>--entities=&lt;fmt&gt;[,&lt;fmt&gt;...]</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Control how result columns of entity type are shown. A<br>
+comma-separated list of the following choices:</p>
+<p><code>url</code>: A URL referring to a source location, if the query was compiled<br>
+to produce such URLs for entity types.</p>
+<p><code>string</code>: A string computed by the toString() method in QL, if the query<br>
+was compiled to produce such strings for the column.</p>
+<p><code>id</code>: The internal ID of the entity, which may not be informative.</p>
+<p><code>all</code>: Show columns with all the information the BQRS file provides.</p>
+<p>All the selected options are shown, if possible.</p>
+<h3 title="Options for pagination (for use by interactive front-ends)"><a href="#options-for-pagination-for-use-by-interactive-front-ends" aria-hidden="true" class="anchor" id="options-for-pagination-for-use-by-interactive-front-ends"></a>Options for pagination (for use by interactive front-ends)</h3>
+<h4><a href="#--rowsnum" aria-hidden="true" class="anchor" id="--rowsnum"></a><code>--rows=&lt;num&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Output this many rows from the selected resultset, starting<br>
+at the top, or at the location given by <code>--start-at</code>.</p>
+<h4><a href="#--start-atoffset" aria-hidden="true" class="anchor" id="--start-atoffset"></a><code>--start-at=&lt;offset&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Start printing the row defined at a particular byte offset<br>
+in the BQRS file. The offset must be gotten from <a href="bqrs-info.html">codeql bqrs info</a>, or from the "next" pointer found in JSON output from a previous invocation with <code>--rows</code><br>
+set. Other offsets are likely to produce nonsense output and/or explicit<br>
+errors.</p>
+<p>Must always be used together with <code>--rows</code>, and is incompatible with<br>
+<code>--sort-key</code>.</p>
+<h3 title="Options / Common options"><a href="#common-options" aria-hidden="true" class="anchor" id="common-options"></a>Common options</h3>
+<h4><a href="#-h---help" aria-hidden="true" class="anchor" id="-h---help"></a><code>-h, --help</code></h4>
+<p>Show this help text.</p>
+<h4><a href="#-jopt" aria-hidden="true" class="anchor" id="-jopt"></a><code>-J=&lt;opt&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Give option to the JVM running the command.</p>
+<p>(Beware that options containing spaces will not be handled correctly.)</p>
+<h4><a href="#-v---verbose" aria-hidden="true" class="anchor" id="-v---verbose"></a><code>-v, --verbose</code></h4>
+<p>Incrementally increase the number of progress messages printed.</p>
+<h4><a href="#-q---quiet" aria-hidden="true" class="anchor" id="-q---quiet"></a><code>-q, --quiet</code></h4>
+<p>Incrementally decrease the number of progress messages printed.</p>
+<h4><a href="#--verbositylevel" aria-hidden="true" class="anchor" id="--verbositylevel"></a><code>--verbosity=&lt;level&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Explicitly set the verbosity level to one of errors,<br>
+warnings, progress, progress+, progress++, progress+++. Overrides <code>-v</code><br>
+and <code>-q</code>.</p>
+<h4><a href="#--logdirdir" aria-hidden="true" class="anchor" id="--logdirdir"></a><code>--logdir=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Write detailed logs to one or more files in the given<br>
+directory, with generated names that include timestamps and the name of<br>
+the running subcommand.</p>
+<p>(To write a log file with a name you have full control over, instead<br>
+give <code>--log-to-stderr</code> and redirect stderr as desired.)</p>
+<h4><a href="#--common-cachesdir" aria-hidden="true" class="anchor" id="--common-cachesdir"></a><code>--common-caches=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Controls the location of cached data on disk that will<br>
+persist between several runs of the CLI, such as downloaded QL packs and<br>
+compiled query plans. If not set explicitly, this defaults to a<br>
+directory named <code>.codeql</code> in the user's home directory; it will be<br>
+created if it doesn't already exist.</p>
+<p>Available since <code>v2.15.2</code>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Using conditions to control job execution</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Write workflows</a> / <a href="index.html">Choose when workflows run</a> / </nav><h1><a href="#using-conditions-to-control-job-execution" aria-hidden="true" class="anchor" id="using-conditions-to-control-job-execution"></a>Using conditions to control job execution</h1>
+<p>Prevent a job from running unless your conditions are met.</p>
+<p>You can use the <code>jobs.&lt;job_id&gt;.if</code> conditional to prevent a job from running unless a condition is met. You can use any supported context and expression to create a conditional. For more information on which contexts are supported in this key, see <a href="../../../reference/workflows-and-actions/contexts.html#context-availability">Contexts reference</a>.</p>
+<h3 title="Example: Only run job for a specific repository"><a href="#example-only-run-job-for-a-specific-repository" aria-hidden="true" class="anchor" id="example-only-run-job-for-a-specific-repository"></a>Example: Only run job for a specific repository</h3>
+<p>This example uses <code>if</code> to control when the <code>production-deploy</code> job can run. It will only run if the repository is named <code>octo-repo-prod</code> and is within the <code>octo-org</code> organization. Otherwise, the job will be marked as <em>skipped</em>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">example-workflow
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">push</span><span style="color:#c0c5ce;">]
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">production-deploy</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ github.repository == 'octo-org/octo-repo-prod' }}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-node@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">node-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">14</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm install -g bats
+</span></code></pre>
+<p>Skipped jobs display the message "This check was skipped."</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>A job that is skipped will report its status as "Success". It will not prevent a pull request from merging, even if it is a required check.</p>
+</div>
+<p>To debug why a job was skipped or ran unexpectedly, you can view job condition expression logs. For more information, see <a href="../../monitor-workflows/view-job-condition-logs.html">Viewing job condition expression logs</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

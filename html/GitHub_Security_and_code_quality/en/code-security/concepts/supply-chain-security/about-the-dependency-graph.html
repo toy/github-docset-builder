@@ -1,0 +1,47 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>About the dependency graph</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Supply chain security</a> / </nav><h1><a href="#about-the-dependency-graph" aria-hidden="true" class="anchor" id="about-the-dependency-graph"></a>About the dependency graph</h1>
+<p>You can use the dependency graph to identify all your project's dependencies. The dependency graph supports a range of popular package ecosystems.</p>
+<!--Marketing-LINK: From /features/security and /features/security/software-supply-chain pages "How GitHub's dependency graph is generated".-->
+<h2 title="About the dependency graph"><a href="#about-the-dependency-graph-1" aria-hidden="true" class="anchor" id="about-the-dependency-graph-1"></a>About the dependency graph</h2>
+<p>The dependency graph is a summary of the manifest and lock files stored in a repository and any dependencies that are submitted for the repository using the dependency submission API. For each repository, it shows:</p>
+<ul>
+<li>Dependencies, the ecosystems and packages it depends on</li>
+<li>Dependents, the repositories and packages that depend on it</li>
+</ul>
+<p>For each dependency, you can see the version, license information, the manifest file which included it, and whether it has known vulnerabilities. For package ecosystems supporting transitive dependencies, the relationship status will be displayed and you can click "<svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-kebab-horizontal" aria-label="Show dependency options" role="img"><path d="M8 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM1.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm13 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path></svg>", then "Show paths", to see the transitive path which brought in the dependency.</p>
+<p>You can also search for a specific dependency using the search bar. Dependencies are sorted automatically with vulnerable packages at the top.</p>
+<p>For information on the supported ecosystems and manifest files, see <a href="../../reference/supply-chain-security/dependency-graph-supported-package-ecosystems.html#supported-package-ecosystems">Dependency graph supported package ecosystems</a>.</p>
+<p>When you create a pull request containing changes to dependencies that targets the default branch, GitHub uses the dependency graph to add dependency reviews to the pull request. These indicate whether the dependencies contain vulnerabilities and, if so, the version of the dependency in which the vulnerability was fixed. For more information, see <a href="about-dependency-review.html">About dependency review</a>.</p>
+<h2 title="How the dependency graph is built"><a href="#how-the-dependency-graph-is-built" aria-hidden="true" class="anchor" id="how-the-dependency-graph-is-built"></a>How the dependency graph is built</h2>
+<p>The dependency graph automatically parses dependencies by analyzing manifests and lock files in your repository. You can also submit data yourself. For more information, see <a href="dependency-graph-data.html">How the dependency graph recognizes dependencies</a>.</p>
+<h2 title="Dependency graph availability"><a href="#dependency-graph-availability" aria-hidden="true" class="anchor" id="dependency-graph-availability"></a>Dependency graph availability</h2>
+<p>Repository administrators can enable or disable the dependency graph for repositories. For more information, see <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-security-and-analysis-settings-for-your-repository" class="external">Managing security and analysis settings for your repository</a>.</p>
+<p>Repository administrators can enable or disable the dependency graph for repositories. See <a href="../../how-tos/secure-your-supply-chain/secure-your-dependencies/enabling-the-dependency-graph.html">Enabling the dependency graph</a>.</p>
+<h2 title="Dependents and &quot;used by&quot; data"><a href="#dependents-and-used-by-data" aria-hidden="true" class="anchor" id="dependents-and-used-by-data"></a>Dependents and "used by" data</h2>
+<p>For public repositories, the dependency graph lists dependents. These are other public repositories that depend on the repository or on packages that it publishes. This information is not reported for private repositories.</p>
+<p>Some repositories have a "Used by" section in the sidebar of the <strong>Code</strong> tab. This section shows the number of public references to a package that were found, and displays the avatars of some of the owners of the dependent projects. Clicking any item in this section takes you to the <strong>Dependents</strong> tab of the dependency graph.</p>
+<p>Your repository will have a "Used by" section if:</p>
+<ul>
+<li>The dependency graph is enabled for the repository.</li>
+<li>Your repository contains a package that is published on a supported package ecosystem. See <a href="../../reference/supply-chain-security/dependency-graph-supported-package-ecosystems.html#supported-package-ecosystems">Dependency graph supported package ecosystems</a>.</li>
+<li>Within the ecosystem, your package has a link to a <em>public</em> repository where the source is stored.</li>
+<li>More than 100 repositories depend on your package.</li>
+</ul>
+<p><img src="../../../..//assets/images/help/repository/used-by-section.png" alt="Screenshot of the &quot;Used by&quot; section for a repository showing the summary of &quot;13.4m&quot; with details of 8 avatars and &quot;+13,435,819.&quot;"></p>
+<p>The "Used by" section represents a single package from the repository. If you have admin permissions to a repository that contains multiple packages, you can choose which package the "Used by" section represents. See <a href="../../how-tos/view-and-interpret-data/change-used-by-data.html">Changing the "used by" data for a repository</a>.</p>
+<h2 title="What you can do with the dependency graph"><a href="#what-you-can-do-with-the-dependency-graph" aria-hidden="true" class="anchor" id="what-you-can-do-with-the-dependency-graph"></a>What you can do with the dependency graph</h2>
+<p>You can use the dependency graph to:</p>
+<ul>
+<li>Explore the repositories your code depends on, and those that depend on it. For more information, see <a href="../../how-tos/secure-your-supply-chain/secure-your-dependencies/exploring-the-dependencies-of-a-repository.html">Exploring the dependencies of a repository</a>.</li>
+<li>View a summary of the dependencies used in your organization's repositories in a single dashboard. For more information, see <a href="https://docs.github.com/en/organizations/collaborating-with-groups-in-organizations/viewing-insights-for-dependencies-in-your-organization#viewing-organization-dependency-insights" class="external">Viewing insights for dependencies in your organization</a>.</li>
+<li>View and update vulnerable dependencies for your repository. For more information, see <a href="about-dependabot-alerts.html">About Dependabot alerts</a>.</li>
+<li>See information about vulnerable dependencies in pull requests. For more information, see <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/reviewing-dependency-changes-in-a-pull-request" class="external">Reviewing dependency changes in a pull request</a>.</li>
+<li>Export a software bill of materials (SBOM) for audit or compliance purposes. This is a formal, machine-readable inventory of a project's dependencies. See <a href="../../how-tos/secure-your-supply-chain/establish-provenance-and-integrity/exporting-a-software-bill-of-materials-for-your-repository.html">Exporting a software bill of materials for your repository</a>.</li>
+</ul>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Dependency_graph" class="external">Dependency graph</a> on Wikipedia</li>
+<li><a href="../../how-tos/secure-your-supply-chain/secure-your-dependencies/exploring-the-dependencies-of-a-repository.html">Exploring the dependencies of a repository</a></li>
+<li><a href="../../how-tos/manage-security-alerts/manage-dependabot-alerts/viewing-and-updating-dependabot-alerts.html">Viewing and updating Dependabot alerts</a></li>
+<li><a href="../../reference/supply-chain-security/troubleshoot-dependabot/vulnerable-dependency-detection.html">Vulnerable dependency detection</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,15 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>About SARIF files for code scanning</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Code scanning</a> / </nav><h1><a href="#about-sarif-files-for-code-scanning" aria-hidden="true" class="anchor" id="about-sarif-files-for-code-scanning"></a>About SARIF files for code scanning</h1>
+<p>SARIF files convert third-party analyses into alerts on GitHub.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>If you use default setup for code scanning, or an advanced setup that involves using GitHub Actions to run the CodeQL action, then you don't need to interact with SARIF files. Scan results are uploaded and parsed as code scanning alerts automatically.</p>
+</div>
+<p>SARIF stands for <em>Static Analysis Results Interchange Format</em>. This is a JSON-based standard for storing results from static analysis tools.</p>
+<p>If you use a <strong>third-party analysis tool or CI/CD system</strong> to scan code for vulnerabilities, you can generate a SARIF file and upload it to GitHub. GitHub will parse the SARIF file and show alerts using the results in your repository as a part of the code scanning experience.</p>
+<p>GitHub uses properties in the SARIF file to display alerts. For example, the <code>shortDescription</code> and <code>fullDescription</code> appear at the top of a code scanning alert. The <code>location</code> allows GitHub to show annotations in your code file.</p>
+<p>This article explains how SARIF files are used on GitHub. If you're new to SARIF and want to learn more, see Microsoft's <a href="https://github.com/microsoft/sarif-tutorials" class="external"><code>SARIF tutorials</code></a> repository.</p>
+<h2 title="Version requirements"><a href="#version-requirements" aria-hidden="true" class="anchor" id="version-requirements"></a>Version requirements</h2>
+<p>Code scanning supports a subset of the <a href="https://docs.oasis-open.org/sarif/sarif/v2.1.0/sarif-v2.1.0.html" class="external">SARIF 2.1.0</a> JSON schema. Ensure that SARIF files from third-party tools use this version.</p>
+<h2 title="Upload methods"><a href="#upload-methods" aria-hidden="true" class="anchor" id="upload-methods"></a>Upload methods</h2>
+<p>You can upload a SARIF file using GitHub Actions, the code scanning API, or the CodeQL CLI. The best upload method depends on how you generate the SARIF file. For more information, see <a href="../../how-tos/find-and-fix-code-vulnerabilities/integrate-with-existing-tools/uploading-a-sarif-file-to-github.html">Uploading a SARIF file to GitHub</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

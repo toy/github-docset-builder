@@ -1,0 +1,92 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Security configuration statuses</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Reference</a> / <a href="index.html">Security at scale</a> / </nav><h1><a href="#security-configuration-statuses" aria-hidden="true" class="anchor" id="security-configuration-statuses"></a>Security configuration statuses</h1>
+<p>Each repository that has a security configuration applied to it has a configuration status that reflects the current state of the relationship between the repository and the configuration.</p>
+<p>A repository's configuration status tells you the current state of its relationship with the applied security configuration. That relationship can change over time—for example, when a repository admin overrides a setting, an admin enables enforcement, or an attachment fails. For more about how configurations and repositories interact, see <a href="../../concepts/security-at-scale/about-enabling-security-features-at-scale.html">About enabling security features at scale</a>.</p>
+<p>You can view configuration statuses in the repository table on your organization's security configurations settings page, or retrieve them with the REST API. For more information, see <a href="../../how-tos/secure-at-scale/configure-organization-security/manage-your-coverage/filtering-repositories-in-your-organization-using-the-repository-table.html">Filtering repositories in your organization using the repository table</a> and <a href="https://docs.github.com/en/rest/code-security/configurations" class="external">Configurations</a>.</p>
+<h2 title="Configuration status reference"><a href="#configuration-status-reference" aria-hidden="true" class="anchor" id="configuration-status-reference"></a>Configuration status reference</h2>
+<p>The following table describes all configuration statuses, what causes each status, how each appears in the organization settings repository table, and the recommended action.</p>
+<p>In the repository table, the "Configuration status" filter supports "Attached," "Removed," "Failed," "Enforced," and "Removed by enterprise." Repositories with a <code>detached</code> status appear as "No configuration" and are not filterable by configuration status in the UI. However, the REST API's <code>status</code> parameter does accept <code>detached</code> when listing repositories for an organization-level configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Description</th>
+<th>Cause</th>
+<th>UI display</th>
+<th>Recommended action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">attached</code></td>
+<td>The configuration is actively applied. The repository inherits all settings from the configuration.</td>
+<td>An organization or enterprise admin applied the configuration to the repository.</td>
+<td>The configuration name (for example, "My config")</td>
+<td>No action needed.</td>
+</tr>
+<tr>
+<td><code class="keyword">attaching</code></td>
+<td>The configuration is being applied. This is a transient state.</td>
+<td>An organization or enterprise admin just applied the configuration.</td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-clock" aria-label="Applying" role="img"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm7-3.25v2.992l2.028.812a.75.75 0 0 1-.557 1.392l-2.5-1A.751.751 0 0 1 7 8.25v-3.5a.75.75 0 0 1 1.5 0Z"></path></svg> Applying CONFIGURATION-NAME</td>
+<td>Wait for the operation to complete. If the status does not change, check for attachment failures.</td>
+</tr>
+<tr>
+<td><code class="keyword">updating</code></td>
+<td>The configuration is being updated on the repository.</td>
+<td>An organization or enterprise admin changed a setting in the configuration.</td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-clock" aria-label="Updating" role="img"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm7-3.25v2.992l2.028.812a.75.75 0 0 1-.557 1.392l-2.5-1A.751.751 0 0 1 7 8.25v-3.5a.75.75 0 0 1 1.5 0Z"></path></svg> Updating CONFIGURATION-NAME</td>
+<td>Wait for the update to complete.</td>
+</tr>
+<tr>
+<td><code class="keyword">enforced</code></td>
+<td>The configuration is actively applied and enforced. Repository admins cannot change the enablement status of features controlled by the configuration.</td>
+<td>An organization or enterprise admin enabled enforcement on the configuration.</td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="Enforced" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Enforced CONFIGURATION-NAME</td>
+<td>No action needed. For more information, see <a href="security-configuration-enforcement.html">Security configuration enforcement</a>.</td>
+</tr>
+<tr>
+<td><code class="keyword">removed</code></td>
+<td>A repository-level setting was changed that conflicts with the configuration. The configuration is still associated with the repository, but the repository no longer inherits all settings.</td>
+<td>A repository admin changed a security setting on an unenforced configuration.</td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-alert" aria-label="Removed" role="img"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Removed CONFIGURATION-NAME</td>
+<td>To restore the intended settings, re-apply the configuration in the "Advanced Security" page of the repository. To prevent future overrides, consider enabling enforcement.</td>
+</tr>
+<tr>
+<td><code class="keyword">removed_by_enterprise</code></td>
+<td>An enterprise-level configuration change caused a conflict with the repository's settings.</td>
+<td>An enterprise admin changed a setting that conflicts with the organization-level configuration applied to the repository.</td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-alert" aria-label="Removed" role="img"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Removed CONFIGURATION-NAME</td>
+<td>Coordinate with your enterprise admin to resolve the conflict. Re-apply the configuration at the organization or enterprise level.</td>
+</tr>
+<tr>
+<td><code class="keyword">failed</code></td>
+<td>The configuration could not be attached to the repository.</td>
+<td>A conflict between existing repository settings and the configuration prevented attachment.</td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-alert" aria-label="Failed" role="img"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Failed REASON</td>
+<td>Filter by <code>config-status:failed</code> in the repository table, then follow the remediation guidance for the specific repository. For more information, see <a href="troubleshoot-security-configurations/diagnosing-security-configuration-issues.html">Diagnosing security configuration issues</a>.</td>
+</tr>
+<tr>
+<td><code class="keyword">detached</code></td>
+<td>No configuration is applied. The repository's security settings are managed individually.</td>
+<td>An organization admin detached the configuration, or the repository was never attached to a configuration.</td>
+<td>No configuration</td>
+<td>Apply a configuration if you want the repository to inherit centrally managed settings. For more information, see <a href="../../how-tos/secure-at-scale/configure-organization-security/establish-complete-coverage/applying-a-custom-security-configuration.html">Applying a custom security configuration</a>.</td>
+</tr>
+</tbody>
+</table>
+<h2 title="Understanding removed vs. detached"><a href="#understanding-removed-vs-detached" aria-hidden="true" class="anchor" id="understanding-removed-vs-detached"></a>Understanding <code>removed</code> vs. <code>detached</code></h2>
+<p>These statuses reflect different situations:</p>
+<ul>
+<li><strong><code>removed</code></strong>: A repository admin changed a security setting that conflicts with an unenforced configuration. The configuration is still associated with the repository, but the repository no longer counts toward your organization's coverage metrics for that configuration. Re-applying the configuration restores the relationship.</li>
+<li><strong><code>detached</code></strong>: The configuration is fully disconnected from the repository. The repository's existing security settings are unchanged, but no configuration manages them. To restore centrally managed settings, apply a new configuration.</li>
+</ul>
+<p>To prevent repositories from reaching a <code>removed</code> status, enable enforcement on the configuration. For more information, see <a href="security-configuration-enforcement.html">Security configuration enforcement</a>.</p>
+<h2 title="Tracking configuration status changes with the audit log"><a href="#tracking-configuration-status-changes-with-the-audit-log" aria-hidden="true" class="anchor" id="tracking-configuration-status-changes-with-the-audit-log"></a>Tracking configuration status changes with the audit log</h2>
+<p>Your organization's audit log records <code>repository_security_configuration</code> events whenever a configuration status changes. You can search for these events using the <code>action:repository_security_configuration</code> filter. For more information, see <a href="https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/audit-log-events-for-your-organization#repository_security_configuration" class="external">Audit log events for your organization</a>.</p>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li><a href="../../concepts/security-at-scale/about-enabling-security-features-at-scale.html">About enabling security features at scale</a></li>
+<li><a href="security-configuration-enforcement.html">Security configuration enforcement</a></li>
+<li><a href="troubleshoot-security-configurations/diagnosing-security-configuration-issues.html">Diagnosing security configuration issues</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

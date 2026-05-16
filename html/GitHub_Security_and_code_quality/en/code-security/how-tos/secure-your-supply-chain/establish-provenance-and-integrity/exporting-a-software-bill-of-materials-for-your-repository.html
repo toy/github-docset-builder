@@ -1,0 +1,47 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Exporting a software bill of materials for your repository</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Secure your supply chain</a> / <a href="index.html">Establish provenance and integrity</a> / </nav><h1><a href="#exporting-a-software-bill-of-materials-for-your-repository" aria-hidden="true" class="anchor" id="exporting-a-software-bill-of-materials-for-your-repository"></a>Exporting a software bill of materials for your repository</h1>
+<p>You can export a software bill of materials or SBOM for your repository from the dependency graph. SBOMs allow transparency into your open source usage and help expose supply chain vulnerabilities, reducing supply chain risks.</p>
+<p>You can export the current state of the dependency graph for your repository as a software bill of materials (SBOM) using the industry standard <a href="https://spdx.github.io/spdx-spec/v2.3/" class="external">SPDX</a> format.</p>
+<p>SBOMs include an inventory of a project's dependencies and associated information such as versions, package identifiers, licenses, transitive paths, and copyright information. SBOMs do not include dependents (other projects that rely on your project).</p>
+<h2 title="Exporting a software bill of materials for your repository from the UI"><a href="#exporting-a-software-bill-of-materials-for-your-repository-from-the-ui" aria-hidden="true" class="anchor" id="exporting-a-software-bill-of-materials-for-your-repository-from-the-ui"></a>Exporting a software bill of materials for your repository from the UI</h2>
+<ol>
+<li>
+<p>On GitHub, navigate to the main page of the repository.</p>
+</li>
+<li>
+<p>Under your repository name, click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-graph" aria-label="graph" role="img"><path d="M1.5 1.75V13.5h13.75a.75.75 0 0 1 0 1.5H.75a.75.75 0 0 1-.75-.75V1.75a.75.75 0 0 1 1.5 0Zm14.28 2.53-5.25 5.25a.75.75 0 0 1-1.06 0L7 7.06 4.28 9.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.25-3.25a.75.75 0 0 1 1.06 0L10 7.94l4.72-4.72a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042Z"></path></svg> Insights</strong>.</p>
+<p><img src="../../../../..//assets/images/help/repository/repo-nav-insights-tab.png" alt="Screenshot of the main page of a repository. In the horizontal navigation bar, a tab, labeled with a graph icon and &quot;Insights,&quot; is outlined in orange."></p>
+</li>
+<li>
+<p>In the left sidebar, click <strong>Dependency graph</strong>.</p>
+</li>
+<li>
+<p>On the top right side of the <strong>Dependencies</strong> tab, click <strong>Export SBOM</strong> to generate an SBOM file for download from your browser.</p>
+</li>
+</ol>
+<h2 title="Exporting a software bill of materials for your repository using the REST API"><a href="#exporting-a-software-bill-of-materials-for-your-repository-using-the-rest-api" aria-hidden="true" class="anchor" id="exporting-a-software-bill-of-materials-for-your-repository-using-the-rest-api"></a>Exporting a software bill of materials for your repository using the REST API</h2>
+<p>If you want to use the REST API to export an SBOM for your repository, see <a href="https://docs.github.com/en/rest/dependency-graph/sboms#export-a-software-bill-of-materials-sbom-for-a-repository" class="external">REST API endpoints for software bill of materials (SBOM)</a>.</p>
+<h2 title="Generating a software bill of materials from GitHub Actions"><a href="#generating-a-software-bill-of-materials-from-github-actions" aria-hidden="true" class="anchor" id="generating-a-software-bill-of-materials-from-github-actions"></a>Generating a software bill of materials from GitHub Actions</h2>
+<p>The following actions will generate an SBOM for your repository and attach it as a workflow artifact which you can download and use in other applications. For more information about downloading workflow artifacts, see <a href="https://docs.github.com/en/actions/managing-workflow-runs/downloading-workflow-artifacts" class="external">Downloading workflow artifacts</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/marketplace/actions/spdx-dependency-submission-action" class="external">SPDX Dependency Submission Action</a></td>
+<td>Uses <a href="https://github.com/microsoft/sbom-tool" class="external">Microsoft's SBOM Tool</a> to create SPDX 2.2 compatible SBOMs with the <a href="https://github.com/microsoft/component-detection/blob/main/docs/feature-overview.md" class="external">supported ecosystems</a></td>
+</tr>
+<tr>
+<td><a href="https://github.com/marketplace/actions/anchore-sbom-action" class="external">Anchore SBOM Action</a></td>
+<td>Uses <a href="https://github.com/anchore/syft" class="external">Syft</a> to create SPDX 2.2 compatible SBOMs with the <a href="https://github.com/anchore/syft#supported-ecosystems" class="external">supported ecosystems</a></td>
+</tr>
+<tr>
+<td><a href="https://github.com/marketplace/actions/sbom-submission-action" class="external">SBOM Dependency Submission Action</a></td>
+<td>Uploads a CycloneDX SBOM to the dependency submission API</td>
+</tr>
+</tbody>
+</table>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

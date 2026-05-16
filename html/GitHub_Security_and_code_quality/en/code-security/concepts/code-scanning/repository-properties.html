@@ -1,0 +1,40 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Repository properties for code scanning</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Code scanning</a> / </nav><h1><a href="#repository-properties-for-code-scanning" aria-hidden="true" class="anchor" id="repository-properties-for-code-scanning"></a>Repository properties for code scanning</h1>
+<p>You can use repository properties to adjust code scanning to suit your needs.</p>
+<h2 title="Prerequisites"><a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<p>For the repository properties described here to have an effect, you need to have set up code scanning. See <a href="setup-types.html">About setup types for code scanning</a>.</p>
+<p>Repository properties which affect code scanning must be created manually for your organization. You can then set values for them that apply to your entire organization or allow them to be configured differently for each repository. See <a href="https://docs.github.com/en/organizations/managing-organization-settings/managing-custom-properties-for-repositories-in-your-organization" class="external">Managing custom properties for repositories in your organization</a>.</p>
+<h2 title="Supported repository properties for code scanning"><a href="#supported-repository-properties-for-code-scanning" aria-hidden="true" class="anchor" id="supported-repository-properties-for-code-scanning"></a>Supported repository properties for code scanning</h2>
+<p>Some code scanning functionality can be configured using repository properties. Organizations can use repository properties to both enforce configurations across all repositories and for individual repositories. If code scanning is customized using repository properties, the customization applies to all setup types.</p>
+<p>The following is an overview of repository properties you can set up which affect code scanning analyses when configured:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">github-codeql-extra-queries</code></td>
+<td>Text</td>
+</tr>
+<tr>
+<td><code class="keyword">github-codeql-disable-overlay</code></td>
+<td>True/false</td>
+</tr>
+<tr>
+<td><code class="keyword">github-codeql-file-coverage-on-prs</code></td>
+<td>True/false</td>
+</tr>
+</tbody>
+</table>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The repository properties which are supported depend on the version of the <a href="https://github.com/github/codeql-action/" class="external">github/codeql-action</a> that is used by your code scanning analyses. For code scanning advanced setup, check that your workflow is referencing the latest major version. Code scanning default setup automatically uses the latest version.</p>
+</div>
+<h3 title="Supported repository properties for code scanning / Analysis customization"><a href="#analysis-customization" aria-hidden="true" class="anchor" id="analysis-customization"></a>Analysis customization</h3>
+<p>The <code>github-codeql-extra-queries</code> property allows you to configure additional queries that should be run. This is useful to add queries to all relevant analyses in your organization without needing to modify individual workflows or switch to an advanced setup. This accepts the same values as the <code>queries</code> input of the <a href="https://github.com/github/codeql-action/" class="external">github/codeql-action</a>. See <a href="../../reference/code-scanning/workflow-configuration-options.html">Workflow configuration options for code scanning</a>.</p>
+<h3 title="Supported repository properties for code scanning / Enabling or disabling features"><a href="#enabling-or-disabling-features" aria-hidden="true" class="anchor" id="enabling-or-disabling-features"></a>Enabling or disabling features</h3>
+<p>You can disable improved incremental analysis by setting the <code>github-codeql-disable-overlay</code> property to <code>true</code>. This may be useful if improved incremental analysis is failing because of increased hardware requirements.</p>
+<p>File coverage information is not calculated for analyses of pull requests. If you want to enable file coverage information for pull requests, you can set the <code>github-codeql-file-coverage-on-prs</code> property to <code>true</code>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

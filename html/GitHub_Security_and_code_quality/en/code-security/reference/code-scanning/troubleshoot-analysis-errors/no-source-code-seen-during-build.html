@@ -1,0 +1,40 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Error: "No source code was seen during the build"</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">Reference</a> / <a href="../index.html">Code scanning</a> / <a href="index.html">Troubleshoot analysis errors</a> / </nav><h1><a href="#error-no-source-code-was-seen-during-the-build" aria-hidden="true" class="anchor" id="error-no-source-code-was-seen-during-the-build"></a>Error: "No source code was seen during the build"</h1>
+<p>When CodeQL fails to find any source code, you need to resolve this problem to unblock code scanning analysis.</p>
+<!-- CodeQL CLI depends on a short URL generated from this article's URL. If this article's URL ever changes, make sure to update the short URL https://gh.io/troubleshooting-code-scanning/no-source-code-seen-during-build. https://thehub.github.com/it/how-to/url-shortening -->
+<p>If your workflow fails with <code>Error: "No source code was seen during the build"</code> or <code>The process '/opt/hostedtoolcache/CodeQL/0.0.0-20200630/x64/codeql/codeql' failed with exit code 32</code>, this indicates that CodeQL was unable to monitor your code. There are six possible reasons for this:</p>
+<ol>
+<li>
+<p><em>No supported languages:</em> The repository may not contain source code that is written in languages supported by CodeQL. Check the list of supported languages and, if this is the case, remove the CodeQL workflow. For more information, see <a href="../../../concepts/code-scanning/codeql/about-code-scanning-with-codeql.html#about-codeql">About code scanning with CodeQL</a>.</p>
+</li>
+<li>
+<p><em>No analyzable code of the detected languages:</em> Automatic language detection identified a supported language, but there is no analyzable code of that language in the repository. A typical example is when our language detection service finds a file associated with a particular programming language like a <code>.h</code>, or <code>.gyp</code> file, but no corresponding executable code is present in the repository. To solve the problem, you can manually define the languages you want to analyze by updating the list of languages in the <code>language</code> matrix. For example, the following configuration will analyze only Go, and JavaScript.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">strategy</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">fail-fast</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">matrix</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Override automatic language detection by changing the list below.
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Supported options are listed in a comment in the default workflow.
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">language</span><span style="color:#c0c5ce;">: ['</span><span style="color:#a3be8c;">go</span><span style="color:#c0c5ce;">', '</span><span style="color:#a3be8c;">javascript-typescript</span><span style="color:#c0c5ce;">']
+</span></code></pre>
+<p>For more information, see the workflow extract in <a href="some-languages-not-analyzed.html">Some languages were not analyzed with CodeQL advanced setup</a>.</p>
+</li>
+<li>
+<p><em>Compilation of a compiled language failed:</em> Your code scanning workflow tries to compile a compiled language (C, C++, C#, Go, or Java), but the code was not compiled. When a workflow specifies <code>build-mode: autobuild</code> for a language or contains an <code>autobuild</code> step, CodeQL makes a best effort to detect a suitable build method and build your code. The <code>autobuild</code> process may not succeed in building your code, depending on your specific build environment. Compilation may also fail if you have removed the <code>autobuild</code> step and did not include build steps manually. For more information about defining build steps, see <a href="../../../how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/codeql-code-scanning-for-compiled-languages.html#using-build-mode-manual-and-specifying-build-steps">CodeQL code scanning for compiled languages</a>.</p>
+</li>
+<li>
+<p><em>Cached components not detected:</em> Your workflow builds a compiled language (C, C++, C#, Go, or Java) to create a CodeQL database for analysis, but portions of your build are cached to improve performance (most likely to occur with build systems like Gradle or Bazel). Since CodeQL observes the activity of the compiler to understand the data flows in a repository, CodeQL requires a complete build to take place in order to perform analysis.</p>
+</li>
+<li>
+<p><em>Compilation outside <code>init</code> and <code>analyze</code> steps:</em> Your workflow builds a compiled language (C, C++, C#, Go, or Java), but compilation does not occur between the <code>init</code> and <code>analyze</code> steps in the workflow. CodeQL requires that your build happens in between these two steps in order to observe the activity of the compiler and perform analysis.</p>
+</li>
+<li>
+<p><em>Compilation not detected by CodeQL:</em> Your compiled code (in C, C++, C#, Go, or Java) was compiled successfully, but CodeQL was unable to detect the compiler invocations. The most common causes are:</p>
+<ul>
+<li>Running your build process in a separate container to CodeQL. For more information, see <a href="../../../tutorials/customize-code-scanning/running-codeql-code-scanning-in-a-container.html">Running CodeQL code scanning in a container</a>.</li>
+<li>Building using a distributed build system external to GitHub Actions, using a daemon process.</li>
+<li>CodeQL isn't aware of the specific compiler you are using.</li>
+</ul>
+</li>
+</ol>
+<p>If you encounter another problem with your specific compiler or configuration, contact us through the <a href="https://support.github.com" class="external">GitHub Support portal</a>.</p>
+<p>For more information about specifying build steps, see <a href="../../../how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/codeql-code-scanning-for-compiled-languages.html#adding-build-steps-for-a-compiled-language">CodeQL code scanning for compiled languages</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

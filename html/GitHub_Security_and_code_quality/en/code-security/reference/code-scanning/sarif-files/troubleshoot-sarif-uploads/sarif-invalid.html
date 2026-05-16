@@ -1,0 +1,15 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>SARIF file is invalid</title><link rel="stylesheet" href="../../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../../index.html">Security and code quality</a> / <a href="../../../index.html">Reference</a> / <a href="../../index.html">Code scanning</a> / <a href="../index.html">SARIF files</a> / <a href="index.html">Troubleshoot SARIF uploads</a> / </nav><h1><a href="#sarif-file-is-invalid" aria-hidden="true" class="anchor" id="sarif-file-is-invalid"></a>SARIF file is invalid</h1>
+<p>Code scanning can only process syntactically valid SARIF files. Invalid files are rejected.</p>
+<h2 title="About this error"><a href="#about-this-error" aria-hidden="true" class="anchor" id="about-this-error"></a>About this error</h2>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Invalid SARIF
+</span><span style="color:#c0c5ce;">SARIF file invalid
+</span><span style="color:#c0c5ce;">SARIF ZIP upload is invalid
+</span><span style="color:#c0c5ce;">400: Bad Request if the sarif field is invalid
+</span></code></pre>
+<p>One of these errors is reported if code scanning cannot parse the SARIF file.</p>
+<p>You are unlikely to see this error when using CodeQL analysis.</p>
+<h2 title="Confirming the cause of the error"><a href="#confirming-the-cause-of-the-error" aria-hidden="true" class="anchor" id="confirming-the-cause-of-the-error"></a>Confirming the cause of the error</h2>
+<p>You can investigate the underlying cause of the error by looking at the log for the workflow run that uploaded the analysis and by checking the SARIF file in a validator. For more information, see <a href="https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/using-workflow-run-logs" class="external">Using workflow run logs</a> and visit the <a href="https://sarifweb.azurewebsites.net/" class="external">Microsoft SARIF validator</a>.</p>
+<h2 title="Fixing the problem"><a href="#fixing-the-problem" aria-hidden="true" class="anchor" id="fixing-the-problem"></a>Fixing the problem</h2>
+<p>After you identify the invalid parts of the SARIF file, you may be able to resolve smaller issues manually, but you may need to talk to the maintainers of the tool. For information about validation and the format supported by code scanning, see <a href="../sarif-support-for-code-scanning.html">SARIF support for code scanning</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

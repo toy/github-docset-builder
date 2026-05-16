@@ -1,0 +1,83 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Best practices for securing code in your supply chain</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Implement supply chain best practices</a> / </nav><h1><a href="#best-practices-for-securing-code-in-your-supply-chain" aria-hidden="true" class="anchor" id="best-practices-for-securing-code-in-your-supply-chain"></a>Best practices for securing code in your supply chain</h1>
+<p>Guidance on how to protect the center of your supply chain—the code you write and the code you depend on.</p>
+<h2 title="About this guide"><a href="#about-this-guide" aria-hidden="true" class="anchor" id="about-this-guide"></a>About this guide</h2>
+<p>This guide describes the highest impact changes you can make to improve the security of your code. Each section outlines a change you can make to your processes to improve security. The highest impact changes are listed first.</p>
+<h2 title="What's the risk?"><a href="#whats-the-risk" aria-hidden="true" class="anchor" id="whats-the-risk"></a>What's the risk?</h2>
+<p>Key risks in the development process include:</p>
+<ul>
+<li>Using dependencies with security vulnerabilities that an attacker could exploit.</li>
+<li>Leaking authentication credentials or a token that an attacker could use to access your resources.</li>
+<li>Introducing a vulnerability to your own code that an attacker could exploit.</li>
+</ul>
+<p>These risks open your resources and projects to attack and those risks are passed directly on to anyone who uses a package that you create. The following sections explain how you can protect yourself and your users from these risks.</p>
+<h2 title="Create a vulnerability management program for dependencies"><a href="#create-a-vulnerability-management-program-for-dependencies" aria-hidden="true" class="anchor" id="create-a-vulnerability-management-program-for-dependencies"></a>Create a vulnerability management program for dependencies</h2>
+<p>You can secure the code you depend on by creating a vulnerability management program for dependencies. At a high level this should include processes to ensure that you:</p>
+<ol>
+<li>
+<p>Create an inventory of your dependencies.</p>
+</li>
+<li>
+<p>Know when there is a security vulnerability in a dependency.</p>
+</li>
+<li>
+<p>Enforce dependency reviews on your pull requests.</p>
+</li>
+<li>
+<p>Assess the impact of that vulnerability on your code and decide what action to take.</p>
+</li>
+</ol>
+<h3 title="Create a vulnerability management program for dependencies / Automatic inventory generation"><a href="#automatic-inventory-generation" aria-hidden="true" class="anchor" id="automatic-inventory-generation"></a>Automatic inventory generation</h3>
+<p>As a first step, you want to make a complete inventory of your dependencies. The dependency graph for a repository shows you dependencies for supported ecosystems. If you check in your dependencies, or use other ecosystems, you will need to supplement this with data from 3rd party tools or by listing dependencies manually. If you have at least read access to the repository, you can export the dependency graph for the repository as an SPDX-compatible, Software Bill of Materials (SBOM), via the GitHub UI or GitHub REST API. For more information, see <a href="../../how-tos/secure-your-supply-chain/establish-provenance-and-integrity/exporting-a-software-bill-of-materials-for-your-repository.html">Exporting a software bill of materials for your repository</a>.</p>
+<h3 title="Create a vulnerability management program for dependencies / Automatic detection of vulnerabilities in dependencies"><a href="#automatic-detection-of-vulnerabilities-in-dependencies" aria-hidden="true" class="anchor" id="automatic-detection-of-vulnerabilities-in-dependencies"></a>Automatic detection of vulnerabilities in dependencies</h3>
+<p>Dependabot can help you by monitoring your dependencies and notifying you when they contain a known vulnerability. You can even enable Dependabot to automatically raise pull requests that update the dependency to a secure version. For more information, see <a href="../../concepts/supply-chain-security/about-dependabot-alerts.html">About Dependabot alerts</a> and <a href="../../concepts/supply-chain-security/about-dependabot-security-updates.html">About Dependabot security updates</a>.</p>
+<h3 title="Create a vulnerability management program for dependencies / Automatic detection of vulnerabilities in pull requests"><a href="#automatic-detection-of-vulnerabilities-in-pull-requests" aria-hidden="true" class="anchor" id="automatic-detection-of-vulnerabilities-in-pull-requests"></a>Automatic detection of vulnerabilities in pull requests</h3>
+<p>The dependency review action enforces a dependency review on your pull requests, making it easy for you to see if a pull request will introduce a vulnerable version of a dependency to your repository. When a vulnerability is detected, the dependency review action can block the pull request from merging. For more information, see <a href="../../concepts/supply-chain-security/about-dependency-review.html#the-dependency-review-action">About dependency review</a>.</p>
+<h3 title="Create a vulnerability management program for dependencies / Assessment of exposure to risk from a vulnerable dependency"><a href="#assessment-of-exposure-to-risk-from-a-vulnerable-dependency" aria-hidden="true" class="anchor" id="assessment-of-exposure-to-risk-from-a-vulnerable-dependency"></a>Assessment of exposure to risk from a vulnerable dependency</h3>
+<p>When you discover you are using a vulnerable dependency, for example, a library or a framework, you must assess your project's level of exposure and determine what action to take. Vulnerabilities are usually reported with a severity score to show how severe their impact could be. The severity score is a useful guide but cannot tell you the full impact of the vulnerability on your code.</p>
+<p>To assess the impact of a vulnerability on your code, you also need to consider how you use the library and determine how much risk that actually poses to your system. Maybe the vulnerability is part of a feature that you don't use, and you can update the affected library and continue with your normal release cycle. Or maybe your code is badly exposed to risk, and you need to update the affected library and ship an updated build right away. This decision depends on how you're using the library in your system, and is a decision that only you have the knowledge to make.</p>
+<h2 title="Secure your communication tokens"><a href="#secure-your-communication-tokens" aria-hidden="true" class="anchor" id="secure-your-communication-tokens"></a>Secure your communication tokens</h2>
+<p>Code often needs to communicate with other systems over a network, and requires secrets (like a password, or an API key) to authenticate. Your system needs access to those secrets to run, but it's best practice to not include them in your source code. This is especially important for repositories to which many people might have access and critical for public repositories.</p>
+<h3 title="Secure your communication tokens / Automatic detection of secrets committed to a repository"><a href="#automatic-detection-of-secrets-committed-to-a-repository" aria-hidden="true" class="anchor" id="automatic-detection-of-secrets-committed-to-a-repository"></a>Automatic detection of secrets committed to a repository</h3>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Secret scanning is available for the following repository types:</p>
+<ul>
+<li><strong>Public repositories</strong>: Secret scanning runs automatically for free.</li>
+<li><strong>Organization-owned private and internal repositories</strong>: Available with <a href="https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security" class="external">GitHub Secret Protection</a> enabled on GitHub Team or GitHub Enterprise Cloud.</li>
+<li><strong>User-owned repositories</strong>: Available on GitHub Enterprise Cloud with Enterprise Managed Users. Available on GitHub Enterprise Server when the enterprise has <a href="https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security" class="external">GitHub Secret Protection</a> enabled.</li>
+</ul>
+</div>
+<p>GitHub partners with many providers to automatically detect when secrets are committed to or stored in your public repositories and public npm packages you depend on, and will notify the provider so they can take appropriate actions to ensure your account remains secure. For more information, see <a href="../../concepts/secret-security/about-alerts.html##about-partner-alerts">About secret scanning alerts</a>.</p>
+<p>You can enable and configure additional scanning that will alert you about accidentally leaked secrets on GitHub if you own:</p>
+<ul>
+<li>Public repositories.</li>
+<li>An organization using GitHub Team or GitHub Enterprise Cloud with a license for GitHub Secret Protection or GitHub Advanced Security. Secret scanning will also analyze your private repositories.</li>
+</ul>
+<h3 title="Secure your communication tokens / Secure storage of secrets you use on GitHub"><a href="#secure-storage-of-secrets-you-use-on-github" aria-hidden="true" class="anchor" id="secure-storage-of-secrets-you-use-on-github"></a>Secure storage of secrets you use on GitHub</h3>
+<p>Besides your code, you probably need to use secrets in other places. For example, to allow GitHub Actions workflows, Dependabot, or your GitHub Codespaces development environment to communicate with other systems. For more information on how to securely store and use secrets, see <a href="https://docs.github.com/en/actions/security-guides/encrypted-secrets" class="external">Using secrets in GitHub Actions</a>, <a href="../../how-tos/secure-your-supply-chain/manage-your-dependency-security/configuring-access-to-private-registries-for-dependabot.html#storing-credentials-for-dependabot-to-use">Configuring access to private registries for Dependabot</a>, and <a href="https://docs.github.com/en/codespaces/managing-your-codespaces/managing-encrypted-secrets-for-your-codespaces" class="external">Managing your account-specific secrets for GitHub Codespaces</a>.</p>
+<h2 title="Keep vulnerable coding patterns out of your repository"><a href="#keep-vulnerable-coding-patterns-out-of-your-repository" aria-hidden="true" class="anchor" id="keep-vulnerable-coding-patterns-out-of-your-repository"></a>Keep vulnerable coding patterns out of your repository</h2>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Code scanning is available for the following repository types:</p>
+<ul>
+<li>Public repositories on GitHub.com</li>
+<li>Organization-owned repositories on GitHub Team, GitHub Enterprise Cloud, or GitHub Enterprise Server, with <a href="https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security" class="external">GitHub Code Security</a> enabled.</li>
+</ul>
+</div>
+<h3 title="Keep vulnerable coding patterns out of your repository / Create a pull request review process"><a href="#create-a-pull-request-review-process" aria-hidden="true" class="anchor" id="create-a-pull-request-review-process"></a>Create a pull request review process</h3>
+<p>You can improve the quality and security of your code by ensuring that all pull requests are reviewed and tested before they are merged. GitHub has many features you can use to control the review and merge process. To get started, see <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches" class="external">About protected branches</a>.</p>
+<h3 title="Keep vulnerable coding patterns out of your repository / Scan your code for vulnerable patterns"><a href="#scan-your-code-for-vulnerable-patterns" aria-hidden="true" class="anchor" id="scan-your-code-for-vulnerable-patterns"></a>Scan your code for vulnerable patterns</h3>
+<p>Insecure code patterns are often difficult for reviewers to spot unaided. In addition to scanning your code for secrets, you can check it for patterns that are associated with security vulnerabilities. For example, a function that isn't memory-safe, or failing to escaping user input that could lead to an injection vulnerability. GitHub offers several different ways to approach both how and when you scan your code. To get started, see <a href="../../concepts/code-scanning/about-code-scanning.html">About code scanning</a>.</p>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<ul>
+<li>
+<p><a href="end-to-end-supply-chain-overview.html">Securing your end-to-end supply chain</a></p>
+</li>
+<li>
+<p><a href="securing-accounts.html">Best practices for securing accounts</a></p>
+</li>
+<li>
+<p><a href="securing-builds.html">Best practices for securing your build system</a></p>
+</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

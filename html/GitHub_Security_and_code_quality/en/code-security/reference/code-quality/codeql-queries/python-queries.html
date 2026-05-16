@@ -1,0 +1,527 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Python CodeQL queries for Code Quality</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">Reference</a> / <a href="../index.html">Code quality</a> / <a href="index.html">CodeQL queries</a> / </nav><h1><a href="#python-codeql-queries-for-code-quality" aria-hidden="true" class="anchor" id="python-codeql-queries-for-code-quality"></a>Python CodeQL queries for Code Quality</h1>
+<p>Explore the queries that CodeQL uses to analyze code quality for code written in Python.</p>
+<p>Code Quality uses the following CodeQL queries to analyze Python code and detect code quality issues on:</p>
+<ul>
+<li>Your <strong>default branch</strong>, with results shown on the repository's "Standard findings" dashboard</li>
+<li><strong>Pull requests</strong>, with findings shown as comments made by <code>github-code-quality[bot]</code></li>
+</ul>
+<p>Copilot Autofix suggestions are provided for findings where possible.</p>
+<div class="ghd-tool rowheaders">
+<table>
+<thead>
+<tr>
+<th>Query name</th>
+<th>Category</th>
+<th>Severity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-polluting-import/" class="external">'import *' may pollute namespace</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-regex-backspace-escape/" class="external">Backspace escape in regular expression</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-commented-out-code/" class="external">Commented-out code</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-comparison-of-constants/" class="external">Comparison of constants</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-comparison-of-identical-expressions/" class="external">Comparison of identical values</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-constant-conditional-expression/" class="external">Constant in conditional expression or statement</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-duplicate-key-dict-literal/" class="external">Duplicate key in dict literal</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-regex-duplicate-in-character-class/" class="external">Duplication in regular expression character class</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-not-named-cls/" class="external">First parameter of a class method is not named 'cls'</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-not-named-self/" class="external">First parameter of a method is not named 'self'</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-implicit-string-concatenation-in-list/" class="external">Implicit string concatenation in a list</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-imprecise-assert/" class="external">Imprecise assert</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-import-own-module/" class="external">Module imports itself</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-repeated-import/" class="external">Module is imported more than once</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-import-and-import-from/" class="external">Module is imported with 'import' and 'import from'</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-nested-loops-with-same-variable/" class="external">Nested loops with same variable</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-overly-complex-delete/" class="external">Overly complex <code>__del__</code> method</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-redundant-comparison/" class="external">Redundant comparison</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-should-use-with/" class="external">Should use a 'with' statement</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-ineffectual-statement/" class="external">Statement has no effect</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-redundant-else/" class="external">Unnecessary 'else' clause in loop</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-unnecessary-lambda/" class="external">Unnecessary lambda</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-unnecessary-pass/" class="external">Unnecessary pass</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-unreachable-statement/" class="external">Unreachable code</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-str-format-surplus-argument/" class="external">Unused argument in a formatting call</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-unused-global-variable/" class="external">Unused global variable</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-unused-import/" class="external">Unused import</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-unused-local-variable/" class="external">Unused local variable</a></td>
+<td>Maintainability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-str-format-surplus-named-argument/" class="external">Unused named argument in formatting call</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-redundant-global-declaration/" class="external">Use of 'global' at module level</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-procedure-return-value-used/" class="external">Use of the return value of a procedure</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-multiple-definition/" class="external">Variable defined multiple times</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-explicit-call-to-delete/" class="external"><code>__del__</code> is called explicitly</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-missing-equals/" class="external"><code>__eq__</code> not overridden when adding attributes</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-init-calls-subclass/" class="external"><code>__init__</code> method calls overridden method</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-init-method-is-generator/" class="external"><code>__init__</code> method is a generator</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-explicit-return-in-init/" class="external"><code>__init__</code> method returns a value</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-iter-returns-non-iterator/" class="external"><code>__iter__</code> method returns a non-iterator</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-side-effect-in-assert/" class="external">An assert statement has a side-effect</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-asserts-tuple/" class="external">Asserting a tuple</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-comparison-using-is/" class="external">Comparison using is when operands support <code>__eq__</code></a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-conflicting-attributes/" class="external">Conflicting attributes in base classes</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-empty-except/" class="external">Empty except</a></td>
+<td>Reliability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-encoding-error/" class="external">Encoding error</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-catch-base-exception/" class="external">Except block handles 'BaseException'</a></td>
+<td>Reliability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-undefined-export/" class="external">Explicit export is not defined</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-mixed-returns/" class="external">Explicit returns mixed with implicit (fall through) returns</a></td>
+<td>Reliability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-file-not-closed/" class="external">File is not always closed</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-super-not-enclosing-class/" class="external">First argument to super() is not enclosing class</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-percent-format-not-mapping/" class="external">Formatted object is not a mapping</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-str-format-mixed-fields/" class="external">Formatting string mixes implicitly and explicitly numbered fields</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-illegal-raise/" class="external">Illegal raise</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-incomplete-ordering/" class="external">Incomplete ordering</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-equals-hash-mismatch/" class="external">Inconsistent equality and hashing</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-inconsistent-equality/" class="external">Inconsistent equality and inequality</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-inconsistent-mro/" class="external">Inconsistent method resolution order</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-iteration-string-and-sequence/" class="external">Iterable can be either a string or a sequence</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-iter-returns-non-self/" class="external">Iterator does not return self from <code>__iter__</code> method</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-loop-variable-capture/" class="external">Loop variable capture</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-comparison-missing-self/" class="external">Maybe missing 'self' in comparison</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-member-test-non-container/" class="external">Membership test with a non-container</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-inheritance-incorrect-overridden-signature/" class="external">Mismatch between signature and use of an overridden method</a></td>
+<td>Reliability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-inheritance-incorrect-overriding-signature/" class="external">Mismatch between signature and use of an overriding method</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-mismatched-multiple-assignment/" class="external">Mismatch in multiple assignment</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-missing-call-to-delete/" class="external">Missing call to superclass <code>__del__</code> during object destruction</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-missing-call-to-init/" class="external">Missing call to superclass <code>__init__</code> during object initialization</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-str-format-missing-named-argument/" class="external">Missing named arguments in formatting call</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-regex-incomplete-special-group/" class="external">Missing part of special group in regular expression</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-modification-of-locals/" class="external">Modification of dictionary returned by locals()</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-modification-of-default-value/" class="external">Modification of parameter with default</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-multiple-calls-to-delete/" class="external">Multiple calls to <code>__del__</code> during object destruction</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-multiple-calls-to-init/" class="external">Multiple calls to <code>__init__</code> during object initialization</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-mutable-descriptor/" class="external">Mutation of descriptor in <code>__get__</code> or <code>__set__</code> method</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-nested-loops-with-same-variable-reused/" class="external">Nested loops with same variable reused after inner loop body</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-call-to-non-callable/" class="external">Non-callable called</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-useless-except/" class="external">Non-exception in 'except' clause</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-non-iterable-in-for-loop/" class="external">Non-iterable used in for loop</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-unexpected-raise-in-special-method/" class="external">Non-standard exception raised in special method</a></td>
+<td>Reliability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-raise-not-implemented/" class="external">Raising <code>NotImplemented</code></a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-redundant-assignment/" class="external">Redundant assignment</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-mixed-tuple-returns/" class="external">Returning tuples with varying lengths</a></td>
+<td>Reliability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-inheritance-signature-mismatch/" class="external">Signature mismatch in overriding method</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-special-method-wrong-signature/" class="external">Special method has incorrect signature</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-attribute-shadows-method/" class="external">Superclass attribute shadows subclass method</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-unused-loop-variable/" class="external">Suspicious unused loop iteration variable</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-syntax-error/" class="external">Syntax error</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-test-equals-none/" class="external">Testing equality to None</a></td>
+<td>Reliability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-str-format-missing-argument/" class="external">Too few arguments in formatting call</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-hash-unhashable-value/" class="external">Unhashable object hashed</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-regex-unmatchable-caret/" class="external">Unmatchable caret in regular expression</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-regex-unmatchable-dollar/" class="external">Unmatchable dollar in regular expression</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-unreachable-except/" class="external">Unreachable <code>except</code> block</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-percent-format-unsupported-character/" class="external">Unsupported format character</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-unused-exception-object/" class="external">Unused exception object</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-print-during-import/" class="external">Use of a print statement at module level</a></td>
+<td>Reliability</td>
+<td>Recommendation</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-use-of-exit-or-quit/" class="external">Use of exit() or quit()</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-call-wrong-named-argument/" class="external">Wrong name for an argument in a call</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-call-wrong-named-class-argument/" class="external">Wrong name for an argument in a class instantiation</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-percent-format-wrong-arguments/" class="external">Wrong number of arguments for format</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-call-wrong-arguments/" class="external">Wrong number of arguments in a call</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/python/py-call-wrong-number-class-arguments/" class="external">Wrong number of arguments in a class instantiation</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+</tbody>
+</table>
+</div>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

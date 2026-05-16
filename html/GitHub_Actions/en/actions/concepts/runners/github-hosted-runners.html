@@ -1,0 +1,48 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>GitHub-hosted runners</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Runners</a> / </nav><h1><a href="#github-hosted-runners" aria-hidden="true" class="anchor" id="github-hosted-runners"></a>GitHub-hosted runners</h1>
+<p>GitHub offers hosted virtual machines to run workflows. The virtual machine contains an environment of tools, packages, and settings available for GitHub Actions to use.</p>
+<h2 title="Overview of GitHub-hosted runners"><a href="#overview-of-github-hosted-runners" aria-hidden="true" class="anchor" id="overview-of-github-hosted-runners"></a>Overview of GitHub-hosted runners</h2>
+<p>Runners are the machines that execute jobs in a GitHub Actions workflow. For example, a runner can clone your repository locally, install testing software, and then run commands that evaluate your code.</p>
+<p>GitHub provides runners that you can use to run your jobs, or you can <a href="self-hosted-runners.html">host your own runners</a>. With the exception of single-CPU runners, each GitHub-hosted runner is a new virtual machine (VM) hosted by GitHub. Single-CPU runners are hosted in a container on a shared VM—see <a href="../../reference/runners/github-hosted-runners.html#single-cpu-runners">GitHub-hosted runners reference</a>.</p>
+<p>Each runner comes with the runner application and other tools preinstalled. GitHub-hosted runners are available with Ubuntu Linux, Windows, or macOS operating systems. When you use a GitHub-hosted runner, machine maintenance and upgrades are taken care of for you.</p>
+<p>You can choose one of the standard GitHub-hosted runner options or, if you are on the GitHub Team or GitHub Enterprise Cloud plan, you can provision a runner with more cores, or a runner that's powered by a GPU processor. These machines are referred to as "larger runner." For more information, see <a href="https://docs.github.com/en/enterprise-cloud@latest/actions/using-github-hosted-runners/about-larger-runners/about-larger-runners" class="external">Larger runners</a>.</p>
+<p>Larger runners also support custom images, which let you create and manage your own preconfigured VM images. For more information, see <a href="#custom-images">Custom images</a>.</p>
+<p>Using GitHub-hosted runners requires network access with at least 70 kilobits per second upload and download speeds.</p>
+<h2 title="Runner images"><a href="#runner-images" aria-hidden="true" class="anchor" id="runner-images"></a>Runner images</h2>
+<p>GitHub maintains our own set of VM images for our standard hosted runners. The list of images and their included tools are managed in the <a href="https://github.com/actions/runner-images" class="external"><code>actions/runner-images</code></a> repository.</p>
+<h3 title="Runner images / Preinstalled software for GitHub-owned images"><a href="#preinstalled-software-for-github-owned-images" aria-hidden="true" class="anchor" id="preinstalled-software-for-github-owned-images"></a>Preinstalled software for GitHub-owned images</h3>
+<p>The software tools included in our GitHub-owned images are updated weekly. The update process takes several days, and the list of preinstalled software on the <code>main</code> branch is updated after the whole deployment ends.</p>
+<p>Workflow logs include a link to the preinstalled tools on the exact runner. To find this information in the workflow log, expand the <code>Set up job</code> section. Under that section, expand the <code>Runner Image</code> section. The link following <code>Included Software</code> will describe the preinstalled tools on the runner that ran the workflow.</p>
+<p>For more information, see <a href="../../how-tos/monitor-workflows/view-workflow-run-history.html">Viewing workflow run history</a>.</p>
+<p>GitHub-hosted runners include the operating system's default built-in tools, in addition to the packages listed in the above references. For example, Ubuntu and macOS runners include <code>grep</code>, <code>find</code>, and <code>which</code>, among other default tools.</p>
+<p>You can also view a software bill of materials (SBOM) for each build of the Windows and Ubuntu runner images. For more information, see <a href="../../reference/security/secure-use.html#reviewing-the-supply-chain-for-github-hosted-runners">Secure use reference</a>.</p>
+<p>We recommend using actions to interact with the software installed on runners. This approach has several benefits:</p>
+<ul>
+<li>Usually, actions provide more flexible functionality like version selection, ability to pass arguments, and parameters</li>
+<li>It ensures the tool versions used in your workflow will remain the same regardless of software updates</li>
+</ul>
+<p>If there is a tool that you'd like to request, please open an issue at <a href="https://github.com/actions/runner-images" class="external">actions/runner-images</a>. This repository also contains announcements about all major software updates on runners.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<ul>
+<li>You can also install additional software on GitHub-hosted runners. See <a href="../../how-tos/manage-runners/github-hosted-runners/customize-runners.html">Customizing GitHub-hosted runners</a>.</li>
+<li>While nested virtualization is technically possible while using runners, it is not officially supported. Any use of nested VMs is experimental and done at your own risk, we offer no guarantees regarding stability, performance, or compatibility.</li>
+</ul>
+</div>
+<h3 title="Runner images / Custom images"><a href="#custom-images" aria-hidden="true" class="anchor" id="custom-images"></a>Custom images</h3>
+<p>Custom images let you start with a GitHub-provided base image and build your own VM image that’s customized to your workflow needs. With custom images, you can:</p>
+<ul>
+<li>Build custom VM images using existing workflow YAML syntax.</li>
+<li>Pre-configure environments with approved tooling, security patches, and dependencies before workflows start.</li>
+<li>Create consistent, validated base environments across all builds.</li>
+</ul>
+<p>Custom images can include repository code, container images, binaries, certificates, and other dependencies to create a consistent build environment across workflows. This helps you gain control over your supply chain. They help reduce setup time, improve build performance, and strengthen security by reducing the surface attack vector on your images. Administrators can also apply policies to manage image versions, retention, and age to meet organizational security and compliance requirements.</p>
+<p>Custom images can only be used with larger runners. Jobs that use custom images are billed at the same per-minute rates as those runners. Storage for custom images is billed and metered through GitHub Actions storage. For more information, see <a href="https://docs.github.com/en/billing/concepts/product-billing/github-actions#custom-image-storage" class="external">GitHub Actions billing</a>.</p>
+<p>To get started with custom images, see <a href="../../how-tos/manage-runners/larger-runners/use-custom-images.html">Using custom images</a>.</p>
+<h2 title="Cloud hosts used by GitHub-hosted runners"><a href="#cloud-hosts-used-by-github-hosted-runners" aria-hidden="true" class="anchor" id="cloud-hosts-used-by-github-hosted-runners"></a>Cloud hosts used by GitHub-hosted runners</h2>
+<p>GitHub hosts Linux and Windows runners on virtual machines in Microsoft Azure with the GitHub Actions runner application installed. The GitHub-hosted runner application is a fork of the Azure Pipelines Agent. Inbound ICMP packets are blocked for all Azure virtual machines, so ping or traceroute commands might not work. GitHub hosts macOS runners in Azure data centers.</p>
+<h2 title="Workflow continuity"><a href="#workflow-continuity" aria-hidden="true" class="anchor" id="workflow-continuity"></a>Workflow continuity</h2>
+<p>If GitHub Actions services are temporarily unavailable, then a workflow run is discarded if it has not been queued within 30 minutes of being triggered. For example, if a workflow is triggered and the GitHub Actions services are unavailable for 31 minutes or longer, then the workflow run will not be processed.</p>
+<p>In addition, if the workflow run has been successfully queued, but has not been processed by a GitHub-hosted runner within 45 minutes, then the queued workflow run is discarded.</p>
+<h2 title="The etc/hosts file"><a href="#the-etchosts-file" aria-hidden="true" class="anchor" id="the-etchosts-file"></a>The <code>etc/hosts</code> file</h2>
+<p>GitHub-hosted runners are provisioned with an <code>etc/hosts</code> file that blocks network access to various cryptocurrency mining pools and malicious sites. Hosts such as MiningMadness.com and cpu-pool.com are rerouted to localhost so that they do not present a significant security risk.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

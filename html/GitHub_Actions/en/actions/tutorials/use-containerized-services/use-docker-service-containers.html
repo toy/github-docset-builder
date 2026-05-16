@@ -1,0 +1,142 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Communicating with Docker service containers</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Use containerized services</a> / </nav><h1><a href="#communicating-with-docker-service-containers" aria-hidden="true" class="anchor" id="communicating-with-docker-service-containers"></a>Communicating with Docker service containers</h1>
+<p>Learn how to use Docker service containers to connect databases, web services, memory caches, and other tools to your workflow.</p>
+<h2 title="Communicating with Docker service containers"><a href="#communicating-with-docker-service-containers-1" aria-hidden="true" class="anchor" id="communicating-with-docker-service-containers-1"></a>Communicating with Docker service containers</h2>
+<p>Service containers are Docker containers that provide a simple and portable way for you to host services that you might need to test or operate your application in a workflow. For example, your workflow might need to run integration tests that require access to a database and memory cache.</p>
+<p>You can configure service containers for each job in a workflow. GitHub creates a fresh Docker container for each service configured in the workflow, and destroys the service container when the job completes. Steps in a job can communicate with all service containers that are part of the same job. However, you cannot create and use service containers inside a composite action.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>If your workflows use Docker container actions, job containers, or service containers, then you must use a Linux runner:</p>
+<ul>
+<li>If you are using GitHub-hosted runners, you must use an Ubuntu runner.</li>
+<li>If you are using self-hosted runners, you must use a Linux machine as your runner and Docker must be installed.</li>
+</ul>
+</div>
+<p>You can configure jobs in a workflow to run directly on a runner machine or in a Docker container. Communication between a job and its service containers is different depending on whether a job runs directly on the runner machine or in a container.</p>
+<h3 title="Communicating with Docker service containers / Running jobs in a container"><a href="#running-jobs-in-a-container" aria-hidden="true" class="anchor" id="running-jobs-in-a-container"></a>Running jobs in a container</h3>
+<p>When you run jobs in a container, GitHub connects service containers to the job using Docker's user-defined bridge networks. For more information, see <a href="https://docs.docker.com/engine/network/drivers/bridge/" class="external">Bridge network driver</a> in the Docker documentation.</p>
+<p>Running the job and services in a container simplifies network access. You can access a service container using the label you configure in the workflow. The hostname of the service container is automatically mapped to the label name. For example, if you create a service container with the label <code>redis</code>, the hostname of the service container is <code>redis</code>.</p>
+<p>You don't need to configure any ports for service containers. By default, all containers that are part of the same Docker network expose all ports to each other, and no ports are exposed outside of the Docker network.</p>
+<h3 title="Communicating with Docker service containers / Running jobs on the runner machine"><a href="#running-jobs-on-the-runner-machine" aria-hidden="true" class="anchor" id="running-jobs-on-the-runner-machine"></a>Running jobs on the runner machine</h3>
+<p>When running jobs directly on the runner machine, you can access service containers using <code>localhost:&lt;port&gt;</code> or <code>127.0.0.1:&lt;port&gt;</code>. GitHub configures the container network to enable communication from the service container to the Docker host.</p>
+<p>When a job runs directly on a runner machine, the service running in the Docker container does not expose its ports to the job on the runner by default. You need to map ports on the service container to the Docker host. For more information, see <a href="#mapping-docker-host-and-service-container-ports">Communicating with Docker service containers</a>.</p>
+<h2 title="Creating service containers"><a href="#creating-service-containers" aria-hidden="true" class="anchor" id="creating-service-containers"></a>Creating service containers</h2>
+<p>You can use the <code>services</code> keyword to create service containers that are part of a job in your workflow. For more information, see <a href="../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idservices"><code>jobs.&lt;job_id&gt;.services</code></a>.</p>
+<p>This example creates a service called <code>redis</code> in a job called <code>container-job</code>. The Docker host in this example is the <code>node:16-bullseye</code> container.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Redis container example
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">push
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Label of the container job
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">container-job</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Containers must run in Linux based operating systems
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Docker Hub image that `container-job` executes in
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">container</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">node:16-bullseye
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Service containers to run with `container-job`
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">services</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Label used to access the service container
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">redis</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># Docker Hub image
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">image</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">redis
+</span></code></pre>
+<h2 title="Mapping Docker host and service container ports"><a href="#mapping-docker-host-and-service-container-ports" aria-hidden="true" class="anchor" id="mapping-docker-host-and-service-container-ports"></a>Mapping Docker host and service container ports</h2>
+<p>If your job runs in a Docker container, you do not need to map ports on the host or the service container. If your job runs directly on the runner machine, you'll need to map any required service container ports to ports on the host runner machine.</p>
+<p>You can map service containers ports to the Docker host using the <code>ports</code> keyword. For more information, see <a href="../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idservices"><code>jobs.&lt;job_id&gt;.services</code></a>.</p>
+<table>
+<thead>
+<tr>
+<th>Value of <code>ports</code></th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">8080:80</code></td>
+<td>Maps TCP port 80 in the container to port 8080 on the Docker host.</td>
+</tr>
+<tr>
+<td><code class="keyword">8080:80/udp</code></td>
+<td>Maps UDP port 80 in the container to port 8080 on the Docker host.</td>
+</tr>
+<tr>
+<td><code class="keyword">8080/udp</code></td>
+<td>Maps a randomly chosen port on the Docker host to UDP port 8080 in the container.</td>
+</tr>
+</tbody>
+</table>
+<p>When you map ports using the <code>ports</code> keyword, GitHub uses the <code>--publish</code> command to publish the container’s ports to the Docker host. For more information, see <a href="https://docs.docker.com/config/containers/container-networking/" class="external">Docker container networking</a> in the Docker documentation.</p>
+<p>When you specify the container port but not the Docker host port, the container port is randomly assigned to a free port. GitHub sets the assigned container port in the service container context. For example, for a <code>redis</code> service container, if you configured the Docker host port 5432, you can access the corresponding container port using the <code>job.services.redis.ports[5432]</code> context. For more information, see <a href="../../reference/workflows-and-actions/contexts.html#job-context">Contexts reference</a>.</p>
+<h3 title="Mapping Docker host and service container ports / Example mapping Redis ports"><a href="#example-mapping-redis-ports" aria-hidden="true" class="anchor" id="example-mapping-redis-ports"></a>Example mapping Redis ports</h3>
+<p>This example maps the service container <code>redis</code> port 6379 to the Docker host port 6379.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Redis Service Example
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">push
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Label of the container job
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">runner-job</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># You must use a Linux environment when using service containers or container jobs
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Service containers to run with `runner-job`
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">services</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Label used to access the service container
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">redis</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># Docker Hub image
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">image</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">redis
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;">#
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">ports</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#65737e;"># Opens tcp port 6379 on the host and service container
+</span><span style="color:#c0c5ce;">          - </span><span style="color:#a3be8c;">6379:6379
+</span></code></pre>
+<h2 title="Authenticating with image registries"><a href="#authenticating-with-image-registries" aria-hidden="true" class="anchor" id="authenticating-with-image-registries"></a>Authenticating with image registries</h2>
+<p>You can specify credentials for your service containers in case you need to authenticate with an image registry. This allows you to use images from private registries or to <a href="https://www.docker.com/increase-rate-limits/" class="external">increase your DockerHub rate limit</a>.</p>
+<p>Here’s an example of authenticating with Docker Hub and the GitHub Container registry:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">services</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">redis</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># Docker Hub image
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">image</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">redis
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">ports</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          - </span><span style="color:#a3be8c;">6379:6379
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">credentials</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.dockerhub_username }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.dockerhub_password }}
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">db</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># Private registry image
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">image</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ghcr.io/octocat/testdb:latest
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">credentials</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ github.repository_owner }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.ghcr_password }}
+</span></code></pre>
+<h2 title="Customizing service container entrypoints and commands"><a href="#customizing-service-container-entrypoints-and-commands" aria-hidden="true" class="anchor" id="customizing-service-container-entrypoints-and-commands"></a>Customizing service container entrypoints and commands</h2>
+<p>By default, service containers run with the entrypoint and command defined in the Docker image. You can override these using the <code>entrypoint</code> and <code>command</code> keys. This is useful when you need to pass flags to a service (such as a database) or swap the image entrypoint entirely, without building a custom wrapper image.</p>
+<p>The <code>command</code> key overrides the image's default command (<code>CMD</code>). Most scenarios only need <code>command</code>—the image already has the right entrypoint, you just need to pass flags:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">services</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">mysql</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">image</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">mysql:8
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">command</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">--sql_mode=STRICT_TRANS_TABLES --max_allowed_packet=512M
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">MYSQL_ROOT_PASSWORD</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">test
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">ports</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">3306:3306
+</span></code></pre>
+<p>The <code>entrypoint</code> key overrides the image's <code>ENTRYPOINT</code>. You can combine it with <code>command</code> to pass arguments to the custom entrypoint:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">services</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">etcd</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">image</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">quay.io/coreos/etcd:v3.5.17
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">entrypoint</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">etcd
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">command</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">&gt;-
+</span><span style="color:#a3be8c;">      --listen-client-urls http://0.0.0.0:2379
+</span><span style="color:#a3be8c;">      --advertise-client-urls http://0.0.0.0:2379
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">ports</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">2379:2379
+</span></code></pre>
+<p>The naming and behavior match Docker Compose. For more information, see <a href="../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idservicesservice_idcommand"><code>jobs.&lt;job_id&gt;.services.&lt;service_id&gt;.command</code></a> and <a href="../../reference/workflows-and-actions/workflow-syntax.html#jobsjob_idservicesservice_identrypoint"><code>jobs.&lt;job_id&gt;.services.&lt;service_id&gt;.entrypoint</code></a>.</p>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li><a href="create-redis-service-containers.html">Creating Redis service containers</a></li>
+<li><a href="create-postgresql-service-containers.html">Creating PostgreSQL service containers</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

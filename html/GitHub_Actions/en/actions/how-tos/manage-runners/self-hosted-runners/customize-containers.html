@@ -1,0 +1,500 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Customizing the containers used by jobs</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Manage runners</a> / <a href="index.html">Self-hosted runners</a> / </nav><h1><a href="#customizing-the-containers-used-by-jobs" aria-hidden="true" class="anchor" id="customizing-the-containers-used-by-jobs"></a>Customizing the containers used by jobs</h1>
+<p>You can customize how your self-hosted runner invokes a container for a job.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This feature is currently in public preview and is subject to change.</p>
+</div>
+<h2 title="About container customization"><a href="#about-container-customization" aria-hidden="true" class="anchor" id="about-container-customization"></a>About container customization</h2>
+<p>GitHub Actions allows you to run a job within a container, using the <code>container:</code> statement in your workflow file. For more information, see <a href="../../write-workflows/choose-where-workflows-run/run-jobs-in-a-container.html">Running jobs in a container</a>. To process container-based jobs, the self-hosted runner creates a container for each job.</p>
+<p>GitHub Actions supports commands that let you customize the way your containers are created by the self-hosted runner. For example, you can use these commands to manage the containers through Kubernetes or Podman, and you can also customize the <code>docker run</code> or <code>docker create</code> commands used to invoke the container. The customization commands are run by a script, which is automatically triggered when a specific environment variable is set on the runner. For more information, see <a href="#triggering-the-customization-script">Triggering the customization script</a> below.</p>
+<p>This customization is only available for Linux-based self-hosted runners, and root user access is not required.</p>
+<h2 title="Container customization commands"><a href="#container-customization-commands" aria-hidden="true" class="anchor" id="container-customization-commands"></a>Container customization commands</h2>
+<p>GitHub Actions includes the following commands for container customization:</p>
+<ul>
+<li><a href="#prepare_job"><code>prepare_job</code></a>: Called when a job is started.</li>
+<li><a href="#cleanup_job"><code>cleanup_job</code></a>: Called at the end of a job.</li>
+<li><a href="#run_container_step"><code>run_container_step</code></a>: Called once for each container action in the job.</li>
+<li><a href="#run_script_step"><code>run_script_step</code></a>: Runs any step that is not a container action.</li>
+</ul>
+<p>Each of these customization commands must be defined in its own JSON file. The file name must match the command name, with the extension <code>.json</code>. For example, the <code>prepare_job</code> command is defined in <code>prepare_job.json</code>. These JSON files will then be run together on the self-hosted runner, as part of the main <code>index.js</code> script. This process is described in more detail in <a href="#generating-the-customization-script">Generating the customization script</a>.</p>
+<p>These commands also include configuration arguments, explained below in more detail.</p>
+<h3 title="Container customization commands / prepare_job"><a href="#prepare_job" aria-hidden="true" class="anchor" id="prepare_job"></a><code>prepare_job</code></h3>
+<p>The <code>prepare_job</code> command is called when a job is started. GitHub Actions passes in any job or service containers the job has. This command will be called if you have any service or job containers in the job.</p>
+<p>GitHub Actions assumes that you will do the following tasks in the <code>prepare_job</code> command:</p>
+<ul>
+<li>Prune anything from previous jobs, if needed.</li>
+<li>Create a network, if needed.</li>
+<li>Pull the job and service containers.</li>
+<li>Start the job container.</li>
+<li>Start the service containers.</li>
+<li>Write to the response file any information that GitHub Actions will need:
+<ul>
+<li>Required: State whether the container is an <code>alpine</code> linux container (using the <code>isAlpine</code> boolean).</li>
+<li>Optional: Any context fields you want to set on the job context, otherwise they will be unavailable for users to use. For more information, see <a href="../../../reference/workflows-and-actions/contexts.html#job-context">Contexts reference</a>.</li>
+</ul>
+</li>
+<li>Return <code>0</code> when the health checks have succeeded and the job/service containers are started.</li>
+</ul>
+<h4><a href="#arguments-for-prepare_job" aria-hidden="true" class="anchor" id="arguments-for-prepare_job"></a>Arguments for <code>prepare_job</code></h4>
+<ul>
+<li><code>jobContainer</code>: <strong>Optional</strong>. An object containing information about the specified job container.
+<ul>
+<li><code>image</code>: <strong>Required</strong>. A string containing the Docker image.</li>
+<li><code>workingDirectory</code>: <strong>Required</strong>. A string containing the absolute path of the working directory.</li>
+<li><code>createOptions</code>: <strong>Optional</strong>. The optional <em>create</em> options specified in the YAML. For more information, see <a href="../../write-workflows/choose-where-workflows-run/run-jobs-in-a-container.html#example-running-a-job-within-a-container">Running jobs in a container</a>.</li>
+<li><code>environmentVariables</code>: <strong>Optional</strong>. Sets a map of key environment variables.</li>
+<li><code>userMountVolumes</code>: <strong>Optional</strong>. An array of user mount volumes set in the YAML. For more information, see <a href="../../write-workflows/choose-where-workflows-run/run-jobs-in-a-container.html#example-running-a-job-within-a-container">Running jobs in a container</a>.
+<ul>
+<li><code>sourceVolumePath</code>: <strong>Required</strong>. The source path to the volume that will be mounted into the Docker container.</li>
+<li><code>targetVolumePath</code>: <strong>Required</strong>. The target path to the volume that will be mounted into the Docker container.</li>
+<li><code>readOnly</code>: <strong>Required</strong>. Determines whether or not the mount should be read-only.</li>
+</ul>
+</li>
+<li><code>systemMountVolumes</code>: <strong>Required</strong>. An array of mounts to mount into the container, same fields as above.
+<ul>
+<li><code>sourceVolumePath</code>: <strong>Required</strong>. The source path to the volume that will be mounted into the Docker container.</li>
+<li><code>targetVolumePath</code>: <strong>Required</strong>. The target path to the volume that will be mounted into the Docker container.</li>
+<li><code>readOnly</code>: <strong>Required</strong>. Determines whether or not the mount should be read-only.</li>
+</ul>
+</li>
+<li><code>registry</code> <strong>Optional</strong>. The Docker registry credentials for a private container registry.
+<ul>
+<li><code>username</code>: <strong>Optional</strong>. The username of the registry account.</li>
+<li><code>password</code>: <strong>Optional</strong>. The password to the registry account.</li>
+<li><code>serverUrl</code>: <strong>Optional</strong>. The registry URL.</li>
+</ul>
+</li>
+<li><code>portMappings</code>: <strong>Optional</strong>. A key value hash of <em>source:target</em> ports to map into the container.</li>
+</ul>
+</li>
+<li><code>services</code>: <strong>Optional</strong>. An array of service containers to spin up.
+<ul>
+<li><code>contextName</code>: <strong>Required</strong>. The name of the service in the Job context.</li>
+<li><code>image</code>: <strong>Required</strong>. A string containing the Docker image.</li>
+<li><code>createOptions</code>: <strong>Optional</strong>. The optional <em>create</em> options specified in the YAML. For more information, see <a href="../../write-workflows/choose-where-workflows-run/run-jobs-in-a-container.html#example-running-a-job-within-a-container">Running jobs in a container</a>.</li>
+<li><code>environmentVariables</code>: <strong>Optional</strong>. Sets a map of key environment variables.</li>
+<li><code>userMountVolumes</code>: <strong>Optional</strong>. An array of mounts to mount into the container, same fields as above.
+<ul>
+<li><code>sourceVolumePath</code>: <strong>Required</strong>. The source path to the volume that will be mounted into the Docker container.</li>
+<li><code>targetVolumePath</code>: <strong>Required</strong>. The target path to the volume that will be mounted into the Docker container.</li>
+<li><code>readOnly</code>: <strong>Required</strong>. Determines whether or not the mount should be read-only.</li>
+</ul>
+</li>
+<li><code>registry</code> <strong>Optional</strong>. The Docker registry credentials for the private container registry.
+<ul>
+<li><code>username</code>: <strong>Optional</strong>. The username of the registry account.</li>
+<li><code>password</code>: <strong>Optional</strong>. The password to the registry account.</li>
+<li><code>serverUrl</code>: <strong>Optional</strong>. The registry URL.</li>
+</ul>
+</li>
+<li><code>portMappings</code>: <strong>Optional</strong>. A key value hash of <em>source:target</em> ports to map into the container.</li>
+</ul>
+</li>
+</ul>
+<h4><a href="#example-input-for-prepare_job" aria-hidden="true" class="anchor" id="example-input-for-prepare_job"></a>Example input for <code>prepare_job</code></h4>
+<pre lang="json" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">{
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">command</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">prepare_job</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">responseFile</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/users/octocat/runner/_work/{guid}.json</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">state</span><span style="color:#c0c5ce;">": {},
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">args</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">jobContainer</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">image</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">node:18</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">workingDirectory</span><span style="color:#c0c5ce;">"</span><span style="background-color:#bf616a;color:#2b303b;">:</span><span style="color:#c0c5ce;"> "</span><span style="color:#a3be8c;">/__w/octocat-test2/octocat-test2</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">createOptions</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">--cpus 1</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">environmentVariables</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">NODE_ENV</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">development</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      },
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">userMountVolumes</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">        {
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">sourceVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">my_docker_volume</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">targetVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/volume_mount</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">readOnly</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">        }
+</span><span style="color:#c0c5ce;">      ],
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">systemMountVolumes</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">        {
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">sourceVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/home/octocat/git/runner/_layout/_work</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">targetVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/__w</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">readOnly</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">        },
+</span><span style="color:#c0c5ce;">        {
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">sourceVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/home/octocat/git/runner/_layout/externals</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">targetVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/__e</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">readOnly</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">true
+</span><span style="color:#c0c5ce;">        },
+</span><span style="color:#c0c5ce;">        {
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">sourceVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/home/octocat/git/runner/_layout/_work/_temp</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">targetVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/__w/_temp</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">readOnly</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">        },
+</span><span style="color:#c0c5ce;">        {
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">sourceVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/home/octocat/git/runner/_layout/_work/_actions</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">targetVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/__w/_actions</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">readOnly</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">        },
+</span><span style="color:#c0c5ce;">        {
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">sourceVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/home/octocat/git/runner/_layout/_work/_tool</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">targetVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/__w/_tool</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">readOnly</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">        },
+</span><span style="color:#c0c5ce;">        {
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">sourceVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/home/octocat/git/runner/_layout/_work/_temp/_github_home</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">targetVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/github/home</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">readOnly</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">        },
+</span><span style="color:#c0c5ce;">        {
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">sourceVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/home/octocat/git/runner/_layout/_work/_temp/_github_workflow</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">targetVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/github/workflow</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">readOnly</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">        }
+</span><span style="color:#c0c5ce;">      ],
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">registry</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">username</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">octocat</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">password</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">examplePassword</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">serverUrl</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">https://index.docker.io/v1</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      },
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">portMappings</span><span style="color:#c0c5ce;">": { "</span><span style="color:#a3be8c;">80</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">801</span><span style="color:#c0c5ce;">" }
+</span><span style="color:#c0c5ce;">    },
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">services</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">      {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">contextName</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">redis</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">image</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">redis</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">createOptions</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">--cpus 1</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">environmentVariables</span><span style="color:#c0c5ce;">": {},
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">userMountVolumes</span><span style="color:#c0c5ce;">": [],
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">portMappings</span><span style="color:#c0c5ce;">": { "</span><span style="color:#a3be8c;">80</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">801</span><span style="color:#c0c5ce;">" },
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">registry</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">username</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">octocat</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">password</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">examplePassword</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">serverUrl</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">https://index.docker.io/v1</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">        }
+</span><span style="color:#c0c5ce;">      }
+</span><span style="color:#c0c5ce;">    ]
+</span><span style="color:#c0c5ce;">  }
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+<h4><a href="#example-output-for-prepare_job" aria-hidden="true" class="anchor" id="example-output-for-prepare_job"></a>Example output for <code>prepare_job</code></h4>
+<p>This example output is the contents of the <code>responseFile</code> defined in the input above.</p>
+<pre lang="json" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">{
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">state</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">network</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">example_network_53269bd575972817b43f7733536b200c</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">jobContainer</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">82e8219701fe096a35941d869cf3d71af1d943b5d8bdd718857fb87ac3042480</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">serviceContainers</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">redis</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">60972d9aa486605e66b0dad4abb678dc3d9116f536579e418176eedb8abb9105</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    }
+</span><span style="color:#c0c5ce;">  },
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">context</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">container</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">id</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">82e8219701fe096a35941d869cf3d71af1d943b5d8bdd718857fb87ac3042480</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">network</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">example_network_53269bd575972817b43f7733536b200c</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    },
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">services</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">redis</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">id</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">60972d9aa486605e66b0dad4abb678dc3d9116f536579e418176eedb8abb9105</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">ports</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">8080</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">8080</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">        },
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">network</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">example_network_53269bd575972817b43f7733536b200c</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      }
+</span><span style="color:#c0c5ce;">    },
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">isAlpine</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">true
+</span><span style="color:#c0c5ce;">  }
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+<h3 title="Container customization commands / cleanup_job"><a href="#cleanup_job" aria-hidden="true" class="anchor" id="cleanup_job"></a><code>cleanup_job</code></h3>
+<p>The <code>cleanup_job</code> command is called at the end of a job. GitHub Actions assumes that you will do the following tasks in the <code>cleanup_job</code> command:</p>
+<ul>
+<li>Stop any running service or job containers (or the equivalent pod).</li>
+<li>Stop the network (if one exists).</li>
+<li>Delete any job or service containers (or the equivalent pod).</li>
+<li>Delete the network (if one exists).</li>
+<li>Cleanup anything else that was created for the job.</li>
+</ul>
+<h4><a href="#arguments-for-cleanup_job" aria-hidden="true" class="anchor" id="arguments-for-cleanup_job"></a>Arguments for <code>cleanup_job</code></h4>
+<p>No arguments are provided for <code>cleanup_job</code>.</p>
+<h4><a href="#example-input-for-cleanup_job" aria-hidden="true" class="anchor" id="example-input-for-cleanup_job"></a>Example input for <code>cleanup_job</code></h4>
+<pre lang="json" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">{
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">command</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">cleanup_job</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">responseFile</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">null</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">state</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">network</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">example_network_53269bd575972817b43f7733536b200c</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">jobContainer</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">82e8219701fe096a35941d869cf3d71af1d943b5d8bdd718857fb87ac3042480</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">serviceContainers</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">redis</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">60972d9aa486605e66b0dad4abb678dc3d9116f536579e418176eedb8abb9105</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    }
+</span><span style="color:#c0c5ce;">  },
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">args</span><span style="color:#c0c5ce;">": {}
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+<h4><a href="#example-output-for-cleanup_job" aria-hidden="true" class="anchor" id="example-output-for-cleanup_job"></a>Example output for <code>cleanup_job</code></h4>
+<p>No output is expected for <code>cleanup_job</code>.</p>
+<h3 title="Container customization commands / run_container_step"><a href="#run_container_step" aria-hidden="true" class="anchor" id="run_container_step"></a><code>run_container_step</code></h3>
+<p>The <code>run_container_step</code> command is called once for each container action in your job. GitHub Actions assumes that you will do the following tasks in the <code>run_container_step</code> command:</p>
+<ul>
+<li>Pull or build the required container (or fail if you cannot).</li>
+<li>Run the container action and return the exit code of the container.</li>
+<li>Stream any step logs output to stdout and stderr.</li>
+<li>Cleanup the container after it executes.</li>
+</ul>
+<h4><a href="#arguments-for-run_container_step" aria-hidden="true" class="anchor" id="arguments-for-run_container_step"></a>Arguments for <code>run_container_step</code></h4>
+<ul>
+<li><code>image</code>: <strong>Optional</strong>. A string containing the docker image. Otherwise a dockerfile must be provided.</li>
+<li><code>dockerfile</code>: <strong>Optional</strong>. A string containing the path to the dockerfile, otherwise an image must be provided.</li>
+<li><code>entryPointArgs</code>: <strong>Optional</strong>. A list containing the entry point args.</li>
+<li><code>entryPoint</code>: <strong>Optional</strong>. The container entry point to use if the default image entrypoint should be overwritten.</li>
+<li><code>workingDirectory</code>: <strong>Required</strong>. A string containing the absolute path of the working directory.</li>
+<li><code>createOptions</code>: <strong>Optional</strong>. The optional <em>create</em> options specified in the YAML. For more information, see <a href="../../write-workflows/choose-where-workflows-run/run-jobs-in-a-container.html#example-running-a-job-within-a-container">Running jobs in a container</a>.</li>
+<li><code>environmentVariables</code>: <strong>Optional</strong>. Sets a map of key environment variables.</li>
+<li><code>prependPath</code>: <strong>Optional</strong>. An array of additional paths to prepend to the <code>$PATH</code> variable.</li>
+<li><code>userMountVolumes</code>: <strong>Optional</strong>. an array of user mount volumes set in the YAML. For more information, see <a href="../../write-workflows/choose-where-workflows-run/run-jobs-in-a-container.html#example-running-a-job-within-a-container">Running jobs in a container</a>.
+<ul>
+<li><code>sourceVolumePath</code>: <strong>Required</strong>. The source path to the volume that will be mounted into the Docker container.</li>
+<li><code>targetVolumePath</code>: <strong>Required</strong>. The target path to the volume that will be mounted into the Docker container.</li>
+<li><code>readOnly</code>: <strong>Required</strong>. Determines whether or not the mount should be read-only.</li>
+</ul>
+</li>
+<li><code>systemMountVolumes</code>: <strong>Required</strong>. An array of mounts to mount into the container, using the same fields as above.
+<ul>
+<li><code>sourceVolumePath</code>: <strong>Required</strong>. The source path to the volume that will be mounted into the Docker container.</li>
+<li><code>targetVolumePath</code>: <strong>Required</strong>. The target path to the volume that will be mounted into the Docker container.</li>
+<li><code>readOnly</code>: <strong>Required</strong>. Determines whether or not the mount should be read-only.</li>
+</ul>
+</li>
+<li><code>registry</code> <strong>Optional</strong>. The Docker registry credentials for a private container registry.
+<ul>
+<li><code>username</code>: <strong>Optional</strong>. The username of the registry account.</li>
+<li><code>password</code>: <strong>Optional</strong>. The password to the registry account.</li>
+<li><code>serverUrl</code>: <strong>Optional</strong>. The registry URL.</li>
+</ul>
+</li>
+<li><code>portMappings</code>: <strong>Optional</strong>. A key value hash of the <em>source:target</em> ports to map into the container.</li>
+</ul>
+<h4><a href="#example-input-for-image" aria-hidden="true" class="anchor" id="example-input-for-image"></a>Example input for image</h4>
+<p>If you're using a Docker image, you can specify the image name in the <code>"image":</code> parameter.</p>
+<pre lang="json" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">{
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">command</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">run_container_step</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">responseFile</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">null</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">state</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">network</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">example_network_53269bd575972817b43f7733536b200c</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">jobContainer</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">82e8219701fe096a35941d869cf3d71af1d943b5d8bdd718857fb87ac3042480</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">serviceContainers</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">redis</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">60972d9aa486605e66b0dad4abb678dc3d9116f536579e418176eedb8abb9105</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    }
+</span><span style="color:#c0c5ce;">  },
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">args</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">image</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">node:18</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">dockerfile</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">null</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">entryPointArgs</span><span style="color:#c0c5ce;">": ["</span><span style="color:#a3be8c;">-f</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">/dev/null</span><span style="color:#c0c5ce;">"],
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">entryPoint</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">tail</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">workingDirectory</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/__w/octocat-test2/octocat-test2</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">createOptions</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">--cpus 1</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">environmentVariables</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">NODE_ENV</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">development</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    },
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">prependPath</span><span style="color:#c0c5ce;">": ["</span><span style="color:#a3be8c;">/foo/bar</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">bar/foo</span><span style="color:#c0c5ce;">"],
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">userMountVolumes</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">      {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">sourceVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">my_docker_volume</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">targetVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/volume_mount</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">readOnly</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">      }
+</span><span style="color:#c0c5ce;">    ],
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">systemMountVolumes</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">      {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">sourceVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/home/octocat/git/runner/_layout/_work</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">targetVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/__w</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">readOnly</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">      },
+</span><span style="color:#c0c5ce;">      {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">sourceVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/home/octocat/git/runner/_layout/externals</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">targetVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/__e</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">readOnly</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">true
+</span><span style="color:#c0c5ce;">      },
+</span><span style="color:#c0c5ce;">      {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">sourceVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/home/octocat/git/runner/_layout/_work/_temp</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">targetVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/__w/_temp</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">readOnly</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">      },
+</span><span style="color:#c0c5ce;">      {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">sourceVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/home/octocat/git/runner/_layout/_work/_actions</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">targetVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/__w/_actions</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">readOnly</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">      },
+</span><span style="color:#c0c5ce;">      {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">sourceVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/home/octocat/git/runner/_layout/_work/_tool</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">targetVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/__w/_tool</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">readOnly</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">      },
+</span><span style="color:#c0c5ce;">      {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">sourceVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/home/octocat/git/runner/_layout/_work/_temp/_github_home</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">targetVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/github/home</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">readOnly</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">      },
+</span><span style="color:#c0c5ce;">      {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">sourceVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/home/octocat/git/runner/_layout/_work/_temp/_github_workflow</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">targetVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/github/workflow</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">readOnly</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">      }
+</span><span style="color:#c0c5ce;">    ],
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">registry</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">null</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">portMappings</span><span style="color:#c0c5ce;">": { "</span><span style="color:#a3be8c;">80</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">801</span><span style="color:#c0c5ce;">" }
+</span><span style="color:#c0c5ce;">  }
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+<h4><a href="#example-input-for-dockerfile" aria-hidden="true" class="anchor" id="example-input-for-dockerfile"></a>Example input for Dockerfile</h4>
+<p>If your container is defined by a Dockerfile, this example demonstrates how to specify the path to a <code>Dockerfile</code> in your input, using the <code>"dockerfile":</code> parameter.</p>
+<pre lang="json" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">{
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">command</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">run_container_step</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">responseFile</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">null</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">state</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">network</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">example_network_53269bd575972817b43f7733536b200c</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">jobContainer</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">82e8219701fe096a35941d869cf3d71af1d943b5d8bdd718857fb87ac3042480</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">services</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">redis</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">60972d9aa486605e66b0dad4abb678dc3d9116f536579e418176eedb8abb9105</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    }
+</span><span style="color:#c0c5ce;">  },
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">args</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">image</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">null</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">dockerfile</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/__w/_actions/foo/dockerfile</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">entryPointArgs</span><span style="color:#c0c5ce;">": ["</span><span style="color:#a3be8c;">hello world</span><span style="color:#c0c5ce;">"],
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">entryPoint</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">echo</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">workingDirectory</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/__w/octocat-test2/octocat-test2</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">createOptions</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">--cpus 1</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">environmentVariables</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">NODE_ENV</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">development</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    },
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">prependPath</span><span style="color:#c0c5ce;">": ["</span><span style="color:#a3be8c;">/foo/bar</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">bar/foo</span><span style="color:#c0c5ce;">"],
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">userMountVolumes</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">      {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">sourceVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">my_docker_volume</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">targetVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/volume_mount</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">readOnly</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">      }
+</span><span style="color:#c0c5ce;">    ],
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">systemMountVolumes</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">      {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">sourceVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/home/octocat/git/runner/_layout/_work</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">targetVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/__w</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">readOnly</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">      },
+</span><span style="color:#c0c5ce;">      {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">sourceVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/home/octocat/git/runner/_layout/externals</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">targetVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/__e</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">readOnly</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">true
+</span><span style="color:#c0c5ce;">      },
+</span><span style="color:#c0c5ce;">      {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">sourceVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/home/octocat/git/runner/_layout/_work/_temp</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">targetVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/__w/_temp</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">readOnly</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">      },
+</span><span style="color:#c0c5ce;">      {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">sourceVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/home/octocat/git/runner/_layout/_work/_actions</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">targetVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/__w/_actions</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">readOnly</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">      },
+</span><span style="color:#c0c5ce;">      {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">sourceVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/home/octocat/git/runner/_layout/_work/_tool</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">targetVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/__w/_tool</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">readOnly</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">      },
+</span><span style="color:#c0c5ce;">      {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">sourceVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/home/octocat/git/runner/_layout/_work/_temp/_github_home</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">targetVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/github/home</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">readOnly</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">      },
+</span><span style="color:#c0c5ce;">      {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">sourceVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/home/octocat/git/runner/_layout/_work/_temp/_github_workflow</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">targetVolumePath</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/github/workflow</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">readOnly</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">false
+</span><span style="color:#c0c5ce;">      }
+</span><span style="color:#c0c5ce;">    ],
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">registry</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">null</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">portMappings</span><span style="color:#c0c5ce;">": { "</span><span style="color:#a3be8c;">80</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">801</span><span style="color:#c0c5ce;">" }
+</span><span style="color:#c0c5ce;">  }
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+<h4><a href="#example-output-for-run_container_step" aria-hidden="true" class="anchor" id="example-output-for-run_container_step"></a>Example output for <code>run_container_step</code></h4>
+<p>No output is expected for <code>run_container_step</code>.</p>
+<h3 title="Container customization commands / run_script_step"><a href="#run_script_step" aria-hidden="true" class="anchor" id="run_script_step"></a><code>run_script_step</code></h3>
+<p>GitHub Actions assumes that you will do the following tasks:</p>
+<ul>
+<li>Invoke the provided script inside the job container and return the exit code.</li>
+<li>Stream any step log output to stdout and stderr.</li>
+</ul>
+<h4><a href="#arguments-for-run_script_step" aria-hidden="true" class="anchor" id="arguments-for-run_script_step"></a>Arguments for <code>run_script_step</code></h4>
+<ul>
+<li><code>entryPointArgs</code>: <strong>Optional</strong>. A list containing the entry point arguments.</li>
+<li><code>entryPoint</code>: <strong>Optional</strong>. The container entry point to use if the default image entrypoint should be overwritten.</li>
+<li><code>prependPath</code>: <strong>Optional</strong>. An array of additional paths to prepend to the <code>$PATH</code> variable.</li>
+<li><code>workingDirectory</code>: <strong>Required</strong>. A string containing the absolute path of the working directory.</li>
+<li><code>environmentVariables</code>: <strong>Optional</strong>. Sets a map of key environment variables.</li>
+</ul>
+<h4><a href="#example-input-for-run_script_step" aria-hidden="true" class="anchor" id="example-input-for-run_script_step"></a>Example input for <code>run_script_step</code></h4>
+<pre lang="json" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">{
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">command</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">run_script_step</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">responseFile</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">null</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">state</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">network</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">example_network_53269bd575972817b43f7733536b200c</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">jobContainer</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">82e8219701fe096a35941d869cf3d71af1d943b5d8bdd718857fb87ac3042480</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">serviceContainers</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">redis</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">60972d9aa486605e66b0dad4abb678dc3d9116f536579e418176eedb8abb9105</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    }
+</span><span style="color:#c0c5ce;">  },
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">args</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">entryPointArgs</span><span style="color:#c0c5ce;">": ["</span><span style="color:#a3be8c;">-e</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">/runner/temp/example.sh</span><span style="color:#c0c5ce;">"],
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">entryPoint</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">bash</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">environmentVariables</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">NODE_ENV</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">development</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    },
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">prependPath</span><span style="color:#c0c5ce;">": ["</span><span style="color:#a3be8c;">/foo/bar</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">bar/foo</span><span style="color:#c0c5ce;">"],
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">workingDirectory</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">/__w/octocat-test2/octocat-test2</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">  }
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+<h4><a href="#example-output-for-run_script_step" aria-hidden="true" class="anchor" id="example-output-for-run_script_step"></a>Example output for <code>run_script_step</code></h4>
+<p>No output is expected for <code>run_script_step</code>.</p>
+<h2 title="Generating the customization script"><a href="#generating-the-customization-script" aria-hidden="true" class="anchor" id="generating-the-customization-script"></a>Generating the customization script</h2>
+<p>GitHub has created an example repository that demonstrates how to generate customization scripts for Docker and Kubernetes.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The resulting scripts are available for testing purposes, and you will need to determine whether they are appropriate for your requirements.</p>
+</div>
+<ol>
+<li>
+<p>Clone the <a href="https://github.com/actions/runner-container-hooks" class="external">actions/runner-container-hooks</a> repository to your self-hosted runner.</p>
+</li>
+<li>
+<p>The <code>examples/</code> directory contains some existing customization commands, each with its own JSON file. You can review these examples and use them as a starting point for your own customization commands.</p>
+<ul>
+<li><code>prepare_job.json</code></li>
+<li><code>run_script_step.json</code></li>
+<li><code>run_container_step.json</code></li>
+</ul>
+</li>
+<li>
+<p>Build the npm packages. These commands generate the <code>index.js</code> files inside <code>packages/docker/dist</code> and <code>packages/k8s/dist</code>.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">npm install &amp;&amp; npm run bootstrap &amp;&amp; npm run build-all
+</span></code></pre>
+</li>
+</ol>
+<p>When the resulting <code>index.js</code> is triggered by GitHub Actions, it will run the customization commands defined in the JSON files. To trigger the <code>index.js</code>, you will need to add it to your <code>ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER</code> environment variable, as described in the next section.</p>
+<h2 title="Triggering the customization script"><a href="#triggering-the-customization-script" aria-hidden="true" class="anchor" id="triggering-the-customization-script"></a>Triggering the customization script</h2>
+<p>The custom script must be located on the runner, but should not be stored in the self-hosted runner application directory (that is, the directory into which you downloaded and unpacked the runner software). The scripts are executed in the security context of the service account that's running the runner service.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The triggered script is processed synchronously, so it will block job execution while running.</p>
+</div>
+<p>The script is automatically executed when the runner has the following environment variable containing an absolute path to the script:</p>
+<ul>
+<li><code>ACTIONS_RUNNER_CONTAINER_HOOKS</code>: The script defined in this environment variable is triggered when a job has been assigned to a runner, but before the job starts running.</li>
+</ul>
+<p>To set this environment variable, you can either add it to the operating system, or add it to a file named <code>.env</code> within the self-hosted runner application directory. For example, the following <code>.env</code> entry will have the runner automatically run the script at <code>/Users/octocat/runner/index.js</code> before each container-based job runs:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#bf616a;">ACTIONS_RUNNER_CONTAINER_HOOKS</span><span style="color:#c0c5ce;">=</span><span style="color:#a3be8c;">/Users/octocat/runner/index.js
+</span></code></pre>
+<p>If you want to ensure that your job always runs inside a container, and subsequently always applies your container customizations, you can set the <code>ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER</code> variable on the self hosted runner to <code>true</code>. This will fail jobs that do not specify a job container.</p>
+<h2 title="Troubleshooting"><a href="#troubleshooting" aria-hidden="true" class="anchor" id="troubleshooting"></a>Troubleshooting</h2>
+<h3 title="Troubleshooting / No timeout setting"><a href="#no-timeout-setting" aria-hidden="true" class="anchor" id="no-timeout-setting"></a>No timeout setting</h3>
+<p>There is currently no timeout setting available for the script executed by <code>ACTIONS_RUNNER_CONTAINER_HOOKS</code>. As a result, you could consider adding timeout handling to your script.</p>
+<h3 title="Troubleshooting / Reviewing the workflow run log"><a href="#reviewing-the-workflow-run-log" aria-hidden="true" class="anchor" id="reviewing-the-workflow-run-log"></a>Reviewing the workflow run log</h3>
+<p>To confirm whether your scripts are executing, you can review the logs for that job. For more information on checking the logs, see <a href="../../monitor-workflows/use-workflow-run-logs.html#viewing-logs-to-diagnose-failures">Using workflow run logs</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Exploring the structure of your source code</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Find and fix code vulnerabilities</a> / <a href="index.html">Scan from VS Code</a> / </nav><h1><a href="#exploring-the-structure-of-your-source-code" aria-hidden="true" class="anchor" id="exploring-the-structure-of-your-source-code"></a>Exploring the structure of your source code</h1>
+<p>Visualize how your code maps to CodeQL classes in VS Code.</p>
+<h2 title="Prerequisites"><a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<p>To view the abstract syntax tree (AST) of a source file, you need to have an appropriate CodeQL query (usually <code>printAST.ql</code>) in your workspace. If you do not have an appropriate query, you can update your copy of the <a href="https://github.com/github/codeql" class="external"><code>github/codeql</code></a> repository from the <code>main</code> branch.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Updating your repository may discard your query caches, making your next query runs slower.</p>
+</div>
+<h2 title="Viewing the abstract syntax tree of a source file"><a href="#viewing-the-abstract-syntax-tree-of-a-source-file" aria-hidden="true" class="anchor" id="viewing-the-abstract-syntax-tree-of-a-source-file"></a>Viewing the abstract syntax tree of a source file</h2>
+<ol>
+<li>Open the "Databases" view in the extension, and right-click the database that you want to explore. Click <strong>Add Database Source to Workspace</strong>.</li>
+<li>Navigate to a CodeQL database's source file in the File Explorer.</li>
+<li>Run <strong>CodeQL: View AST</strong> from the VS Code Command Palette. This runs a CodeQL query over the active file, which may take a few seconds. Once the query is complete, the AST viewer will display the structure of the source file.</li>
+<li>To see the nested structure of the source file, click the arrows and expand the nodes. These nodes represent different elements of your code, such as statements and expressions.</li>
+<li>To see the source code corresponding to a particular node, click the node in the AST viewer. Similarly, you can click a section of the source code to display the corresponding node.</li>
+</ol>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

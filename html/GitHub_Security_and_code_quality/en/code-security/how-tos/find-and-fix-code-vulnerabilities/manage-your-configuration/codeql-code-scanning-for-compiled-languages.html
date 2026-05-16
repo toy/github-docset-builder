@@ -1,0 +1,177 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>CodeQL code scanning for compiled languages</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Find and fix code vulnerabilities</a> / <a href="index.html">Manage your configuration</a> / </nav><h1><a href="#codeql-code-scanning-for-compiled-languages" aria-hidden="true" class="anchor" id="codeql-code-scanning-for-compiled-languages"></a>CodeQL code scanning for compiled languages</h1>
+<p>Understand how CodeQL analyzes compiled languages, the build options available, and learn how you can customize the database generation process if you need to.</p>
+<h2 title="Compare build modes"><a href="#compare-build-modes" aria-hidden="true" class="anchor" id="compare-build-modes"></a>Compare build modes</h2>
+<div class="ghd-tool rowheaders">
+<table>
+<thead>
+<tr>
+<th>Build mode characteristic</th>
+<th>None</th>
+<th>Autobuild</th>
+<th>Manual</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Used by default setup and for organization-level enablement</td>
+<td>Yes (C/C++, C#, Java and Rust)</td>
+<td>Yes, where <code>none</code> is not supported</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Analysis succeeds without user configuration</td>
+<td>Yes</td>
+<td>Variable</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Completeness of analysis</td>
+<td>Generated code not analyzed</td>
+<td>Variable</td>
+<td>User controlled</td>
+</tr>
+<tr>
+<td>Accuracy of analysis</td>
+<td>Good</td>
+<td>Good</td>
+<td>Best</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 title="Choose a build mode"><a href="#choose-a-build-mode" aria-hidden="true" class="anchor" id="choose-a-build-mode"></a>Choose a build mode</h2>
+<p>When you are setting up code scanning for the first time, or across multiple repositories, it's best to use default setup. Default setup uses the simplest method available to generate a CodeQL database and analyze your code, so that you can start fixing alerts as soon as possible. Once you have resolved the initial alerts, you may want to switch to advanced setup with a manual build process for high risk repositories.</p>
+<p>For language-specific <code>autobuild</code> behavior, runner requirements, and build-mode details for compiled languages, see <a href="../../../reference/code-scanning/codeql/codeql-build-options-and-steps-for-compiled-languages.html">CodeQL build options and steps for compiled languages</a>.</p>
+<h2 title="Use multiple build modes in a multi-language repository"><a href="#use-multiple-build-modes-in-a-multi-language-repository" aria-hidden="true" class="anchor" id="use-multiple-build-modes-in-a-multi-language-repository"></a>Use multiple build modes in a multi-language repository</h2>
+<p>For repositories with multiple compiled languages, you can use different build modes for different languages. For example, if your repository contains C/C++, C# and Java, you might want to provide manual build steps for one language (here C/C++). This workflow specifies a different build mode for each language.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">strategy</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">matrix</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">include</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Analyzes C and C++ code using the commands in `Build C and C++ code`
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">language</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">c-cpp
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">build-mode</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">manual
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Analyzes C# code by automatically detecting a build
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">language</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">csharp
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">build-mode</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">autobuild
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Analyzes Java code directly from the codebase without a build
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">language</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">java-kotlin
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">build-mode</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">none </span><span style="color:#65737e;"># analyzes Java only
+</span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Checkout repository
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># Initializes CodeQL tools and creates a codebase for analysis.
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Initialize CodeQL
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/init@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">languages</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ matrix.language }}
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ matrix.build-mode == 'manual' }}
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Build C and C++ code
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">    echo 'If you are using a "manual" build mode for one or more of the' \
+</span><span style="color:#a3be8c;">      'languages you are analyzing, replace this with the commands to build' \
+</span><span style="color:#a3be8c;">      'your code, for example:'
+</span><span style="color:#a3be8c;">    echo ' make bootstrap'
+</span><span style="color:#a3be8c;">    echo ' make release'
+</span><span style="color:#a3be8c;">    exit 1
+</span></code></pre>
+<p>For information about the languages, libraries, and frameworks that are supported in the latest version of CodeQL, see <a href="https://codeql.github.com/docs/codeql-overview/supported-languages-and-frameworks" class="external">Supported languages and frameworks</a> in the CodeQL documentation. For information about the system requirements for running the latest version of CodeQL, see <a href="https://codeql.github.com/docs/codeql-overview/system-requirements/#additional-software-requirements" class="external">System requirements</a> in the CodeQL documentation.</p>
+<h2 title="Enable dependency caching for CodeQL"><a href="#enable-dependency-caching-for-codeql" aria-hidden="true" class="anchor" id="enable-dependency-caching-for-codeql"></a>Enable dependency caching for CodeQL</h2>
+<p>For default setup workflows, dependency caching is enabled only for GitHub-hosted runners in public and private repositories.</p>
+<p>For advanced setup workflows, dependency caching is disabled by default. To enable dependency caching for CodeQL, use the <code>dependency-caching</code> setting for the CodeQL action in your advanced setup workflow. This setting accepts the following values:</p>
+<ul>
+<li><code>false</code>/<code>none</code>/<code>off</code>: Dependency caching is disabled (default)</li>
+<li><code>restore</code>: Only restore existing caches, do not store new caches</li>
+<li><code>store</code>: Only store new caches, do not restore existing caches</li>
+<li><code>true</code>/<code>full</code>/<code>on</code>: Restore existing caches, and store new caches</li>
+</ul>
+<p>For example, the following settings would enable dependency caching for the CodeQL action:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Initializes CodeQL with dependency caching enabled
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Initialize CodeQL
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/init@v4
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">languages</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">java
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">dependency-caching</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span></code></pre>
+<h2 title="Use none build mode for CodeQL"><a href="#use-none-build-mode-for-codeql" aria-hidden="true" class="anchor" id="use-none-build-mode-for-codeql"></a>Use <code>none</code> build mode for CodeQL</h2>
+<p>For C/C++, C#, Java and Rust, CodeQL creates a database without requiring a build when you enable default setup for code scanning unless the repository also includes Kotlin code. If a repository contains Kotlin code in addition to Java code, default setup is enabled with the autobuild process because Kotlin analysis requires a build.</p>
+<p>Creating a CodeQL database without a build may produce less accurate results than using <code>autobuild</code> or manual build steps if:</p>
+<ul>
+<li>The build scripts cannot be queried for dependency information, and dependency guesses are inaccurate.</li>
+<li>The repository normally generates code during the build process.</li>
+</ul>
+<p>To use <code>autobuild</code> or manual build steps, you can use advanced setup.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>For Java analysis, if <code>build-mode</code> is set to <code>none</code> and Kotlin code is found in the repository, the Kotlin code will not be analyzed and a warning will be produced. See <a href="../../../reference/code-scanning/codeql/codeql-build-options-and-steps-for-compiled-languages.html#building-java-and-kotlin">CodeQL build options and steps for compiled languages</a>.</p>
+</div>
+<h2 title="Use autobuild for CodeQL"><a href="#use-autobuild-for-codeql" aria-hidden="true" class="anchor" id="use-autobuild-for-codeql"></a>Use <code>autobuild</code> for CodeQL</h2>
+<p>The CodeQL action uses <code>autobuild</code> to analyze compiled languages in the following cases.</p>
+<ul>
+<li>Default setup is enabled and the language does not support <code>none</code> build (supported for C/C++, C#, Java and Rust).</li>
+<li>Advanced setup is enabled and the workflow specifies <code>build-mode: autobuild</code>.</li>
+<li>Advanced setup is enabled and the workflow has an Autobuild step for the language using the <code>autobuild</code> action (<code>github/codeql-action/autobuild@v4</code>).</li>
+</ul>
+<h3 title="Use autobuild for CodeQL / Use the build-mode option"><a href="#use-the-build-mode-option" aria-hidden="true" class="anchor" id="use-the-build-mode-option"></a>Use the <code>build-mode</code> option</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># Initializes the CodeQL tools for scanning.
+</span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Analyze
+</span><span style="color:#bf616a;">strategy</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">matrix</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">include</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Analyze C and C++ code
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">language</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">c-cpp
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">build-mode</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">autobuild
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Analyze Go code
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">language</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">go
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">build-mode</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">autobuild
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/init@v4
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">languages</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ matrix.language }}
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">build-mode</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ matrix.build-mode }}
+</span></code></pre>
+<h3 title="Use autobuild for CodeQL / Use the Autobuild step"><a href="#use-the-autobuild-step" aria-hidden="true" class="anchor" id="use-the-autobuild-step"></a>Use the Autobuild step</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Initializes the CodeQL tools for scanning.
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Initialize CodeQL
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/init@v4
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">languages</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ matrix.language }}
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Autobuild
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/autobuild@v4
+</span></code></pre>
+<h2 title="Specify build steps manually"><a href="#specify-build-steps-manually" aria-hidden="true" class="anchor" id="specify-build-steps-manually"></a>Specify build steps manually</h2>
+<p>You can only specify manual build steps if you have enabled advanced setup, see <a href="../configure-code-scanning/configuring-advanced-setup-for-code-scanning.html#configuring-advanced-setup-for-a-repository">Configuring advanced setup for code scanning</a>.</p>
+<p>If <code>autobuild</code> fails, or you want to analyze a different set of source files from those built by the <code>autobuild</code> process, you'll need to do the following:</p>
+<ul>
+<li>If your workflow specifies a build mode for the language, change the build mode to <code>manual</code>.</li>
+<li>If your workflow contains an <code>autobuild</code> step, remove or comment out the <code>autobuild</code> step in the workflow.</li>
+</ul>
+<p>Then uncomment the <code>run</code> step and manually specify the build process to use. For C/C++, C#, Go, Java, Kotlin, and Swift, CodeQL will analyze whatever source code is built by your specified build steps.</p>
+<p>Update your workflow to define the <code>build-mode</code> as <code>manual</code>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># Initializes the CodeQL tools for scanning.
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Initialize CodeQL
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/init@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">languages</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ matrix.language }}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">build-mode</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">manual
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/analyze@v4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">category</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/language:${{ matrix.language }}</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<p>Alternatively, update your workflow to comment out the "Autobuild" step.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Autobuild attempts to build any compiled languages.
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># - name: Autobuild
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;">#  uses: github/codeql-action/autobuild@v4
+</span></code></pre>
+<h3 title="Specify build steps manually / Add build commands"><a href="#add-build-commands" aria-hidden="true" class="anchor" id="add-build-commands"></a>Add build commands</h3>
+<p>When manual building is enabled, uncomment the <code>run</code> step in the workflow and add build commands that are suitable for your repository. The <code>run</code> step runs command-line programs using the operating system's shell. You can modify these commands and add more commands to customize the build process.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">    make bootstrap
+</span><span style="color:#a3be8c;">    make release
+</span></code></pre>
+<p>For more information about the <code>run</code> keyword, see <a href="https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun" class="external">Workflow syntax for GitHub Actions</a>.</p>
+<!-- For "no-build" this is covered earlier in the article under "About CodeQL build modes". -->
+<p>If you added manual build steps for compiled languages and code scanning is still not working on your repository, contact us through the <a href="https://support.github.com" class="external">GitHub Support portal</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

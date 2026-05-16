@@ -1,0 +1,38 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>About validity checks</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Secret security</a> / </nav><h1><a href="#about-validity-checks" aria-hidden="true" class="anchor" id="about-validity-checks"></a>About validity checks</h1>
+<p>Validity checks and extended metadata checks help you prioritize remediation of exposed credentials that pose immediate security risks.</p>
+<h2 title="About validity checks"><a href="#about-validity-checks-1" aria-hidden="true" class="anchor" id="about-validity-checks-1"></a>About validity checks</h2>
+<p>Validity checks, a feature of secret scanning, verify whether a detected secret is still active and could be exploited. This helps you prioritize remediation by focusing first on secrets that are confirmed to be active.</p>
+<p>You can enable automatic validity checks for detected secrets. Once enabled, GitHub will periodically check the validity of a detected credential by sending the secret to the issuer and testing it against APIs provided by that service. Validity checks are available for secrets from many service providers, and support continues to expand as GitHub partners with additional services.</p>
+<p>GitHub prioritizes privacy when checking the validity of the credential. We typically make GET requests, pick the least intrusive endpoints, and select endpoints that don't return any personal information.</p>
+<p>GitHub displays the validation status of the secret in the alert view, so you can see if the secret is <code>active</code>, <code>inactive</code>, or if the validation status is <code>unknown</code>. You can optionally perform an "on-demand" validity check for the secret in the alert view.</p>
+<h2 title="About extended metadata checks"><a href="#about-extended-metadata-checks" aria-hidden="true" class="anchor" id="about-extended-metadata-checks"></a>About extended metadata checks</h2>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Extended metadata checks in security configurations is currently in public preview and subject to change.</p>
+</div>
+<p>Extended metadata checks provide <strong>additional contextual information</strong> about detected secrets. They are often referred to as <strong>analyzers</strong> in other tools.</p>
+<p>You can enable extended metadata checks if validity checks are enabled. Then, you'll get information that helps you:</p>
+<ul>
+<li><strong>Gain deeper insight into detected secrets</strong>: Know who owns a secret.</li>
+<li><strong>Prioritize remediation</strong>: Understand the scope and impact of each exposed secret.</li>
+<li><strong>Improve incident response</strong>: Quickly identify responsible teams or individuals when a secret is leaked.</li>
+<li><strong>Enhance compliance</strong>: Ensure secrets align with your organization’s governance and security policies.</li>
+<li><strong>Reduce false positives</strong>: Use additional context to determine if a detection requires action.</li>
+</ul>
+<p>The specific metadata available depends on what the service provider shares with GitHub. Not all secret types support extended metadata checks. For more information, see <a href="../../tutorials/remediate-leaked-secrets/evaluating-alerts.html#verifying-token-metadata">Evaluating alerts from secret scanning</a>.</p>
+<h2 title="Getting started with validity and extended metadata checks"><a href="#getting-started-with-validity-and-extended-metadata-checks" aria-hidden="true" class="anchor" id="getting-started-with-validity-and-extended-metadata-checks"></a>Getting started with validity and extended metadata checks</h2>
+<!-- expires 2026-03-28 -->
+<!-- To check on whether this can be deleted or not, see the PM in ref: 20867 -->
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Starting on February 18, 2026, GitHub will automatically enable extended metadata checks for repositories that have validity checks enabled. For repositories managed by security configurations, GitHub will update those configurations and apply the feature to attached repositories. This is a one-time transition to help organizations benefit from enhanced metadata without manual configuration.</p>
+</div>
+<p>You can enable validity and extended metadata checks at the repository, organization, or enterprise level to help prioritize which exposed credentials pose the most immediate security risks.</p>
+<p>For large organizations, we recommend using <strong>security configurations</strong> to enable these features at the organization or enterprise level. Security configurations allow you to centrally manage  secret scanning settings and apply them consistently across many repositories.</p>
+<p>To get started:</p>
+<ul>
+<li>For repositories, see <a href="../../how-tos/secure-your-secrets/customize-leak-detection/enabling-validity-checks-for-your-repository.html">Enabling validity checks for your repository</a></li>
+<li>For an organization, see <a href="../../how-tos/secure-at-scale/configure-organization-security/establish-complete-coverage/creating-a-custom-security-configuration.html">Creating a custom security configuration</a></li>
+<li>For an enterprise, see <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-at-scale/configure-enterprise-security/establish-complete-coverage/creating-a-custom-security-configuration-for-your-enterprise" class="external">Creating a custom security configuration for your enterprise</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Code scanning alert tracking using issues</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Code scanning</a> / </nav><h1><a href="#code-scanning-alert-tracking-using-issues" aria-hidden="true" class="anchor" id="code-scanning-alert-tracking-using-issues"></a>Code scanning alert tracking using issues</h1>
+<p>Connect security findings to your team's workflow by linking code scanning alerts to issues for tracking and collaboration.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Code scanning alert tracking using GitHub issues is currently in public preview and subject to change.</p>
+</div>
+<h2 title="How alert-to-issue linking works"><a href="#how-alert-to-issue-linking-works" aria-hidden="true" class="anchor" id="how-alert-to-issue-linking-works"></a>How alert-to-issue linking works</h2>
+<p>When code scanning identifies a vulnerability in your code, you can link the alert to a GitHub <strong>issue</strong> to track remediation work. This brings security fixes into your existing planning and project management workflow, making vulnerabilities visible in sprint planning, project boards, and team backlogs.</p>
+<p>Each alert can link to a single issue, while each issue can track up to 50 different alerts. This flexibility lets you group related vulnerabilities or track them individually, depending on your team's workflow.</p>
+<p>You can link alerts to issues in any repository where you have access and GitHub Issues is enabled, not just the repository where the alert was found. This is useful when you track work in a central repository or use a separate issue tracker for security fixes.</p>
+<h2 title="Understanding synchronization behavior"><a href="#understanding-synchronization-behavior" aria-hidden="true" class="anchor" id="understanding-synchronization-behavior"></a>Understanding synchronization behavior</h2>
+<p><strong>Alert and issue statuses are not automatically synchronized.</strong> Changes you make to an alert do not update the linked issue, and vice versa. This means:</p>
+<ul>
+<li>When you fix the vulnerability and the alert automatically closes, the linked issue remains open until you manually close it.</li>
+<li>When you close or reopen an issue, the alert status stays unchanged.</li>
+<li>When you delete an issue, the link is removed from the alert page and alert list, but the alert itself remains open.</li>
+</ul>
+<h2 title="Best practices for managing linked alerts and issues"><a href="#best-practices-for-managing-linked-alerts-and-issues" aria-hidden="true" class="anchor" id="best-practices-for-managing-linked-alerts-and-issues"></a>Best practices for managing linked alerts and issues</h2>
+<p><strong>Track remediation progress clearly.</strong> When you commit a fix, add a comment to the linked issue noting that the code is updated. After the next code scanning run confirms the alert is closed, manually close the issue.</p>
+<p><strong>Use labels to show status.</strong> Create issue labels like "code-fixed-awaiting-scan" or use project fields to indicate when a vulnerability is fixed but the issue is waiting for final verification and closure.</p>
+<p><strong>Assign responsibility.</strong> Use issue assignees to make it clear who owns the remediation work, especially when security and development teams need to coordinate.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

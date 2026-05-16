@@ -1,0 +1,51 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Setting code quality thresholds for pull requests</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">How-tos</a> / <a href="index.html">Maintain quality code</a> / </nav><h1><a href="#setting-code-quality-thresholds-for-pull-requests" aria-hidden="true" class="anchor" id="setting-code-quality-thresholds-for-pull-requests"></a>Setting code quality thresholds for pull requests</h1>
+<p>Create a Code Quality gate for pull requests to increase the quality of code merged into your repository.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>GitHub Code Quality is currently in public preview and subject to change.<br>
+During public preview, Code Quality will not be billed, although Code Quality scans will consume GitHub Actions minutes.</p>
+</div>
+<h2 title="Introduction"><a href="#introduction" aria-hidden="true" class="anchor" id="introduction"></a>Introduction</h2>
+<p>You can block pull requests that don't meet your code quality standards by adding the <strong>Require code quality results</strong> branch rule to a ruleset and specifying the severity level you require. If a pull request doesn't reach this threshold, it can't be merged.</p>
+<h2 title="Prerequisites"><a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<ul>
+<li>Code Quality is enabled. See <a href="enable-code-quality.html">Enabling GitHub Code Quality</a></li>
+<li>Code in a supported language. See <a href="../../concepts/about-code-quality.html#supported-languages">Supported languages</a>.</li>
+</ul>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The threshold will have an impact only if the repository has code in one or more of the supported languages, see <a href="enable-code-quality.html">Enabling GitHub Code Quality</a>.</p>
+</div>
+<h2 title="Confirming Code Quality runs successfully on pull requests"><a href="#confirming-code-quality-runs-successfully-on-pull-requests" aria-hidden="true" class="anchor" id="confirming-code-quality-runs-successfully-on-pull-requests"></a>Confirming Code Quality runs successfully on pull requests</h2>
+<p>Before you add or update a ruleset to include a threshold for Code Quality, confirm that the Code Quality workflow is running and reporting results back to pull requests. Otherwise, the ruleset could block the merging of <strong>all</strong> pull requests.</p>
+<ol>
+<li>Open a recent pull request and scroll to the "Checks" summary at the bottom of the pull request.</li>
+<li>Confirm that the "CodeQL - Code Quality" check ran successfully and reported its status.</li>
+</ol>
+<p>For more information, see <a href="../../reference/code-quality/codeql-detection.html">CodeQL-powered analysis for Code Quality</a>.</p>
+<h2 title="Adding or updating a ruleset to include Code Quality"><a href="#adding-or-updating-a-ruleset-to-include-code-quality" aria-hidden="true" class="anchor" id="adding-or-updating-a-ruleset-to-include-code-quality"></a>Adding or updating a ruleset to include Code Quality</h2>
+<ol>
+<li>Navigate to the "Settings" tab of your repository.</li>
+<li>In the left sidebar, under "Code and automation", expand <svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-repo-push" aria-label="repo-push" role="img"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0V1.5h-8a1 1 0 0 0-1 1v6.708A2.493 2.493 0 0 1 4.5 9h2.25a.75.75 0 0 1 0 1.5H4.5a1 1 0 0 0 0 2h4.75a.75.75 0 0 1 0 1.5H4.5A2.5 2.5 0 0 1 2 11.5Zm12.23 7.79h-.001l-1.224-1.224v6.184a.75.75 0 0 1-1.5 0V9.066L10.28 10.29a.75.75 0 0 1-1.06-1.061l2.505-2.504a.75.75 0 0 1 1.06 0L15.29 9.23a.751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018Z"></path></svg> <strong>Rules</strong>, then click <strong>Rulesets</strong>.</li>
+<li>If you don't already have a ruleset to protect your default branch, expand <strong>New ruleset</strong> and click <strong>New branch ruleset</strong>. Alternatively, open your existing ruleset for the default branch and move to step 5.</li>
+<li>If you are creating a new ruleset:
+<ul>
+<li>Define a name for the ruleset.</li>
+<li>Set the "Enforcement status" to "Active."</li>
+<li>Under "Target branches" add a target of "Include default branch."</li>
+</ul>
+</li>
+<li>Under "Branch rules", enable "Require code quality results".</li>
+<li>Set "Severity" to define the lowest severity of code quality results that must be resolved before a pull request can be merged into the default branch. For example:
+<ul>
+<li>Set "Errors" to block pull requests with unresolved code quality <strong>errors</strong> being merged.</li>
+<li>Set "Warnings and higher" to block pull requests with unresolved code quality <strong>warnings</strong> or <strong>errors</strong> being merged.</li>
+<li>Set "Notes and higher" to block pull requests with unresolved code quality <strong>notes</strong>, <strong>warnings</strong> or <strong>errors</strong> being merged.</li>
+<li>Set "All" to block pull requests with <strong>any</strong> unresolved code quality results being merged.</li>
+</ul>
+</li>
+<li>When you have finished defining or editing the ruleset, click <strong>Create</strong> or <strong>Save changes</strong>.</li>
+</ol>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>Learn how GitHub Code Quality works on pull requests to prevent code quality issues from reaching your default branch. See <a href="../../tutorials/improve-code-quality/fix-findings-in-prs.html">Fixing code quality findings before merging your pull request</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Go CodeQL queries for Code Quality</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">Reference</a> / <a href="../index.html">Code quality</a> / <a href="index.html">CodeQL queries</a> / </nav><h1><a href="#go-codeql-queries-for-code-quality" aria-hidden="true" class="anchor" id="go-codeql-queries-for-code-quality"></a>Go CodeQL queries for Code Quality</h1>
+<p>Explore the queries that CodeQL uses to analyze code quality for code written in Go.</p>
+<p>Code Quality uses the following CodeQL queries to analyze Go code and detect code quality issues on:</p>
+<ul>
+<li>Your <strong>default branch</strong>, with results shown on the repository's "Standard findings" dashboard</li>
+<li><strong>Pull requests</strong>, with findings shown as comments made by <code>github-code-quality[bot]</code></li>
+</ul>
+<p>Copilot Autofix suggestions are provided for findings where possible.</p>
+<div class="ghd-tool rowheaders">
+<table>
+<thead>
+<tr>
+<th>Query name</th>
+<th>Category</th>
+<th>Severity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/go/go-useless-assignment-to-field/" class="external">Useless assignment to field</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/go/go-useless-assignment-to-local/" class="external">Useless assignment to local variable</a></td>
+<td>Maintainability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/go/go-mistyped-exponentiation/" class="external">Bitwise exclusive-or used like exponentiation</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/go/go-comparison-of-identical-expressions/" class="external">Comparison of identical values</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/go/go-constant-length-comparison/" class="external">Constant length comparison</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/go/go-duplicate-branches/" class="external">Duplicate 'if' branches</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/go/go-duplicate-condition/" class="external">Duplicate 'if' condition</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/go/go-duplicate-switch-case/" class="external">Duplicate switch case</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/go/go-useless-expression/" class="external">Expression has no effect</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/go/go-redundant-operation/" class="external">Identical operands</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/go/go-impossible-interface-nil-check/" class="external">Impossible interface nil check</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/go/go-inconsistent-loop-direction/" class="external">Inconsistent direction of for loop</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/go/go-missing-error-check/" class="external">Missing error check</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/go/go-index-out-of-bounds/" class="external">Off-by-one comparison against length</a></td>
+<td>Reliability</td>
+<td>Error</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/go/go-redundant-recover/" class="external">Redundant call to recover</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/go/go-negative-length-check/" class="external">Redundant check for negative value</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/go/go-redundant-assignment/" class="external">Self assignment</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/go/go-shift-out-of-range/" class="external">Shift out of range</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/go/go-unreachable-statement/" class="external">Unreachable statement</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/go/go-whitespace-contradicts-precedence/" class="external">Whitespace contradicts operator precedence</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/go/go-unexpected-nil-value/" class="external">Wrapped error is always nil</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td><a href="https://codeql.github.com/codeql-query-help/go/go-unhandled-writable-file-close/" class="external">Writable file handle closed without error handling</a></td>
+<td>Reliability</td>
+<td>Warning</td>
+</tr>
+</tbody>
+</table>
+</div>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Immutable releases</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Supply chain security</a> / </nav><h1><a href="#immutable-releases" aria-hidden="true" class="anchor" id="immutable-releases"></a>Immutable releases</h1>
+<p>Learn about immutable releases and how they can help you maintain the integrity of your software supply chain.</p>
+<p><strong>Immutable releases</strong> are releases where the assets and associated Git tag cannot be changed after publication. The use of this type of release increases security by blocking supply chain attacks. Attackers cannot:</p>
+<ul>
+<li>Inject vulnerabilities or malware into current project releases.</li>
+<li>Make changes to assets and tags that may break developer workflows.</li>
+</ul>
+<h2 title="What immutable releases protect"><a href="#what-immutable-releases-protect" aria-hidden="true" class="anchor" id="what-immutable-releases-protect"></a>What immutable releases protect</h2>
+<p>When you enable immutable releases, the following protections are enforced:</p>
+<ul>
+<li><strong>Git tags cannot be moved</strong>: Once an immutable release is published, its associated Git tag is locked to a specific commit, cannot be changed, and cannot be deleted while the release exists. If you delete the immutable release, you can delete the tag, but you cannot reuse the same tag name.</li>
+<li><strong>Release assets cannot be modified or deleted</strong>: All files attached to the release (such as binaries and archives) are protected from modification or deletion.</li>
+</ul>
+<p>Additionally, creating an immutable release automatically generates a <strong>release attestation</strong>, which is a cryptographically verifiable record of a release containing the release tag, commit SHA, and release assets. Consumers can use this attestation to make sure the releases and artifacts they are using exactly match the published GitHub releases.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Immutable releases include protection against repository resurrection attacks. Even if you delete a repository and create a new one with the same name, you cannot reuse tags that were associated with immutable releases in the original repository.</p>
+</div>
+<p>If a release is immutable, you will see "<svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-lock" aria-label="lock icon" role="img"><path d="M4 4a4 4 0 0 1 8 0v2h.25c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 12.25 15h-8.5A1.75 1.75 0 0 1 2 13.25v-5.5C2 6.784 2.784 6 3.75 6H4Zm8.25 3.5h-8.5a.25.25 0 0 0-.25.25v5.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25ZM10.5 6V4a2.5 2.5 0 1 0-5 0v2Z"></path></svg> Immutable"  below the title on the release page.</p>
+<h2 title="Best practices for publishing immutable releases"><a href="#best-practices-for-publishing-immutable-releases" aria-hidden="true" class="anchor" id="best-practices-for-publishing-immutable-releases"></a>Best practices for publishing immutable releases</h2>
+<p>We recommend you use the following workflow for publishing an immutable release.</p>
+<ol>
+<li>Create the release as a draft.</li>
+<li>Attach all associated assets to the draft release.</li>
+<li>Publish the draft release.</li>
+</ol>
+<p>This ensures that all assets are in place before the release becomes immutable, preventing the need to work around immutability restrictions.</p>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>To learn how to enable immutable releases for your repository or organization, see <a href="../../how-tos/secure-your-supply-chain/establish-provenance-and-integrity/preventing-changes-to-your-releases.html">Preventing changes to your releases</a>.</p>
+<p>To learn how to ensure a release and local assets have not been changed, see <a href="../../how-tos/secure-your-supply-chain/secure-your-dependencies/verifying-the-integrity-of-a-release.html">Verifying the integrity of a release</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

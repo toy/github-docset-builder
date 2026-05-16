@@ -1,0 +1,33 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Managing CodeQL databases</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Find and fix code vulnerabilities</a> / <a href="index.html">Scan from VS Code</a> / </nav><h1><a href="#managing-codeql-databases" aria-hidden="true" class="anchor" id="managing-codeql-databases"></a>Managing CodeQL databases</h1>
+<p>You can work with CodeQL databases using the extension.</p>
+<h2 title="About CodeQL databases"><a href="#about-codeql-databases" aria-hidden="true" class="anchor" id="about-codeql-databases"></a>About CodeQL databases</h2>
+<p>To analyze a project, you need to select a CodeQL database for that project. You can select a database locally (from a ZIP archive or an unarchived folder), from a public URL, or from a project's URL on GitHub. Alternatively, you can create a database using the CodeQL CLI, see <a href="../../../tutorials/customize-code-scanning/preparing-your-code-for-codeql-analysis.html">Preparing your code for CodeQL analysis</a>.</p>
+<h3 title="About CodeQL databases / Downloading a database from GitHub"><a href="#downloading-a-database-from-github" aria-hidden="true" class="anchor" id="downloading-a-database-from-github"></a>Downloading a database from GitHub</h3>
+<p>GitHub.com stores CodeQL databases for over 200,000 open source repositories that you can use to test your analysis on.</p>
+<p>You can check if a repository has any CodeQL databases available for download, and if so download it, using the REST API. For more information, see <a href="https://docs.github.com/en/rest/code-scanning/code-scanning#list-codeql-databases-for-a-repository" class="external">List CodeQL databases for a repository</a> and <a href="https://docs.github.com/en/rest/code-scanning/code-scanning#get-a-codeql-database-for-a-repository" class="external">Get a CodeQL database for a repository</a> in the GitHub REST API documentation.</p>
+<h2 title="Choosing a database to analyze"><a href="#choosing-a-database-to-analyze" aria-hidden="true" class="anchor" id="choosing-a-database-to-analyze"></a>Choosing a database to analyze</h2>
+<ol>
+<li>
+<p>Hover over the title bar of the "Databases" view and choose the appropriate icon to select your database. You can select a local database (from a ZIP archive or an unarchived folder), from a public URL, or from a project's URL on GitHub.</p>
+</li>
+<li>
+<p>Once you've chosen a database, it will be displayed in the "Databases" view. To see the menu options for interacting with a database, right-click an entry in the list. You can select multiple databases at once.</p>
+</li>
+</ol>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>You can also analyze test databases. Test databases (folders with a <code>.testproj</code> extension) are generated when you run regression tests on custom queries using the CodeQL CLI. If a query fails a regression test, you may want to import the test database into Visual Studio Code to debug the failure. For more information about running query tests, see <a href="../scan-from-the-command-line/testing-custom-queries.html">Testing custom queries</a>.</p>
+</div>
+<h2 title="Filtering databases and queries by language"><a href="#filtering-databases-and-queries-by-language" aria-hidden="true" class="anchor" id="filtering-databases-and-queries-by-language"></a>Filtering databases and queries by language</h2>
+<p>Optionally, to see databases containing a specific language and queries written for that language, you can apply a language filter using the language selector.</p>
+<ol>
+<li>
+<p>To see available language filters, in the sidebar, open the "Language" view.</p>
+</li>
+<li>
+<p>Hover over the language filter you would like to apply, then click <strong>Select</strong>.</p>
+</li>
+</ol>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>To learn how to use the extension to analyze your projects by running queries on CodeQL databases, see <a href="running-codeql-queries.html">Running CodeQL queries</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

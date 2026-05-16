@@ -1,0 +1,199 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Customizing Dependabot pull requests to fit your processes</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Secure your dependencies</a> / </nav><h1><a href="#customizing-dependabot-pull-requests-to-fit-your-processes" aria-hidden="true" class="anchor" id="customizing-dependabot-pull-requests-to-fit-your-processes"></a>Customizing Dependabot pull requests to fit your processes</h1>
+<p>Learn how to tailor your Dependabot pull requests to better suit your own internal workflows.</p>
+<p>There are various ways to customize your Dependabot pull requests so that they better suit your own internal processes.</p>
+<p>For example, to integrate Dependabot's pull requests into your CI/CD pipelines, it can apply <strong>custom labels</strong> to pull requests, which you can then use to trigger action workflows.</p>
+<p>There are several different customization options which can all be used in combination, and tailored per package ecosystem.</p>
+<h2 title="Automatically adding assignees"><a href="#automatically-adding-assignees" aria-hidden="true" class="anchor" id="automatically-adding-assignees"></a>Automatically adding assignees</h2>
+<p>By default, Dependabot raises pull requests without any assignees.</p>
+<p>To automatically assign pull requests to a designated security team, you can use <code>assignees</code> to set these values per package ecosystem.</p>
+<p>The example <code>dependabot.yml</code> file below changes the npm configuration so that all pull requests opened with version and security updates for npm have:</p>
+<ul>
+<li>An individual ("<code>user-name</code>") automatically assigned to the pull requests.</li>
+</ul>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># `dependabot.yml` file with
+</span><span style="color:#65737e;">#  assignee for all npm pull requests
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Keep npm dependencies up to date
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">npm</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Raise all npm pull requests with assignees
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">assignees</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - "</span><span style="color:#a3be8c;">user-name</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<h2 title="Automatically adding reviewers"><a href="#automatically-adding-reviewers" aria-hidden="true" class="anchor" id="automatically-adding-reviewers"></a>Automatically adding reviewers</h2>
+<p>By default, Dependabot raises pull requests without any reviewers.</p>
+<p>To ensure your project's security updates get addressed promptly by the appropriate team, you can automatically add reviewers to Dependabot pull requests using a CODEOWNERS file. See <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" class="external">About code owners</a>.</p>
+<h2 title="Labeling pull requests with custom labels"><a href="#labeling-pull-requests-with-custom-labels" aria-hidden="true" class="anchor" id="labeling-pull-requests-with-custom-labels"></a>Labeling pull requests with custom labels</h2>
+<p>By default, Dependabot raises pull requests with the <code>dependencies</code> label.</p>
+<p>Dependabot also applies an ecosystem label, such as <code>java</code>, <code>npm</code>, or <code>github-actions</code>, to pull requests. Dependabot adds both the <code>dependencies</code> label and the ecosystem label to all pull requests, including single-ecosystem updates, to improve filtering and triaging.</p>
+<p>Dependabot creates the default labels it applies to pull requests if they do not already exist in the repository. If you want to use custom labels instead of the defaults, you can set the <code>labels</code> option in your <code>dependabot.yml</code> file per package ecosystem; this overrides the defaults. For more information, see <a href="https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels" class="external">Managing labels</a> and <a href="../../reference/supply-chain-security/dependabot-options-reference.html#labels--"><code>labels</code></a>.</p>
+<p>If semantic version (SemVer) labels are present in the repository, Dependabot will also automatically apply them to indicate the type of version update (<code>major</code>, <code>minor</code>, or <code>patch</code>). These labels are applied in addition to any custom labels you define.</p>
+<p>You can use <code>labels</code> to override the default labels and specify your own custom labels per package ecosystem. This is useful if, for example, you want to:</p>
+<ul>
+<li>Use labels to assign a priority to certain pull requests.</li>
+<li>Use labels to trigger another workflow, such as automatically adding the pull request onto a project board.</li>
+</ul>
+<p>The example <code>dependabot.yml</code> file below changes the npm configuration so that all pull requests opened with version and security updates for npm have custom labels.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># `dependabot.yml` file with
+</span><span style="color:#65737e;"># customized npm configuration
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Keep npm dependencies up to date
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">npm</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Raise all npm pull requests with custom labels
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">labels</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - "</span><span style="color:#a3be8c;">npm dependencies</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      - "</span><span style="color:#a3be8c;">triage-board</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<p>Setting this option will also affect pull requests for security updates to the manifest files of this package manager, unless you use <code>target-branch</code> to check for version updates on a non-default branch.</p>
+<p>See also <a href="../../reference/supply-chain-security/dependabot-options-reference.html#labels--"><code>labels</code></a>.</p>
+<h2 title="Adding a prefix to commit messages"><a href="#adding-a-prefix-to-commit-messages" aria-hidden="true" class="anchor" id="adding-a-prefix-to-commit-messages"></a>Adding a prefix to commit messages</h2>
+<p>By default, Dependabot attempts to detect your commit message preferences and use similar patterns. In addition, Dependabot populates the titles of pull requests based on the commit messages.</p>
+<p>You can specify your own prefix for Dependabot's commit messages (and pull request titles) for a specific package ecosystem. This can be useful if, for example, you're running automations that process commit messages or pull requests titles.</p>
+<p>To specify your preferences explicitly, use <code>commit-message</code> together with the following supported options:</p>
+<ul>
+<li><code>prefix</code>:
+<ul>
+<li>Specifies a prefix for all commit messages.</li>
+<li>Prefix is also added to the start of the pull request title.</li>
+</ul>
+</li>
+<li><code>prefix-development</code>:
+<ul>
+<li>Specifies a separate prefix for all commit messages that update development dependencies, as defined by the package manager or ecosystem.</li>
+<li>Supported for <code>bundler</code>, <code>composer</code>, <code>mix</code>, <code>maven</code>, <code>npm</code>, and <code>pip</code>.</li>
+</ul>
+</li>
+<li><code>include: "scope"</code>:
+<ul>
+<li>Specifies that any prefix is followed by the dependency types (<code>deps</code> or <code>deps-dev</code>) updated in the commit.</li>
+</ul>
+</li>
+</ul>
+<p>The example below shows several different options, tailored per package ecosystem:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># Customize commit messages
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">npm</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">commit-message</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Prefix all commit messages with "npm: "
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">prefix</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">npm</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">docker</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">commit-message</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Prefix all commit messages with "[docker] " (no colon, but a trailing whitespace)
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">prefix</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">[docker] </span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">composer</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Prefix all commit messages with "Composer" plus its scope, that is, a
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># list of updated dependencies
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">commit-message</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">prefix</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">Composer</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">include</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">scope</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">pip</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Include a list of updated dependencies
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># with a prefix determined by the dependency group
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">commit-message</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">prefix</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">pip prod</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">prefix-development</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">pip dev</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<p>Setting this option will also affect pull requests for security updates to the manifest files of this package manager, unless you use <code>target-branch</code> to check for version updates on a non-default branch.</p>
+<p>See also <a href="../../reference/supply-chain-security/dependabot-options-reference.html#commit-message--"><code>commit-message</code></a>.</p>
+<h2 title="Associating pull requests with a milestone"><a href="#associating-pull-requests-with-a-milestone" aria-hidden="true" class="anchor" id="associating-pull-requests-with-a-milestone"></a>Associating pull requests with a milestone</h2>
+<p>Milestones help you track the progress of groups of pull requests (or issues) towards a project goal or release. With Dependabot, you can use the <code>milestone</code> option to associate pull requests for dependency updates with a specific milestone.</p>
+<p>You must specify the numeric identifier of the milestone and not its label. To find the numeric identifier, check the final part of the page URL, after <code>milestone</code>. For example, for <code>https://github.com/&lt;org&gt;/&lt;repo&gt;/milestone/3</code>, "<code>3</code>" is the numeric identifier of the milestone.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># Specify a milestone for pull requests
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">npm</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Associate pull requests with milestone "4"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">milestone</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">4
+</span></code></pre>
+<p>Setting this option will also affect pull requests for security updates to the manifest files of this package manager, unless you use <code>target-branch</code> to check for version updates on a non-default branch.</p>
+<p>See also <a href="../../reference/supply-chain-security/dependabot-options-reference.html#milestone--"><code>milestone</code></a> and <a href="https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/about-milestones" class="external">About milestones</a>.</p>
+<h2 title="Changing the separator in the pull request branch name"><a href="#changing-the-separator-in-the-pull-request-branch-name" aria-hidden="true" class="anchor" id="changing-the-separator-in-the-pull-request-branch-name"></a>Changing the separator in the pull request branch name</h2>
+<p>Dependabot generates a branch for each pull request. Each branch name includes <code>dependabot</code>, as well as the name of the package manager and the dependency to be updated. By default, these parts of the branch name are separated by a <code>/</code> symbol, for example:</p>
+<ul>
+<li><code>dependabot/npm_and_yarn/next_js/acorn-6.4.1</code></li>
+</ul>
+<p>To maintain supportability or consistency with your existing processes, you may need to ensure your branch names align with your team's existing conventions. In this case, you can use <code>pull-request-branch-name.separator</code> to specify a different separator, choosing either <code>_</code>, <code>/</code>, or <code>"-"</code>.</p>
+<p>In the below example, the npm configuration changes the default separator from <code>/</code> to <code>"-"</code>, so that it would appear as such:</p>
+<ul>
+<li>Default (<code>/</code>): <code>dependabot/npm_and_yarn/next_js/acorn-6.4.1</code></li>
+<li>Customized (<code>"-"</code>): <code>dependabot-npm_and_yarn-next_js-acorn-6.4.1</code></li>
+</ul>
+<p>Note that the hyphen symbol (<code>"-"</code>) must be surrounded by quotation marks so that it's not interpreted as starting an empty YAML list.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># Specify a different separator for branch names
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">npm</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">pull-request-branch-name</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Change the default separator (/) to a hyphen (-)
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">separator</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">-</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<p>Setting this option will also affect pull requests for security updates to the manifest files of this package manager, unless you use <code>target-branch</code> to check for version updates on a non-default branch.</p>
+<p>See also <a href="../../reference/supply-chain-security/dependabot-options-reference.html#pull-request-branch-nameseparator--"><code>pull-request-branch-name.separator</code></a>.</p>
+<h2 title="Targeting pull requests against a non-default branch"><a href="#targeting-pull-requests-against-a-non-default-branch" aria-hidden="true" class="anchor" id="targeting-pull-requests-against-a-non-default-branch"></a>Targeting pull requests against a non-default branch</h2>
+<p>By default, Dependabot checks for manifest files on the default branch and raises pull requests for updates against the default branch.</p>
+<p>Generally, it makes most sense to keep Dependabot's checks and updates on the default branch. However, there may be some cases where you may need to specify a different target branch. If, for example, your team's processes require you to first test and validate updates on a non-production branch, you can use <code>target-branch</code> to specify a different branch for Dependabot to raise pull requests against.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Dependabot raises pull requests for security updates against the <strong>default branch only</strong>. If you use <code>target-branch</code>, then as a result, all configuration settings for that package manager will then <em>only</em> apply to version updates, and not security updates.</p>
+</div>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># Specify a non-default branch for pull requests for pip
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">pip</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Raise pull requests for version updates
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># to pip against the `develop` branch
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">target-branch</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">develop</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Labels on pull requests for version updates only
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">labels</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - "</span><span style="color:#a3be8c;">pip dependencies</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">npm</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Check for npm updates on Sundays
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">day</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">sunday</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Labels on pull requests for security and version updates
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">labels</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - "</span><span style="color:#a3be8c;">npm dependencies</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<p>See also <a href="../../reference/supply-chain-security/dependabot-options-reference.html#target-branch-"><code>target-branch</code></a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

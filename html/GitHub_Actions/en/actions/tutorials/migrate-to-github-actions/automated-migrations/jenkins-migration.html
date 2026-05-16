@@ -1,0 +1,464 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Migrating from Jenkins with GitHub Actions Importer</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">Tutorials</a> / <a href="../index.html">Migrate to GitHub Actions</a> / <a href="index.html">Automated migrations</a> / </nav><h1><a href="#migrating-from-jenkins-with-github-actions-importer" aria-hidden="true" class="anchor" id="migrating-from-jenkins-with-github-actions-importer"></a>Migrating from Jenkins with GitHub Actions Importer</h1>
+<p>Learn how to use GitHub Actions Importer to automate the migration of your Jenkins pipelines to GitHub Actions.</p>
+<h2 title="About migrating from Jenkins with GitHub Actions Importer"><a href="#about-migrating-from-jenkins-with-github-actions-importer" aria-hidden="true" class="anchor" id="about-migrating-from-jenkins-with-github-actions-importer"></a>About migrating from Jenkins with GitHub Actions Importer</h2>
+<p>The instructions below will guide you through configuring your environment to use GitHub Actions Importer to migrate Jenkins pipelines to GitHub Actions.</p>
+<h3 title="About migrating from Jenkins with GitHub Actions Importer / Prerequisites"><a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h3>
+<ul>
+<li>A Jenkins account or organization with pipelines and jobs that you want to convert to GitHub Actions workflows.</li>
+<li>Access to create a Jenkins personal API token for your account or organization.</li>
+<li>An environment where you can run Linux-based containers, and can install the necessary tools.
+<ul>
+<li>
+<p>Docker is <a href="https://docs.docker.com/get-docker/" class="external">installed</a> and running.</p>
+</li>
+<li>
+<p><a href="https://cli.github.com" class="external">GitHub CLI</a> is installed.</p>
+</li>
+</ul>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The GitHub Actions Importer container and CLI do not need to be installed on the same server as your CI platform.</p>
+</div>
+</li>
+</ul>
+<h3 title="About migrating from Jenkins with GitHub Actions Importer / Limitations"><a href="#limitations" aria-hidden="true" class="anchor" id="limitations"></a>Limitations</h3>
+<p>There are some limitations when migrating from Jenkins to GitHub Actions with GitHub Actions Importer. For example, you must migrate the following constructs manually:</p>
+<ul>
+<li>Mandatory build tools</li>
+<li>Scripted pipelines</li>
+<li>Secrets</li>
+<li>Self-hosted runners</li>
+<li>Unknown plugins</li>
+</ul>
+<p>For more information on manual migrations, see <a href="../manual-migrations/migrate-from-jenkins.html">Migrating from Jenkins to GitHub Actions</a>.</p>
+<h2 title="Installing the GitHub Actions Importer CLI extension"><a href="#installing-the-github-actions-importer-cli-extension" aria-hidden="true" class="anchor" id="installing-the-github-actions-importer-cli-extension"></a>Installing the GitHub Actions Importer CLI extension</h2>
+<ol>
+<li>
+<p>Install the GitHub Actions Importer CLI extension:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> extension install github/gh-actions-importer
+</span></code></pre>
+</li>
+<li>
+<p>Verify that the extension is installed:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">$</span><span style="color:#c0c5ce;"> gh actions-importer</span><span style="color:#bf616a;"> -h
+</span><span style="color:#8fa1b3;">Options:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#8fa1b3;">-?,</span><span style="color:#bf616a;"> -h</span><span style="color:#c0c5ce;">,</span><span style="color:#bf616a;"> --help</span><span style="color:#c0c5ce;">  Show help and usage information
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#8fa1b3;">Commands:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#8fa1b3;">update</span><span style="color:#c0c5ce;">     Update to the latest version of GitHub Actions Importer.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#8fa1b3;">version</span><span style="color:#c0c5ce;">    Display the version of GitHub Actions Importer.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#8fa1b3;">configure</span><span style="color:#c0c5ce;">  Start an interactive prompt to configure credentials used to authenticate with your CI server(s)</span><span style="color:#96b5b4;">.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#8fa1b3;">audit</span><span style="color:#c0c5ce;">      Plan your CI/CD migration by analyzing your current CI/CD footprint.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#8fa1b3;">forecast</span><span style="color:#c0c5ce;">   Forecast GitHub Actions usage from historical pipeline utilization.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#8fa1b3;">dry-run</span><span style="color:#c0c5ce;">    Convert a pipeline to a GitHub Actions workflow and output its yaml file.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#8fa1b3;">migrate</span><span style="color:#c0c5ce;">    Convert a pipeline to a GitHub Actions workflow and open a pull request with the changes.
+</span></code></pre>
+</li>
+</ol>
+<h2 title="Configuring credentials"><a href="#configuring-credentials" aria-hidden="true" class="anchor" id="configuring-credentials"></a>Configuring credentials</h2>
+<p>The <code>configure</code> CLI command is used to set required credentials and options for GitHub Actions Importer when working with Jenkins and GitHub.</p>
+<ol>
+<li>
+<p>Create a GitHub personal access token (classic). For more information, see <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic" class="external">Managing your personal access tokens</a>.</p>
+<p>Your token must have the <code>workflow</code> scope.</p>
+<p>After creating the token, copy it and save it in a safe location for later use.</p>
+</li>
+<li>
+<p>Create a Jenkins API token. For more information, see <a href="https://www.jenkins.io/doc/book/system-administration/authenticating-scripted-clients/" class="external">Authenticating scripted clients</a> in the Jenkins documentation.</p>
+<p>After creating the token, copy it and save it in a safe location for later use.</p>
+</li>
+<li>
+<p>In your terminal, run the GitHub Actions Importer <code>configure</code> CLI command:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer configure
+</span></code></pre>
+<p>The <code>configure</code> command will prompt you for the following information:</p>
+<ul>
+<li>For "Which CI providers are you configuring?", use the arrow keys to select <code>Jenkins</code>, press <kbd>Space</kbd> to select it, then press <kbd>Enter</kbd>.</li>
+<li>For "Personal access token for GitHub", enter the value of the personal access token (classic) that you created earlier, and press <kbd>Enter</kbd>.</li>
+<li>For "Base url of the GitHub instance", press <kbd>Enter</kbd> to accept the default value (<code>https://github.com</code>).</li>
+<li>For "Personal access token for Jenkins", enter the value for the Jenkins personal API token that you created earlier, and press <kbd>Enter</kbd>.</li>
+<li>For "Username of Jenkins user", enter your Jenkins username and press <kbd>Enter</kbd>.</li>
+<li>For "Base url of the Jenkins instance", enter the URL of your Jenkins instance, and press <kbd>Enter</kbd>.</li>
+</ul>
+<p>An example of the <code>configure</code> command is shown below:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">$ gh actions-importer configure
+</span><span style="color:#c0c5ce;">✔ Which CI providers are you configuring?: Jenkins
+</span><span style="color:#c0c5ce;">Enter the following values (leave empty to omit):
+</span><span style="color:#c0c5ce;">✔ Personal access token for GitHub: ***************
+</span><span style="color:#c0c5ce;">✔ Base url of the GitHub instance: https://github.com
+</span><span style="color:#c0c5ce;">✔ Personal access token for Jenkins: ***************
+</span><span style="color:#c0c5ce;">✔ Username of Jenkins user: admin
+</span><span style="color:#c0c5ce;">✔ Base url of the Jenkins instance: https://localhost
+</span><span style="color:#c0c5ce;">Environment variables successfully updated.
+</span></code></pre>
+</li>
+<li>
+<p>In your terminal, run the GitHub Actions Importer <code>update</code> CLI command to connect to GitHub Packages Container registry and ensure that the container image is updated to the latest version:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer update
+</span></code></pre>
+<p>The output of the command should be similar to below:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Updating ghcr.io/actions-importer/cli:latest...
+</span><span style="color:#c0c5ce;">ghcr.io/actions-importer/cli:latest up-to-date
+</span></code></pre>
+</li>
+</ol>
+<h2 title="Perform an audit of Jenkins"><a href="#perform-an-audit-of-jenkins" aria-hidden="true" class="anchor" id="perform-an-audit-of-jenkins"></a>Perform an audit of Jenkins</h2>
+<p>You can use the <code>audit</code> command to get a high-level view of all pipelines in a Jenkins server.</p>
+<p>The <code>audit</code> command performs the following steps:</p>
+<ol>
+<li>Fetches all of the projects defined in a Jenkins server.</li>
+<li>Converts each pipeline to its equivalent GitHub Actions workflow.</li>
+<li>Generates a report that summarizes how complete and complex of a migration is possible with GitHub Actions Importer.</li>
+</ol>
+<h3 title="Perform an audit of Jenkins / Running the audit command"><a href="#running-the-audit-command" aria-hidden="true" class="anchor" id="running-the-audit-command"></a>Running the audit command</h3>
+<p>To perform an audit of a Jenkins server, run the following command in your terminal:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer audit jenkins --output-dir tmp/audit
+</span></code></pre>
+<h3 title="Perform an audit of Jenkins / Inspecting the audit results"><a href="#inspecting-the-audit-results" aria-hidden="true" class="anchor" id="inspecting-the-audit-results"></a>Inspecting the audit results</h3>
+<p>The files in the specified output directory contain the results of the audit. See the <code>audit_summary.md</code> file for a summary of the audit results.</p>
+<p>The audit summary has the following sections.</p>
+<h4><a href="#pipelines" aria-hidden="true" class="anchor" id="pipelines"></a>Pipelines</h4>
+<p>The "Pipelines" section contains a high-level statistics regarding the conversion rate done by GitHub Actions Importer.</p>
+<p>Listed below are some key terms that can appear in the "Pipelines" section:</p>
+<ul>
+<li><strong>Successful</strong> pipelines had 100% of the pipeline constructs and individual items converted automatically to their GitHub Actions equivalent.</li>
+<li><strong>Partially successful</strong> pipelines had all of the pipeline constructs converted, however, there were some individual items that were not converted automatically to their GitHub Actions equivalent.</li>
+<li><strong>Unsupported</strong> pipelines are definition types that are not supported by GitHub Actions Importer.</li>
+<li><strong>Failed</strong> pipelines encountered a fatal error when being converted. This can occur for one of three reasons:
+<ul>
+<li>The pipeline was originally misconfigured and not valid.</li>
+<li>GitHub Actions Importer encountered an internal error when converting it.</li>
+<li>There was an unsuccessful network response that caused the pipeline to be inaccessible, which is often due to invalid credentials.</li>
+</ul>
+</li>
+</ul>
+<h4><a href="#build-steps" aria-hidden="true" class="anchor" id="build-steps"></a>Build steps</h4>
+<p>The "Build steps" section contains an overview of individual build steps that are used across all pipelines, and how many were automatically converted by GitHub Actions Importer.</p>
+<p>Listed below are some key terms that can appear in the "Build steps" section:</p>
+<ul>
+<li>A <strong>known</strong> build step is a step that was automatically converted to an equivalent action.</li>
+<li>An <strong>unknown</strong> build step is a step that was not automatically converted to an equivalent action.</li>
+<li>An <strong>unsupported</strong> build step is a step that is either:
+<ul>
+<li>Fundamentally not supported by GitHub Actions.</li>
+<li>Configured in a way that is incompatible with GitHub Actions.</li>
+</ul>
+</li>
+<li>An <strong>action</strong> is a list of the actions that were used in the converted workflows. This can be important for:
+<ul>
+<li>If you use GitHub Enterprise Server, gathering the list of actions to sync to your instance.</li>
+<li>Defining an organization-level allowlist of actions that are used. This list of actions is a comprehensive list of actions that your security or compliance teams may need to review.</li>
+</ul>
+</li>
+</ul>
+<h4><a href="#manual-tasks" aria-hidden="true" class="anchor" id="manual-tasks"></a>Manual tasks</h4>
+<p>The "Manual tasks" section contains an overview of tasks that GitHub Actions Importer is not able to complete automatically, and that you must complete manually.</p>
+<p>Listed below are some key terms that can appear in the "Manual tasks" section:</p>
+<ul>
+<li>A <strong>secret</strong> is a repository or organization-level secret that is used in the converted pipelines. These secrets must be created manually in GitHub Actions for these pipelines to function properly. For more information, see <a href="../../../how-tos/write-workflows/choose-what-workflows-do/use-secrets.html">Using secrets in GitHub Actions</a>.</li>
+<li>A <strong>self-hosted runner</strong> refers to a label of a runner that is referenced in a converted pipeline that is not a GitHub-hosted runner. You will need to manually define these runners for these pipelines to function properly.</li>
+</ul>
+<h4><a href="#files" aria-hidden="true" class="anchor" id="files"></a>Files</h4>
+<p>The final section of the audit report provides a manifest of all the files that were written to disk during the audit.</p>
+<p>Each pipeline file has a variety of files included in the audit, including:</p>
+<ul>
+<li>The original pipeline as it was defined in GitHub.</li>
+<li>Any network responses used to convert the pipeline.</li>
+<li>The converted workflow file.</li>
+<li>Stack traces that can be used to troubleshoot a failed pipeline conversion.</li>
+</ul>
+<p>Additionally, the <code>workflow_usage.csv</code> file contains a comma-separated list of all actions, secrets, and runners that are used by each successfully converted pipeline. This can be useful for determining which workflows use which actions, secrets, or runners, and can be useful for performing security reviews.</p>
+<h2 title="Forecast potential build runner usage"><a href="#forecast-potential-build-runner-usage" aria-hidden="true" class="anchor" id="forecast-potential-build-runner-usage"></a>Forecast potential build runner usage</h2>
+<p>You can use the <code>forecast</code> command to forecast potential GitHub Actions usage by computing metrics from completed pipeline runs in your Jenkins server.</p>
+<h3 title="Forecast potential build runner usage / Prerequisites for running the forecast command"><a href="#prerequisites-for-running-the-forecast-command" aria-hidden="true" class="anchor" id="prerequisites-for-running-the-forecast-command"></a>Prerequisites for running the forecast command</h3>
+<p>In order to run the <code>forecast</code> command against a Jenkins instance, you must install the <a href="https://plugins.jenkins.io/paginated-builds" class="external"><code>paginated-builds</code> plugin</a> on your Jenkins server. This plugin allows GitHub Actions Importer to efficiently retrieve historical build data for jobs that have a large number of builds. Because Jenkins does not provide a method to retrieve paginated build data, using this plugin prevents timeouts from the Jenkins server that can occur when fetching a large amount of historical data. The <code>paginated-builds</code> plugin is open source, and exposes a REST API endpoint to fetch build data in pages, rather than all at once.</p>
+<p>To install the <code>paginated-builds</code> plugin:</p>
+<ol>
+<li>On your Jenkins instance, navigate to <code>https://&lt;your-jenkins-instance&gt;/pluginManager/available</code>.</li>
+<li>Search for the <code>paginated-builds</code> plugin.</li>
+<li>Check the box on the left and select <strong>Install without restart</strong>.</li>
+</ol>
+<h3 title="Forecast potential build runner usage / Running the forecast command"><a href="#running-the-forecast-command" aria-hidden="true" class="anchor" id="running-the-forecast-command"></a>Running the forecast command</h3>
+<p>To perform a forecast of potential GitHub Actions, run the following command in your terminal. By default, GitHub Actions Importer includes the previous seven days in the forecast report.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer forecast jenkins --output-dir tmp/forecast
+</span></code></pre>
+<h3 title="Forecast potential build runner usage / Inspecting the forecast report"><a href="#inspecting-the-forecast-report" aria-hidden="true" class="anchor" id="inspecting-the-forecast-report"></a>Inspecting the forecast report</h3>
+<p>The <code>forecast_report.md</code> file in the specified output directory contains the results of the forecast.</p>
+<p>Listed below are some key terms that can appear in the forecast report:</p>
+<ul>
+<li>The <strong>job count</strong> is the total number of completed jobs.</li>
+<li>The <strong>pipeline count</strong> is the number of unique pipelines used.</li>
+<li><strong>Execution time</strong> describes the amount of time a runner spent on a job. This metric can be used to help plan for the cost of GitHub-hosted runners.
+<ul>
+<li>This metric is correlated to how much you should expect to spend in GitHub Actions. This will vary depending on the hardware used for these minutes. You can use the <a href="https://github.com/pricing/calculator" class="external">GitHub Actions pricing calculator</a> to estimate the costs.</li>
+</ul>
+</li>
+<li><strong>Queue time</strong> metrics describe the amount of time a job spent waiting for a runner to be available to execute it.</li>
+<li><strong>Concurrent jobs</strong> metrics describe the amount of jobs running at any given time. This metric can be used to define the number of runners you should configure.</li>
+</ul>
+<p>Additionally, these metrics are defined for each queue of runners in Jenkins. This is especially useful if there is a mix of hosted or self-hosted runners, or high or low spec machines, so you can see metrics specific to different types of runners.</p>
+<h2 title="Perform a dry-run migration of a Jenkins pipeline"><a href="#perform-a-dry-run-migration-of-a-jenkins-pipeline" aria-hidden="true" class="anchor" id="perform-a-dry-run-migration-of-a-jenkins-pipeline"></a>Perform a dry-run migration of a Jenkins pipeline</h2>
+<p>You can use the <code>dry-run</code> command to convert a Jenkins pipeline to its equivalent GitHub Actions workflow.</p>
+<h3 title="Perform a dry-run migration of a Jenkins pipeline / Running the dry-run command"><a href="#running-the-dry-run-command" aria-hidden="true" class="anchor" id="running-the-dry-run-command"></a>Running the dry-run command</h3>
+<p>You can use the <code>dry-run</code> command to convert a Jenkins pipeline to an equivalent GitHub Actions workflow. A dry-run creates the output files in a specified directory, but does not open a pull request to migrate the pipeline.</p>
+<p>To perform a dry run of migrating your Jenkins pipelines to GitHub Actions, run the following command in your terminal, replacing <code>my-jenkins-project</code> with the URL of your Jenkins job.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer dry-run jenkins --source-url my-jenkins-project --output-dir tmp/dry-run
+</span></code></pre>
+<h3 title="Perform a dry-run migration of a Jenkins pipeline / Inspecting the converted workflows"><a href="#inspecting-the-converted-workflows" aria-hidden="true" class="anchor" id="inspecting-the-converted-workflows"></a>Inspecting the converted workflows</h3>
+<p>You can view the logs of the dry run and the converted workflow files in the specified output directory.</p>
+<p>If there is anything that GitHub Actions Importer was not able to convert automatically, such as unknown build steps or a partially successful pipeline, you might want to create custom transformers to further customize the conversion process. For more information, see <a href="../../../reference/github-actions-importer/custom-transformers.html">Extending GitHub Actions Importer with custom transformers</a>.</p>
+<h2 title="Perform a production migration of a Jenkins pipeline"><a href="#perform-a-production-migration-of-a-jenkins-pipeline" aria-hidden="true" class="anchor" id="perform-a-production-migration-of-a-jenkins-pipeline"></a>Perform a production migration of a Jenkins pipeline</h2>
+<p>You can use the <code>migrate</code> command to convert a Jenkins pipeline and open a pull request with the equivalent GitHub Actions workflow.</p>
+<h3 title="Perform a production migration of a Jenkins pipeline / Running the migrate command"><a href="#running-the-migrate-command" aria-hidden="true" class="anchor" id="running-the-migrate-command"></a>Running the migrate command</h3>
+<p>To migrate a Jenkins pipeline to GitHub Actions, run the following command in your terminal, replacing the <code>target-url</code> value with the URL for your GitHub repository, and <code>my-jenkins-project</code> with the URL for your Jenkins job.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer migrate jenkins --target-url https://github.com/:owner/:repo --output-dir tmp/migrate --source-url my-jenkins-project
+</span></code></pre>
+<p>The command's output includes the URL to the pull request that adds the converted workflow to your repository. An example of a successful output is similar to the following:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">$ gh actions-importer migrate jenkins --target-url https://github.com/octo-org/octo-repo --output-dir tmp/migrate --source-url http://localhost:8080/job/monas_dev_work/job/monas_freestyle
+</span><span style="color:#c0c5ce;">[2022-08-20 22:08:20] Logs: 'tmp/migrate/log/actions-importer-20220916-014033.log'
+</span><span style="color:#c0c5ce;">[2022-08-20 22:08:20] Pull request: 'https://github.com/octo-org/octo-repo/pull/1'
+</span></code></pre>
+<h3 title="Perform a production migration of a Jenkins pipeline / Inspecting the pull request"><a href="#inspecting-the-pull-request" aria-hidden="true" class="anchor" id="inspecting-the-pull-request"></a>Inspecting the pull request</h3>
+<p>The output from a successful run of the <code>migrate</code> command contains a link to the new pull request that adds the converted workflow to your repository.</p>
+<p>Some important elements of the pull request include:</p>
+<ul>
+<li>In the pull request description, a section called <strong>Manual steps</strong>, which lists steps that you must manually complete before you can finish migrating your pipelines to GitHub Actions. For example, this section might tell you to create any secrets used in your workflows.</li>
+<li>The converted workflows file. Select the <strong>Files changed</strong> tab in the pull request to view the workflow file that will be added to your GitHub repository.</li>
+</ul>
+<p>When you are finished inspecting the pull request, you can merge it to add the workflow to your GitHub repository.</p>
+<h2 title="Reference"><a href="#reference" aria-hidden="true" class="anchor" id="reference"></a>Reference</h2>
+<p>This section contains reference information on environment variables, optional arguments, and supported syntax when using GitHub Actions Importer to migrate from Jenkins.</p>
+<h3 title="Reference / Using environment variables"><a href="#using-environment-variables" aria-hidden="true" class="anchor" id="using-environment-variables"></a>Using environment variables</h3>
+<p>GitHub Actions Importer uses environment variables for its authentication configuration. These variables are set when following the configuration process using the <code>configure</code> command. For more information, see the <a href="#configuring-credentials">Configuring credentials</a> section.</p>
+<p>GitHub Actions Importer uses the following environment variables to connect to your Jenkins instance:</p>
+<ul>
+<li>
+<p><code>GITHUB_ACCESS_TOKEN</code>: The personal access token (classic) used to create pull requests with a converted workflow (requires <code>repo</code> and <code>workflow</code> scopes).</p>
+</li>
+<li>
+<p><code>GITHUB_INSTANCE_URL</code>: The URL to the target GitHub instance (for example, <code>https://github.com</code>).</p>
+</li>
+<li>
+<p><code>JENKINS_ACCESS_TOKEN</code>: The Jenkins API token used to view Jenkins resources.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This token requires access to all jobs that you want to migrate or audit. In cases where a folder or job does not inherit access control lists from their parent, you must grant explicit permissions or full admin privileges.</p>
+</div>
+</li>
+<li>
+<p><code>JENKINS_USERNAME</code>: The username of the user account that created the Jenkins API token.</p>
+</li>
+<li>
+<p><code>JENKINS_INSTANCE_URL</code>: The URL of the Jenkins instance.</p>
+</li>
+<li>
+<p><code>JENKINSFILE_ACCESS_TOKEN</code> (Optional) The API token used to retrieve the contents of a <code>Jenkinsfile</code> stored in the build repository. This requires the <code>repo</code> scope. If this is not provided, the <code>GITHUB_ACCESS_TOKEN</code> will be used instead.</p>
+</li>
+</ul>
+<p>These environment variables can be specified in a <code>.env.local</code> file that is loaded by GitHub Actions Importer when it is run.</p>
+<h3 title="Reference / Using optional arguments"><a href="#using-optional-arguments" aria-hidden="true" class="anchor" id="using-optional-arguments"></a>Using optional arguments</h3>
+<p>There are optional arguments you can use with the GitHub Actions Importer subcommands to customize your migration.</p>
+<h4><a href="#--source-file-path" aria-hidden="true" class="anchor" id="--source-file-path"></a><code>--source-file-path</code></h4>
+<p>You can use the <code>--source-file-path</code> argument with the <code>forecast</code>, <code>dry-run</code>, or <code>migration</code> subcommands.</p>
+<p>By default, GitHub Actions Importer fetches pipeline contents from source control. The <code>--source-file-path</code> argument tells GitHub Actions Importer to use the specified source file path instead. You can use this option for Jenkinsfile and multibranch pipelines.</p>
+<p>If you would like to supply multiple source files when running the <code>forecast</code> subcommand, you can use pattern matching in the file path value. For example, <code>gh forecast --source-file-path ./tmp/previous_forecast/jobs/*.json</code> supplies GitHub Actions Importer with any source files that match the <code>./tmp/previous_forecast/jobs/*.json</code> file path.</p>
+<h5><a href="#jenkinsfile-pipeline-example" aria-hidden="true" class="anchor" id="jenkinsfile-pipeline-example"></a>Jenkinsfile pipeline example</h5>
+<p>In this example, GitHub Actions Importer uses the specified Jenkinsfile as the source file to perform a dry run.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer dry-run jenkins --output-dir path/to/output/ --source-file-path path/to/Jenkinsfile --source-url :url_to_jenkins_job
+</span></code></pre>
+<h4><a href="#--config-file-path" aria-hidden="true" class="anchor" id="--config-file-path"></a><code>--config-file-path</code></h4>
+<p>You can use the <code>--config-file-path</code> argument with the <code>audit</code>, <code>dry-run</code>, and <code>migrate</code> subcommands.</p>
+<p>By default, GitHub Actions Importer fetches pipeline contents from source control. The <code>--config-file-path</code> argument tells GitHub Actions Importer to use the specified source files instead.</p>
+<p>When you use the <code>--config-file-path</code> option with the <code>dry-run</code> or <code>migrate</code> subcommands, GitHub Actions Importer matches the repository slug to the job represented by the <code>--source-url</code> option to select the pipeline. It uses the <code>config-file-path</code> to pull the specified source file.</p>
+<h5><a href="#audit-example" aria-hidden="true" class="anchor" id="audit-example"></a>Audit example</h5>
+<p>In this example, GitHub Actions Importer uses the specified YAML configuration file to perform an audit.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer audit jenkins --output-dir path/to/output/ --config-file-path path/to/jenkins/config.yml
+</span></code></pre>
+<p>To audit a Jenkins instance using a config file, the config file must be in the following format, and each <code>repository_slug</code> value must be unique:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">source_files</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">repository_slug</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">pipeline-name
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">path/to/Jenkinsfile
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">repository_slug</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">multi-branch-pipeline-name
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">branch</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">main
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">path/to/Jenkinsfile
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">branch</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">node
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">path/to/Jenkinsfile
+</span></code></pre>
+<h3 title="Reference / Supported syntax for Jenkins pipelines"><a href="#supported-syntax-for-jenkins-pipelines" aria-hidden="true" class="anchor" id="supported-syntax-for-jenkins-pipelines"></a>Supported syntax for Jenkins pipelines</h3>
+<p>The following tables show the type of properties GitHub Actions Importer is currently able to convert. For more details about how Jenkins pipeline syntax aligns with GitHub Actions, see <a href="../manual-migrations/migrate-from-jenkins.html">Migrating from Jenkins to GitHub Actions</a>.</p>
+<p>For information about supported Jenkins plugins, see the <a href="https://github.com/github/gh-actions-importer/blob/main/docs/jenkins/index.md" class="external"><code>github/gh-actions-importer</code> repository</a>.</p>
+<h4><a href="#supported-syntax-for-freestyle-pipelines" aria-hidden="true" class="anchor" id="supported-syntax-for-freestyle-pipelines"></a>Supported syntax for Freestyle pipelines</h4>
+<table>
+<thead>
+<tr>
+<th align="left">Jenkins</th>
+<th align="left">GitHub Actions</th>
+<th align="left">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">docker template</td>
+<td align="left"><code class="keyword">jobs.&lt;job_id&gt;.container</code></td>
+<td align="left">Supported</td>
+</tr>
+<tr>
+<td align="left">build</td>
+<td align="left"><code class="keyword">jobs</code></td>
+<td align="left">Partially supported</td>
+</tr>
+<tr>
+<td align="left">build environment</td>
+<td align="left"><code class="keyword">env</code></td>
+<td align="left">Partially supported</td>
+</tr>
+<tr>
+<td align="left">build triggers</td>
+<td align="left"><code class="keyword">on</code></td>
+<td align="left">Partially supported</td>
+</tr>
+<tr>
+<td align="left">general</td>
+<td align="left"><code class="keyword">runners</code></td>
+<td align="left">Partially supported</td>
+</tr>
+</tbody>
+</table>
+<h4><a href="#supported-syntax-for-jenkinsfile-pipelines" aria-hidden="true" class="anchor" id="supported-syntax-for-jenkinsfile-pipelines"></a>Supported syntax for Jenkinsfile pipelines</h4>
+<table>
+<thead>
+<tr>
+<th align="left">Jenkins</th>
+<th align="left">GitHub Actions</th>
+<th align="left">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">docker</td>
+<td align="left"><code>jobs.&lt;job_id&gt;.container</code></td>
+<td align="left">Supported</td>
+</tr>
+<tr>
+<td align="left">stage</td>
+<td align="left"><code>jobs.&lt;job_id&gt;</code></td>
+<td align="left">Supported</td>
+</tr>
+<tr>
+<td align="left">agent</td>
+<td align="left"><code>runners</code></td>
+<td align="left">Partially supported</td>
+</tr>
+<tr>
+<td align="left">environment</td>
+<td align="left"><code>env</code></td>
+<td align="left">Partially supported</td>
+</tr>
+<tr>
+<td align="left">stages</td>
+<td align="left"><code>jobs</code></td>
+<td align="left">Partially supported</td>
+</tr>
+<tr>
+<td align="left">steps</td>
+<td align="left"><code>jobs.&lt;job_id&gt;.steps</code></td>
+<td align="left">Partially supported</td>
+</tr>
+<tr>
+<td align="left">triggers</td>
+<td align="left"><code>on</code></td>
+<td align="left">Partially supported</td>
+</tr>
+<tr>
+<td align="left">when</td>
+<td align="left"><code>jobs.&lt;job_id&gt;.if</code></td>
+<td align="left">Partially supported</td>
+</tr>
+<tr>
+<td align="left">inputs</td>
+<td align="left"><code>inputs</code></td>
+<td align="left">Unsupported</td>
+</tr>
+<tr>
+<td align="left">matrix</td>
+<td align="left"><code>jobs.&lt;job_id&gt;.strategy.matrix</code></td>
+<td align="left">Unsupported</td>
+</tr>
+<tr>
+<td align="left">options</td>
+<td align="left"><code>jobs.&lt;job_id&gt;.strategy</code></td>
+<td align="left">Unsupported</td>
+</tr>
+<tr>
+<td align="left">parameters</td>
+<td align="left"><code>inputs</code></td>
+<td align="left">Unsupported</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Reference / Environment variables syntax"><a href="#environment-variables-syntax" aria-hidden="true" class="anchor" id="environment-variables-syntax"></a>Environment variables syntax</h3>
+<p>GitHub Actions Importer uses the mapping in the table below to convert default Jenkins environment variables to the closest equivalent in GitHub Actions.</p>
+<table>
+<thead>
+<tr>
+<th align="left">Jenkins</th>
+<th align="left">GitHub Actions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code class="keyword">${BUILD_ID}</code></td>
+<td align="left"><code>${{ github.run_id }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">${BUILD_NUMBER}</code></td>
+<td align="left"><code>${{ github.run_id }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">${BUILD_TAG}</code></td>
+<td align="left"><code>${{ github.workflow }}-${{ github.run_id }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">${BUILD_URL}</code></td>
+<td align="left"><code>${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">${JENKINS_URL}</code></td>
+<td align="left"><code>${{ github.server_url }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">${JOB_NAME}</code></td>
+<td align="left"><code>${{ github.workflow }}</code></td>
+</tr>
+<tr>
+<td align="left"><code class="keyword">${WORKSPACE}</code></td>
+<td align="left"><code>${{ github.workspace }}</code></td>
+</tr>
+</tbody>
+</table>
+<h2 title="Legal notice"><a href="#legal-notice" aria-hidden="true" class="anchor" id="legal-notice"></a>Legal notice</h2>
+<p>Portions have been adapted from <a href="https://github.com/github/gh-actions-importer/" class="external">https://github.com/github/gh-actions-importer/</a> under the MIT license:</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">MIT License
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">Copyright (c) 2022 GitHub
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">Permission is hereby granted, free of charge, to any person obtaining a copy
+</span><span style="color:#c0c5ce;">of this software and associated documentation files (the "Software"), to deal
+</span><span style="color:#c0c5ce;">in the Software without restriction, including without limitation the rights
+</span><span style="color:#c0c5ce;">to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+</span><span style="color:#c0c5ce;">copies of the Software, and to permit persons to whom the Software is
+</span><span style="color:#c0c5ce;">furnished to do so, subject to the following conditions:
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">The above copyright notice and this permission notice shall be included in all
+</span><span style="color:#c0c5ce;">copies or substantial portions of the Software.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+</span><span style="color:#c0c5ce;">IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+</span><span style="color:#c0c5ce;">FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+</span><span style="color:#c0c5ce;">AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+</span><span style="color:#c0c5ce;">LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+</span><span style="color:#c0c5ce;">OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+</span><span style="color:#c0c5ce;">SOFTWARE.
+</span></code></pre>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

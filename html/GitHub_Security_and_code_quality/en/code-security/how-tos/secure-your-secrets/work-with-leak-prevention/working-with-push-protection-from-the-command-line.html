@@ -1,0 +1,164 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Working with push protection from the command line</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Secure your secrets</a> / <a href="index.html">Work with leak prevention</a> / </nav><h1><a href="#working-with-push-protection-from-the-command-line" aria-hidden="true" class="anchor" id="working-with-push-protection-from-the-command-line"></a>Working with push protection from the command line</h1>
+<p>Learn your options for unblocking your push from the command line to GitHub if secret scanning detects a secret in your changes.</p>
+<h2 title="Resolving a blocked push"><a href="#resolving-a-blocked-push" aria-hidden="true" class="anchor" id="resolving-a-blocked-push"></a>Resolving a blocked push</h2>
+<p>To resolve a blocked push, you must remove the secret from all of the commits it appears in.</p>
+<ul>
+<li>If the secret was introduced by your latest commit, see <a href="#removing-a-secret-introduced-by-the-latest-commit-on-your-branch">Removing a secret introduced by the latest commit on your branch</a>.</li>
+<li>If the secret appears in earlier commits, see <a href="#removing-a-secret-introduced-by-an-earlier-commit-on-your-branch">Removing a secret introduced by an earlier commit on your branch</a>.</li>
+</ul>
+<h3 title="Resolving a blocked push / Removing a secret introduced by the latest commit on your branch"><a href="#removing-a-secret-introduced-by-the-latest-commit-on-your-branch" aria-hidden="true" class="anchor" id="removing-a-secret-introduced-by-the-latest-commit-on-your-branch"></a>Removing a secret introduced by the latest commit on your branch</h3>
+<ol>
+<li>Remove the secret from your code.</li>
+<li>To commit the changes, run <code>git commit --amend --all</code>. This updates the original commit that introduced the secret instead of creating a new commit.</li>
+<li>Push your changes with <code>git push</code>.</li>
+</ol>
+<h3 title="Resolving a blocked push / Removing a secret introduced by an earlier commit on your branch"><a href="#removing-a-secret-introduced-by-an-earlier-commit-on-your-branch" aria-hidden="true" class="anchor" id="removing-a-secret-introduced-by-an-earlier-commit-on-your-branch"></a>Removing a secret introduced by an earlier commit on your branch</h3>
+<ol>
+<li>
+<p>Examine the error message that displayed when you tried to push your branch, which lists all of the commits that contain the secret.</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">remote:   —— GitHub Personal Access Token ——————————————————————
+</span><span style="color:#c0c5ce;">remote:    locations:
+</span><span style="color:#c0c5ce;">remote:      - commit: 8728dbe67
+</span><span style="color:#c0c5ce;">remote:        path: README.md:4
+</span><span style="color:#c0c5ce;">remote:      - commit: 03d69e5d3
+</span><span style="color:#c0c5ce;">remote:        path: README.md:4
+</span><span style="color:#c0c5ce;">remote:      - commit: 8053f7b27
+</span><span style="color:#c0c5ce;">remote:        path: README.md:4
+</span></code></pre>
+</li>
+<li>
+<p>Next, run <code>git log</code> to see a full history of all the commits on your branch, along with their corresponding timestamps.</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">test-repo (test-branch)]$ git log
+</span><span style="color:#c0c5ce;">commit 8053f7b27 (HEAD -&gt; main)
+</span><span style="color:#c0c5ce;">Author: Octocat &lt;1000+octocat@users.noreply.github.com
+</span><span style="color:#c0c5ce;">Date:   Tue Jan 30 13:03:37 2024 +0100
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  my fourth commit message
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">commit 03d69e5d3
+</span><span style="color:#c0c5ce;">Author: Octocat &lt;1000+octocat@users.noreply.github.com&gt;
+</span><span style="color:#c0c5ce;">Date:   Tue Jan 30 13:02:59 2024 +0100
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  my third commit message
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">commit 8728dbe67
+</span><span style="color:#c0c5ce;">Author: Octocat &lt;1000+octocat@users.noreply.github.com
+</span><span style="color:#c0c5ce;">Date:   Tue Jan 30 13:01:36 2024 +0100
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  my second commit message
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">commit 6057cbe51
+</span><span style="color:#c0c5ce;">Author: Octocat &lt;1000+octocat@users.noreply.github.com
+</span><span style="color:#c0c5ce;">Date:   Tue Jan 30 12:58:24 2024 +0100
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  my first commit message
+</span><span style="color:#c0c5ce;">
+</span></code></pre>
+</li>
+<li>
+<p>Focusing only on the commits that contain the secret, use the output of <code>git log</code> to identify which commit comes <em>earliest</em> in your Git history.</p>
+<ul>
+<li>In the example, commit <code>8728dbe67</code> was the first commit to contain the secret.</li>
+</ul>
+</li>
+<li>
+<p>Start an interactive rebase with <code>git rebase -i &lt;COMMIT-ID&gt;~1</code>.</p>
+<ul>
+<li>For <code>&lt;COMMIT-ID&gt;</code>, use the commit identified in step 3. For example, <code>git rebase -i 8728dbe67~1</code>.</li>
+</ul>
+</li>
+<li>
+<p>In the editor, choose to edit the commit identified in step 3 by changing <code>pick</code> to <code>edit</code> on the first line of the text.</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">edit 8728dbe67 my second commit message
+</span><span style="color:#c0c5ce;">pick 03d69e5d3 my third commit message
+</span><span style="color:#c0c5ce;">pick 8053f7b27 my fourth commit message
+</span></code></pre>
+</li>
+<li>
+<p>Save and close the editor to start the interactive rebase.</p>
+</li>
+<li>
+<p>Remove the secret from your code.</p>
+</li>
+<li>
+<p>Add your changes to the staging area using <code>git add .</code>.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The full command is <code>git add .</code>:</p>
+<ul>
+<li>There is a space between <code>add</code> and <code>.</code>.</li>
+<li>The period following the space is part of the command.</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Commit your changes using <code>git commit --amend</code>.</p>
+</li>
+<li>
+<p>Run <code>git rebase --continue</code> to finish the rebase.</p>
+</li>
+<li>
+<p>Push your changes with <code>git push</code>.</p>
+</li>
+</ol>
+<h2 title="Bypassing push protection"><a href="#bypassing-push-protection" aria-hidden="true" class="anchor" id="bypassing-push-protection"></a>Bypassing push protection</h2>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>If you don't see the option to bypass a block, you should remove the secret from the commit, or submit a request for "bypass privileges" in order to push the blocked secret. See <a href="#requesting-bypass-privileges">Requesting bypass privileges</a>.</p>
+</div>
+<ol>
+<li>
+<p>Visit the URL returned by GitHub when your push was blocked, <strong>as the same user that performed the push</strong>. If a different user attempts to visit this URL, they will receive a <code>404</code> error.</p>
+</li>
+<li>
+<p>Choose the option that best describes why you should be able to push the secret.</p>
+<ul>
+<li>
+<p>If the secret is only used in tests and poses no threat, click <strong>It's used in tests</strong>.</p>
+</li>
+<li>
+<p>If the detected string is not a secret, click <strong>It's a false positive</strong>.</p>
+</li>
+<li>
+<p>If the secret is real but you intend to fix it later, click <strong>I'll fix it later</strong>.</p>
+</li>
+</ul>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>You are required to specify a reason for bypassing push protection if the repository has secret scanning enabled.</p>
+<p>When pushing to a <em>public</em> repository that doesn't have secret scanning enabled, you are still protected from accidentally pushing secrets thanks to <em>push protection for users</em>, which is on by default for your user account.</p>
+<p>With push protection for users, GitHub will automatically block pushes to public repositories if these pushes contain supported secrets, but you won't need to specify a reason for allowing the secret, and GitHub won't generate an alert. For more information, see <a href="../prevent-future-leaks/manage-user-push-protection.html">Managing push protection for users</a>.</p>
+</div>
+</li>
+<li>
+<p>Click <strong>Allow me to push this secret</strong>.</p>
+</li>
+<li>
+<p>Reattempt the push on the command line within three hours. If you have not pushed within three hours, you will need to repeat this process.</p>
+</li>
+</ol>
+<h2 title="Requesting bypass privileges"><a href="#requesting-bypass-privileges" aria-hidden="true" class="anchor" id="requesting-bypass-privileges"></a>Requesting bypass privileges</h2>
+<ol>
+<li>
+<p>Visit the URL returned by GitHub when your push was blocked, <strong>as the same user that performed the push</strong>. If a different user attempts to visit this URL, they will receive a <code>404</code> error.</p>
+</li>
+<li>
+<p>Under "Or request bypass privileges", add a comment. For example, you might explain why you believe the secret is safe to push, or provide context about the request to bypass the block.</p>
+</li>
+<li>
+<p>Click <strong>Submit request</strong>.</p>
+</li>
+<li>
+<p>Check your email notifications for a response to your request. Once your request has been reviewed, you will receive an email notifying you of the decision.</p>
+<ul>
+<li>If your request is <strong>approved</strong>, you can push the commit (or commits) containing the secret to the repository, as well as any future commits that contain the same secret.</li>
+<li>If your request is <strong>denied</strong>, you need to remove the secret from all commits before pushing again. For information on how to remove a blocked secret, see <a href="#resolving-a-blocked-push">Resolving a blocked push</a>.</li>
+</ul>
+</li>
+</ol>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li><a href="working-with-push-protection-in-the-github-ui.html">Working with push protection in the GitHub UI</a></li>
+<li><a href="../../../concepts/secret-security/working-with-push-protection-from-the-rest-api.html">Working with push protection from the REST API</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

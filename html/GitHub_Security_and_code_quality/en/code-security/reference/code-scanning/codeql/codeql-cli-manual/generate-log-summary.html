@@ -1,0 +1,78 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>generate log-summary</title><link rel="stylesheet" href="../../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../../index.html">Security and code quality</a> / <a href="../../../index.html">Reference</a> / <a href="../../index.html">Code scanning</a> / <a href="../index.html">CodeQL</a> / <a href="index.html">CodeQL CLI manual</a> / </nav><h1><a href="#generate-log-summary" aria-hidden="true" class="anchor" id="generate-log-summary"></a>generate log-summary</h1>
+<p>[Advanced] Create a summary of a structured log file.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This content describes the most recent release of the CodeQL CLI. For more information about this release, see <a href="https://github.com/github/codeql-cli-binaries/releases" class="external">https://github.com/github/codeql-cli-binaries/releases</a>.</p>
+<p>To see details of the options available for this command in an earlier release, run the command with the <span style="white-space: nowrap;"><code>--help</code></span> option in your terminal.</p>
+</div>
+<h2 title="Synopsis"><a href="#synopsis" aria-hidden="true" class="anchor" id="synopsis"></a>Synopsis</h2>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql generate log-summary &lt;options&gt;... -- &lt;input&gt; &lt;result&gt;
+</span></code></pre>
+<h2 title="Description"><a href="#description" aria-hidden="true" class="anchor" id="description"></a>Description</h2>
+<p><span data-escaped-char="">[</span>Advanced] Create a summary of a structured log file.</p>
+<p>This command creates a summary of a structured JSON evaluator event log.<br>
+The output of this command aims to be more stable across different<br>
+versions of the CLI than the log files themselves. Thus, when<br>
+implementing a script that uses output from the logs, it is strongly<br>
+recommended to run this command and use its output rather than using the<br>
+event logs directly.</p>
+<h2 title="Options"><a href="#options" aria-hidden="true" class="anchor" id="options"></a>Options</h2>
+<h3 title="Primary Options"><a href="#primary-options" aria-hidden="true" class="anchor" id="primary-options"></a>Primary Options</h3>
+<h4><a href="#input" aria-hidden="true" class="anchor" id="input"></a><code>&lt;input&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Mandatory] Path to the event log file to produce a summary of.</p>
+<h4><a href="#result" aria-hidden="true" class="anchor" id="result"></a><code>&lt;result&gt;</code></h4>
+<p>Path to the location to output the summarised log file to. If this<br>
+omitted, then the summary will be output to stdout.</p>
+<h4><a href="#--minify-output" aria-hidden="true" class="anchor" id="--minify-output"></a><code>--minify-output</code></h4>
+<p>Where applicable, omit whitespace in the outputted summary. The result<br>
+will be less human-readable but take up less memory. This option only<br>
+has an effect for some output formats.</p>
+<h4><a href="#--utc" aria-hidden="true" class="anchor" id="--utc"></a><code>--utc</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Certain timestamps in the summaries produced by this<br>
+command may use the local timezone of the machine they are running on.<br>
+Enabling this flag forces all timestamps to be UTC.</p>
+<h4><a href="#--formatformat" aria-hidden="true" class="anchor" id="--formatformat"></a><code>--format=&lt;format&gt;</code></h4>
+<p>Control the format of the output produced.</p>
+<p><code>predicates</code> <em>(default)</em>: Produce a summary of the computation performed<br>
+for each predicate. This will be a stream of JSON objects separated<br>
+either by two newline characters (by default) or one if the<br>
+<code>--minify-output</code> option is passed.</p>
+<p><code>text</code>: Produce a human-readable summary of the evaluation run.</p>
+<p><code>overall</code>: Produce a JSON file containing some overall information about<br>
+the evaluation run, including some summary statistics and information<br>
+about the most time-consuming evaluations that were performed.</p>
+<h4><a href="#--no-deduplicate-stage-summaries" aria-hidden="true" class="anchor" id="--no-deduplicate-stage-summaries"></a><code>--[no-]deduplicate-stage-summaries</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] This option only works in conjunction with the text format.<br>
+If passed, this will result in the summary tables containing the most<br>
+expensive predicates not being repeated for stages that are shared<br>
+between queries. This has the side-effect of moving all the summary<br>
+tables to the end of the log, rather than having the ones for each query<br>
+appear at the point when that query finished.</p>
+<h3 title="Options / Common options"><a href="#common-options" aria-hidden="true" class="anchor" id="common-options"></a>Common options</h3>
+<h4><a href="#-h---help" aria-hidden="true" class="anchor" id="-h---help"></a><code>-h, --help</code></h4>
+<p>Show this help text.</p>
+<h4><a href="#-jopt" aria-hidden="true" class="anchor" id="-jopt"></a><code>-J=&lt;opt&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Give option to the JVM running the command.</p>
+<p>(Beware that options containing spaces will not be handled correctly.)</p>
+<h4><a href="#-v---verbose" aria-hidden="true" class="anchor" id="-v---verbose"></a><code>-v, --verbose</code></h4>
+<p>Incrementally increase the number of progress messages printed.</p>
+<h4><a href="#-q---quiet" aria-hidden="true" class="anchor" id="-q---quiet"></a><code>-q, --quiet</code></h4>
+<p>Incrementally decrease the number of progress messages printed.</p>
+<h4><a href="#--verbositylevel" aria-hidden="true" class="anchor" id="--verbositylevel"></a><code>--verbosity=&lt;level&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Explicitly set the verbosity level to one of errors,<br>
+warnings, progress, progress+, progress++, progress+++. Overrides <code>-v</code><br>
+and <code>-q</code>.</p>
+<h4><a href="#--logdirdir" aria-hidden="true" class="anchor" id="--logdirdir"></a><code>--logdir=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Write detailed logs to one or more files in the given<br>
+directory, with generated names that include timestamps and the name of<br>
+the running subcommand.</p>
+<p>(To write a log file with a name you have full control over, instead<br>
+give <code>--log-to-stderr</code> and redirect stderr as desired.)</p>
+<h4><a href="#--common-cachesdir" aria-hidden="true" class="anchor" id="--common-cachesdir"></a><code>--common-caches=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Controls the location of cached data on disk that will<br>
+persist between several runs of the CLI, such as downloaded QL packs and<br>
+compiled query plans. If not set explicitly, this defaults to a<br>
+directory named <code>.codeql</code> in the user's home directory; it will be<br>
+created if it doesn't already exist.</p>
+<p>Available since <code>v2.15.2</code>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

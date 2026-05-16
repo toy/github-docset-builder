@@ -1,0 +1,54 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Viewing workflow run history</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">How-tos</a> / <a href="index.html">Monitor workflows</a> / </nav><h1><a href="#viewing-workflow-run-history" aria-hidden="true" class="anchor" id="viewing-workflow-run-history"></a>Viewing workflow run history</h1>
+<p>You can view logs for each run of a workflow. Logs include the status for each job and step in a workflow.</p>
+<p>Read access to the repository is required to perform these steps.</p>
+<div class="ghd-tool webui">
+<ol>
+<li>
+<p>On GitHub, navigate to the main page of the repository.</p>
+</li>
+<li>
+<p>Under your repository name, click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-play" aria-label="play" role="img"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm4.879-2.773 4.264 2.559a.25.25 0 0 1 0 .428l-4.264 2.559A.25.25 0 0 1 6 10.559V5.442a.25.25 0 0 1 .379-.215Z"></path></svg> Actions</strong>.</p>
+<p><img src="../../../..//assets/images/help/repository/actions-tab-global-nav-update.png" alt="Screenshot of the tabs for the &quot;github/docs&quot; repository. The &quot;Actions&quot; tab is highlighted with an orange outline."></p>
+</li>
+<li>
+<p>In the left sidebar, click the workflow you want to see.</p>
+<p><img src="../../../..//assets/images/help/actions/superlinter-workflow-sidebar.png" alt="Screenshot of the left sidebar of the &quot;Actions&quot; tab. A workflow, &quot;CodeQL,&quot; is outlined in dark orange."></p>
+</li>
+<li>
+<p>From the list of workflow runs, click the name of the run to see the workflow run summary.</p>
+</li>
+</ol>
+</div>
+<div class="ghd-tool cli">
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>To learn more about GitHub CLI, see <a href="https://docs.github.com/en/github-cli/github-cli/about-github-cli" class="external">About GitHub CLI</a>.</p>
+</div>
+<h2 title="Viewing recent workflow runs"><a href="#viewing-recent-workflow-runs" aria-hidden="true" class="anchor" id="viewing-recent-workflow-runs"></a>Viewing recent workflow runs</h2>
+<p>To list the recent workflow runs, use the <code>run list</code> subcommand.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh run list
+</span></code></pre>
+<p>To specify the maximum number of runs to return, you can use the <code>-L</code> or <code>--limit</code> flag . The default is <code>10</code>.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh run list --limit 5
+</span></code></pre>
+<p>To only return runs for the specified workflow, you can use the <code>-w</code> or <code>--workflow</code> flag. Replace <code>workflow</code> with either the workflow name, workflow ID, or workflow file name. For example, <code>"Link Checker"</code>, <code>1234567</code>, or <code>"link-check-test.yml"</code>.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh run list --workflow WORKFLOW
+</span></code></pre>
+<h2 title="Viewing details for a specific workflow run"><a href="#viewing-details-for-a-specific-workflow-run" aria-hidden="true" class="anchor" id="viewing-details-for-a-specific-workflow-run"></a>Viewing details for a specific workflow run</h2>
+<p>To display details for a specific workflow run, use the <code>run view</code> subcommand. Replace <code>run-id</code> with the ID of the run that you want to view. If you don't specify a <code>run-id</code>, GitHub CLI returns an interactive menu for you to choose a recent run.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh run view RUN_ID
+</span></code></pre>
+<p>To include job steps in the output, use the <code>-v</code> or <code>--verbose</code> flag.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh run view RUN_ID --verbose
+</span></code></pre>
+<p>To view details for a specific job in the run, use the <code>-j</code> or <code>--job</code> flag. Replace <code>job-id</code> with the ID of the job that you want to view.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh run view --job JOB_ID
+</span></code></pre>
+<p>To view the full log for a job, use the <code>--log</code> flag.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh run view --job JOB_ID --log
+</span></code></pre>
+<p>Use the <code>--exit-status</code> flag to exit with a non-zero status if the run failed. For example:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh run view 0451 --exit-status &amp;&amp; echo "run pending or passed"
+</span></code></pre>
+</div>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

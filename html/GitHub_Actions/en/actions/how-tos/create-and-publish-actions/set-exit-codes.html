@@ -1,0 +1,43 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Setting exit codes for actions</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">How-tos</a> / <a href="index.html">Create and publish actions</a> / </nav><h1><a href="#setting-exit-codes-for-actions" aria-hidden="true" class="anchor" id="setting-exit-codes-for-actions"></a>Setting exit codes for actions</h1>
+<p>You can use exit codes to set the status of an action. GitHub displays statuses to indicate passing or failing actions.</p>
+<h2 title="About exit codes"><a href="#about-exit-codes" aria-hidden="true" class="anchor" id="about-exit-codes"></a>About exit codes</h2>
+<p>GitHub uses the exit code to set the action's check run status, which can be <code>success</code> or <code>failure</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Exit status</th>
+<th>Check run status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0</code></td>
+<td><code class="keyword">success</code></td>
+<td>The action completed successfully and other tasks that depend on it can begin.</td>
+</tr>
+<tr>
+<td>Nonzero value (any integer but 0)</td>
+<td><code class="keyword">failure</code></td>
+<td>Any other exit code indicates the action failed. When an action fails, all concurrent actions are canceled and future actions are skipped. The check run and check suite both get a <code>failure</code> status.</td>
+</tr>
+</tbody>
+</table>
+<h2 title="Setting a failure exit code in a JavaScript action"><a href="#setting-a-failure-exit-code-in-a-javascript-action" aria-hidden="true" class="anchor" id="setting-a-failure-exit-code-in-a-javascript-action"></a>Setting a failure exit code in a JavaScript action</h2>
+<p>If you are creating a JavaScript action, you can use the actions toolkit <a href="https://github.com/actions/toolkit/tree/main/packages/core" class="external"><code>@actions/core</code></a> package to log a message and set a failure exit code. For example:</p>
+<pre lang="javascript" style="background-color:#2b303b;"><code><span style="color:#b48ead;">try </span><span style="color:#c0c5ce;">{
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;">// something
+</span><span style="color:#c0c5ce;">} </span><span style="color:#b48ead;">catch </span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">error</span><span style="color:#c0c5ce;">) {
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">core</span><span style="color:#c0c5ce;">.</span><span style="color:#8fa1b3;">setFailed</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">error</span><span style="color:#c0c5ce;">.message);
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+<p>For more information, see <a href="../../tutorials/create-actions/create-a-javascript-action.html">Creating a JavaScript action</a>.</p>
+<h2 title="Setting a failure exit code in a Docker container action"><a href="#setting-a-failure-exit-code-in-a-docker-container-action" aria-hidden="true" class="anchor" id="setting-a-failure-exit-code-in-a-docker-container-action"></a>Setting a failure exit code in a Docker container action</h2>
+<p>If you are creating a Docker container action, you can set a failure exit code in your <code>entrypoint.sh</code> script. For example:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">if &lt;condition&gt; ; then
+</span><span style="color:#c0c5ce;">  echo "Game over!"
+</span><span style="color:#c0c5ce;">  exit 1
+</span><span style="color:#c0c5ce;">fi
+</span></code></pre>
+<p>For more information, see <a href="../../tutorials/use-containerized-services/create-a-docker-container-action.html">Creating a Docker container action</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

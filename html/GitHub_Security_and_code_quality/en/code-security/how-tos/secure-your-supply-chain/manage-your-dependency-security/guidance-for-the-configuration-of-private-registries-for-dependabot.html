@@ -1,0 +1,485 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Guidance for the configuration of private registries for Dependabot</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Secure your supply chain</a> / <a href="index.html">Manage your dependency security</a> / </nav><h1><a href="#guidance-for-the-configuration-of-private-registries-for-dependabot" aria-hidden="true" class="anchor" id="guidance-for-the-configuration-of-private-registries-for-dependabot"></a>Guidance for the configuration of private registries for Dependabot</h1>
+<p>This article contains detailed information about configuring private registries, as well as commands you can run from the command line to configure your package managers locally.</p>
+<p>This article contains recommendations and advice to help you configure Dependabot to access your private registry, along with:</p>
+<ul>
+<li>Detailed snippets of the <code>dependabot.yml</code> configuration file for each package manager</li>
+<li>Important limitations or caveats</li>
+<li>Steps explaining how to test that the configuration is working</li>
+<li>Extra configuration options, wherever appropriate (for example, npm has a configuration file that needs to be set)</li>
+<li>Advice about configuring registry hosts</li>
+</ul>
+<p>You'll find detailed guidance for the setup of the following package managers:</p>
+<ul>
+<li><a href="#bun">Bun</a></li>
+<li><a href="#bundler">Bundler</a></li>
+<li><a href="#cargo">Cargo</a></li>
+<li><a href="#docker">Docker</a></li>
+<li><a href="#docker-compose">Docker Compose</a></li>
+<li><a href="#go">Go</a></li>
+<li><a href="#gradle">Gradle</a></li>
+<li><a href="#helm-charts">Helm Charts</a></li>
+<li><a href="#maven">Maven</a></li>
+<li><a href="#npm">npm</a></li>
+<li><a href="#nuget">NuGet</a></li>
+<li><a href="#pub">pub</a></li>
+<li><a href="#python">Python</a> (includes pip, pip-compile, pipenv, and poetry)</li>
+<li><a href="#uv">uv</a></li>
+<li><a href="#yarn">Yarn</a></li>
+</ul>
+<p>You'll also find recommendations for the setup of the following registry hosts:</p>
+<ul>
+<li><a href="#artifactory">Artifactory</a></li>
+<li><a href="#azure-artifacts">Azure Artifacts</a></li>
+<li><a href="#cloudsmith">Cloudsmith</a></li>
+<li><a href="#github-packages-registry">GitHub Packages registry</a></li>
+<li><a href="#nexus">Nexus</a></li>
+<li><a href="#proget">ProGet</a></li>
+</ul>
+<p>To have greater control over Dependabot's access to your private registries and internal network resources, you can configure Dependabot to run on GitHub Actions self-hosted runners. For more information, see <a href="../../../concepts/supply-chain-security/about-dependabot-on-github-actions-runners.html">About Dependabot on GitHub Actions runners</a> and <a href="configure-on-self-hosted-runners.html">Configuring Dependabot on self-hosted runners</a>.</p>
+<h2 title="Configuring package managers"><a href="#configuring-package-managers" aria-hidden="true" class="anchor" id="configuring-package-managers"></a>Configuring package managers</h2>
+<h3 title="Configuring package managers / Bun"><a href="#bun" aria-hidden="true" class="anchor" id="bun"></a>Bun</h3>
+<p>Bun adheres to the same configuration guidelines as npm. Note that the <code>.npmrc</code> file is not required, but can be provided in order to customize the configuration. For detailed steps, see <a href="#npm">npm</a>.</p>
+<h3 title="Configuring package managers / Bundler"><a href="#bundler" aria-hidden="true" class="anchor" id="bundler"></a>Bundler</h3>
+<p>Supported by Artifactory, Artifacts, Cloudsmith, GitHub Packages registry, Nexus, and ProGet.</p>
+<p>You can authenticate with either a username and password, or a token. For more information, see <code>rubygems-server</code> in <a href="configuring-access-to-private-registries-for-dependabot.html#rubygems-server">Configuring access to private registries for Dependabot</a>.</p>
+<p>Snippet of a <code>dependabot.yml</code> file using a username and password.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">ruby-example</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">rubygems-server
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://rubygems.example.com
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octocat@example.com
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_RUBYGEMS_PASSWORD}}
+</span></code></pre>
+<p>The snippet of <code>dependabot.yml</code> file below uses a token. For this type of registry using the GitHub Packages registry<br>
+(<code>xyz.pkg.github.com</code>), the token is in fact a GitHub personal access token (PAT) .</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">ruby-github</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">rubygems-server
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://rubygems.pkg.github.com/octocat/github_api
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_GITHUB_PERSONAL_TOKEN}}
+</span></code></pre>
+<h4><a href="#notes" aria-hidden="true" class="anchor" id="notes"></a>Notes</h4>
+<p>Dependencies sourced directly from a GitHub repository give Dependabot access to the repository through the GitHub UI. For information about allowing Dependabot to access private GitHub dependencies, see <a href="https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/managing-security-and-analysis-settings-for-your-organization#allowing-dependabot-to-access-private-dependencies" class="external">Allowing Dependabot to access private dependencies</a>.</p>
+<h3 title="Configuring package managers / Cargo"><a href="#cargo" aria-hidden="true" class="anchor" id="cargo"></a>Cargo</h3>
+<p>Cargo supports username, password and token-based authentication. For more information, see <code>cargo-registry</code> in <a href="configuring-access-to-private-registries-for-dependabot.html#cargo-registry">Configuring access to private registries for Dependabot</a>.</p>
+<p>The snippet below shows a <code>dependabot.yml</code> file configuration that uses a token.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">cargo-example</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">cargo-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">registry</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">name-of-your-registry</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://cargo.cloudsmith.io/foobaruser/test/
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">token</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">Token ${{secrets.CARGO_TOKEN}}</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<p>We tested this configuration against the <code>https://cargo.cloudsmith.io</code> private registry.</p>
+<h3 title="Configuring package managers / Docker"><a href="#docker" aria-hidden="true" class="anchor" id="docker"></a>Docker</h3>
+<p>Docker supports using a username and password for registries. For more information, see <code>docker-registry</code> in <a href="configuring-access-to-private-registries-for-dependabot.html#docker-registry">Configuring access to private registries for Dependabot</a>.</p>
+<p>Snippet of <code>dependabot.yml</code> file using a username and password.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">dockerhub</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">docker-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://registry.hub.docker.com
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octocat
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_DOCKERHUB_PASSWORD}}
+</span></code></pre>
+<p><code>docker-registry</code> can also be used to pull from private Amazon ECR using static AWS credentials.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">ecr-docker</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">docker-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://1234567890.dkr.ecr.us-east-1.amazonaws.com
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.ECR_AWS_ACCESS_KEY_ID}}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.ECR_AWS_SECRET_ACCESS_KEY}}
+</span></code></pre>
+<h4><a href="#notes-1" aria-hidden="true" class="anchor" id="notes-1"></a>Notes</h4>
+<p>Dependabot works with any container registries that implement the Open Container Initiative (OCI) Distribution Specification. For more information, see <a href="https://github.com/opencontainers/distribution-spec/blob/main/spec.md" class="external">https://github.com/opencontainers/distribution-spec/blob/main/spec.md</a>.</p>
+<p>Dependabot supports authentication to private registries via a central token service or HTTP Basic Auth. For more information, see <a href="https://docs.docker.com/registry/spec/auth/token/" class="external">Token Authentication Specification</a> in the Docker documentation and <a href="https://en.wikipedia.org/wiki/Basic_access_authentication" class="external">Basic access authentication</a> on Wikipedia.</p>
+<h4><a href="#limitations-and-workarounds" aria-hidden="true" class="anchor" id="limitations-and-workarounds"></a>Limitations and workarounds</h4>
+<ul>
+<li>Image names may not always be detected in Containerfiles, Helm files, or yaml files.</li>
+<li>Dockerfiles may only receive a version update to the first <code>FROM</code> directive.</li>
+<li>Dockerfiles do not receive updates to images specified with the <code>ARG</code> directive. There is a workaround available for the <code>COPY</code> directive. For more information, see <a href="https://github.com/dependabot/dependabot-core/issues/5103#issuecomment-1692420920" class="external">Dependabot ignores image references in COPY Dockerfile statement</a> in the <code>dependabot/dependabot-core</code> repository.</li>
+<li>Dependabot doesn't support multi-stage Docker builds. For more information, see <a href="https://github.com/dependabot/dependabot-core/issues/7640" class="external">Support for Docker multi-stage builds</a> in the <code>dependabot/dependabot-core</code> repository.</li>
+</ul>
+<h3 title="Configuring package managers / Docker Compose"><a href="#docker-compose" aria-hidden="true" class="anchor" id="docker-compose"></a>Docker Compose</h3>
+<p>Docker Compose adheres to the same configuration guidelines as Docker. For more information, see <a href="#docker">Docker</a>.</p>
+<h3 title="Configuring package managers / Helm Charts"><a href="#helm-charts" aria-hidden="true" class="anchor" id="helm-charts"></a>Helm Charts</h3>
+<p>Helm supports using a username and password for registries. For more information, see <a href="configuring-access-to-private-registries-for-dependabot.html#helm-registry">Configuring access to private registries for Dependabot</a>.</p>
+<p>Snippet of <code>dependabot.yml</code> file using a username and password.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">helm_registry</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">helm-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://registry.example.com
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octocat
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_REGISTRY_PASSWORD}}
+</span></code></pre>
+<h4><a href="#notes-2" aria-hidden="true" class="anchor" id="notes-2"></a>Notes</h4>
+<p>The <code>helm-registry</code> type only supports HTTP Basic Auth and does not support OCI-compliant registries. If you need to access an OCI-compliant registry for Helm charts, configure a <a href="#docker"><code>docker-registry</code></a> instead. For more information on basic authentication, see <a href="https://en.wikipedia.org/wiki/Basic_access_authentication" class="external">Basic access authentication</a> on Wikipedia.</p>
+<p>When configuring Dependabot for Helm charts, it will also automatically update the Docker images referenced within those charts, ensuring that both the chart versions and their contained images stay up to date.</p>
+<h4><a href="#limitations-and-workarounds-1" aria-hidden="true" class="anchor" id="limitations-and-workarounds-1"></a>Limitations and workarounds</h4>
+<ul>
+<li>Dependabot only updates dependencies in <code>Chart.yaml</code> files.</li>
+<li>Images in <code>values.yaml</code> files and <code>Chart.yaml</code> files are updated.</li>
+<li>Helm dependency updates are first attempted via the Helm CLI, with fallback to searching <code>index.yaml</code>.</li>
+<li>Images that have an array of versions in the YAML cannot be updated.</li>
+<li>Image names may not always be detected in Helm files or YAML files.</li>
+<li>For Helm v2 updates, use the <a href="#docker">Docker ecosystem</a>.</li>
+</ul>
+<h3 title="Configuring package managers / Gradle"><a href="#gradle" aria-hidden="true" class="anchor" id="gradle"></a>Gradle</h3>
+<p>Dependabot doesn't run Gradle but supports updates to certain Gradle files. For more information, see "Gradle" in <a href="../../../reference/supply-chain-security/supported-ecosystems-and-repositories.html#gradle">Dependabot supported ecosystems and repositories</a>.</p>
+<p>Gradle supports the <code>maven-repository</code> registry type. For more information, see <code>maven-repository</code> in <a href="configuring-access-to-private-registries-for-dependabot.html#maven-repository">Configuring access to private registries for Dependabot</a>.</p>
+<p>The <code>maven-repository</code> type supports username, password and replaces-base. If the account is a GitHub account, you can use a GitHub personal access token in place of the password.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">gradle-artifactory</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">maven-repository
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://acme.jfrog.io/artifactory/my-gradle-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octocat
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_ARTIFACTORY_PASSWORD}}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">replaces-base</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">gradle</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">gradle-artifactory
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">monthly</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<h4><a href="#notes-3" aria-hidden="true" class="anchor" id="notes-3"></a>Notes</h4>
+<p>You may not see all of your dependencies represented in the dependency graph, especially if some dependencies are build-time dependencies. You can use the dependency submission API to inform GitHub about your other dependencies, and receive security updates for them. For more information, see <a href="../secure-your-dependencies/using-the-dependency-submission-api.html">Using the dependency submission API</a>.</p>
+<h3 title="Configuring package managers / Go"><a href="#go" aria-hidden="true" class="anchor" id="go"></a>Go</h3>
+<p>Supported by Jfrog Artifactory and Nexus.</p>
+<p>Go supports using a username and password for private registries.</p>
+<p>Configure your private registry using the <code>dependabot.yml</code> file with the <code>goproxy-server</code> type:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">my-private-registry</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">goproxy-server
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://acme.jfrog.io/artifactory/api/go/my-repo
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octocat
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_GO_REGISTRY_TOKEN}}
+</span></code></pre>
+<p>You can also optionally configure how the Go toolchain accesses your proxy server by creating a <code>go.env</code> file in your repository root. This file allows you to set environment variables like <code>GOPROXY</code>, <code>GOPRIVATE</code>, <code>GONOSUMDB</code>, and <code>GOSUMDB</code> to control how Go modules are resolved:</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GOPROXY=https://acme.jfrog.io/artifactory/api/go/my-repo
+</span><span style="color:#c0c5ce;">GOPRIVATE=my-company.com/*
+</span><span style="color:#c0c5ce;">GONOSUMDB=my-company.com/*
+</span></code></pre>
+<h4><a href="#notes-4" aria-hidden="true" class="anchor" id="notes-4"></a>Notes</h4>
+<p>This feature enables unified dependency management for both public and private Go modules within a single Dependabot workflow, making it ideal for organizations using corporate artifact management systems like JFrog Artifactory or Nexus.</p>
+<p><strong>Private Proxy Serving All Modules</strong>: All module requests go through your proxy first. For public modules fetching failures, your proxy returns 404/410 and Go falls back to direct version control system (VCS) access. For private modules, such as those published only to a private repository like JFrog Artifactory, the VCS fall back will not work since they are only accessible through the proxy.</p>
+<p><strong>Private Proxy Serving Private Modules</strong>: Add a go.env to your repository root, and set up a GONOSUMDB matching the private modules pattern (for example, <code>GONOSUMDB=my-company.com/*</code> for all private modules starting with my-company.com/). Doing this will disable the public checksum validation of your private modules because the public checksum database does not have those private modules.</p>
+<p><strong>Direct Access to Private Modules</strong>: Set <code>GOPRIVATE=my-company.com/*</code> to bypass proxies and fetch directly from VCS. This setting only works if private modules are properly published with semantic version tags in your source control.</p>
+<p>Dependencies sourced directly from a GitHub repository give Dependabot access to the repository through the GitHub UI. For information about allowing Dependabot to access private GitHub dependencies, see <a href="https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/managing-security-and-analysis-settings-for-your-organization#allowing-dependabot-to-access-private-dependencies" class="external">Allowing Dependabot to access private dependencies</a>.</p>
+<h3 title="Configuring package managers / Maven"><a href="#maven" aria-hidden="true" class="anchor" id="maven"></a>Maven</h3>
+<p>Maven supports username, password and replaces-base. For more information, see <code>maven-repository</code> in <a href="configuring-access-to-private-registries-for-dependabot.html#maven-repository">Configuring access to private registries for Dependabot</a>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">maven-artifactory</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">maven-repository
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://acme.jfrog.io/artifactory/my-maven-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octocat
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_ARTIFACTORY_PASSWORD}}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">replaces-base</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span></code></pre>
+<p>If the account is a GitHub account, you can use a GitHub personal access token in place of the password.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">maven-github</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">maven-repository
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://maven.pkg.github.com/octocat
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octocat
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.OCTOCAT_GITHUB_PAT}}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">replaces-base</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">maven</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">maven-github
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">monthly</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<h4><a href="#notes-5" aria-hidden="true" class="anchor" id="notes-5"></a>Notes</h4>
+<p>You may not see all of your dependencies represented in the dependency graph, especially if some dependencies are build-time dependencies. You can use the dependency submission API to inform GitHub about your other dependencies, and receive security updates for them. For more information, see <a href="../secure-your-dependencies/using-the-dependency-submission-api.html">Using the dependency submission API</a>.</p>
+<h3 title="Configuring package managers / npm"><a href="#npm" aria-hidden="true" class="anchor" id="npm"></a>npm</h3>
+<p>You can define the configuration in the <code>dependabot.yml</code> file using the <code>npm-registry</code> type, or configure Dependabot to send all registry requests through a specified base URL.</p>
+<h4><a href="#using-the-npm-registry-type-in-the-configuration-file" aria-hidden="true" class="anchor" id="using-the-npm-registry-type-in-the-configuration-file"></a>Using the <code>npm-registry</code> type in the configuration file</h4>
+<p>You can define the private registry configuration in a <code>dependabot.yml</code> file using the <code>npm-registry</code> type. For more information, see <a href="configuring-access-to-private-registries-for-dependabot.html#npm-registry">Configuring access to private registries for Dependabot</a>.</p>
+<p>The snippet of a <code>dependabot.yml</code> file below uses a token. For this type of registry using the GitHub Packages registry<br>
+(<code>xyz.pkg.github.com</code>), the token is in fact a GitHub personal access token (PAT) .</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">npm-github</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://npm.pkg.github.com
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_GITHUB_PERSONAL_TOKEN}}
+</span></code></pre>
+<p>The npm ecosystem requires a <code>.npmrc</code> file with the private registry URL to be checked into the repository.</p>
+<p>Example of the content of a <code>.npmrc</code> file:</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">registry=https://&lt;private-registry-url&gt;
+</span></code></pre>
+<p>Alternatively you can add the private registry URL to an existing <code>.npmrc</code> file using the following command.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">npm config set registry &lt;url&gt;
+</span></code></pre>
+<p>For more information, see <a href="https://docs.npmjs.com/cli/v9/using-npm/config?v=true#registry" class="external">registry</a> in the npm documentation.</p>
+<p>You can also scope the configuration to only a single dependency or organization, in which case the token will only be valid for the organization, and different tokens can be used for different organizations for the same repository.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">npm config set @&lt;org-name&gt;:registry &lt;url&gt;
+</span></code></pre>
+<p>This would result in a '.npmrc' with the registry:</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">@&lt;org-name&gt;:registry=https://&lt;private-registry-url&gt;
+</span></code></pre>
+<p>npm can be configured to use the private registry's URL in lockfiles with <code>replace-registry-host</code>. For more information, see <a href="https://docs.npmjs.com/cli/v9/using-npm/config?v=true#replace-registry-host" class="external">replace-registry-host</a> in the npm documentation.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">npm config set replace-registry-host "never"
+</span></code></pre>
+<p>If you use <code>replace-registry-host</code>, you must locally run <code>npm install</code> in order to regenerate the lockfile to use the private registry URL. Dependabot will use the same URL when providing updates.</p>
+<p>Once the registry is configured, you can also run <code>npm login</code> to verify that your configuration is correct and valid. The lockfile can also be regenerated to use the new private registry by running <code>npm install</code> again.</p>
+<p>You need to ensure that the <code>.npmrc</code> file is checked into the same directory as the project's <code>package.json</code> and that the file doesn't include any environment variables or secrets.<br>
+If you use a monorepo, the <code>.npmrc</code> file should live in the project's root directory.</p>
+<h4><a href="#configuring-dependabot-to-send-registry-requests-through-a-specified-base-url" aria-hidden="true" class="anchor" id="configuring-dependabot-to-send-registry-requests-through-a-specified-base-url"></a>Configuring Dependabot to send registry requests through a specified base URL</h4>
+<p>You can configure Dependabot to send all registry requests through a specified base URL. In order for Dependabot to access a public dependency, the registry must either have a cloned copy of the dependency with the requested version, or allow traffic to fetch from a public registry if the dependency is not available.</p>
+<p>If there is no global registry defined in a <code>.npmrc</code> file, you can set <code>replaces-base</code> to <code>true</code> in the <code>dependabot.yml</code> file. For more information, see "<code>replaces-base</code>" in <a href="/en/code-security/how-tos/secure-your-supply-chain/manage-your-dependency-security/dependabot-options-reference#top-level-registries-key">Top-level <code>registries</code> key</a>.</p>
+<h4><a href="#notes-6" aria-hidden="true" class="anchor" id="notes-6"></a>Notes</h4>
+<p>Dependencies sourced directly from a GitHub repository give Dependabot access to the repository through the GitHub UI. For information about allowing Dependabot to access private GitHub dependencies, see <a href="https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/managing-security-and-analysis-settings-for-your-organization#allowing-dependabot-to-access-private-dependencies" class="external">Allowing Dependabot to access private dependencies</a>.</p>
+<p>For scoped dependencies (<code>@my-org/my-dep</code>), Dependabot requires that the private registry is defined in the project's <code>.npmrc</code> file. To define private registries for individual scopes, use <code>@myscope:registry=https://private_registry_url</code>.</p>
+<p>Registries should be configured using the <code>https</code> protocol.</p>
+<h3 title="Configuring package managers / NuGet"><a href="#nuget" aria-hidden="true" class="anchor" id="nuget"></a>NuGet</h3>
+<p>Supported by Artifactory, Artifacts, Cloudsmith, GitHub Packages registry, Nexus, and ProGet.</p>
+<p>The <code>nuget-feed</code> type supports username and password, or token. For more information, see <code>nuget-feed</code> in <a href="configuring-access-to-private-registries-for-dependabot.html#nuget-feed">Configuring access to private registries for Dependabot</a>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">nuget-example</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">nuget-feed
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://nuget.example.com/v3/index.json
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octocat@example.com
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_NUGET_PASSWORD}}
+</span></code></pre>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">nuget-azure-devops</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">nuget-feed
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://pkgs.dev.azure.com/.../_packaging/My_Feed/nuget/v3/index.json
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octocat@example.com
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_AZURE_DEVOPS_TOKEN}}
+</span></code></pre>
+<h4><a href="#notes-7" aria-hidden="true" class="anchor" id="notes-7"></a>Notes</h4>
+<p>You can also use a token in your <code>dependabot.yml</code> file. For this type of registry using the GitHub Packages registry<br>
+(<code>xyz.pkg.github.com</code>), the token is in fact a GitHub personal access token (PAT) .</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">nuget-azure-devops</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">nuget-feed
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://pkgs.dev.azure.com/.../_packaging/My_Feed/nuget/v3/index.json
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_AZURE_DEVOPS_TOKEN}}
+</span></code></pre>
+<h3 title="Configuring package managers / pub"><a href="#pub" aria-hidden="true" class="anchor" id="pub"></a>pub</h3>
+<p>You can define the private registry configuration in a <code>dependabot.yml</code> file using the <code>pub-repository</code> type. For more information, see <a href="configuring-access-to-private-registries-for-dependabot.html#pub-repository">Configuring access to private registries for Dependabot</a>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">my-pub-registry</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">pub-repository
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://example-private-pub-repo.dev/optional-path
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_PUB_TOKEN}}
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">pub</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">my-pub-registry
+</span></code></pre>
+<h4><a href="#notes-8" aria-hidden="true" class="anchor" id="notes-8"></a>Notes</h4>
+<p>Dependencies sourced directly from a GitHub repository give Dependabot access to the repository through the GitHub UI. For information about allowing Dependabot to access private GitHub dependencies, see <a href="https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/managing-security-and-analysis-settings-for-your-organization#allowing-dependabot-to-access-private-dependencies" class="external">Allowing Dependabot to access private dependencies</a>.</p>
+<p>pub supports URL and token authentication. The URL used for the registry should match the pub-hosted URL. For more information, see <a href="https://github.com/dart-lang/pub/blob/master/doc/repository-spec-v2.md#hosted-url" class="external">Hosted Pub Repository Specification Version 2</a> in the <code>github/dart-lang/pub</code> repository.</p>
+<p>Dependabot doesn't support overrides to the default package registry. For more information about overrides and why some users may implement them, see <a href="https://dart.dev/tools/pub/custom-package-repositories#default-override" class="external">Overriding the default package repository</a> in the Dart documentation.</p>
+<h3 title="Configuring package managers / Python"><a href="#python" aria-hidden="true" class="anchor" id="python"></a>Python</h3>
+<p>Supported by Artifactory, Azure Artifacts, Cloudsmith, Nexus, and ProGet. The GitHub Packages registry is not supported.</p>
+<p>The <code>python-index</code> type supports username and password, or token. For more information, see <code>python-index</code> in <a href="configuring-access-to-private-registries-for-dependabot.html#python-index">Configuring access to private registries for Dependabot</a>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">python-example</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">python-index
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://example.com/_packaging/my-feed/pypi/example
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octocat
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_BASIC_AUTH_PASSWORD}}
+</span></code></pre>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">python-azure</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">python-index
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://pkgs.dev.azure.com/octocat/_packaging/my-feed/pypi/example
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octocat@example.com
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">password</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_AZURE_DEVOPS_TOKEN}}
+</span></code></pre>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">python-gemfury</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">python-index
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://pypi.fury.io/my_org
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_GEMFURY_TOKEN}}
+</span></code></pre>
+<h4><a href="#notes-9" aria-hidden="true" class="anchor" id="notes-9"></a>Notes</h4>
+<p>Dependencies sourced directly from a GitHub repository give Dependabot access to the repository through the GitHub UI. For information about allowing Dependabot to access private GitHub dependencies, see <a href="https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/managing-security-and-analysis-settings-for-your-organization#allowing-dependabot-to-access-private-dependencies" class="external">Allowing Dependabot to access private dependencies</a>.</p>
+<p><code>url</code> should contain the URL, organization, and the "feed" or repository.</p>
+<h3 title="Configuring package managers / uv"><a href="#uv" aria-hidden="true" class="anchor" id="uv"></a>uv</h3>
+<p>The uv registry uses a configuration similar to that of the python index. For more information, see "<code>python-index</code>" in <a href="configuring-access-to-private-registries-for-dependabot.html#python-index">Configuring access to private registries for Dependabot</a>.</p>
+<h3 title="Configuring package managers / Yarn"><a href="#yarn" aria-hidden="true" class="anchor" id="yarn"></a>Yarn</h3>
+<p>The Yarn registry uses a configuration similar to that of the npm registry. For more information, see "<code>npm-registry</code>" in <a href="configuring-access-to-private-registries-for-dependabot.html#npm-registry">Configuring access to private registries for Dependabot</a>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">yarn-github</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://npm.pkg.github.com
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.MY_GITHUB_PERSONAL_TOKEN}}
+</span></code></pre>
+<ul>
+<li>For private registries, you have to check in a <code>.yarnrc.yml</code> file (for Yarn 3) or a <code>.yarnrc</code> file (for Yarn Classic).</li>
+<li>The yarn config files should not contain environment variables.</li>
+<li>You should configure private registries listed in the <code>dependabot.yml</code> file using <code>https</code>.</li>
+</ul>
+<h4><a href="#yarn-classic" aria-hidden="true" class="anchor" id="yarn-classic"></a>Yarn Classic</h4>
+<p>You can either specify the private registry configuration in the <code>dependabot.yml</code> file, or set up Yarn Classic according to the standard package manager instructions.</p>
+<h5><a href="#defining-the-private-registry-configuration-in-the-dependabotyml-file" aria-hidden="true" class="anchor" id="defining-the-private-registry-configuration-in-the-dependabotyml-file"></a>Defining the private registry configuration in the <code>dependabot.yml</code> file</h5>
+<p>You can define the private registry configuration in your <code>dependabot.yml</code> file. For more information, see <a href="/en/code-security/how-tos/secure-your-supply-chain/manage-your-dependency-security/dependabot-options-reference#top-level-registries-key">Top-level <code>registries</code> key</a>.</p>
+<p>To ensure that the private registry is listed as the dependency source in the project's <code>yarn.lock</code> file, you need to run <code>yarn install</code> on a machine with private registry access. Yarn should update the resolved field to include the private registry URL.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">encoding@^0.1.11:
+</span><span style="color:#c0c5ce;">  version "0.1.13"
+</span><span style="color:#c0c5ce;">  resolved "https://private_registry_url/encoding/-/encoding-0.1.13.tgz#56574afdd791f54a8e9b2785c0582a2d26210fa9"
+</span><span style="color:#c0c5ce;">  integrity sha512-ETBauow1T35Y/WZMkio9jiM0Z5xjHHmJ4XmjZOq1l/dXz3lr2sRn87nJy20RupqSh1F2m3HHPSp8ShIPQJrJ3A==
+</span><span style="color:#c0c5ce;">  dependencies:
+</span><span style="color:#c0c5ce;">    iconv-lite "^0.6.2"
+</span></code></pre>
+<h5><a href="#following-the-standard-instructions-from-your-package-manager" aria-hidden="true" class="anchor" id="following-the-standard-instructions-from-your-package-manager"></a>Following the standard instructions from your package manager</h5>
+<p>If the <code>yarn.lock</code> file doesn't list the private registry as the dependency source, you can set up Yarn Classic according to the standard package manager instructions.</p>
+<ol>
+<li>
+<p>Define the private registry configuration in the <code>dependabot.yml</code> file.</p>
+</li>
+<li>
+<p>You can then either:</p>
+<ul>
+<li>Manually set the private registry to the <code>.yarnrc</code> file by adding the registry to a <code>.yarnrc.yml</code> file in the project root with the key registry, or</li>
+<li>Perform the same action by running <code>yarn config set registry &lt;private registry URL&gt;</code> in your terminal.</li>
+</ul>
+<p>Example of a <code>.yarnrc</code> with a private registry defined:<br>
+<code>registry https://nexus.example.com/repository/yarn-all</code></p>
+</li>
+</ol>
+<h4><a href="#yarn-berry-v3" aria-hidden="true" class="anchor" id="yarn-berry-v3"></a>Yarn Berry (v3)</h4>
+<p>For information on the configuration, see <a href="https://yarnpkg.com/configuration/yarnrc/" class="external">Settings (.yarnrc.yml)</a> in the Yarn documentation.</p>
+<p>As with Yarn Classic, you can either specify the private registry configuration in the <code>dependabot.yml</code> file, or set up Yarn Berry according to the package manager instructions.</p>
+<h5><a href="#defining-the-private-registry-configuration-in-the-dependabotyml-file-1" aria-hidden="true" class="anchor" id="defining-the-private-registry-configuration-in-the-dependabotyml-file-1"></a>Defining the private registry configuration in the <code>dependabot.yml</code> file</h5>
+<p>You can define the private registry configuration in your <code>dependabot.yml</code> file. For more information, see <a href="/en/code-security/how-tos/secure-your-supply-chain/manage-your-dependency-security/dependabot-options-reference#top-level-registries-key">Top-level <code>registries</code> key</a>.</p>
+<p>To ensure the private registry is listed as the dependency source in the project's <code>yarn.lock</code> file, run <code>yarn install</code> on a machine with private registry access. Yarn should update the resolved field to include the private registry URL.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">encoding@^0.1.11:
+</span><span style="color:#c0c5ce;">  version "0.1.13"
+</span><span style="color:#c0c5ce;">  resolved "https://private_registry_url/encoding/-/encoding-0.1.13.tgz#56574afdd791f54a8e9b2785c0582a2d26210fa9"
+</span><span style="color:#c0c5ce;">  integrity sha512-ETBauow1T35Y/WZMkio9jiM0Z5xjHHmJ4XmjZOq1l/dXz3lr2sRn87nJy20RupqSh1F2m3HHPSp8ShIPQJrJ3A==
+</span><span style="color:#c0c5ce;">  dependencies:
+</span><span style="color:#c0c5ce;">    iconv-lite "^0.6.2"
+</span></code></pre>
+<p>You can also configure private registries with <code>npmAuthIdent</code> or <code>npmAuthToken</code>. For more information, see "npmAuthIdent" and "npmAuthToken" in the <a href="https://yarnpkg.com/configuration/yarnrc/#npmAuthIdent" class="external">Yarn documentation</a>.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">yarn config set registry &lt;url&gt;
+</span></code></pre>
+<p>You can scope the configuration to only cover a single dependency or organization.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">yarn config set @&lt;SCOPE&gt;:registry &lt;url&gt;
+</span></code></pre>
+<p>Finally, we recommend you run <code>yarn login</code> to verify that your configuration is correct and valid. The lockfile can also be regenerated to use the new private registry by running <code>yarn install</code> again.</p>
+<h5><a href="#following-the-standard-instructions-from-your-package-manager-1" aria-hidden="true" class="anchor" id="following-the-standard-instructions-from-your-package-manager-1"></a>Following the standard instructions from your package manager</h5>
+<p>If the <code>yarn.lock</code> file doesn't list the private registry as the dependency source, you can set up Yarn Berry according to the standard package manager instructions.</p>
+<ol>
+<li>
+<p>Define the private registry configuration in the <code>dependabot.yml</code> file.</p>
+</li>
+<li>
+<p>You can then either:</p>
+<ul>
+<li>Manually set the private registry to the <code>.yarnrc</code> file by adding the registry to a <code>.yarnrc.yml</code> file in the project root with the key <code>npmRegistryServer</code>, or</li>
+<li>Perform the same action by running <code>yarn config set npmRegistryServer &lt;private registry URL&gt;</code> in your terminal.</li>
+</ul>
+<p>Example of a <code>.yarnrc.yml</code> file with a private registry configured:<br>
+<code>npmRegistryServer: "https://nexus.example.com/repository/yarn-all"</code></p>
+<p>For more information, see <a href="https://yarnpkg.com/configuration/yarnrc#npmRegistryServer" class="external">npmRegistryServer</a> in the Yarn documentation.</p>
+</li>
+</ol>
+<h4><a href="#notes-10" aria-hidden="true" class="anchor" id="notes-10"></a>Notes</h4>
+<p>Dependencies sourced directly from a GitHub repository give Dependabot access to the repository through the GitHub UI. For information about allowing Dependabot to access private GitHub dependencies, see <a href="https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/managing-security-and-analysis-settings-for-your-organization#allowing-dependabot-to-access-private-dependencies" class="external">Allowing Dependabot to access private dependencies</a>.</p>
+<p>For scoped dependencies (<code>@my-org/my-dep</code>), Dependabot requires that the private registry is defined in the project's <code>.yarnrc file</code>. To define private registries for individual scopes, use <code>@myscope:registry" "https://private_registry_url"</code>.</p>
+<h2 title="Configuring private registry hosts"><a href="#configuring-private-registry-hosts" aria-hidden="true" class="anchor" id="configuring-private-registry-hosts"></a>Configuring private registry hosts</h2>
+<h3 title="Configuring private registry hosts / Artifactory"><a href="#artifactory" aria-hidden="true" class="anchor" id="artifactory"></a>Artifactory</h3>
+<p>For information about the configuration of Artifactory, see <a href="https://jfrog.com/help/r/jfrog-artifactory-documentation/configuring-artifactory" class="external">Configuring Artifactory</a> in the JFrog Artifactory documentation.</p>
+<h4><a href="#remote-repositories" aria-hidden="true" class="anchor" id="remote-repositories"></a>Remote repositories</h4>
+<p>Remote repositories serve as a cache for build artifacts and dependencies. Instead of having to reach out to a global dependency repository, your build tool can use the artifactory cache, which will speed up build times. For more information, see <a href="https://jfrog.com/help/r/jfrog-artifactory-documentation/remote-repositories" class="external">Remote Repositories</a> in the JFrog Artifactory documentation.</p>
+<p>If you use the <code>replace-base</code> setting, you should also configure a remote repository for Artifactory if you want Dependabot to access another registry whenever the dependency isn't found in the private registry.</p>
+<h4><a href="#virtual-registry" aria-hidden="true" class="anchor" id="virtual-registry"></a>Virtual registry</h4>
+<p>You can use a virtual registry to group together all private and public dependencies under a single domain. For more information, see <a href="https://jfrog.com/help/r/jfrog-artifactory-documentation/npm-registry" class="external">npm Registry</a> in the JFrog Artifactory documentation.</p>
+<h3 title="Configuring private registry hosts / Azure Artifacts"><a href="#azure-artifacts" aria-hidden="true" class="anchor" id="azure-artifacts"></a>Azure Artifacts</h3>
+<p>For information about Azure Artifacts and instructions on how to configure Dependabot to work with Azure Artifacts, see <a href="https://learn.microsoft.com/en-us/azure/devops/artifacts/?view=azure-devops" class="external">Azure DevOps</a> in the Azure Artifacts documentation, and <a href="https://josh-ops.com/posts/github-dependabot-with-azure-artifacts/" class="external">Use Dependabot in GitHub with Azure Artifacts</a>, respectively.</p>
+<p>Example of Azure Artifacts registry:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">nuget-azure-devops</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">nuget-feed
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://pkgs.dev.azure.com/my_org/_packaging/public/nuget/v3/index.json
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.AZURE_DEVOPS_TOKEN}}
+</span></code></pre>
+<p>The Azure Artifacts password must be an unencoded token and should include a <code>:</code> after the token. In addition, the password cannot be base64-encoded.</p>
+<p>You can check whether the private registry is successfully accessed by looking at the Dependabot logs.</p>
+<h3 title="Configuring private registry hosts / Cloudsmith"><a href="#cloudsmith" aria-hidden="true" class="anchor" id="cloudsmith"></a>Cloudsmith</h3>
+<p>For information about Cloudsmith and instructions on how to configure Dependabot to work with Cloudsmith, see <a href="https://help.cloudsmith.io/docs/welcome-to-cloudsmith-docs" class="external">Getting Started with Cloudsmith</a> and <a href="https://help.cloudsmith.io/docs/dependabot" class="external">Integrate GitHub Dependabot with Cloudsmith</a> in the Cloudsmith documentation.</p>
+<h3 title="Configuring private registry hosts / GitHub Packages registry"><a href="#github-packages-registry" aria-hidden="true" class="anchor" id="github-packages-registry"></a>GitHub Packages registry</h3>
+<p>For information about GitHub Packages registries, see <a href="https://docs.github.com/en/packages/working-with-a-github-packages-registry" class="external">Working with a GitHub Packages registry</a>. From that article, you can access pages describing how to configure the following registries.</p>
+<ul>
+<li>Bundler (rubygems)</li>
+<li>Docker (containers)</li>
+<li>GitHub Actions</li>
+<li>Gradle</li>
+<li>Maven</li>
+<li>Npm</li>
+<li>NuGet</li>
+<li>Yarn</li>
+</ul>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">github</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://npm.pkg.github.com
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.&lt;token&gt; }}
+</span></code></pre>
+<h4><a href="#notes-11" aria-hidden="true" class="anchor" id="notes-11"></a>Notes</h4>
+<p>There is no Python container registry.</p>
+<p>For private registries that are scoped to a particular organization, Dependabot expects the URL to include the organization name in the <code>dependabot.yml</code> file.</p>
+<h3 title="Configuring private registry hosts / Nexus"><a href="#nexus" aria-hidden="true" class="anchor" id="nexus"></a>Nexus</h3>
+<p>For information about the configuration of Nexus, see <a href="https://help.sonatype.com/repomanager3" class="external">Repository Manager 3</a> in the Sonatype documentation.</p>
+<h4><a href="#notes-12" aria-hidden="true" class="anchor" id="notes-12"></a>Notes</h4>
+<p>With Nexus Repository Pro, you can enable user tokens. For more information, see <a href="https://help.sonatype.com/repomanager3/nexus-repository-administration/user-authentication/user-tokens" class="external">User Tokens</a> in the Sonatype documentation.</p>
+<p>Example of Nexus registry:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">npm-nexus</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://registry.example.com/repository/npm-internal/
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.NEXUS_NPM_TOKEN}}
+</span></code></pre>
+<p>If you are running Nexus behind a reverse proxy, you need to ensure that the server is accessible using an Auth token by using <code>curl -v -H 'Authorization: Bearer &lt;token&gt;' 'https://&lt;nexus-repo-url&gt;/repository/&lt;repo-name&gt;/@&lt;scope&gt;%2&lt;package&gt;'</code>. For more information, see <a href="https://help.sonatype.com/repomanager3/planning-your-implementation/run-behind-a-reverse-proxy" class="external">Run Behind a Reverse Proxy</a> in the Sonatype documentation.</p>
+<p>If you are restricting which IPs can reach your Nexus host, you need to add the Dependabot IPs to the allowlist.</p>
+<ul>
+<li>You can find the IP addresses Dependabot uses to access the registry in the meta API endpoint, under the dependabot key. For more information, see <a href="https://docs.github.com/en/rest/meta" class="external">REST API endpoints for meta data</a>.</li>
+<li>These are the current IPs:
+<ul>
+<li>"18.213.123.130/32"</li>
+<li>"3.217.79.163/32"</li>
+<li>"3.217.93.44/32"<br>
+For more information, see <a href="https://help.sonatype.com/repomanager3/planning-your-implementation/securing-nexus-repository-manager" class="external">Securing Nexus Repository Manager</a> in the Sonatype documentation.</li>
+</ul>
+</li>
+</ul>
+<p>Registries can be proxied to reach out to a public registry in case a dependency is not available in the private registry. However, you may want Dependabot to only access the private registry and not access the public registry at all. For more information, see <a href="https://help.sonatype.com/repomanager3/planning-your-implementation/quick-start-guide---proxying-maven-and-npm" class="external">Quick Start Guide - Proxying Maven and NPM</a> in the Sonatype documentation, and <a href="removing-dependabot-access-to-public-registries.html">Removing Dependabot access to public registries</a>.</p>
+<h3 title="Configuring private registry hosts / ProGet"><a href="#proget" aria-hidden="true" class="anchor" id="proget"></a>ProGet</h3>
+<p>For information about ProGet and instructions on how to configure Dependabot to work with feeds in ProGet, see the <a href="https://docs.inedo.com/docs/proget-overview" class="external">ProGet documentation</a>.</p>
+<p>Example of ProGet registry configuration for a NuGet feed:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">proget-nuget-feed</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">nuget-feed
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://proget.corp.local/nuget/MyNuGetFeed/v3/index.json
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.PROGET_APK_KEY}}
+</span></code></pre>
+<p>Example of ProGet registry configuration for Bundler (rubygems):</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">proget-gems-feed</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">rubygems-server
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://proget.corp.local/rubygems/MyRubygemsFeed
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.PROGET_APK_KEY}}
+</span></code></pre>
+<p>Example of ProGet registry configuration for Python (PyPI):</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">proget-python-feed</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">python-index
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://proget.corp.local/pypi/MyPythonFeed
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.PROGET_APK_KEY}}
+</span></code></pre>
+<h4><a href="#notes-13" aria-hidden="true" class="anchor" id="notes-13"></a>Notes</h4>
+<p>The <code>token</code> should be an API Key with access to view packages. For more information, see <a href="https://docs.inedo.com/docs/buildmaster-administration-security-api-keys" class="external">API Access and API Keys</a> in the ProGet documentation.</p>
+<p>You can check whether the private registry is successfully accessed by looking at the Dependabot logs.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

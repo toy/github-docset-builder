@@ -1,0 +1,89 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Deploying to Azure Static Web App</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Deploy</a> / <a href="index.html">Deploy to third-party platforms</a> / </nav><h1><a href="#deploying-to-azure-static-web-app" aria-hidden="true" class="anchor" id="deploying-to-azure-static-web-app"></a>Deploying to Azure Static Web App</h1>
+<p>Learn how to deploy a web app to Azure Static Web App as part of your continuous deployment (CD) workflows.</p>
+<h2 title="Prerequisites"><a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<p>Before creating your GitHub Actions workflow, you will first need to complete the following setup steps:</p>
+<ol>
+<li>
+<p>Create an Azure Static Web App using the 'Other' option for deployment source. For more information, see <a href="https://docs.microsoft.com/azure/static-web-apps/get-started-portal" class="external">Quickstart: Building your first static site in the Azure portal</a> in the Azure documentation.</p>
+</li>
+<li>
+<p>Create a secret called <code>AZURE_STATIC_WEB_APPS_API_TOKEN</code> with the value of your static web app deployment token. For more information about how to find your deployment token, see <a href="https://docs.microsoft.com/azure/static-web-apps/deployment-token-management" class="external">Reset deployment tokens in Azure Static Web Apps</a> in the Azure documentation.</p>
+</li>
+</ol>
+<h2 title="Creating the workflow"><a href="#creating-the-workflow" aria-hidden="true" class="anchor" id="creating-the-workflow"></a>Creating the workflow</h2>
+<p>Once you've completed the prerequisites, you can proceed with creating the workflow.</p>
+<p>The following example workflow demonstrates how to build and deploy an Azure static web app when there is a push to the <code>main</code> branch or when a pull request targeting <code>main</code> is opened, synchronized, or reopened. The workflow also tears down the corresponding pre-production deployment when a pull request targeting <code>main</code> is closed.</p>
+<p>Under the workflow <code>env</code> key, change the following values:</p>
+<ul>
+<li><code>APP_LOCATION</code> to the location of your client code</li>
+<li><code>API_LOCATION</code> to the location of your API source code. If <code>API_LOCATION</code> is not relevant, you can delete the variable and the lines where it is used.</li>
+<li><code>OUTPUT_LOCATION</code> to the location of your client code build output</li>
+</ul>
+<p>For more information about these values, see <a href="https://docs.microsoft.com/azure/static-web-apps/build-configuration?tabs=github-actions" class="external">Build configuration for Azure Static Web Apps</a> in the Azure documentation.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># This workflow uses actions that are not certified by GitHub.
+</span><span style="color:#65737e;"># They are provided by a third-party and are governed by
+</span><span style="color:#65737e;"># separate terms of service, privacy policy, and support
+</span><span style="color:#65737e;"># documentation.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># GitHub recommends pinning actions to a commit SHA.
+</span><span style="color:#65737e;"># To get a newer version, you will need to update the SHA.
+</span><span style="color:#65737e;"># You can also reference a tag or branch, but the action may change without warning.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Deploy web app to Azure Static Web Apps
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">APP_LOCATION</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">" </span><span style="color:#65737e;"># location of your client code
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">API_LOCATION</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">api</span><span style="color:#c0c5ce;">" </span><span style="color:#65737e;"># location of your api source code - optional
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">OUTPUT_LOCATION</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">build</span><span style="color:#c0c5ce;">" </span><span style="color:#65737e;"># location of client code build output
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">main
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">pull_request</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">opened</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">synchronize</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">reopened</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">closed</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">main
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">permissions</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">issues</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">contents</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">pull-requests</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build_and_deploy</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github.event_name == 'push' || (github.event_name == 'pull_request' &amp;&amp; github.event.action != 'closed')
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Build and Deploy
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">submodules</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Build And Deploy
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">azure_static_web_apps_api_token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">repo_token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.GITHUB_TOKEN }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">action</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">upload</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">app_location</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ env.APP_LOCATION }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">api_location</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ env.API_LOCATION }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">output_location</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ env.OUTPUT_LOCATION }}
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">close_pull_request</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github.event_name == 'pull_request' &amp;&amp; github.event.action == 'closed'
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Close Pull Request
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Close Pull Request
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">azure_static_web_apps_api_token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">action</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">close</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li>For the original workflow template, see <a href="https://github.com/actions/starter-workflows/blob/main/deployments/azure-staticwebapp.yml" class="external"><code>azure-staticwebapp.yml</code></a> in the GitHub Actions <code>starter-workflows</code> repository.</li>
+<li>The action used to deploy the web app is the official Azure <a href="https://github.com/Azure/static-web-apps-deploy" class="external"><code>Azure/static-web-apps-deploy</code></a> action.</li>
+<li>For more examples of GitHub Action workflows that deploy to Azure, see the <a href="https://github.com/Azure/actions-workflow-samples" class="external">actions-workflow-samples</a> repository.</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

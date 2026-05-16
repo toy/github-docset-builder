@@ -1,0 +1,54 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Code scanning logs</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Reference</a> / <a href="index.html">Code scanning</a> / </nav><h1><a href="#code-scanning-logs" aria-hidden="true" class="anchor" id="code-scanning-logs"></a>Code scanning logs</h1>
+<p>You can view the output generated during code scanning analysis in GitHub.</p>
+<p>The log and diagnostic information available to you depends on the method you use for code scanning in your repository. You can check the type of code scanning you're using in the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab of your repository, by using the <strong>Tool</strong> drop-down menu in the alert list. To access this page, see <a href="../../how-tos/manage-security-alerts/manage-code-scanning-alerts/assessing-code-scanning-alerts-for-your-repository.html#viewing-the-alerts-for-a-repository">Assessing code scanning alerts for your repository</a>.</p>
+<h2 title="Logs on GitHub"><a href="#logs-on-github" aria-hidden="true" class="anchor" id="logs-on-github"></a>Logs on GitHub</h2>
+<p>You can see analysis and diagnostic information for code scanning run using CodeQL analysis on GitHub.</p>
+<ul>
+<li>Analysis information is shown for the most recent analysis in a header at the top of the list of alerts. See <a href="../../how-tos/manage-security-alerts/manage-code-scanning-alerts/assessing-code-scanning-alerts-for-your-repository.html#viewing-the-alerts-for-a-repository">Assessing code scanning alerts for your repository</a>.</li>
+<li>Diagnostic information is displayed in the GitHub Actions workflow logs and consists of summary metrics and extractor diagnostics. To access these logs, see <a href="../../how-tos/view-and-interpret-data/view-code-scanning-logs.html">Viewing code scanning logs from GitHub Actions</a>.</li>
+</ul>
+<h3 title="Logs on GitHub / Summary metrics"><a href="#summary-metrics" aria-hidden="true" class="anchor" id="summary-metrics"></a>Summary metrics</h3>
+<p>Summary metrics include:</p>
+<ul>
+<li>Lines of code in the codebase (used as a baseline), before creation and extraction of the CodeQL database</li>
+<li>Lines of code in the CodeQL database extracted from the code, including external libraries and auto-generated files</li>
+<li>Lines of code in the CodeQL database excluding auto-generated files and external libraries</li>
+</ul>
+<h3 title="Logs on GitHub / Source code extraction diagnostics"><a href="#source-code-extraction-diagnostics" aria-hidden="true" class="anchor" id="source-code-extraction-diagnostics"></a>Source code extraction diagnostics</h3>
+<p>Extractor diagnostics only cover files that were seen during the analysis, metrics include:</p>
+<ul>
+<li>Number of files successfully analyzed</li>
+<li>Number of files that generated extractor errors during database creation</li>
+<li>Number of files that generated extractor warnings during database creation</li>
+</ul>
+<p>You can see more detailed information about CodeQL extractor errors and warnings that occurred during database creation by enabling debug logging. See <a href="troubleshoot-analysis-errors/logs-not-detailed-enough.html#creating-codeql-debugging-artifacts-by-re-running-jobs-with-debug-logging-enabled">Logs are not detailed enough</a>.</p>
+<h3 title="Logs on GitHub / Diagnostic information for private package registries"><a href="#diagnostic-information-for-private-package-registries" aria-hidden="true" class="anchor" id="diagnostic-information-for-private-package-registries"></a>Diagnostic information for private package registries</h3>
+<p>Code scanning default setup workflows include a <code>Setup proxy for registries</code> step. When you are looking at a workflow run for default setup, you can expand this step to view the corresponding log. This contains information about which private package registry configurations were available to the analysis. Additionally, the log contains some diagnostic information which may help with troubleshooting if the private package registries are not successfully used by code scanning default setup. Look for the following messages:</p>
+<ul>
+<li>
+<p><code>Using registries_credentials input.</code> At least one private registry is configured for the organization. This includes configurations for private registry types which are not supported by code scanning default setup. For more details about supported registry types, see <a href="../../how-tos/secure-at-scale/configure-organization-security/manage-usage-and-access/giving-org-access-private-registries.html#code-scanning-default-setup-access-to-private-registries">Giving security features access to private registries</a>.</p>
+</li>
+<li>
+<p><code>Credentials loaded for the following registries:</code></p>
+<ul>
+<li>If no list of configurations follows, then no private registry configurations supported by code scanning default setup were found.</li>
+<li>Otherwise, one line for each supported configuration that was successfully loaded is shown. For example, a line containing <code>Type: nuget_feed; Host: undefined; Url: https://nuget.pkg.github.com/; Username: undefined; Password: true; Token: false</code> indicates that a private NuGet Feed configuration was loaded.</li>
+<li>The information about the configuration in the log may not match exactly what is configured for the organization in the UI. For example, the log may indicate that a <code>Password</code> is set, even though a <code>Token</code> is configured in the UI.</li>
+</ul>
+</li>
+<li>
+<p><code>Proxy started on 127.0.0.1:49152</code> The authentication proxy that is used by code scanning default setup to authenticate to the configured private package registries was started successfully.</p>
+</li>
+<li>
+<p>Following this, there may be messages about the outcomes of connection tests which try to reach the configured private package registries through the authentication proxy. This is a best-effort process. If these checks are not successful for some registries, it does not necessarily mean that the relevant configurations are not working. However, if you find that code scanning default setup is unable to successfully access dependencies in the private registries during the analysis, then this may provide some information to help troubleshoot the issue.</p>
+</li>
+</ul>
+<p>If the output from the <code>Setup proxy for registries</code> step is as expected, but code scanning default setup is unable to successfully access dependencies in the private registries, you can obtain additional troubleshooting information. See <a href="troubleshoot-analysis-errors/logs-not-detailed-enough.html#creating-codeql-debugging-artifacts-for-codeql-default-setup">Logs are not detailed enough</a>.</p>
+<p>For more information about giving code scanning default setup access to private registries, see <a href="../../how-tos/secure-at-scale/configure-organization-security/manage-usage-and-access/giving-org-access-private-registries.html">Giving security features access to private registries</a>.</p>
+<h2 title="Logs for the CodeQL CLI"><a href="#logs-for-the-codeql-cli" aria-hidden="true" class="anchor" id="logs-for-the-codeql-cli"></a>Logs for the CodeQL CLI</h2>
+<p>If you're using the CodeQL CLI outside GitHub, you'll see diagnostic information in the output generated during database analysis. This information is also included in the SARIF results file.</p>
+<h2 title="Logs in VS Code"><a href="#logs-in-vs-code" aria-hidden="true" class="anchor" id="logs-in-vs-code"></a>Logs in VS Code</h2>
+<p>Progress and error messages are displayed as notifications in the bottom right corner of the Visual Studio Code workspace. These link to more detailed logs and error messages in the "Output" window.</p>
+<p>You can access separate logs for the CodeQL extension, language server, query Server, or tests. The Language Server log contains more advanced debug logs for CodeQL language maintainers. You should only need these to provide details in a bug report.</p>
+<p>To access these logs, see <a href="../../how-tos/find-and-fix-code-vulnerabilities/scan-from-vs-code/accessing-logs.html">Accessing logs for CodeQL in Visual Studio Code</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Evaluate expressions in workflows and actions</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Reference</a> / <a href="index.html">Workflows and actions</a> / </nav><h1><a href="#evaluate-expressions-in-workflows-and-actions" aria-hidden="true" class="anchor" id="evaluate-expressions-in-workflows-and-actions"></a>Evaluate expressions in workflows and actions</h1>
+<p>Find information for expressions in GitHub Actions.</p>
+<h2 title="Literals"><a href="#literals" aria-hidden="true" class="anchor" id="literals"></a>Literals</h2>
+<p>As part of an expression, you can use <code>boolean</code>, <code>null</code>, <code>number</code>, or <code>string</code> data types.</p>
+<table>
+<thead>
+<tr>
+<th>Data type</th>
+<th>Literal value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">boolean</code></td>
+<td><code>true</code> or <code>false</code></td>
+</tr>
+<tr>
+<td><code class="keyword">null</code></td>
+<td><code>null</code></td>
+</tr>
+<tr>
+<td><code class="keyword">number</code></td>
+<td>Any number format supported by JSON.</td>
+</tr>
+<tr>
+<td><code class="keyword">string</code></td>
+<td>You don't need to enclose strings in <code>${{</code> and <code>}}</code>. However, if you do, you must use single quotes (<code>'</code>) around the string. To use a literal single quote, escape the literal single quote using an additional single quote (<code>''</code>). Wrapping with double quotes (<code>"</code>) will throw an error.</td>
+</tr>
+</tbody>
+</table>
+<p>Note that in conditionals, falsy values (<code>false</code>, <code>0</code>, <code>-0</code>, <code>""</code>, <code>''</code>, <code>null</code>) are coerced to <code>false</code> and truthy (<code>true</code> and other non-falsy values) are coerced to <code>true</code>.</p>
+<h3 title="Literals / Example of literals"><a href="#example-of-literals" aria-hidden="true" class="anchor" id="example-of-literals"></a>Example of literals</h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">myNull</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ null }}
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">myBoolean</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ false }}
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">myIntegerNumber</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ 711 }}
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">myFloatNumber</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ -9.2 }}
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">myHexNumber</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ 0xff }}
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">myExponentialNumber</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ -2.99e-2 }}
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">myString</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Mona the Octocat
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">myStringInBraces</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ 'It''s open source!' }}
+</span></code></pre>
+<h2 title="Operators"><a href="#operators" aria-hidden="true" class="anchor" id="operators"></a>Operators</h2>
+<table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">( )</code></td>
+<td>Logical grouping</td>
+</tr>
+<tr>
+<td><code class="keyword">[ ]</code></td>
+<td>Index</td>
+</tr>
+<tr>
+<td><code class="keyword">.</code></td>
+<td>Property de-reference</td>
+</tr>
+<tr>
+<td><code class="keyword">!</code></td>
+<td>Not</td>
+</tr>
+<tr>
+<td><code class="keyword">&lt;</code></td>
+<td>Less than</td>
+</tr>
+<tr>
+<td><code class="keyword">&lt;=</code></td>
+<td>Less than or equal</td>
+</tr>
+<tr>
+<td><code class="keyword">&gt;</code></td>
+<td>Greater than</td>
+</tr>
+<tr>
+<td><code class="keyword">&gt;=</code></td>
+<td>Greater than or equal</td>
+</tr>
+<tr>
+<td><code class="keyword">==</code></td>
+<td>Equal</td>
+</tr>
+<tr>
+<td><code class="keyword">!=</code></td>
+<td>Not equal</td>
+</tr>
+<tr>
+<td><code class="keyword">&amp;&amp;</code></td>
+<td>And</td>
+</tr>
+<tr>
+<td><code class="keyword">||</code></td>
+<td>Or</td>
+</tr>
+</tbody>
+</table>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<ul>
+<li>GitHub ignores case when comparing strings.</li>
+<li><code>steps.&lt;step_id&gt;.outputs.&lt;output_name&gt;</code> evaluates as a string. You need to use specific syntax to tell GitHub to evaluate an expression rather than treat it as a string. For more information, see <a href="contexts.html#steps-context">Contexts reference</a>.</li>
+<li>For numerical comparison, the <code>fromJSON()</code> function can be used to convert a string to a number. For more information on the <code>fromJSON()</code> function, see <a href="#fromjson">fromJSON</a>.</li>
+</ul>
+</div>
+<p>GitHub performs loose equality comparisons.</p>
+<ul>
+<li>
+<p>If the types do not match, GitHub coerces the type to a number. GitHub casts data types to a number using these conversions:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Null</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td>Boolean</td>
+<td><code>true</code> returns <code>1</code> <br> <code>false</code> returns <code>0</code></td>
+</tr>
+<tr>
+<td>String</td>
+<td>Parsed from any legal JSON number format, otherwise <code>NaN</code>. <br> Note: empty string returns <code>0</code>.</td>
+</tr>
+<tr>
+<td>Array</td>
+<td><code>NaN</code></td>
+</tr>
+<tr>
+<td>Object</td>
+<td><code>NaN</code></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>When <code>NaN</code> is one of the operands of any relational comparison (<code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>), the result is always <code>false</code>. For more information, see the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN" class="external">NaN Mozilla docs</a>.</p>
+</li>
+<li>
+<p>GitHub ignores case when comparing strings.</p>
+</li>
+<li>
+<p>Objects and arrays are only considered equal when they are the same instance.</p>
+</li>
+</ul>
+<h2 title="Functions"><a href="#functions" aria-hidden="true" class="anchor" id="functions"></a>Functions</h2>
+<p>GitHub offers a set of built-in functions that you can use in expressions. Some functions cast values to a string to perform comparisons. GitHub casts data types to a string using these conversions:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Null</td>
+<td><code>''</code></td>
+</tr>
+<tr>
+<td>Boolean</td>
+<td><code>'true'</code> or <code>'false'</code></td>
+</tr>
+<tr>
+<td>Number</td>
+<td>Decimal format, exponential for large numbers</td>
+</tr>
+<tr>
+<td>Array</td>
+<td>Arrays are not converted to a string</td>
+</tr>
+<tr>
+<td>Object</td>
+<td>Objects are not converted to a string</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Functions / contains"><a href="#contains" aria-hidden="true" class="anchor" id="contains"></a>contains</h3>
+<p><code>contains( search, item )</code></p>
+<p>Returns <code>true</code> if <code>search</code> contains <code>item</code>. If <code>search</code> is an array, this function returns <code>true</code> if the <code>item</code> is an element in the array. If <code>search</code> is a string, this function returns <code>true</code> if the <code>item</code> is a substring of <code>search</code>. This function is not case sensitive. Casts values to a string.</p>
+<h4><a href="#example-using-a-string" aria-hidden="true" class="anchor" id="example-using-a-string"></a>Example using a string</h4>
+<p><code>contains('Hello world', 'llo')</code> returns <code>true</code>.</p>
+<h4><a href="#example-using-an-object-filter" aria-hidden="true" class="anchor" id="example-using-an-object-filter"></a>Example using an object filter</h4>
+<p><code>contains(github.event.issue.labels.*.name, 'bug')</code> returns <code>true</code> if the issue related to the event has a label "bug".</p>
+<p>For more information, see <a href="#object-filters">Object filters</a>.</p>
+<h4><a href="#example-matching-an-array-of-strings" aria-hidden="true" class="anchor" id="example-matching-an-array-of-strings"></a>Example matching an array of strings</h4>
+<p>Instead of writing <code>github.event_name == "push" || github.event_name == "pull_request"</code>, you can use <code>contains()</code> with <code>fromJSON()</code> to check if an array of strings contains an <code>item</code>.</p>
+<p>For example, <code>contains(fromJSON('["push", "pull_request"]'), github.event_name)</code> returns <code>true</code> if <code>github.event_name</code> is "push" or "pull<span data-escaped-char="">_</span>request".</p>
+<h3 title="Functions / startsWith"><a href="#startswith" aria-hidden="true" class="anchor" id="startswith"></a>startsWith</h3>
+<p><code>startsWith( searchString, searchValue )</code></p>
+<p>Returns <code>true</code> when <code>searchString</code> starts with <code>searchValue</code>. This function is not case sensitive. Casts values to a string.</p>
+<h4><a href="#example-of-startswith" aria-hidden="true" class="anchor" id="example-of-startswith"></a>Example of <code>startsWith</code></h4>
+<p><code>startsWith('Hello world', 'He')</code> returns <code>true</code>.</p>
+<h3 title="Functions / endsWith"><a href="#endswith" aria-hidden="true" class="anchor" id="endswith"></a>endsWith</h3>
+<p><code>endsWith( searchString, searchValue )</code></p>
+<p>Returns <code>true</code> if <code>searchString</code> ends with <code>searchValue</code>. This function is not case sensitive. Casts values to a string.</p>
+<h4><a href="#example-of-endswith" aria-hidden="true" class="anchor" id="example-of-endswith"></a>Example of <code>endsWith</code></h4>
+<p><code>endsWith('Hello world', 'ld')</code> returns <code>true</code>.</p>
+<h3 title="Functions / format"><a href="#format" aria-hidden="true" class="anchor" id="format"></a>format</h3>
+<p><code>format( string, replaceValue0, replaceValue1, ..., replaceValueN)</code></p>
+<p>Replaces values in the <code>string</code>, with the variable <code>replaceValueN</code>. Variables in the <code>string</code> are specified using the <code>{N}</code> syntax, where <code>N</code> is an integer. You must specify at least one <code>replaceValue</code> and <code>string</code>. There is no maximum for the number of variables (<code>replaceValueN</code>) you can use. Escape curly braces using double braces.</p>
+<h4><a href="#example-of-format" aria-hidden="true" class="anchor" id="example-of-format"></a>Example of <code>format</code></h4>
+<pre lang="javascript" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">format</span><span style="color:#c0c5ce;">('</span><span style="color:#a3be8c;">Hello {0} {1} {2}</span><span style="color:#c0c5ce;">', '</span><span style="color:#a3be8c;">Mona</span><span style="color:#c0c5ce;">', '</span><span style="color:#a3be8c;">the</span><span style="color:#c0c5ce;">', '</span><span style="color:#a3be8c;">Octocat</span><span style="color:#c0c5ce;">')
+</span></code></pre>
+<p>Returns 'Hello Mona the Octocat'.</p>
+<h4><a href="#example-escaping-braces" aria-hidden="true" class="anchor" id="example-escaping-braces"></a>Example escaping braces</h4>
+<pre lang="javascript" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">format</span><span style="color:#c0c5ce;">('</span><span style="color:#a3be8c;">{{Hello {0} {1} {2}!}}</span><span style="color:#c0c5ce;">', '</span><span style="color:#a3be8c;">Mona</span><span style="color:#c0c5ce;">', '</span><span style="color:#a3be8c;">the</span><span style="color:#c0c5ce;">', '</span><span style="color:#a3be8c;">Octocat</span><span style="color:#c0c5ce;">')
+</span></code></pre>
+<p>Returns '{Hello Mona the Octocat!}'.</p>
+<h3 title="Functions / join"><a href="#join" aria-hidden="true" class="anchor" id="join"></a>join</h3>
+<p><code>join( array, optionalSeparator )</code></p>
+<p>The value for <code>array</code> can be an array or a string. All values in <code>array</code> are concatenated into a string. If you provide <code>optionalSeparator</code>, it is inserted between the concatenated values. Otherwise, the default separator <code>,</code> is used. Casts values to a string.</p>
+<h4><a href="#example-of-join" aria-hidden="true" class="anchor" id="example-of-join"></a>Example of <code>join</code></h4>
+<p><code>join(github.event.issue.labels.*.name, ', ')</code> may return 'bug, help wanted'</p>
+<h3 title="Functions / toJSON"><a href="#tojson" aria-hidden="true" class="anchor" id="tojson"></a>toJSON</h3>
+<p><code>toJSON(value)</code></p>
+<p>Returns a pretty-print JSON representation of <code>value</code>. You can use this function to debug the information provided in contexts.</p>
+<h4><a href="#example-of-tojson" aria-hidden="true" class="anchor" id="example-of-tojson"></a>Example of <code>toJSON</code></h4>
+<p><code>toJSON(job)</code> might return <code>{ "status": "success" }</code></p>
+<h3 title="Functions / fromJSON"><a href="#fromjson" aria-hidden="true" class="anchor" id="fromjson"></a>fromJSON</h3>
+<p><code>fromJSON(value)</code></p>
+<p>Returns a JSON object or JSON data type for <code>value</code>. You can use this function to provide a JSON object as an evaluated expression or to convert any data type that can be represented in JSON or JavaScript, such as strings, booleans, null values, arrays, and objects.</p>
+<h4><a href="#example-returning-a-json-object" aria-hidden="true" class="anchor" id="example-returning-a-json-object"></a>Example returning a JSON object</h4>
+<p>This workflow sets a JSON matrix in one job, and passes it to the next job using an output and <code>fromJSON</code>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">build
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">push
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">job1</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">outputs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">matrix</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ steps.set-matrix.outputs.matrix }}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">set-matrix
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "matrix={\"include\":[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"}]}" &gt;&gt; $GITHUB_OUTPUT
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">job2</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">needs</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">job1
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">strategy</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">matrix</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ fromJSON(needs.job1.outputs.matrix) }}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "Matrix - Project ${{ matrix.project }}, Config ${{ matrix.config }}"
+</span></code></pre>
+<h4><a href="#example-returning-a-json-data-type" aria-hidden="true" class="anchor" id="example-returning-a-json-data-type"></a>Example returning a JSON data type</h4>
+<p>This workflow uses <code>fromJSON</code> to convert environment variables from a string to a Boolean or integer.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">print
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">push
+</span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">continue</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">time</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">3
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">job1</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">continue-on-error</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ fromJSON(env.continue) }}
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">timeout-minutes</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ fromJSON(env.time) }}
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo ...
+</span></code></pre>
+<p>The workflow uses the <code>fromJSON()</code> function to convert the environment variable <code>continue</code> from a string to a boolean, allowing it to determine whether to continue-on-error or not. Similarly, it converts the <code>time</code> environment variable from a string to an integer, setting the timeout for the job in minutes.</p>
+<h3 title="Functions / hashFiles"><a href="#hashfiles" aria-hidden="true" class="anchor" id="hashfiles"></a>hashFiles</h3>
+<p><code>hashFiles(path)</code></p>
+<p>Returns a single hash for the set of files that matches the <code>path</code> pattern. You can provide a single <code>path</code> pattern or multiple <code>path</code> patterns separated by commas. The <code>path</code> is relative to the <code>GITHUB_WORKSPACE</code> directory and can only include files inside of the <code>GITHUB_WORKSPACE</code>. This function calculates an individual SHA-256 hash for each matched file, and then uses those hashes to calculate a final SHA-256 hash for the set of files. If the <code>path</code> pattern does not match any files, this returns an empty string. For more information about SHA-256, see <a href="https://en.wikipedia.org/wiki/SHA-2" class="external">SHA-2</a>.</p>
+<p>You can use pattern matching characters to match file names. Pattern matching for <code>hashFiles</code> follows glob pattern matching and is case-insensitive on Windows. For more information about supported pattern matching characters, see the <a href="https://www.npmjs.com/package/@actions/glob#patterns" class="external">Patterns</a> section in the <code>@actions/glob</code> documentation.</p>
+<h4><a href="#examples-with-a-single-pattern" aria-hidden="true" class="anchor" id="examples-with-a-single-pattern"></a>Examples with a single pattern</h4>
+<p>Matches any <code>package-lock.json</code> file in the repository.</p>
+<p><code>hashFiles('**/package-lock.json')</code></p>
+<p>Matches all <code>.js</code> files in the <code>src</code> directory at root level, but ignores any subdirectories of <code>src</code>.</p>
+<p><code>hashFiles('/src/*.js')</code></p>
+<p>Matches all <code>.rb</code> files in the <code>lib</code> directory at root level, including any subdirectories of <code>lib</code>.</p>
+<p><code>hashFiles('/lib/**/*.rb')</code></p>
+<h4><a href="#examples-with-multiple-patterns" aria-hidden="true" class="anchor" id="examples-with-multiple-patterns"></a>Examples with multiple patterns</h4>
+<p>Creates a hash for any <code>package-lock.json</code> and <code>Gemfile.lock</code> files in the repository.</p>
+<p><code>hashFiles('**/package-lock.json', '**/Gemfile.lock')</code></p>
+<p>Creates a hash for all <code>.rb</code> files in the <code>lib</code> directory at root level, including any subdirectories of <code>lib</code>, but excluding <code>.rb</code> files in the <code>foo</code> subdirectory.</p>
+<p><code>hashFiles('/lib/**/*.rb', '!/lib/foo/*.rb')</code></p>
+<h3 title="Functions / case"><a href="#case" aria-hidden="true" class="anchor" id="case"></a>case</h3>
+<p><code>case( pred1, val1, pred2, val2, ..., default )</code></p>
+<p>Evaluates predicates in order and returns the value corresponding to the first predicate that evaluates to <code>true</code>. If no predicate matches, it returns the last argument as the default value.</p>
+<h4><a href="#example-with-a-single-predicate" aria-hidden="true" class="anchor" id="example-with-a-single-predicate"></a>Example with a single predicate</h4>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">MY_ENV_VAR</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ case(github.ref == 'refs/heads/main', 'production', 'development') }}
+</span></code></pre>
+<p>Sets <code>MY_ENV_VAR</code> to <code>production</code> when the ref is <code>refs/heads/main</code>, otherwise sets it to <code>development</code>.</p>
+<h4><a href="#example-with-multiple-predicates" aria-hidden="true" class="anchor" id="example-with-multiple-predicates"></a>Example with multiple predicates</h4>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">MY_ENV_VAR</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|-
+</span><span style="color:#a3be8c;">    ${{ case(
+</span><span style="color:#a3be8c;">      github.ref == 'refs/heads/main', 'production',
+</span><span style="color:#a3be8c;">      github.ref == 'refs/heads/staging', 'staging',
+</span><span style="color:#a3be8c;">      startsWith(github.ref, 'refs/heads/feature/'), 'development',
+</span><span style="color:#a3be8c;">      'unknown'
+</span><span style="color:#a3be8c;">    ) }}
+</span></code></pre>
+<p>Sets <code>MY_ENV_VAR</code> based on the branch: <code>production</code> for <code>main</code>, <code>staging</code> for <code>staging</code>, <code>development</code> for branches starting with <code>feature/</code>, or <code>unknown</code> for all other branches.</p>
+<h2 title="Status check functions"><a href="#status-check-functions" aria-hidden="true" class="anchor" id="status-check-functions"></a>Status check functions</h2>
+<p>You can use the following status check functions as expressions in <code>if</code> conditionals. A default status check of <code>success()</code> is applied unless you include one of these functions. For more information about <code>if</code> conditionals, see <a href="workflow-syntax.html#jobsjob_idif">Workflow syntax for GitHub Actions</a> and <a href="metadata-syntax.html#runsstepsif">Metadata syntax reference</a>.</p>
+<p>Outside <code>if</code> conditionals, you can use <code>job.status</code> to access the job status. For more information, see <a href="contexts.html#job-context">Contexts reference</a>.</p>
+<h3 title="Status check functions / success"><a href="#success" aria-hidden="true" class="anchor" id="success"></a>success</h3>
+<p>Returns <code>true</code> when all previous steps have succeeded.</p>
+<h4><a href="#example-of-success" aria-hidden="true" class="anchor" id="example-of-success"></a>Example of <code>success</code></h4>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#d08770;">...
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">The job has succeeded
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ success() }}
+</span></code></pre>
+<h3 title="Status check functions / always"><a href="#always" aria-hidden="true" class="anchor" id="always"></a>always</h3>
+<p>Causes the step to always execute, and returns <code>true</code>, even when canceled. The <code>always</code> expression is best used at the step level or on tasks that you expect to run even when a job is canceled. For example, you can use <code>always</code> to send logs even when a job is canceled.</p>
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>Avoid using <code>always</code> for any task that could suffer from a critical failure, for example: getting sources, otherwise the workflow may hang until it times out. If you want to run a job or step regardless of its success or failure, use the recommended alternative: <code>if: ${{ !cancelled() }}</code></p>
+</div>
+<h4><a href="#example-of-always" aria-hidden="true" class="anchor" id="example-of-always"></a>Example of <code>always</code></h4>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ always() }}
+</span></code></pre>
+<h3 title="Status check functions / cancelled"><a href="#cancelled" aria-hidden="true" class="anchor" id="cancelled"></a>cancelled</h3>
+<p>Returns <code>true</code> if the workflow was canceled.</p>
+<h4><a href="#example-of-cancelled" aria-hidden="true" class="anchor" id="example-of-cancelled"></a>Example of <code>cancelled</code></h4>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ cancelled() }}
+</span></code></pre>
+<h3 title="Status check functions / failure"><a href="#failure" aria-hidden="true" class="anchor" id="failure"></a>failure</h3>
+<p>Returns <code>true</code> when any previous step of a job fails. If you have a chain of dependent jobs, <code>failure()</code> returns <code>true</code> if any ancestor job fails.</p>
+<h4><a href="#example-of-failure" aria-hidden="true" class="anchor" id="example-of-failure"></a>Example of <code>failure</code></h4>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#d08770;">...
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">The job has failed
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ failure() }}
+</span></code></pre>
+<h4><a href="#failure-with-conditions" aria-hidden="true" class="anchor" id="failure-with-conditions"></a>failure with conditions</h4>
+<p>You can include extra conditions for a step to run after a failure, but you must still include <code>failure()</code> to override the default status check of <code>success()</code> that is automatically applied to <code>if</code> conditions that don't contain a status check function.</p>
+<h5><a href="#example-of-failure-with-conditions" aria-hidden="true" class="anchor" id="example-of-failure-with-conditions"></a>Example of <code>failure</code> with conditions</h5>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#d08770;">...
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Failing step
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">demo
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">exit 1
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">The demo step has failed
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ failure() &amp;&amp; steps.demo.conclusion == 'failure' }}
+</span></code></pre>
+<h2 title="Object filters"><a href="#object-filters" aria-hidden="true" class="anchor" id="object-filters"></a>Object filters</h2>
+<p>You can use the <code>*</code> syntax to apply a filter and select matching items in a collection.</p>
+<p>For example, consider an array of objects named <code>fruits</code>.</p>
+<pre lang="json" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">[
+</span><span style="color:#c0c5ce;">  { "</span><span style="color:#a3be8c;">name</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">apple</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">quantity</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">1 </span><span style="color:#c0c5ce;">},
+</span><span style="color:#c0c5ce;">  { "</span><span style="color:#a3be8c;">name</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">orange</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">quantity</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">2 </span><span style="color:#c0c5ce;">},
+</span><span style="color:#c0c5ce;">  { "</span><span style="color:#a3be8c;">name</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">pear</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">quantity</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">1 </span><span style="color:#c0c5ce;">}
+</span><span style="color:#c0c5ce;">]
+</span></code></pre>
+<p>The filter <code>fruits.*.name</code> returns the array <code>[ "apple", "orange", "pear" ]</code>.</p>
+<p>You may also use the <code>*</code> syntax on an object. For example, suppose you have an object named <code>vegetables</code>.</p>
+<pre lang="json" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">{
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">scallions</span><span style="color:#c0c5ce;">":
+</span><span style="color:#c0c5ce;">  {
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">colors</span><span style="color:#c0c5ce;">": ["</span><span style="color:#a3be8c;">green</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">white</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">red</span><span style="color:#c0c5ce;">"],
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">ediblePortions</span><span style="color:#c0c5ce;">": ["</span><span style="color:#a3be8c;">roots</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">stalks</span><span style="color:#c0c5ce;">"],
+</span><span style="color:#c0c5ce;">  },
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">beets</span><span style="color:#c0c5ce;">":
+</span><span style="color:#c0c5ce;">  {
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">colors</span><span style="color:#c0c5ce;">": ["</span><span style="color:#a3be8c;">purple</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">red</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">gold</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">white</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">pink</span><span style="color:#c0c5ce;">"],
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">ediblePortions</span><span style="color:#c0c5ce;">": ["</span><span style="color:#a3be8c;">roots</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">stems</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">leaves</span><span style="color:#c0c5ce;">"],
+</span><span style="color:#c0c5ce;">  },
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">artichokes</span><span style="color:#c0c5ce;">":
+</span><span style="color:#c0c5ce;">  {
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">colors</span><span style="color:#c0c5ce;">": ["</span><span style="color:#a3be8c;">green</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">purple</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">red</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">black</span><span style="color:#c0c5ce;">"],
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">ediblePortions</span><span style="color:#c0c5ce;">": ["</span><span style="color:#a3be8c;">hearts</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">stems</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">leaves</span><span style="color:#c0c5ce;">"],
+</span><span style="color:#c0c5ce;">  },
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+<p>The filter <code>vegetables.*.ediblePortions</code> could evaluate to:</p>
+<pre lang="json" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">[
+</span><span style="color:#c0c5ce;">  ["</span><span style="color:#a3be8c;">roots</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">stalks</span><span style="color:#c0c5ce;">"],
+</span><span style="color:#c0c5ce;">  ["</span><span style="color:#a3be8c;">hearts</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">stems</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">leaves</span><span style="color:#c0c5ce;">"],
+</span><span style="color:#c0c5ce;">  ["</span><span style="color:#a3be8c;">roots</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">stems</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">leaves</span><span style="color:#c0c5ce;">"],
+</span><span style="color:#c0c5ce;">]
+</span></code></pre>
+<p>Since objects don't preserve order, the order of the output cannot be guaranteed.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

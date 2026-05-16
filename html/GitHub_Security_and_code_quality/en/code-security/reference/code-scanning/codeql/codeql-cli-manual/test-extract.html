@@ -1,0 +1,99 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>test extract</title><link rel="stylesheet" href="../../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../../index.html">Security and code quality</a> / <a href="../../../index.html">Reference</a> / <a href="../../index.html">Code scanning</a> / <a href="../index.html">CodeQL</a> / <a href="index.html">CodeQL CLI manual</a> / </nav><h1><a href="#test-extract" aria-hidden="true" class="anchor" id="test-extract"></a>test extract</h1>
+<p><span data-escaped-char="">[</span>Plumbing] Build a dataset for a test directory.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This content describes the most recent release of the CodeQL CLI. For more information about this release, see <a href="https://github.com/github/codeql-cli-binaries/releases" class="external">https://github.com/github/codeql-cli-binaries/releases</a>.</p>
+<p>To see details of the options available for this command in an earlier release, run the command with the <span style="white-space: nowrap;"><code>--help</code></span> option in your terminal.</p>
+</div>
+<h2 title="Synopsis"><a href="#synopsis" aria-hidden="true" class="anchor" id="synopsis"></a>Synopsis</h2>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql test extract [--print-database] [--source-root=&lt;dir&gt;] &lt;options&gt;... -- &lt;testDirectory&gt;
+</span></code></pre>
+<h2 title="Description"><a href="#description" aria-hidden="true" class="anchor" id="description"></a>Description</h2>
+<p><span data-escaped-char="">[</span>Plumbing] Build a dataset for a test directory.</p>
+<p>Build a database for a specified test directory, without actually<br>
+running any test queries. Outputs the path to the raw QL dataset to<br>
+execute test queries against.</p>
+<h2 title="Options"><a href="#options" aria-hidden="true" class="anchor" id="options"></a>Options</h2>
+<h3 title="Primary Options"><a href="#primary-options" aria-hidden="true" class="anchor" id="primary-options"></a>Primary Options</h3>
+<h4><a href="#testdirectory" aria-hidden="true" class="anchor" id="testdirectory"></a><code>&lt;testDirectory&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Mandatory] The path to the test directory.</p>
+<h4><a href="#--databasedir" aria-hidden="true" class="anchor" id="--databasedir"></a><code>--database=&lt;dir&gt;</code></h4>
+<p>Override the location of the database being created. By default it will<br>
+be a subdirectory whose name is derived from the name of the test<br>
+directory itself with '.testproj' appended.</p>
+<h4><a href="#-d---print-database" aria-hidden="true" class="anchor" id="-d---print-database"></a><code>-D, --print-database</code></h4>
+<p>Print the path to the database being created, rather than the dataset<br>
+inside it.</p>
+<h4><a href="#-s---source-rootdir" aria-hidden="true" class="anchor" id="-s---source-rootdir"></a><code>-s, --source-root=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] The root source code directory, if different from the test<br>
+directory.</p>
+<h4><a href="#--search-pathdirdir" aria-hidden="true" class="anchor" id="--search-pathdirdir"></a><code>--search-path=&lt;dir&gt;[:&lt;dir&gt;...]</code></h4>
+<p>A list of directories under which extractor packs may be found. The<br>
+directories can either be the extractor packs themselves or directories<br>
+that contain extractors as immediate subdirectories.</p>
+<p>If the path contains multiple directory trees, their order defines<br>
+precedence between them: if the target language is matched in more than<br>
+one of the directory trees, the one given first wins.</p>
+<p>The extractors bundled with the CodeQL toolchain itself will always be<br>
+found, but if you need to use separately distributed extractors you need<br>
+to give this option (or, better yet, set up <code>--search-path</code> in a<br>
+per-user configuration file).</p>
+<p>(Note: On Windows the path separator is <code>;</code>).</p>
+<h4><a href="#--cleanup" aria-hidden="true" class="anchor" id="--cleanup"></a><code>--cleanup</code></h4>
+<p>Remove the test database instead of creating it.</p>
+<h4><a href="#--no-show-extractor-output" aria-hidden="true" class="anchor" id="--no-show-extractor-output"></a><code>--[no-]show-extractor-output</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Show the output from extractor scripts that create test<br>
+databases. This can be useful while developing or editing test cases.<br>
+Beware that it can cause duplicated or malformed output if you use this<br>
+with multiple threads!</p>
+<h4><a href="#--no-check-undefined-labels" aria-hidden="true" class="anchor" id="--no-check-undefined-labels"></a><code>--[no-]check-undefined-labels</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Report errors for undefined labels.</p>
+<h4><a href="#--no-check-unused-labels" aria-hidden="true" class="anchor" id="--no-check-unused-labels"></a><code>--[no-]check-unused-labels</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Report errors for unused labels.</p>
+<h4><a href="#--no-check-repeated-labels" aria-hidden="true" class="anchor" id="--no-check-repeated-labels"></a><code>--[no-]check-repeated-labels</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Report errors for repeated labels.</p>
+<h4><a href="#--no-check-redefined-labels" aria-hidden="true" class="anchor" id="--no-check-redefined-labels"></a><code>--[no-]check-redefined-labels</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Report errors for redefined labels.</p>
+<h4><a href="#--no-check-use-before-definition" aria-hidden="true" class="anchor" id="--no-check-use-before-definition"></a><code>--[no-]check-use-before-definition</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Report errors for labels used before they're defined.</p>
+<h4><a href="#--no-fail-on-trap-errors" aria-hidden="true" class="anchor" id="--no-fail-on-trap-errors"></a><code>--[no-]fail-on-trap-errors</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Exit non-zero if an error occurs during trap import.</p>
+<h4><a href="#--no-include-location-in-star" aria-hidden="true" class="anchor" id="--no-include-location-in-star"></a><code>--[no-]include-location-in-star</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Construct entity IDs that encode the location in the TRAP<br>
+file they came from. Can be useful for debugging of TRAP generators, but<br>
+takes up a lot of space in the dataset.</p>
+<h4><a href="#--no-linkage-aware-import" aria-hidden="true" class="anchor" id="--no-linkage-aware-import"></a><code>--[no-]linkage-aware-import</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Controls whether <a href="dataset-import.html">codeql dataset import</a> is linkage-aware <em>(default)</em> or not. On projects where this part of database creation<br>
+consumes too much memory, disabling this option may help them progress<br>
+at the expense of database completeness.</p>
+<p>Available since <code>v2.15.3</code>.</p>
+<h4><a href="#--formatfmt" aria-hidden="true" class="anchor" id="--formatfmt"></a><code>--format=&lt;fmt&gt;</code></h4>
+<p>Select output format, either <code>text</code> <em>(default)</em> or <code>json</code>.</p>
+<h3 title="Options / Common options"><a href="#common-options" aria-hidden="true" class="anchor" id="common-options"></a>Common options</h3>
+<h4><a href="#-h---help" aria-hidden="true" class="anchor" id="-h---help"></a><code>-h, --help</code></h4>
+<p>Show this help text.</p>
+<h4><a href="#-jopt" aria-hidden="true" class="anchor" id="-jopt"></a><code>-J=&lt;opt&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Give option to the JVM running the command.</p>
+<p>(Beware that options containing spaces will not be handled correctly.)</p>
+<h4><a href="#-v---verbose" aria-hidden="true" class="anchor" id="-v---verbose"></a><code>-v, --verbose</code></h4>
+<p>Incrementally increase the number of progress messages printed.</p>
+<h4><a href="#-q---quiet" aria-hidden="true" class="anchor" id="-q---quiet"></a><code>-q, --quiet</code></h4>
+<p>Incrementally decrease the number of progress messages printed.</p>
+<h4><a href="#--verbositylevel" aria-hidden="true" class="anchor" id="--verbositylevel"></a><code>--verbosity=&lt;level&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Explicitly set the verbosity level to one of errors,<br>
+warnings, progress, progress+, progress++, progress+++. Overrides <code>-v</code><br>
+and <code>-q</code>.</p>
+<h4><a href="#--logdirdir" aria-hidden="true" class="anchor" id="--logdirdir"></a><code>--logdir=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Write detailed logs to one or more files in the given<br>
+directory, with generated names that include timestamps and the name of<br>
+the running subcommand.</p>
+<p>(To write a log file with a name you have full control over, instead<br>
+give <code>--log-to-stderr</code> and redirect stderr as desired.)</p>
+<h4><a href="#--common-cachesdir" aria-hidden="true" class="anchor" id="--common-cachesdir"></a><code>--common-caches=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Controls the location of cached data on disk that will<br>
+persist between several runs of the CLI, such as downloaded QL packs and<br>
+compiled query plans. If not set explicitly, this defaults to a<br>
+directory named <code>.codeql</code> in the user's home directory; it will be<br>
+created if it doesn't already exist.</p>
+<p>Available since <code>v2.15.2</code>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

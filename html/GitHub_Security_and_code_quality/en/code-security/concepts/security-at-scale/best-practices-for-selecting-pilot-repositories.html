@@ -1,0 +1,79 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Best practices for selecting pilot repositories</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Security at scale</a> / </nav><h1><a href="#best-practices-for-selecting-pilot-repositories" aria-hidden="true" class="anchor" id="best-practices-for-selecting-pilot-repositories"></a>Best practices for selecting pilot repositories</h1>
+<p>The right pilot repositories demonstrate value quickly and prepare your organization for broader enablement of GitHub Secret Protection.</p>
+<p>Before enabling GitHub Secret Protection organization-wide, run a pilot to validate the solution with a small set of repositories. A pilot helps you refine your rollout strategy, identify workflow adjustments, and demonstrate security value to stakeholders. This article will help you choose the best repositories for your pilot.</p>
+<p>A successful pilot requires strategic repository selection. The repositories you choose determine how quickly you can demonstrate value, gather actionable feedback, and prepare for organization-wide adoption.</p>
+<h2 title="Selection criteria"><a href="#selection-criteria" aria-hidden="true" class="anchor" id="selection-criteria"></a>Selection criteria</h2>
+<p>A successful pilot requires strategic repository selection. The repositories you choose determine how quickly you can demonstrate value, gather actionable feedback, and prepare for organization-wide adoption.</p>
+<p>When choosing repositories, consider the following criteria.</p>
+<h3 title="Selection criteria / Active development and team engagement"><a href="#active-development-and-team-engagement" aria-hidden="true" class="anchor" id="active-development-and-team-engagement"></a>Active development and team engagement</h3>
+<p>Your pilot needs repositories that generate timely feedback on how Secret Protection fits into daily development work.</p>
+<ul>
+<li>Select repositories with <strong>regular commits and pull requests</strong>. Active repositories generate feedback quickly and show how Secret Protection fits into real development workflows.</li>
+<li>Choose <strong>teams</strong> that will engage with the pilot. Responsive maintainers will identify workflow adjustments faster and help refine your rollout strategy.</li>
+<li><strong>Use repository properties</strong> to systematically identify repositories by team, criticality, or other custom attributes. See <a href="https://docs.github.com/en/organizations/managing-organization-settings/managing-custom-properties-for-repositories-in-your-organization" class="external">Managing custom properties for repositories in your organization</a>.</li>
+</ul>
+<h3 title="Selection criteria / Known secret exposure"><a href="#known-secret-exposure" aria-hidden="true" class="anchor" id="known-secret-exposure"></a>Known secret exposure</h3>
+<p>Choose repositories flagged in your secret risk assessment. These repositories are ideal pilot candidates because they demonstrate immediate value by showing secrets that need remediation.</p>
+<p>Prioritize repositories with production credentials, infrastructure configurations, or integrations with critical services. These high-value targets demonstrate the security value of Secret Protection.</p>
+<h3 title="Selection criteria / Technical diversity"><a href="#technical-diversity" aria-hidden="true" class="anchor" id="technical-diversity"></a>Technical diversity</h3>
+<p>Your pilot should validate that Secret Protection works with your programming languages and tools.</p>
+<ul>
+<li>Include repositories using different programming languages and frameworks. This validates Secret Protection coverage across your codebase.</li>
+<li>Select repositories with CI/CD pipelines to identify potential deployment impacts early. Understanding these interactions prevents surprises during broader rollout.</li>
+</ul>
+<h3 title="Selection criteria / Organizational representation"><a href="#organizational-representation" aria-hidden="true" class="anchor" id="organizational-representation"></a>Organizational representation</h3>
+<p>A successful pilot requires buy-in from different parts of your organization.</p>
+<ul>
+<li>Choose repositories from different teams or business units. Diverse feedback reveals patterns that wouldn't emerge from a single team's experience.</li>
+<li>Include at least one repository that leadership cares about. Executive visibility maintains pilot momentum and facilitates future budget discussions.</li>
+</ul>
+<h3 title="Selection criteria / Repositories to avoid initially"><a href="#repositories-to-avoid-initially" aria-hidden="true" class="anchor" id="repositories-to-avoid-initially"></a>Repositories to avoid initially</h3>
+<p>Not all repositories make good pilot candidates.</p>
+<ul>
+<li><strong>Low-activity or archived repositories</strong>: You won't get timely workflow feedback.</li>
+<li><strong>Experimental or personal repositories</strong>: These repositories don't reflect production patterns.</li>
+<li><strong>Repositories with complex custom tooling</strong>: Unusual workflows may complicate feedback.</li>
+<li><strong>Mission-critical repositories with zero change tolerance</strong>: It's best to add these repositories <em>after</em> validating the solution.</li>
+</ul>
+<h2 title="Pilot size by organization"><a href="#pilot-size-by-organization" aria-hidden="true" class="anchor" id="pilot-size-by-organization"></a>Pilot size by organization</h2>
+<p>Once you've identified repositories that meet these criteria, determine the size of your pilot. The right pilot size balances gathering sufficient feedback with avoiding team overwhelm.</p>
+<table>
+<thead>
+<tr>
+<th>Organization size</th>
+<th>Number of repositories</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Small</strong> (under 100 developers)</td>
+<td>3-5 repositories</td>
+<td>Start with your most critical projects.</td>
+</tr>
+<tr>
+<td><strong>Medium</strong> (100-500 developers)</td>
+<td>5-10 repositories</td>
+<td>Select repositories across different teams, including a mix of high-activity and moderate-activity repositories.</td>
+</tr>
+<tr>
+<td><strong>Large</strong> (500+ developers)</td>
+<td>10-20 repositories</td>
+<td>Ensure broad representation across the organization. Consider a phased approach with waves of repository additions.</td>
+</tr>
+</tbody>
+</table>
+<h2 title="Before enabling your pilot"><a href="#before-enabling-your-pilot" aria-hidden="true" class="anchor" id="before-enabling-your-pilot"></a>Before enabling your pilot</h2>
+<p>Take these steps to set your pilot up for success.</p>
+<ul>
+<li>Confirm repository owners agree to participate. Unwilling teams generate negative feedback that doesn't reflect actual product issues.</li>
+<li>Identify champions within each pilot team. Champions answer questions and keep feedback flowing.</li>
+<li>Document baseline metrics like commit frequency and contributor count. These baselines help you measure pilot impact.</li>
+</ul>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li><a href="https://support.github.com/product-guides/github-advanced-security-secret-protection/get-started/identify-repositories-for-secret-protection" class="external">Identify repositories for secret protection</a> in the GitHub Advanced Security product guides</li>
+</ul>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>Now that you've selected your pilot repositories, review pricing and configure GitHub Secret Protection. See <a href="../../how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/protect-your-secrets.html">Pricing and enabling GitHub Secret Protection</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

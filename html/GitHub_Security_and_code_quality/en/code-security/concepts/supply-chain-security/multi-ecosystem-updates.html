@@ -1,0 +1,128 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Multi-ecosystem updates</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Supply chain security</a> / </nav><h1><a href="#multi-ecosystem-updates" aria-hidden="true" class="anchor" id="multi-ecosystem-updates"></a>Multi-ecosystem updates</h1>
+<p>Multi-ecosystem updates combine dependency updates across multiple package ecosystems into a single pull request, reducing review overhead and simplifying your update workflow.</p>
+<h2 title="What are multi-ecosystem updates?"><a href="#what-are-multi-ecosystem-updates" aria-hidden="true" class="anchor" id="what-are-multi-ecosystem-updates"></a>What are multi-ecosystem updates?</h2>
+<p>Multi-ecosystem updates allow Dependabot to group dependency updates across different package ecosystems such as npm, Docker, Python, and Terraform into a single pull request per group.</p>
+<p>Instead of receiving separate pull requests for each ecosystem, you receive one consolidated pull request containing all updates for the ecosystems in that group.</p>
+<h2 title="How multi-ecosystem updates work"><a href="#how-multi-ecosystem-updates-work" aria-hidden="true" class="anchor" id="how-multi-ecosystem-updates-work"></a>How multi-ecosystem updates work</h2>
+<p>When you configure a multi-ecosystem group:</p>
+<ol>
+<li>You define the group with a schedule in the <code>multi-ecosystem-groups</code> section of your <code>dependabot.yml</code> file.</li>
+<li>You assign individual package ecosystems to the group using the <code>multi-ecosystem-group</code> key.</li>
+<li>You specify which dependencies to include using the <code>patterns</code> key for each ecosystem.</li>
+<li>Dependabot checks for updates according to the group's schedule.</li>
+<li>A single pull request is created containing updates from all ecosystems in the group.</li>
+<li>The PR uses the group identifier in both the branch name and title.</li>
+</ol>
+<h2 title="When to use multi-ecosystem updates"><a href="#when-to-use-multi-ecosystem-updates" aria-hidden="true" class="anchor" id="when-to-use-multi-ecosystem-updates"></a>When to use multi-ecosystem updates</h2>
+<p>Multi-ecosystem updates are particularly useful for:</p>
+<ul>
+<li><strong>Infrastructure projects</strong> that use multiple technologies (Docker, Terraform, Python scripts)</li>
+<li><strong>Full-stack applications</strong> with frontend and backend dependencies that should be updated together</li>
+<li><strong>Cross-platform libraries</strong> that need synchronized protocol versions across languages</li>
+<li><strong>Monorepos</strong> with services in different languages that share versioning</li>
+</ul>
+<h2 title="Multi-ecosystem versus single-ecosystem groups"><a href="#multi-ecosystem-versus-single-ecosystem-groups" aria-hidden="true" class="anchor" id="multi-ecosystem-versus-single-ecosystem-groups"></a>Multi-ecosystem versus single-ecosystem groups</h2>
+<p>Dependabot supports two types of grouping:</p>
+<p><strong>Multi-ecosystem groups:</strong></p>
+<ul>
+<li>Span multiple <code>package-ecosystem</code> entries in your <code>dependabot.yml</code> file</li>
+<li>Require the <code>patterns</code> key to specify which dependencies to include</li>
+<li>Have their own schedule defined in the <code>multi-ecosystem-groups</code> section</li>
+<li>Use the <code>multi-ecosystem-group</code> key to assign ecosystems to a group</li>
+</ul>
+<p><strong>Single-ecosystem groups:</strong></p>
+<ul>
+<li>Work within one package ecosystem</li>
+<li>Use the <code>groups</code> key within an <code>updates</code> entry</li>
+<li>Inherit the schedule from the parent <code>updates</code> entry</li>
+<li>Better for organizing dependencies within a single package manager</li>
+</ul>
+<p>Use multi-ecosystem groups when you want to combine updates across different package managers. Use single-ecosystem groups when you want to organize dependencies within a single package manager (for example, grouping all AWS-related npm packages together).</p>
+<h3 title="Multi-ecosystem versus single-ecosystem groups / Configuration merging behavior"><a href="#configuration-merging-behavior" aria-hidden="true" class="anchor" id="configuration-merging-behavior"></a>Configuration merging behavior</h3>
+<p>Some configuration options can be set at both the group level and ecosystem level. Dependabot combines these values differently depending on the option:</p>
+<p><strong>Additive options</strong> (values are merged):</p>
+<ul>
+<li><code>assignees</code> - All assignees from both levels are assigned to the pull request</li>
+<li><code>labels</code> - All labels from both levels are applied to the pull request</li>
+</ul>
+<p>For example, if you assign <code>@platform-team</code> at the group level and <code>@docker-admin</code> at the Docker ecosystem level, the resulting pull request will be assigned to both <code>@platform-team</code> and <code>@docker-admin</code>.</p>
+<p><strong>Group-only options</strong> (can only be set at group level):</p>
+<ul>
+<li><code>milestone</code></li>
+<li><code>commit-message</code></li>
+<li><code>target-branch</code></li>
+<li><code>pull-request-branch-name</code></li>
+</ul>
+<p>Attempting to set these options at the ecosystem level will cause a configuration error.</p>
+<p>For a complete reference of all available configuration options and their behavior, see <a href="../../reference/supply-chain-security/dependabot-options-reference.html#multi-ecosystem-groups">Dependabot options reference</a>.</p>
+<h2 title="Use cases"><a href="#use-cases" aria-hidden="true" class="anchor" id="use-cases"></a>Use cases</h2>
+<h3 title="Use cases / Infrastructure projects"><a href="#infrastructure-projects" aria-hidden="true" class="anchor" id="infrastructure-projects"></a>Infrastructure projects</h3>
+<p>Infrastructure code often uses multiple technologies—Docker containers, Terraform for cloud resources, and Python scripts for automation. Grouping these updates together simplifies review and deployment coordination.</p>
+<p><strong>Why group these together:</strong> Infrastructure changes often need to be deployed together. Having separate PRs for each technology creates coordination overhead and makes it harder to track what needs to be deployed as a unit.</p>
+<p><strong>Example scenario:</strong> You have Docker images for your services, Terraform modules for AWS resources, and Python scripts for automation tasks. A single weekly "infrastructure" pull request contains updates for all three, making it easier to review and deploy infrastructure changes together.</p>
+<h3 title="Use cases / Full-stack applications"><a href="#full-stack-applications" aria-hidden="true" class="anchor" id="full-stack-applications"></a>Full-stack applications</h3>
+<p>Web applications with frontend and backend components benefit from updating dependencies together to ensure compatibility and streamline testing.</p>
+<p><strong>Why group these together:</strong> Frontend and backend often depend on each other. Updating them together ensures you can test the full application stack in one go, rather than merging frontend changes and then discovering backend incompatibilities later.</p>
+<p><strong>Example scenario:</strong> Your React frontend and Rails backend are updated daily in a single "app-dependencies" pull request, allowing you to test the complete application together before merging.</p>
+<h3 title="Use cases / Cross-platform libraries"><a href="#cross-platform-libraries" aria-hidden="true" class="anchor" id="cross-platform-libraries"></a>Cross-platform libraries</h3>
+<p>Libraries or services that use the same protocols across different languages (like gRPC and Protocol Buffers) need to keep library versions synchronized across all implementations.</p>
+<p><strong>Why group these together:</strong> Protocol libraries need to stay compatible across different language implementations. Updating them together prevents version mismatches that could cause communication failures between services.</p>
+<p><strong>Example scenario:</strong> Your Node.js and Ruby services both use gRPC. A single pull request updates both <code>@grpc/grpc-js</code> (npm) and <code>grpc</code> (bundler) together, ensuring protocol compatibility.</p>
+<h3 title="Use cases / Monorepos with multiple services"><a href="#monorepos-with-multiple-services" aria-hidden="true" class="anchor" id="monorepos-with-multiple-services"></a>Monorepos with multiple services</h3>
+<p>Large repositories containing multiple services in different languages benefit from grouping updates by team responsibility or deployment cadence.</p>
+<p><strong>Why group these together:</strong> Different teams own different parts of the monorepo, and updates should be routed to the appropriate reviewers. Or services are deployed together and need coordinated updates.</p>
+<p><strong>Example scenario:</strong> Your monorepo has a Python API service, a Go worker service, and a Node.js frontend. You create separate groups for "backend-services" (Python + Go) and "frontend" (Node.js), each with different schedules and assignees.</p>
+<h2 title="Example: Complex multi-group configuration"><a href="#example-complex-multi-group-configuration" aria-hidden="true" class="anchor" id="example-complex-multi-group-configuration"></a>Example: Complex multi-group configuration</h2>
+<p>This example shows how a complex project might use multiple groups with different update strategies:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">multi-ecosystem-groups</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Infrastructure updates - weekly, tracked in milestone
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">infrastructure</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">assignees</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">@platform-team</span><span style="color:#c0c5ce;">"]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">labels</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">infrastructure</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">dependencies</span><span style="color:#c0c5ce;">"]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">milestone</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">10
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Application code updates - daily, with development team
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">full-stack</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">daily</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">assignees</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">@full-stack-team</span><span style="color:#c0c5ce;">"]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">labels</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">full-stack</span><span style="color:#c0c5ce;">"]
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Docker images - infrastructure group with additional docker expertise
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">docker</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">patterns</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">nginx</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">redis</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">postgres</span><span style="color:#c0c5ce;">"]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">assignees</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">@docker-admin</span><span style="color:#c0c5ce;">"]      </span><span style="color:#65737e;"># Adds to @platform-team
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">labels</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">docker</span><span style="color:#c0c5ce;">"]                 </span><span style="color:#65737e;"># Adds to infrastructure, dependencies
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">multi-ecosystem-group</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">infrastructure</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Terraform - infrastructure group
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">terraform</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">patterns</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">aws</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">terraform-*</span><span style="color:#c0c5ce;">"]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">multi-ecosystem-group</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">infrastructure</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Frontend - full-stack group with frontend focus
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">npm</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/frontend</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">patterns</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">react</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">lodash</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">@types/*</span><span style="color:#c0c5ce;">"]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">labels</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">frontend</span><span style="color:#c0c5ce;">"]               </span><span style="color:#65737e;"># Adds to full-stack
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">multi-ecosystem-group</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">full-stack</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Backend - full-stack group with backend specialist
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">bundler</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/backend</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">patterns</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">rails</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">pg</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">sidekiq</span><span style="color:#c0c5ce;">"]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">assignees</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">@backend-dev</span><span style="color:#c0c5ce;">"]        </span><span style="color:#65737e;"># Adds to @full-stack-team
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">multi-ecosystem-group</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">full-stack</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<ul>
+<li><a href="../../how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-multi-ecosystem-updates.html">Configuring multi-ecosystem updates for Dependabot</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>database finalize</title><link rel="stylesheet" href="../../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../../index.html">Security and code quality</a> / <a href="../../../index.html">Reference</a> / <a href="../../index.html">Code scanning</a> / <a href="../index.html">CodeQL</a> / <a href="index.html">CodeQL CLI manual</a> / </nav><h1><a href="#database-finalize" aria-hidden="true" class="anchor" id="database-finalize"></a>database finalize</h1>
+<p><span data-escaped-char="">[</span>Plumbing] Final steps in database creation.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This content describes the most recent release of the CodeQL CLI. For more information about this release, see <a href="https://github.com/github/codeql-cli-binaries/releases" class="external">https://github.com/github/codeql-cli-binaries/releases</a>.</p>
+<p>To see details of the options available for this command in an earlier release, run the command with the <span style="white-space: nowrap;"><code>--help</code></span> option in your terminal.</p>
+</div>
+<h2 title="Synopsis"><a href="#synopsis" aria-hidden="true" class="anchor" id="synopsis"></a>Synopsis</h2>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql database finalize [--dbscheme=&lt;file&gt;] [--threads=&lt;num&gt;] [--ram=&lt;MB&gt;] &lt;options&gt;... -- &lt;database&gt;
+</span></code></pre>
+<h2 title="Description"><a href="#description" aria-hidden="true" class="anchor" id="description"></a>Description</h2>
+<p><span data-escaped-char="">[</span>Plumbing] Final steps in database creation.</p>
+<p>Finalize a database that was created with <a href="database-init.html">codeql database init</a> and subsequently seeded with analysis data using <a href="database-trace-command.html">codeql database trace-command</a>. This needs to happen before the new database can be queried.</p>
+<h2 title="Options"><a href="#options" aria-hidden="true" class="anchor" id="options"></a>Options</h2>
+<h3 title="Primary Options"><a href="#primary-options" aria-hidden="true" class="anchor" id="primary-options"></a>Primary Options</h3>
+<h4><a href="#database" aria-hidden="true" class="anchor" id="database"></a><code>&lt;database&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Mandatory] Path to the CodeQL database under construction. This must<br>
+have been prepared for extraction with <a href="database-init.html">codeql database init</a>.</p>
+<p>If the <code>--db-cluster</code> option is given, this is not a database itself,<br>
+but a directory that <em>contains</em> databases, and all of those databases<br>
+will be processed together.</p>
+<h4><a href="#--no-db-cluster" aria-hidden="true" class="anchor" id="--no-db-cluster"></a><code>--[no-]db-cluster</code></h4>
+<p>Indicates that the directory given on the command line is not a database<br>
+itself, but a directory that <em>contains</em> one or more databases under<br>
+construction. Those databases will be processed together.</p>
+<h4><a href="#--working-dirdir" aria-hidden="true" class="anchor" id="--working-dirdir"></a><code>--working-dir=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] The directory in which the specified command should be<br>
+executed. If this argument is not provided, the command is executed in<br>
+the value of <code>--source-root</code> passed to <a href="database-create.html">codeql database create</a>, if one exists. If no <code>--source-root</code> argument is provided, the command is executed in the<br>
+current working directory.</p>
+<h4><a href="#--additional-dbsdatabasedatabase" aria-hidden="true" class="anchor" id="--additional-dbsdatabasedatabase"></a><code>--additional-dbs=&lt;database&gt;[:&lt;database&gt;...]</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Path to additional CodeQL databases under construction.<br>
+These will not themselves be finalized, but the data from them will be<br>
+included in the finalized database being created. This is an advanced<br>
+option that may not have the desired effect in all cases. For more<br>
+information, please refer to the documentation of <a href="database-import.html">codeql database import</a>.</p>
+<p>If the <code>--db-cluster</code> option is given, it is expected that these will be<br>
+database clusters rather than individual CodeQL databases.</p>
+<p>(Note: On Windows the path separator is <code>;</code>).</p>
+<h4><a href="#--no-cleanup" aria-hidden="true" class="anchor" id="--no-cleanup"></a><code>--no-cleanup</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Suppress all database cleanup after finalization. Useful<br>
+for debugging purposes.</p>
+<h4><a href="#--no-pre-finalize" aria-hidden="true" class="anchor" id="--no-pre-finalize"></a><code>--no-pre-finalize</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Skip any pre-finalize script specified by the active CodeQL<br>
+extractor.</p>
+<h4><a href="#--no-skip-empty" aria-hidden="true" class="anchor" id="--no-skip-empty"></a><code>--[no-]skip-empty</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Output a warning instead of failing if a database is empty<br>
+because no source code was seen during the build. The empty database<br>
+will be left unfinalized.</p>
+<h3 title="Options for controlling the TRAP import operation"><a href="#options-for-controlling-the-trap-import-operation" aria-hidden="true" class="anchor" id="options-for-controlling-the-trap-import-operation"></a>Options for controlling the TRAP import operation</h3>
+<h4><a href="#-s---dbschemefile" aria-hidden="true" class="anchor" id="-s---dbschemefile"></a><code>-S, --dbscheme=&lt;file&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Override the auto-detected dbscheme definition that the<br>
+TRAP files are assumed to adhere to. Normally, this is taken from the<br>
+database's extractor.</p>
+<h4><a href="#-j---threadsnum" aria-hidden="true" class="anchor" id="-j---threadsnum"></a><code>-j, --threads=&lt;num&gt;</code></h4>
+<p>Use this many threads for the import operation.</p>
+<p>Defaults to 1. You can pass 0 to use one thread per core on the machine,<br>
+or -<em>N</em> to leave <em>N</em> cores unused (except still use at least one<br>
+thread).</p>
+<h4><a href="#-m---rammb" aria-hidden="true" class="anchor" id="-m---rammb"></a><code>-M, --ram=&lt;MB&gt;</code></h4>
+<p>Use this much memory for the import operation.</p>
+<h3 title="Options / Low-level dataset cleanup options"><a href="#low-level-dataset-cleanup-options" aria-hidden="true" class="anchor" id="low-level-dataset-cleanup-options"></a>Low-level dataset cleanup options</h3>
+<h4><a href="#--max-disk-cachemb" aria-hidden="true" class="anchor" id="--max-disk-cachemb"></a><code>--max-disk-cache=&lt;MB&gt;</code></h4>
+<p>Set the maximum amount of space that the disk cache for intermediate<br>
+query results can use.</p>
+<p>If this size is not configured explicitly, the evaluator will try to use<br>
+a "reasonable" amount of cache space, based on the size of the dataset<br>
+and the complexity of the queries. Explicitly setting a higher limit<br>
+than this default usage will enable additional caching which can speed<br>
+up later queries.</p>
+<h4><a href="#--min-disk-freemb" aria-hidden="true" class="anchor" id="--min-disk-freemb"></a><code>--min-disk-free=&lt;MB&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Set target amount of free space on file system.</p>
+<p>If <code>--max-disk-cache</code> is not given, the evaluator will try hard to<br>
+curtail disk cache usage if the free space on the file system drops<br>
+below this value.</p>
+<h4><a href="#--min-disk-free-pctpct" aria-hidden="true" class="anchor" id="--min-disk-free-pctpct"></a><code>--min-disk-free-pct=&lt;pct&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Set target fraction of free space on file system.</p>
+<p>If <code>--max-disk-cache</code> is not given, the evaluator will try hard to<br>
+curtail disk cache usage if the free space on the file system drops<br>
+below this percentage.</p>
+<h4><a href="#--cache-cleanupmode" aria-hidden="true" class="anchor" id="--cache-cleanupmode"></a><code>--cache-cleanup=&lt;mode&gt;</code></h4>
+<p>Select how aggressively to trim the cache. Choices include:</p>
+<p><code>clear</code>: Remove the entire cache, trimming down to the state of a<br>
+freshly extracted dataset</p>
+<p><code>trim</code> <em>(default)</em>: Trim everything except explicitly "cached"<br>
+predicates.</p>
+<p><code>fit</code>: Simply make sure the defined size limits for the disk cache are<br>
+observed, deleting as many intermediates as necessary.</p>
+<p><code>overlay</code>: Trim to just the data that will be useful when evaluating<br>
+against an overlay.</p>
+<h4><a href="#--cleanup-upgrade-backups" aria-hidden="true" class="anchor" id="--cleanup-upgrade-backups"></a><code>--cleanup-upgrade-backups</code></h4>
+<p>Delete any backup directories resulting from database upgrades.</p>
+<h3 title="Options for checking imported TRAP"><a href="#options-for-checking-imported-trap" aria-hidden="true" class="anchor" id="options-for-checking-imported-trap"></a>Options for checking imported TRAP</h3>
+<h4><a href="#--no-check-undefined-labels" aria-hidden="true" class="anchor" id="--no-check-undefined-labels"></a><code>--[no-]check-undefined-labels</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Report errors for undefined labels.</p>
+<h4><a href="#--no-check-unused-labels" aria-hidden="true" class="anchor" id="--no-check-unused-labels"></a><code>--[no-]check-unused-labels</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Report errors for unused labels.</p>
+<h4><a href="#--no-check-repeated-labels" aria-hidden="true" class="anchor" id="--no-check-repeated-labels"></a><code>--[no-]check-repeated-labels</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Report errors for repeated labels.</p>
+<h4><a href="#--no-check-redefined-labels" aria-hidden="true" class="anchor" id="--no-check-redefined-labels"></a><code>--[no-]check-redefined-labels</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Report errors for redefined labels.</p>
+<h4><a href="#--no-check-use-before-definition" aria-hidden="true" class="anchor" id="--no-check-use-before-definition"></a><code>--[no-]check-use-before-definition</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Report errors for labels used before they're defined.</p>
+<h4><a href="#--no-fail-on-trap-errors" aria-hidden="true" class="anchor" id="--no-fail-on-trap-errors"></a><code>--[no-]fail-on-trap-errors</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Exit non-zero if an error occurs during trap import.</p>
+<h4><a href="#--no-include-location-in-star" aria-hidden="true" class="anchor" id="--no-include-location-in-star"></a><code>--[no-]include-location-in-star</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Construct entity IDs that encode the location in the TRAP<br>
+file they came from. Can be useful for debugging of TRAP generators, but<br>
+takes up a lot of space in the dataset.</p>
+<h4><a href="#--no-linkage-aware-import" aria-hidden="true" class="anchor" id="--no-linkage-aware-import"></a><code>--[no-]linkage-aware-import</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Controls whether <a href="dataset-import.html">codeql dataset import</a> is linkage-aware <em>(default)</em> or not. On projects where this part of database creation<br>
+consumes too much memory, disabling this option may help them progress<br>
+at the expense of database completeness.</p>
+<p>Available since <code>v2.15.3</code>.</p>
+<h3 title="Options / Common options"><a href="#common-options" aria-hidden="true" class="anchor" id="common-options"></a>Common options</h3>
+<h4><a href="#-h---help" aria-hidden="true" class="anchor" id="-h---help"></a><code>-h, --help</code></h4>
+<p>Show this help text.</p>
+<h4><a href="#-jopt" aria-hidden="true" class="anchor" id="-jopt"></a><code>-J=&lt;opt&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Give option to the JVM running the command.</p>
+<p>(Beware that options containing spaces will not be handled correctly.)</p>
+<h4><a href="#-v---verbose" aria-hidden="true" class="anchor" id="-v---verbose"></a><code>-v, --verbose</code></h4>
+<p>Incrementally increase the number of progress messages printed.</p>
+<h4><a href="#-q---quiet" aria-hidden="true" class="anchor" id="-q---quiet"></a><code>-q, --quiet</code></h4>
+<p>Incrementally decrease the number of progress messages printed.</p>
+<h4><a href="#--verbositylevel" aria-hidden="true" class="anchor" id="--verbositylevel"></a><code>--verbosity=&lt;level&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Explicitly set the verbosity level to one of errors,<br>
+warnings, progress, progress+, progress++, progress+++. Overrides <code>-v</code><br>
+and <code>-q</code>.</p>
+<h4><a href="#--logdirdir" aria-hidden="true" class="anchor" id="--logdirdir"></a><code>--logdir=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Write detailed logs to one or more files in the given<br>
+directory, with generated names that include timestamps and the name of<br>
+the running subcommand.</p>
+<p>(To write a log file with a name you have full control over, instead<br>
+give <code>--log-to-stderr</code> and redirect stderr as desired.)</p>
+<h4><a href="#--common-cachesdir" aria-hidden="true" class="anchor" id="--common-cachesdir"></a><code>--common-caches=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Controls the location of cached data on disk that will<br>
+persist between several runs of the CLI, such as downloaded QL packs and<br>
+compiled query plans. If not set explicitly, this defaults to a<br>
+directory named <code>.codeql</code> in the user's home directory; it will be<br>
+created if it doesn't already exist.</p>
+<p>Available since <code>v2.15.2</code>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

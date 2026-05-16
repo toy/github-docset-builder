@@ -1,0 +1,71 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>resolve tests</title><link rel="stylesheet" href="../../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../../index.html">Security and code quality</a> / <a href="../../../index.html">Reference</a> / <a href="../../index.html">Code scanning</a> / <a href="../index.html">CodeQL</a> / <a href="index.html">CodeQL CLI manual</a> / </nav><h1><a href="#resolve-tests" aria-hidden="true" class="anchor" id="resolve-tests"></a>resolve tests</h1>
+<p>[Deep plumbing] Find QL unit tests in given directories.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This content describes the most recent release of the CodeQL CLI. For more information about this release, see <a href="https://github.com/github/codeql-cli-binaries/releases" class="external">https://github.com/github/codeql-cli-binaries/releases</a>.</p>
+<p>To see details of the options available for this command in an earlier release, run the command with the <span style="white-space: nowrap;"><code>--help</code></span> option in your terminal.</p>
+</div>
+<h2 title="Synopsis"><a href="#synopsis" aria-hidden="true" class="anchor" id="synopsis"></a>Synopsis</h2>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql resolve tests &lt;options&gt;... -- &lt;test|dir&gt;...
+</span></code></pre>
+<h2 title="Description"><a href="#description" aria-hidden="true" class="anchor" id="description"></a>Description</h2>
+<p><span data-escaped-char="">[</span>Deep plumbing] Find QL unit tests in given directories.</p>
+<p>This plumbing command is responsible for expanding the command-line<br>
+parameters of subcommands that run QL unit tests, to an actual list of<br>
+individual .ql and .qlref files to execute.</p>
+<h2 title="Options"><a href="#options" aria-hidden="true" class="anchor" id="options"></a>Options</h2>
+<h3 title="Primary Options"><a href="#primary-options" aria-hidden="true" class="anchor" id="primary-options"></a>Primary Options</h3>
+<h4><a href="#testdir" aria-hidden="true" class="anchor" id="testdir"></a><code>&lt;test|dir&gt;...</code></h4>
+<p>Each argument is one of:</p>
+<ul>
+<li>A <code>.ql</code> or <code>.qlref</code> file that defines a test to run.</li>
+<li>A directory which will be searched recursively for tests to run.</li>
+</ul>
+<h4><a href="#--slicenm" aria-hidden="true" class="anchor" id="--slicenm"></a><code>--slice=&lt;N/M&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Divide the test cases into <em>M</em> roughly equal-sized slices<br>
+and process only the <em>N</em>th of them. This can be used for manual<br>
+parallelization of the testing process.</p>
+<h4><a href="#--no-strict-test-discovery" aria-hidden="true" class="anchor" id="--no-strict-test-discovery"></a><code>--[no-]strict-test-discovery</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Only use queries that can be strongly identified as tests.<br>
+This mode tries to distinguish between <code>.ql</code> files that define unit<br>
+tests and <code>.ql</code> files that are meant to be useful queries. This option<br>
+is used by tools, such as IDEs, that need to identify all unit tests in<br>
+a directory tree without depending on previous knowledge of how the<br>
+files in it are arranged.</p>
+<p>Within a QL pack whose <code>qlpack.yml</code> declares a <code>tests</code> directory, all<br>
+<code>.ql</code> files in that directory are considered tests, and <code>.ql</code> files<br>
+outside it are ignored. In a QL pack that doesn't declare a <code>tests</code><br>
+directory, a <code>.ql</code> file is identified as a test only if it has a<br>
+corresponding <code>.expected</code> file.</p>
+<p>For consistency, <code>.qlref</code> files are limited by the same rules as <code>.ql</code><br>
+files even though a <code>.qlref</code> file cannot really be a non-test.</p>
+<h4><a href="#--formatfmt" aria-hidden="true" class="anchor" id="--formatfmt"></a><code>--format=&lt;fmt&gt;</code></h4>
+<p>Select output format, either <code>text</code> <em>(default)</em> or <code>json</code>.</p>
+<h3 title="Options / Common options"><a href="#common-options" aria-hidden="true" class="anchor" id="common-options"></a>Common options</h3>
+<h4><a href="#-h---help" aria-hidden="true" class="anchor" id="-h---help"></a><code>-h, --help</code></h4>
+<p>Show this help text.</p>
+<h4><a href="#-jopt" aria-hidden="true" class="anchor" id="-jopt"></a><code>-J=&lt;opt&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Give option to the JVM running the command.</p>
+<p>(Beware that options containing spaces will not be handled correctly.)</p>
+<h4><a href="#-v---verbose" aria-hidden="true" class="anchor" id="-v---verbose"></a><code>-v, --verbose</code></h4>
+<p>Incrementally increase the number of progress messages printed.</p>
+<h4><a href="#-q---quiet" aria-hidden="true" class="anchor" id="-q---quiet"></a><code>-q, --quiet</code></h4>
+<p>Incrementally decrease the number of progress messages printed.</p>
+<h4><a href="#--verbositylevel" aria-hidden="true" class="anchor" id="--verbositylevel"></a><code>--verbosity=&lt;level&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Explicitly set the verbosity level to one of errors,<br>
+warnings, progress, progress+, progress++, progress+++. Overrides <code>-v</code><br>
+and <code>-q</code>.</p>
+<h4><a href="#--logdirdir" aria-hidden="true" class="anchor" id="--logdirdir"></a><code>--logdir=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Write detailed logs to one or more files in the given<br>
+directory, with generated names that include timestamps and the name of<br>
+the running subcommand.</p>
+<p>(To write a log file with a name you have full control over, instead<br>
+give <code>--log-to-stderr</code> and redirect stderr as desired.)</p>
+<h4><a href="#--common-cachesdir" aria-hidden="true" class="anchor" id="--common-cachesdir"></a><code>--common-caches=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Controls the location of cached data on disk that will<br>
+persist between several runs of the CLI, such as downloaded QL packs and<br>
+compiled query plans. If not set explicitly, this defaults to a<br>
+directory named <code>.codeql</code> in the user's home directory; it will be<br>
+created if it doesn't already exist.</p>
+<p>Available since <code>v2.15.2</code>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

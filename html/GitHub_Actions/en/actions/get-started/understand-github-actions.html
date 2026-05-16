@@ -1,0 +1,55 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Understanding GitHub Actions</title><link rel="stylesheet" href="../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../index.html">GitHub Actions</a> / <a href="index.html">Get started</a> / </nav><h1><a href="#understanding-github-actions" aria-hidden="true" class="anchor" id="understanding-github-actions"></a>Understanding GitHub Actions</h1>
+<p>Learn the basics of core concepts and essential terminology in GitHub Actions.</p>
+<h2 title="Overview"><a href="#overview" aria-hidden="true" class="anchor" id="overview"></a>Overview</h2>
+<p>GitHub Actions is a continuous integration and continuous delivery (CI/CD) platform that allows you to automate your build, test, and deployment pipeline. You can create workflows that build and test every pull request to your repository, or deploy merged pull requests to production.</p>
+<p>GitHub Actions goes beyond just DevOps and lets you run workflows when other events happen in your repository. For example, you can run a workflow to automatically add the appropriate labels whenever someone creates a new issue in your repository.</p>
+<p>GitHub provides Linux, Windows, and macOS virtual machines to run your workflows, or you can host your own self-hosted runners in your own data center or cloud infrastructure.</p>
+<h2 title="The components of GitHub Actions"><a href="#the-components-of-github-actions" aria-hidden="true" class="anchor" id="the-components-of-github-actions"></a>The components of GitHub Actions</h2>
+<p>You can configure a GitHub Actions <strong>workflow</strong> to be triggered when an <strong>event</strong> occurs in your repository, such as a pull request being opened or an issue being created. Your workflow contains one or more <strong>jobs</strong> which can run in sequential order or in parallel. Each job will run inside its own virtual machine <strong>runner</strong>, or inside a container, and has one or more <strong>steps</strong> that either run a script that you define or run an <strong>action</strong>, which is a reusable extension that can simplify your workflow.</p>
+<p><img src="../../..//assets/images/help/actions/overview-actions-simple.png" alt="Diagram of an event triggering Runner 1 to run Job 1, which triggers Runner 2 to run Job 2. Each of the jobs is broken into multiple steps."></p>
+<h3 title="The components of GitHub Actions / Workflows"><a href="#workflows" aria-hidden="true" class="anchor" id="workflows"></a>Workflows</h3>
+<p>A <strong>workflow</strong> is a configurable automated process that will run one or more jobs. Workflows are defined by a YAML file checked in to your repository and will run when triggered by an event in your repository, or they can be triggered manually, or at a defined schedule.</p>
+<p>Workflows are defined in the <code>.github/workflows</code> directory in a repository. A repository can have multiple workflows, each of which can perform a different set of tasks such as:</p>
+<ul>
+<li>Building and testing pull requests</li>
+<li>Deploying your application every time a release is created</li>
+<li>Adding a label whenever a new issue is opened</li>
+</ul>
+<p>You can reference a workflow within another workflow. For more information, see <a href="../how-tos/reuse-automations/reuse-workflows.html">Reuse workflows</a>.</p>
+<p>For more information, see <a href="../how-tos/write-workflows/index.html">Writing workflows</a>.</p>
+<h3 title="The components of GitHub Actions / Events"><a href="#events" aria-hidden="true" class="anchor" id="events"></a>Events</h3>
+<p>An <strong>event</strong> is a specific activity in a repository that triggers a <strong>workflow</strong> run. For example, an activity can originate from GitHub when someone creates a pull request, opens an issue, or pushes a commit to a repository. You can also trigger a workflow to run on a <a href="../reference/workflows-and-actions/events-that-trigger-workflows.html#schedule">schedule</a>, by <a href="https://docs.github.com/en/rest/repos/repos#create-a-repository-dispatch-event" class="external">posting to a REST API</a>, or manually.</p>
+<p>For a complete list of events that can be used to trigger workflows, see <a href="../reference/workflows-and-actions/events-that-trigger-workflows.html">Events that trigger workflows</a>.</p>
+<h3 title="The components of GitHub Actions / Jobs"><a href="#jobs" aria-hidden="true" class="anchor" id="jobs"></a>Jobs</h3>
+<p>A <strong>job</strong> is a set of <strong>steps</strong> in a workflow that is executed on the same <strong>runner</strong>. Each step is either a shell script that will be executed, or an <strong>action</strong> that will be run. Steps are executed in order and are dependent on each other. Since each step is executed on the same runner, you can share data from one step to another. For example, you can have a step that builds your application followed by a step that tests the application that was built.</p>
+<p>You can configure a job's dependencies with other jobs; by default, jobs have no dependencies and run in parallel. When a job takes a dependency on another job, it waits for the dependent job to complete before running.</p>
+<p>You can also use a <strong>matrix</strong> to run the same job multiple times, each with a different combination of variables—like operating systems or language versions.</p>
+<p>For example, you might configure multiple build jobs for different architectures without any job dependencies and a packaging job that depends on those builds. The build jobs run in parallel, and once they complete successfully, the packaging job runs.</p>
+<p>For more information, see <a href="../how-tos/write-workflows/choose-what-workflows-do/index.html">Choosing what your workflow does</a>.</p>
+<h3 title="The components of GitHub Actions / Actions"><a href="#actions" aria-hidden="true" class="anchor" id="actions"></a>Actions</h3>
+<p>An <strong>action</strong> is a pre-defined, reusable set of jobs or code that performs specific tasks within a <strong>workflow</strong>, reducing the amount of repetitive code you write in your workflow files. Actions can perform tasks such as:</p>
+<ul>
+<li>Pulling your Git repository from GitHub</li>
+<li>Setting up the correct toolchain for your build environment</li>
+<li>Setting up authentication to your cloud provider</li>
+</ul>
+<p>You can write your own actions, or you can find actions to use in your workflows in the GitHub Marketplace.</p>
+<p>For more information on actions, see <a href="../how-tos/reuse-automations/index.html">Reusing automations</a>.</p>
+<h3 title="The components of GitHub Actions / Runners"><a href="#runners" aria-hidden="true" class="anchor" id="runners"></a>Runners</h3>
+<p>A <strong>runner</strong> is a server that runs your workflows when they're triggered. Each runner can run a single <strong>job</strong> at a time.<br>
+GitHub provides Ubuntu Linux, Microsoft Windows, and macOS runners to run your <strong>workflows</strong>. Each workflow run executes in a fresh, newly-provisioned virtual machine.</p>
+<p>GitHub also offers larger runners, which are available in larger configurations. For more information, see <a href="../how-tos/manage-runners/larger-runners/index.html">Using larger runners</a>.</p>
+<p>If you need a different operating system or require a specific hardware configuration, you can host your own runners.</p>
+<p>For more information about self-hosted runners, see <a href="../how-tos/manage-runners/self-hosted-runners/index.html">Managing self-hosted runners</a>.</p>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>GitHub Actions can help you automate nearly every aspect of your application development processes. Ready to get started? Here are some helpful resources for taking your next steps with GitHub Actions:</p>
+<ul>
+<li>To create a GitHub Actions workflow, see <a href="../how-tos/write-workflows/use-workflow-templates.html">Using workflow templates</a>.</li>
+<li>For continuous integration (CI) workflows, see <a href="../tutorials/build-and-test-code/index.html">Building and testing your code</a>.</li>
+<li>For building and publishing packages, see <a href="../tutorials/publish-packages/index.html">Publishing packages</a>.</li>
+<li>For deploying projects, see <a href="../how-tos/deploy/deploy-to-third-party-platforms/index.html">Deploying to third-party platforms</a>.</li>
+<li>For automating tasks and processes on GitHub, see <a href="../tutorials/manage-your-work/index.html">Managing your work with GitHub Actions</a>.</li>
+<li>For examples that demonstrate more complex features of GitHub Actions, see <a href="../tutorials/manage-your-work/index.html">Managing your work with GitHub Actions</a>. These detailed examples explain how to test your code on a runner, access the GitHub CLI, and use advanced features such as concurrency and test matrices.</li>
+<li>To certify your proficiency in automating workflows and accelerating development with GitHub Actions, earn a GitHub Actions certificate with GitHub Certifications. For more information, see <a href="https://docs.github.com/en/get-started/showcase-your-expertise-with-github-certifications/about-github-certifications" class="external">About GitHub Certifications</a>.</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

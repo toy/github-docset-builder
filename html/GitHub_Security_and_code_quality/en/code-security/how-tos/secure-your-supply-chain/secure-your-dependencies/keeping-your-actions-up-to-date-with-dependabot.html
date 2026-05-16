@@ -1,0 +1,32 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Keeping your actions up to date with Dependabot</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Secure your supply chain</a> / <a href="index.html">Secure your dependencies</a> / </nav><h1><a href="#keeping-your-actions-up-to-date-with-dependabot" aria-hidden="true" class="anchor" id="keeping-your-actions-up-to-date-with-dependabot"></a>Keeping your actions up to date with Dependabot</h1>
+<p>You can use Dependabot to keep the actions you use updated to the latest versions.</p>
+<p>When you enable Dependabot version updates for GitHub Actions, Dependabot will help ensure that references to actions in a repository's <em>workflow<span data-escaped-char="">.</span>yml</em> file and reusable workflows used inside workflows are kept up to date. For more information, see <a href="../../../concepts/supply-chain-security/about-dependabot-version-updates.html">About Dependabot version updates</a>.</p>
+<h2 title="Enabling Dependabot version updates for actions"><a href="#enabling-dependabot-version-updates-for-actions" aria-hidden="true" class="anchor" id="enabling-dependabot-version-updates-for-actions"></a>Enabling Dependabot version updates for actions</h2>
+<ol>
+<li>If you have already enabled Dependabot version updates for other ecosystems or package managers, simply open the existing <code>dependabot.yml</code> file. Otherwise, create a <code>dependabot.yml</code> configuration file in the <code>.github</code> directory of your repository. For more information, see <a href="configuring-dependabot-version-updates.html#enabling-dependabot-version-updates">Configuring Dependabot version updates</a>.</li>
+<li>Specify <code>"github-actions"</code> as a <code>package-ecosystem</code> to monitor.</li>
+<li>Set the <code>directory</code> to <code>"/"</code> to check for workflow files in <code>.github/workflows</code>.</li>
+<li>Set a <code>schedule.interval</code> to specify how often to check for new versions.</li>
+<li>Check the <code>dependabot.yml</code> configuration file in to the <code>.github</code> directory of the repository. If you have edited an existing file, save your changes.</li>
+</ol>
+<p>You can also enable Dependabot version updates on forks. For more information, see <a href="configuring-dependabot-version-updates.html#enabling-version-updates-on-forks">Configuring Dependabot version updates</a>.</p>
+<h2 title="Example dependabot.yml file for GitHub Actions"><a href="#example-dependabotyml-file-for-github-actions" aria-hidden="true" class="anchor" id="example-dependabotyml-file-for-github-actions"></a>Example <code>dependabot.yml</code> file for GitHub Actions</h2>
+<p>The example <code>dependabot.yml</code> file below configures version updates for GitHub Actions. The <code>directory</code> must be set to <code>"/"</code> to check for workflow files in <code>.github/workflows</code>. The <code>schedule.interval</code> is set to <code>"weekly"</code>. After this file has been checked in or updated, Dependabot checks for new versions of your actions. Dependabot will raise pull requests for version updates for any outdated actions that it finds. After the initial version updates, Dependabot will continue to check for outdated versions of actions once a week.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># Set update schedule for GitHub Actions
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">github-actions</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Check for updates to GitHub Actions every week
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<h2 title="Configuring Dependabot version updates for actions"><a href="#configuring-dependabot-version-updates-for-actions" aria-hidden="true" class="anchor" id="configuring-dependabot-version-updates-for-actions"></a>Configuring Dependabot version updates for actions</h2>
+<p>When enabling Dependabot version updates for actions, you must specify values for <code>package-ecosystem</code>, <code>directory</code>, and <code>schedule.interval</code>. There are many more optional properties that you can set to further customize your version updates. For more information, see <a href="../../../reference/supply-chain-security/dependabot-options-reference.html">Dependabot options reference</a>.</p>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li><a href="https://docs.github.com/en/actions/learn-github-actions" class="external">Writing workflows</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

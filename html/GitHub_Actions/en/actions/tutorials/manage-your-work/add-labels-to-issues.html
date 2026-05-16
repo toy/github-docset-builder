@@ -1,0 +1,62 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Adding labels to issues</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Manage your work</a> / </nav><h1><a href="#adding-labels-to-issues" aria-hidden="true" class="anchor" id="adding-labels-to-issues"></a>Adding labels to issues</h1>
+<p>You can use GitHub Actions to automatically label issues.</p>
+<h2 title="Introduction"><a href="#introduction" aria-hidden="true" class="anchor" id="introduction"></a>Introduction</h2>
+<p>This tutorial demonstrates how to use the GitHub CLI in a workflow to label newly opened or reopened issues. For example, you can add the <code>triage</code> label every time an issue is opened or reopened. Then, you can see all issues that need to be triaged by filtering for issues with the <code>triage</code> label.</p>
+<p>The GitHub CLI allows you to easily use the GitHub API in a workflow.</p>
+<p>In the tutorial, you will first make a workflow file that uses the GitHub CLI. Then, you will customize the workflow to suit your needs.</p>
+<h2 title="Creating the workflow"><a href="#creating-the-workflow" aria-hidden="true" class="anchor" id="creating-the-workflow"></a>Creating the workflow</h2>
+<ol>
+<li>
+<p>Choose a repository where you want to apply this project management workflow. You can use an existing repository that you have write access to, or you can create a new repository. For more information about creating a repository, see <a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-new-repository" class="external">Creating a new repository</a>.</p>
+</li>
+<li>
+<p>In your repository, create a file called <code>.github/workflows/YOUR_WORKFLOW.yml</code>, replacing <code>YOUR_WORKFLOW</code> with a name of your choice. This is a workflow file. For more information about creating new files on GitHub, see <a href="https://docs.github.com/en/repositories/working-with-files/managing-files/creating-new-files" class="external">Creating new files</a>.</p>
+</li>
+<li>
+<p>Copy the following YAML contents into your workflow file.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Label issues
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">issues</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">reopened
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">opened
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">label_issues</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">permissions</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">issues</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">gh issue edit "$NUMBER" --add-label "$LABELS"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">GH_TOKEN</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.GITHUB_TOKEN }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">GH_REPO</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ github.repository }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">NUMBER</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ github.event.issue.number }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">LABELS</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">triage
+</span></code></pre>
+</li>
+<li>
+<p>Customize the <code>env</code> values in your workflow file:</p>
+<ul>
+<li>The <code>GH_TOKEN</code>, <code>GH_REPO</code>, and <code>NUMBER</code> values are automatically set using the <code>github</code> and <code>secrets</code> contexts. You do not need to change these.</li>
+<li>Change the value for <code>LABELS</code> to the list of labels that you want to add to the issue. The label(s) must exist for your repository. Separate multiple labels with commas. For example, <code>help wanted,good first issue</code>. For more information about labels, see <a href="https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels#applying-labels-to-issues-and-pull-requests" class="external">Managing labels</a>.</li>
+</ul>
+</li>
+<li>
+<p>Commit your workflow file to the default branch of your repository. For more information, see <a href="https://docs.github.com/en/repositories/working-with-files/managing-files/creating-new-files" class="external">Creating new files</a>.</p>
+</li>
+</ol>
+<h2 title="Testing the workflow"><a href="#testing-the-workflow" aria-hidden="true" class="anchor" id="testing-the-workflow"></a>Testing the workflow</h2>
+<p>Every time an issue in your repository is opened or reopened, this workflow will add the labels that you specified to the issue.</p>
+<p>Test out your workflow by creating an issue in your repository.</p>
+<ol>
+<li>Create an issue in your repository. For more information, see <a href="https://docs.github.com/en/issues/tracking-your-work-with-issues/creating-an-issue" class="external">Creating an issue</a>.</li>
+<li>To see the workflow run that was triggered by creating the issue, view the history of your workflow runs. For more information, see <a href="../../how-tos/monitor-workflows/view-workflow-run-history.html">Viewing workflow run history</a>.</li>
+<li>When the workflow completes, the issue that you created should have the specified labels added.</li>
+</ol>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<ul>
+<li>To learn more about additional things you can do with the GitHub CLI, see the <a href="https://cli.github.com/manual/" class="external">GitHub CLI manual</a>.</li>
+<li>To learn more about different events that can trigger your workflow, see <a href="../../reference/workflows-and-actions/events-that-trigger-workflows.html#issues">Events that trigger workflows</a>.</li>
+<li><a href="https://github.com/search?q=path%3A.github%2Fworkflows+gh+issue+edit&amp;type=code" class="external">Search GitHub</a> for examples of workflows using <code>gh issue edit</code>.</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

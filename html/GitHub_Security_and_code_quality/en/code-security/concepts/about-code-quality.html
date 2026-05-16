@@ -1,0 +1,64 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>About GitHub Code Quality</title><link rel="stylesheet" href="../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../index.html">Security and code quality</a> / <a href="index.html">Concepts</a> / </nav><h1><a href="#about-github-code-quality" aria-hidden="true" class="anchor" id="about-github-code-quality"></a>About GitHub Code Quality</h1>
+<p>Use GitHub Code Quality to flag code quality issues in pull requests and repository scans, apply Copilot-powered autofixes, and enforce standards with rulesets.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>GitHub Code Quality is currently in public preview and subject to change.<br>
+During public preview, Code Quality will not be billed, although Code Quality scans will consume GitHub Actions minutes.</p>
+</div>
+<h2 title="Overview"><a href="#overview" aria-hidden="true" class="anchor" id="overview"></a>Overview</h2>
+<p>GitHub Code Quality helps you ensure your codebase is reliable, maintainable, and efficient. Whether you're building a new feature, reducing technical debt, or reporting on repository health, Code Quality provides actionable insights and automated fixes so you can improve and maintain the code health of your repository efficiently.</p>
+<h2 title="Key features and benefits"><a href="#key-features-and-benefits" aria-hidden="true" class="anchor" id="key-features-and-benefits"></a>Key features and benefits</h2>
+<p>With Code Quality, you can:</p>
+<ul>
+<li>Identify code quality risks and opportunities in <strong>pull requests</strong> and through <strong>repository scans</strong>.</li>
+<li>Review clear explanations for findings and apply one-click <strong>Copilot-powered autofixes</strong>.</li>
+<li>Use <strong>repository dashboards</strong> to track reliability and maintainability scores, identify areas needing attention, and prioritize remediation.</li>
+<li>Monitor <strong>organization dashboards</strong> to understand the code health of your repositories at a glance and determine which repositories to investigate further.</li>
+<li>Set up <strong>rulesets</strong> for pull requests to enforce code quality standards and block changes that do not meet your criteria.</li>
+<li>Easily assign remediation work to <strong>Copilot cloud agent</strong>, if you have a Copilot license.</li>
+</ul>
+<h2 title="Availability and usage costs"><a href="#availability-and-usage-costs" aria-hidden="true" class="anchor" id="availability-and-usage-costs"></a>Availability and usage costs</h2>
+<p>GitHub Code Quality is available for organization-owned repositories on GitHub Team and GitHub Enterprise Cloud plans.</p>
+<p>GitHub Code Quality won't be billed during public preview. However, Code Quality scans will consume GitHub Actions minutes. See <a href="https://docs.github.com/en/billing/concepts/product-billing/github-code-quality" class="external">GitHub Code Quality billing</a>.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<ul>
+<li>You <strong>don't</strong> need a Copilot or a Code Security license to use Code Quality or apply Copilot-powered autofixes.</li>
+</ul>
+</div>
+<h2 title="Supported languages"><a href="#supported-languages" aria-hidden="true" class="anchor" id="supported-languages"></a>Supported languages</h2>
+<p>Code Quality performs rule-based analysis of the following languages using CodeQL:</p>
+<ul>
+<li>C#</li>
+<li>Go</li>
+<li>Java</li>
+<li>JavaScript</li>
+<li>Python</li>
+<li>Ruby</li>
+<li>TypeScript</li>
+</ul>
+<p>Code Quality also performs AI-powered analysis with results displayed separately on the "<strong>AI findings</strong>" repository dashboard. Unlike the rule-based CodeQL analysis that scans the entire codebase and pull requests, this AI-powered analysis only examines files recently pushed to the default branch and may identify issues in languages beyond those listed above. For more information, see <a href="../responsible-use/code-quality.html">Responsible use of GitHub Code Quality</a>.</p>
+<h2 title="Where will findings appear?"><a href="#where-will-findings-appear" aria-hidden="true" class="anchor" id="where-will-findings-appear"></a>Where will findings appear?</h2>
+<p>Once you enable Code Quality for a repository, you'll see CodeQL scans for:</p>
+<ul>
+<li>Every new pull request opened against the default branch</li>
+<li>All existing pull requests to the default branch when they are updated, triggering a new run of CI tests</li>
+<li>The whole codebase on the default branch at the time and date shown on the "Code quality" settings page</li>
+</ul>
+<p>In addition, you'll see an AI-powered analysis of all recent pushes to the default branch.</p>
+<h3 title="Where will findings appear? / Pull request results"><a href="#pull-request-results" aria-hidden="true" class="anchor" id="pull-request-results"></a>Pull request results</h3>
+<p>When CodeQL finds rule-based problems on pull requests, you'll see comments from the <code>github-code-quality[bot]</code>. Where possible, each comment will include a Copilot Autofix suggestion on how to fix the problem. See <a href="../tutorials/improve-code-quality/fix-findings-in-prs.html">Fixing code quality findings before merging your pull request</a>.</p>
+<h3 title="Where will findings appear? / Default branch results"><a href="#default-branch-results" aria-hidden="true" class="anchor" id="default-branch-results"></a>Default branch results</h3>
+<p>Code Quality findings on the default branch are reported on "Code quality" pages on the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab for the repository:</p>
+<ul>
+<li><strong>Standard findings</strong> shows the results of CodeQL quality analysis. See <a href="../tutorials/improve-code-quality/improve-your-codebase.html">Improving the quality of your repository's code</a>.</li>
+<li><strong>AI findings</strong> shows the results of AI-powered analysis of the files most recently pushed to the default branch. See <a href="../tutorials/improve-code-quality/improve-recent-merges.html">Improving the quality of recently merged code with AI</a>.</li>
+</ul>
+<h3 title="Where will findings appear? / Scan information"><a href="#scan-information" aria-hidden="true" class="anchor" id="scan-information"></a>Scan information</h3>
+<p>Each CodeQL analysis will use GitHub Actions minutes and can be seen on the <strong>Actions</strong> tab of the repository as a run of the dynamic "Code Quality" workflow.</p>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<ul>
+<li><strong>For your repository:</strong> Turn on Code Quality to start generating results. See <a href="../how-tos/maintain-quality-code/enable-code-quality.html">Enabling GitHub Code Quality</a>.</li>
+<li><strong>For your enterprise:</strong> Ensure repositories in your enterprise can enable Code Quality. See <a href="../how-tos/secure-at-scale/configure-enterprise-security/configure-specific-tools/allow-github-code-quality-in-enterprise.html">Allowing use of GitHub Code Quality in your enterprise</a>.</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

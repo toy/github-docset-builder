@@ -1,0 +1,64 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Commenting on an issue when a label is added</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Manage your work</a> / </nav><h1><a href="#commenting-on-an-issue-when-a-label-is-added" aria-hidden="true" class="anchor" id="commenting-on-an-issue-when-a-label-is-added"></a>Commenting on an issue when a label is added</h1>
+<p>You can use GitHub Actions to automatically comment on issues when a specific label is applied.</p>
+<h2 title="Introduction"><a href="#introduction" aria-hidden="true" class="anchor" id="introduction"></a>Introduction</h2>
+<p>This tutorial demonstrates how to use the GitHub CLI to comment on an issue when a specific label is applied. For example, when the <code>help wanted</code> label is added to an issue, you can add a comment to encourage contributors to work on the issue. For more information about GitHub CLI, see <a href="../../how-tos/write-workflows/choose-what-workflows-do/use-github-cli.html">Using GitHub CLI in workflows</a>.</p>
+<p>In the tutorial, you will first make a workflow file that uses the <code>gh issue comment</code> command to comment on an issue. Then, you will customize the workflow to suit your needs.</p>
+<h2 title="Creating the workflow"><a href="#creating-the-workflow" aria-hidden="true" class="anchor" id="creating-the-workflow"></a>Creating the workflow</h2>
+<ol>
+<li>
+<p>Choose a repository where you want to apply this project management workflow. You can use an existing repository that you have write access to, or you can create a new repository. For more information about creating a repository, see <a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-new-repository" class="external">Creating a new repository</a>.</p>
+</li>
+<li>
+<p>In your repository, create a file called <code>.github/workflows/YOUR_WORKFLOW.yml</code>, replacing <code>YOUR_WORKFLOW</code> with a name of your choice. This is a workflow file. For more information about creating new files on GitHub, see <a href="https://docs.github.com/en/repositories/working-with-files/managing-files/creating-new-files" class="external">Creating new files</a>.</p>
+</li>
+<li>
+<p>Copy the following YAML contents into your workflow file.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Add comment
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">issues</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">labeled
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">add-comment</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github.event.label.name == 'help wanted'
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">permissions</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">issues</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Add comment
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">gh issue comment "$NUMBER" --body "$BODY"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">GH_TOKEN</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ secrets.GITHUB_TOKEN }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">GH_REPO</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ github.repository }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">NUMBER</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ github.event.issue.number }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">BODY</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">&gt;
+</span><span style="color:#a3be8c;">            This issue is available for anyone to work on.
+</span><span style="color:#a3be8c;">            **Make sure to reference this issue in your pull request.**
+</span><span style="color:#a3be8c;">            :sparkles: Thank you for your contribution! :sparkles:
+</span></code></pre>
+</li>
+<li>
+<p>Customize the parameters in your workflow file:</p>
+<ul>
+<li>Replace <code>help wanted</code> in <code>if: github.event.label.name == 'help wanted'</code> with the label that you want to act on. If you want to act on more than one label, separate the conditions with <code>||</code>. For example, <code>if: github.event.label.name == 'bug' || github.event.label.name == 'fix me'</code> will comment whenever the <code>bug</code> or <code>fix me</code> labels are added to an issue.</li>
+<li>Change the value for <code>BODY</code> to the comment that you want to add. GitHub flavored markdown is supported. For more information about markdown, see <a href="https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax" class="external">Basic writing and formatting syntax</a>.</li>
+</ul>
+</li>
+<li>
+<p>Commit your workflow file to the default branch of your repository. For more information, see <a href="https://docs.github.com/en/repositories/working-with-files/managing-files/creating-new-files" class="external">Creating new files</a>.</p>
+</li>
+</ol>
+<h2 title="Testing the workflow"><a href="#testing-the-workflow" aria-hidden="true" class="anchor" id="testing-the-workflow"></a>Testing the workflow</h2>
+<p>Every time an issue in your repository is labeled, this workflow will run. If the label that was added is one of the labels that you specified in your workflow file, the <code>gh issue comment</code> command will add the comment that you specified to the issue.</p>
+<p>Test your workflow by applying your specified label to an issue.</p>
+<ol>
+<li>Open an issue in your repository. For more information, see <a href="https://docs.github.com/en/issues/tracking-your-work-with-issues/creating-an-issue" class="external">Creating an issue</a>.</li>
+<li>Label the issue with the specified label in your workflow file. For more information, see <a href="https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels#applying-labels-to-issues-and-pull-requests" class="external">Managing labels</a>.</li>
+<li>To see the workflow run triggered by labeling the issue, view the history of your workflow runs. For more information, see <a href="../../how-tos/monitor-workflows/view-workflow-run-history.html">Viewing workflow run history</a>.</li>
+<li>When the workflow completes, the issue that you labeled should have a comment added.</li>
+</ol>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<ul>
+<li>To learn more about additional things you can do with the GitHub CLI, like editing existing comments, visit the <a href="https://cli.github.com/manual/" class="external">GitHub CLI Manual</a>.</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Configuring multi-ecosystem updates for Dependabot</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Secure your supply chain</a> / <a href="index.html">Secure your dependencies</a> / </nav><h1><a href="#configuring-multi-ecosystem-updates-for-dependabot" aria-hidden="true" class="anchor" id="configuring-multi-ecosystem-updates-for-dependabot"></a>Configuring multi-ecosystem updates for Dependabot</h1>
+<p>Reduce the number of Dependabot pull requests you receive by grouping updates across multiple ecosystems into a single, consolidated pull request.</p>
+<p>Multi-ecosystem updates allow you to consolidate Dependabot pull requests across different package ecosystems into a single PR per group. See <a href="../../../concepts/supply-chain-security/multi-ecosystem-updates.html">Multi-ecosystem updates</a>.</p>
+<h2 title="Prerequisites"><a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<ul>
+<li>A repository with dependencies in multiple package ecosystems</li>
+<li>An existing <code>.github/dependabot.yml</code> file. See <a href="configuring-dependabot-version-updates.html">Configuring Dependabot version updates</a>.</li>
+</ul>
+<h2 title="1. Define your multi-ecosystem group in your .github/dependabot.yml file"><a href="#1-define-your-multi-ecosystem-group-in-your-githubdependabotyml-file" aria-hidden="true" class="anchor" id="1-define-your-multi-ecosystem-group-in-your-githubdependabotyml-file"></a>1. Define your multi-ecosystem group in your <code>.github/dependabot.yml</code> file</h2>
+<p>Start by defining a group with a schedule in the top-level <code>multi-ecosystem-groups</code> section:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">multi-ecosystem-groups</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">infrastructure</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Your existing package ecosystems will go here
+</span></code></pre>
+<h2 title="2. Assign ecosystems to the group"><a href="#2-assign-ecosystems-to-the-group" aria-hidden="true" class="anchor" id="2-assign-ecosystems-to-the-group"></a>2. Assign ecosystems to the group</h2>
+<p>Add the <code>multi-ecosystem-groups</code> key and patterns to your package ecosystem configurations.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">multi-ecosystem-groups</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">infrastructure</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">docker</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">patterns</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">nginx</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">redis</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">postgres</span><span style="color:#c0c5ce;">"]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">multi-ecosystem-group</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">infrastructure</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">terraform</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">patterns</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">aws</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">terraform-*</span><span style="color:#c0c5ce;">"]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">multi-ecosystem-group</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">infrastructure</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Use <code>["*"]</code> to include all dependencies.</p>
+</div>
+<h2 title="3. Commit your changes"><a href="#3-commit-your-changes" aria-hidden="true" class="anchor" id="3-commit-your-changes"></a>3. Commit your changes</h2>
+<p>Commit the changes to your <code>dependabot.yml</code> file.</p>
+<h2 title="4. Customize with additional keys (optional)"><a href="#4-customize-with-additional-keys-optional" aria-hidden="true" class="anchor" id="4-customize-with-additional-keys-optional"></a>4. Customize with additional keys (optional)</h2>
+<p>You can add assignees, labels, or other configuration options to your multi-ecosystem groups. See <a href="../../../reference/supply-chain-security/dependabot-options-reference.html#assignees--"><code>assignees</code></a> and <a href="../../../reference/supply-chain-security/dependabot-options-reference.html#labels--"><code>labels</code></a>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">multi-ecosystem-groups</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">infrastructure</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">assignees</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">@platform-team</span><span style="color:#c0c5ce;">"]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">labels</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">infrastructure</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">dependencies</span><span style="color:#c0c5ce;">"]
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">docker</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">patterns</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">nginx</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">redis</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">postgres</span><span style="color:#c0c5ce;">"]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">multi-ecosystem-group</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">infrastructure</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">terraform</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">patterns</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">aws</span><span style="color:#c0c5ce;">", "</span><span style="color:#a3be8c;">terraform-*</span><span style="color:#c0c5ce;">"]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">multi-ecosystem-group</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">infrastructure</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<p>For a complete list of available options, see <a href="../../../reference/supply-chain-security/dependabot-options-reference.html#multi-ecosystem-groups">Dependabot options reference</a>.</p>
+<h2 title="5. Verify your configuration"><a href="#5-verify-your-configuration" aria-hidden="true" class="anchor" id="5-verify-your-configuration"></a>5. Verify your configuration</h2>
+<p>After committing your changes, you can verify the configuration:</p>
+<ol>
+<li>Navigate to your repository's <strong>Insights</strong> tab.</li>
+<li>Select <strong>Dependency graph</strong>, then <strong>Dependabot</strong>.</li>
+<li>Confirm your multi-ecosystem group appears in the list.</li>
+</ol>
+<p>The next time the scheduled update runs, you'll receive a single pull request with updates from all ecosystems in the group.</p>
+<h2 title="Troubleshooting"><a href="#troubleshooting" aria-hidden="true" class="anchor" id="troubleshooting"></a>Troubleshooting</h2>
+<p>If you're not seeing consolidated pull requests, ensure that:</p>
+<ul>
+<li>The <code>patterns</code> key is defined for each ecosystem (required when using <code>multi-ecosystem-group</code>).</li>
+<li>All ecosystems use the same group name in the <code>multi-ecosystem-group</code> field.</li>
+</ul>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li><a href="../../../reference/supply-chain-security/dependabot-options-reference.html">Dependabot options reference</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

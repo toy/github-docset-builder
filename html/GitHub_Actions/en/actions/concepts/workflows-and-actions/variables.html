@@ -1,0 +1,16 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Variables</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Workflows and actions</a> / </nav><h1><a href="#variables" aria-hidden="true" class="anchor" id="variables"></a>Variables</h1>
+<p>Learn about variables in GitHub Actions workflows.</p>
+<h2 title="About"><a href="#about" aria-hidden="true" class="anchor" id="about"></a>About</h2>
+<p>Variables provide a way to store and reuse non-sensitive configuration information. You can store any configuration data such as compiler flags, usernames, or server names as variables. Variables are interpolated on the runner machine that runs your workflow. Commands that run in actions or workflow steps can create, read, and modify variables.</p>
+<p>You can set your own custom variables or use the default environment variables that GitHub sets automatically.</p>
+<p>You can set a custom variable in two ways.</p>
+<ul>
+<li>To define an environment variable for use in a single workflow, you can use the <code>env</code> key in the workflow file. For more information, see <a href="../../how-tos/write-workflows/choose-what-workflows-do/use-variables.html#defining-environment-variables-for-a-single-workflow">Defining environment variables for a single workflow</a>.</li>
+<li>To define a configuration variable across multiple workflows, you can define it at the organization, repository, or environment level. When creating a variable in an organization, you can use a policy to limit access by repository. For example, you can grant access to all repositories, or limit access to only private repositories or a specified list of repositories. For more information, see <a href="../../how-tos/write-workflows/choose-what-workflows-do/use-variables.html#defining-configuration-variables-for-multiple-workflows">Defining configuration variables for multiple workflows</a>.</li>
+</ul>
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>By default, variables render unmasked in your build outputs. If you need greater security for sensitive information, such as passwords, use secrets instead. For more information, see <a href="../security/secrets.html">Secrets</a>.</p>
+</div>
+<p>For reference documentation, see <a href="../../reference/workflows-and-actions/variables.html">Variables reference</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

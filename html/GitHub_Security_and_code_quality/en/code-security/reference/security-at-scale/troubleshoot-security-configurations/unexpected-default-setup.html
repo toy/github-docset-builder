@@ -1,0 +1,27 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Default setup for code scanning overrides advanced setup</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">Reference</a> / <a href="../index.html">Security at scale</a> / <a href="index.html">Troubleshoot security configurations</a> / </nav><h1><a href="#default-setup-for-code-scanning-overrides-advanced-setup" aria-hidden="true" class="anchor" id="default-setup-for-code-scanning-overrides-advanced-setup"></a>Default setup for code scanning overrides advanced setup</h1>
+<p>You apply a security configuration with "Enabled with advanced setup allowed" and the existing advanced setup for code scanning is ignored in some repositories.</p>
+<h2 title="About the problem"><a href="#about-the-problem" aria-hidden="true" class="anchor" id="about-the-problem"></a>About the problem</h2>
+<p>When you apply a security configuration and code scanning is defined as "Enabled with advanced setup allowed", each repository is checked to see if there is an existing, active, advanced setup.</p>
+<ul>
+<li><strong>No change to code scanning</strong> if an <strong>active</strong> advanced setup configuration is detected.</li>
+<li><strong>Default setup is enabled</strong> for repositories where advanced setup is <strong>inactive or absent</strong>.</li>
+</ul>
+<h3 title="About the problem / Inactive or absent advanced setup"><a href="#inactive-or-absent-advanced-setup" aria-hidden="true" class="anchor" id="inactive-or-absent-advanced-setup"></a>Inactive or absent advanced setup</h3>
+<p>Advanced setup is considered <strong>inactive</strong> for a repository if the repository meets any of the following criteria:</p>
+<ul>
+<li>The latest CodeQL analysis is more than 90 days old.</li>
+<li>All CodeQL configurations have been deleted.</li>
+<li>The workflow file has been deleted or disabled (exclusively for advanced setup run using actions).</li>
+</ul>
+<h2 title="Solving the problem"><a href="#solving-the-problem" aria-hidden="true" class="anchor" id="solving-the-problem"></a>Solving the problem</h2>
+<p>This solution has two parts:</p>
+<ol>
+<li>
+<p>Any repositories where default setup for code scanning was unexpectedly applied need to run CodeQL analysis at intervals of less than 90 days, for example, once a month.</p>
+<p>Even if the repository is not under active development, new vulnerabilities may be identified by updates to CodeQL analysis.</p>
+</li>
+<li>
+<p>Once the affected repositories all have CodeQL analysis running, you can reapply the security configuration.</p>
+</li>
+</ol>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

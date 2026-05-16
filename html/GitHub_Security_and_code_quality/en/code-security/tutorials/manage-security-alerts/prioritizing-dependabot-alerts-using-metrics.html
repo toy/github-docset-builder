@@ -1,0 +1,45 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Prioritizing Dependabot alerts using metrics</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Manage security alerts</a> / </nav><h1><a href="#prioritizing-dependabot-alerts-using-metrics" aria-hidden="true" class="anchor" id="prioritizing-dependabot-alerts-using-metrics"></a>Prioritizing Dependabot alerts using metrics</h1>
+<p>You can prioritize Dependabot alerts in your organization by analyzing the provided metrics. Using this approach, you can tell your developers to focus on the most important vulnerabilities first.</p>
+<h2 title="Prioritizing Dependabot alerts using metrics"><a href="#prioritizing-dependabot-alerts-using-metrics-1" aria-hidden="true" class="anchor" id="prioritizing-dependabot-alerts-using-metrics-1"></a>Prioritizing Dependabot alerts using metrics</h2>
+<p>Application Security (AppSec) managers often face a flood of Dependabot alerts, making it challenging to determine which vulnerabilities to address first. Dependabot metrics provide valuable insights that help prioritize alerts efficiently, ensuring that critical security issues are resolved promptly. Users can make informed decisions, focusing resources on the most impactful vulnerabilities. This approach strengthens the organization’s security posture and streamlines vulnerability management.</p>
+<h2 title="Understanding Dependabot metrics"><a href="#understanding-dependabot-metrics" aria-hidden="true" class="anchor" id="understanding-dependabot-metrics"></a>Understanding Dependabot metrics</h2>
+<p>Dependabot metrics offer detailed information about vulnerabilities detected in your dependencies. Key metrics include:</p>
+<ul>
+<li><strong>Severity</strong>: Indicates the potential impact of a vulnerability (e.g., low, medium, high, critical).</li>
+<li><strong>Exploitability</strong>: Assesses how easily a vulnerability can be exploited.</li>
+<li><strong>Dependency relationship</strong>: Differentiates between direct and transitive dependencies.</li>
+<li><strong>Dependency scope</strong>: Differentiates between runtime and development dependencies. Determines if the vulnerable code is actually used in your application.</li>
+<li><strong>Alerts closed in the last 30 days, including the number of alerts fixed by Dependabot, manually dismissed, and auto dismissed</strong>: Tracks alert resolution progress. Illustrates how GitHub Code Security can help you detect vulnerabilities early.</li>
+<li><strong>Table showing the total number of open alerts for each repository, as well as severity and expoitability data</strong>: Allows you to dig deeper at the repository level.</li>
+</ul>
+<p>For more information about these metrics, see <a href="../../concepts/supply-chain-security/about-metrics-for-dependabot-alerts.html">About metrics for Dependabot alerts</a>.</p>
+<p>Additionally, you can specify complex filters, which are combinations of the individual filters that are available. For more information about filters, see <a href="../../how-tos/manage-security-alerts/remediate-alerts-at-scale/filtering-alerts-in-security-overview.html#dependabot-dashboard-view-filters">Dependabot dashboard view filters</a>.</p>
+<h2 title="Steps to prioritize alerts"><a href="#steps-to-prioritize-alerts" aria-hidden="true" class="anchor" id="steps-to-prioritize-alerts"></a>Steps to prioritize alerts</h2>
+<p>These first steps help you identify the Dependabot alerts that put your organization the most at risk, so that you can tell your developers which alerts to focus on for remediation.</p>
+<h3 title="Steps to prioritize alerts / 1. Tailor the funnel order to suit your organization's needs"><a href="#1-tailor-the-funnel-order-to-suit-your-organizations-needs" aria-hidden="true" class="anchor" id="1-tailor-the-funnel-order-to-suit-your-organizations-needs"></a>1. Tailor the funnel order to suit your organization's needs</h3>
+<p>You can customize the default funnel order on the "Alert prioritization" graph to ensure it reflects the unique risk profile, business priorities, and compliance requirements of your organization. See <a href="../../how-tos/view-and-interpret-data/analyze-organization-data/viewing-metrics-for-dependabot-alerts.html#configuring-funnel-categories">Viewing metrics for Dependabot alerts</a>.</p>
+<h3 title="Steps to prioritize alerts / 2. Focus on critical and high severity alerts"><a href="#2-focus-on-critical-and-high-severity-alerts" aria-hidden="true" class="anchor" id="2-focus-on-critical-and-high-severity-alerts"></a>2. Focus on critical and high severity alerts</h3>
+<p>Start by identifying alerts with the highest severity by using the <code>severity-critical</code> or <code>severity-high</code> filters. These vulnerabilities pose the greatest risk and are often prioritized by compliance standards.</p>
+<h3 title="Steps to prioritize alerts / 3. Assess exploitability and reachability"><a href="#3-assess-exploitability-and-reachability" aria-hidden="true" class="anchor" id="3-assess-exploitability-and-reachability"></a>3. Assess exploitability and reachability</h3>
+<p>Prioritize vulnerabilities that are the most likely to be exploited in your codebase. To identify alerts that are most likely to be exploited, you can use the <code>epss_percentage</code> filter associated to a value (for example <code>epss_percentage&gt;=0.10</code>).</p>
+<h3 title="Steps to prioritize alerts / 4. Review dependency scope and relationship"><a href="#4-review-dependency-scope-and-relationship" aria-hidden="true" class="anchor" id="4-review-dependency-scope-and-relationship"></a>4. Review dependency scope and relationship</h3>
+<p>Direct dependencies are typically easier to update and may have a greater impact on your application’s security. We recommend addressing these before transitive dependencies when possible.<br>
+Filtering alerts using the <code>relationship:direct</code> filter allows us to see vulnerabilities on direct dependencies for supported ecosystems like npm.</p>
+<p>Runtime dependencies are used by an application in production. Updating this sort of dependency can address security vulnerabilities, bug fixes, and performance improvements that affect your end users or systems directly. On the other hand, development dependencies are only used during development, testing, or build processes. While important, issues in these dependencies usually don’t impact your running application or its users.</p>
+<p>You can use the <code>scope:runtime</code> or <code>scope:development</code> filters to only display alerts for runtime or development dependencies, respectively.</p>
+<h3 title="Steps to prioritize alerts / 5. Consider the age of alerts"><a href="#5-consider-the-age-of-alerts" aria-hidden="true" class="anchor" id="5-consider-the-age-of-alerts"></a>5. Consider the age of alerts</h3>
+<p>Older alerts may indicate long-standing risks. Regularly review and address aged alerts to prevent security debt from accumulating. For example, once you establish that a specific repository has more alerts that need prioritizing than other repositories, you can:</p>
+<ol>
+<li>Click the repository name on the per-repository table to display the alerts for that repository only.</li>
+<li>Use the "Older" filter in the <strong>Sort</strong> dropdown list, as well as other sorting criteria, to fine-tune the visualization to alerts meeting your criteria by age.</li>
+</ol>
+<h3 title="Steps to prioritize alerts / 6. Leverage automation"><a href="#6-leverage-automation" aria-hidden="true" class="anchor" id="6-leverage-automation"></a>6. Leverage automation</h3>
+<p>Use Dependabot’s automated pull requests to quickly remediate vulnerabilities. Integrate these updates into your CI/CD pipeline for faster resolution and improved efficiency.</p>
+<h2 title="Best practices"><a href="#best-practices" aria-hidden="true" class="anchor" id="best-practices"></a>Best practices</h2>
+<ul>
+<li><strong>Establish Service Level Agreements (SLAs)</strong> for resolving vulnerabilities based on severity.</li>
+<li><strong>Monitor metrics regularly</strong> to identify trends and recurring issues.</li>
+<li><strong>Collaborate with developers</strong> to ensure timely updates and minimize disruption.</li>
+<li><strong>Document decisions</strong> to provide transparency and support future prioritization.</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

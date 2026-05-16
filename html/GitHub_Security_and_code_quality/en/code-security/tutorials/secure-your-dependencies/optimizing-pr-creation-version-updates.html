@@ -1,0 +1,257 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Optimizing the creation of pull requests for Dependabot version updates</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Secure your dependencies</a> / </nav><h1><a href="#optimizing-the-creation-of-pull-requests-for-dependabot-version-updates" aria-hidden="true" class="anchor" id="optimizing-the-creation-of-pull-requests-for-dependabot-version-updates"></a>Optimizing the creation of pull requests for Dependabot version updates</h1>
+<p>Learn how to streamline and efficiently manage your Dependabot pull requests.</p>
+<p>By default, Dependabot opens a new pull request to update each dependency. When you enable security updates, new pull requests are opened when a vulnerable dependency is found. When you configure version updates for one or more ecosystems, new pull requests are opened when new versions of dependencies are available, with the frequency defined in the <code>dependabot.yml</code> file.</p>
+<p>If your project has many dependencies, you might find that you have a very large number of Dependabot pull requests to review and merge, which can quickly become difficult to manage.</p>
+<p>There are a couple of customization options you can implement to optimize Dependabot update pull requests to align with your processes, such as:</p>
+<ul>
+<li><strong>Controlling the frequency</strong> with which Dependabot checks for newer versions of your dependencies with <code>schedule</code>.</li>
+<li><strong>Prioritize meaningful updates</strong> with <code>groups</code>.</li>
+</ul>
+<h2 title="Controlling the frequency and timings of dependency updates"><a href="#controlling-the-frequency-and-timings-of-dependency-updates" aria-hidden="true" class="anchor" id="controlling-the-frequency-and-timings-of-dependency-updates"></a>Controlling the frequency and timings of dependency updates</h2>
+<p>Dependabot runs its checks for version updates at a frequency set by you in the configuration file, where the required field, <code>schedule.interval</code>, must be set to <code>daily</code>, <code>weekly</code>, <code>monthly</code>, <code>quarterly</code>, <code>semiannually</code>, <code>yearly</code>, or <code>cron</code> (see <a href="../../reference/supply-chain-security/dependabot-options-reference.html#cronjob"><code>cronjob</code></a>).</p>
+<p>By default, Dependabot balances its workload by assigning a random time to check and raise pull requests for dependency updates.</p>
+<p>However, to reduce distraction, or to better organize time and resources for reviewing and addressing version updates, you might find it useful to modify the frequency and timings. For example, you may prefer Dependabot to run weekly rather than daily checks for updates, and at a time that ensures pull requests are raised before for your team's triage session.</p>
+<h3 title="Controlling the frequency and timings of dependency updates / Modifying the frequency and timings for dependency updates"><a href="#modifying-the-frequency-and-timings-for-dependency-updates" aria-hidden="true" class="anchor" id="modifying-the-frequency-and-timings-for-dependency-updates"></a>Modifying the frequency and timings for dependency updates</h3>
+<p>You can use <code>schedule</code> with a combination of options to modify the frequency and timings of when Dependabot checks for version updates.</p>
+<p>The example <code>dependabot.yml</code> file below changes the npm configuration to specify that Dependabot should check for version updates to npm dependencies every Tuesday at 02:00 Japanese Standard Time (UTC +09:00).</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># `dependabot.yml` file with
+</span><span style="color:#65737e;"># customized schedule for version updates
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Keep npm dependencies up to date
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">npm</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Check the npm registry every week on Tuesday at 02:00 Japan Standard Time (UTC +09:00)
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">day</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">tuesday</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">time</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">02:00</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">timezone</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">Asia/Tokyo</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<p>See also <a href="../../reference/supply-chain-security/dependabot-options-reference.html#schedule-">schedule</a>.</p>
+<h3 title="Controlling the frequency and timings of dependency updates / Setting up a cooldown period for dependency updates"><a href="#setting-up-a-cooldown-period-for-dependency-updates" aria-hidden="true" class="anchor" id="setting-up-a-cooldown-period-for-dependency-updates"></a>Setting up a cooldown period for dependency updates</h3>
+<p>You can use  <code>cooldown</code> with a combination of options to control when Dependabot creates pull requests for <strong>version updates</strong>, but not <strong>security updates</strong>.</p>
+<p>The example <code>dependabot.yml</code> file below shows a cooldown period being applied to the dependencies <code>requests</code>, <code>numpy</code>, and those prefixed with <code>pandas</code> or <code>django</code>, but not to the dependency called <code>pandas</code> (exact match), which is excluded via the <strong>exclude</strong> list.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">pip</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">daily</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">cooldown</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">default-days</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">5
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">semver-major-days</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">30
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">semver-minor-days</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">7
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">semver-patch-days</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">3
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">include</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        - "</span><span style="color:#a3be8c;">requests</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">        - "</span><span style="color:#a3be8c;">numpy</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">        - "</span><span style="color:#a3be8c;">pandas*</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">        - "</span><span style="color:#a3be8c;">django</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">exclude</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        - "</span><span style="color:#a3be8c;">pandas</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<ul>
+<li>The number of cooldown days must be between 1 and 90.</li>
+<li>The maximum allowed items limit in <code>include</code> and <code>exclude</code> lists, which can be used with <code>cooldown</code>, is 150 each.</li>
+</ul>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>To consider <strong>all dependencies</strong> for a cooldown period, you can:</p>
+<ul>
+<li>Omit the <code>include</code> option which applies cooldown to all dependencies.</li>
+<li>Use <code>"*"</code> in <code>include</code> to apply the cooldown settings to everything.<br>
+We recommend the use of <code>exclude</code> to <strong>only</strong> exclude <strong>specific dependencies</strong> from cooldown settings.</li>
+</ul>
+</div>
+<p>SemVer is supported for most package managers. Updates to new versions for dependencies in cooldown are deferred as follows:</p>
+<ul>
+<li>Major updates: Delayed by 30 days (<code>semver-major-days: 30</code>).</li>
+<li>Minor updates: Delayed by 7 days (<code>semver-minor-days: 7</code>).</li>
+<li>Patch updates: Delayed by 3 days (<code>semver-patch-days: 3</code>).</li>
+</ul>
+<p>See also <a href="../../reference/supply-chain-security/dependabot-options-reference.html#cooldown-"><code>cooldown</code></a>.</p>
+<h2 title="Prioritizing meaningful updates"><a href="#prioritizing-meaningful-updates" aria-hidden="true" class="anchor" id="prioritizing-meaningful-updates"></a>Prioritizing meaningful updates</h2>
+<h3 title="Prioritizing meaningful updates / Grouping related dependencies together"><a href="#grouping-related-dependencies-together" aria-hidden="true" class="anchor" id="grouping-related-dependencies-together"></a>Grouping related dependencies together</h3>
+<p>You can use <code>groups</code> to consolidate updates for multiple dependencies into a single pull request. This helps you focus your review time on higher risk updates, and minimize the time spent reviewing minor version updates. For example, you can combine updates for minor or patch updates for development dependencies into a single pull request, and have a dedicated group for security or version updates that impact a key area of your codebase.</p>
+<p>You must configure groups per individual package ecosystem, then you can create multiple groups per package ecosystem using a combination of criteria:</p>
+<ul>
+<li>Dependabot update type: <code>applies-to</code></li>
+<li>Type of dependency: <code>dependency-type</code>.</li>
+<li>Dependency name: <code>patterns</code> and <code>exclude-patterns</code></li>
+<li>Semantic versioning levels: <code>update-types</code></li>
+</ul>
+<p>To see all supported values for each criterion, see <a href="../../reference/supply-chain-security/dependabot-options-reference.html#groups--"><code>groups</code></a>.</p>
+<p>The below examples present several different methods to create groups of dependencies using the criteria.</p>
+<h3 title="Prioritizing meaningful updates / Example 1: Three version update groups"><a href="#example-1-three-version-update-groups" aria-hidden="true" class="anchor" id="example-1-three-version-update-groups"></a>Example 1: Three version update groups</h3>
+<p>In this example, the <code>dependabot.yml</code> file:</p>
+<ul>
+<li>Creates three groups, called "<code>production-dependencies</code>", "<code>development-dependencies</code>", and "<code>rubocop</code>".</li>
+<li>Uses <code>patterns</code> and <code>dependency-type</code> to include dependencies in the group.</li>
+<li>Uses <code>exclude-patterns</code> to exclude a dependency (or multiple dependencies) from the group.</li>
+</ul>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Keep bundler dependencies up to date
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">bundler</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">groups</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">production-dependencies</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">dependency-type</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">production</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">development-dependencies</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">dependency-type</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">development</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">exclude-patterns</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          - "</span><span style="color:#a3be8c;">rubocop*</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">rubocop</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">patterns</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          - "</span><span style="color:#a3be8c;">rubocop*</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<p>As a result:</p>
+<ul>
+<li>Version updates are grouped by dependency type.</li>
+<li>Development dependencies matching the pattern <code>rubocop*</code> are excluded from the <code>development-dependencies</code> group.</li>
+<li>Instead, development dependencies matching <code>rubocop*</code> will be included in the <code>rubocop</code> group. Due to the ordering, production dependencies matching <code>rubocop*</code> will be included in the <code>production-dependencies</code> group.</li>
+<li>In addition, all groups default to applying to version updates only, since the <code>applies-to</code> key is absent.</li>
+</ul>
+<h3 title="Prioritizing meaningful updates / Example 2: Grouped updates with excluded dependencies"><a href="#example-2-grouped-updates-with-excluded-dependencies" aria-hidden="true" class="anchor" id="example-2-grouped-updates-with-excluded-dependencies"></a>Example 2: Grouped updates with excluded dependencies</h3>
+<p>In this example, the <code>dependabot.yml</code> file:</p>
+<ul>
+<li>Creates a group called "<code>support-dependencies</code>," as part of a customized Bundler configuration.</li>
+<li>Uses <code>patterns</code> that match with the name of a dependency (or multiple dependencies) to include dependencies in the group.</li>
+<li>Uses <code>exclude-patterns</code> that match with the name of a dependency (or multiple dependencies) to exclude dependencies from the group.</li>
+<li>Applies the grouping to version updates only, since <code>applies-to: version-updates</code> is used.</li>
+</ul>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Keep bundler dependencies up to date
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">bundler</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directories</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - "</span><span style="color:#a3be8c;">/frontend</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      - "</span><span style="color:#a3be8c;">/backend</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      - "</span><span style="color:#a3be8c;">/admin</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Create a group of dependencies to be updated together in one pull request
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">groups</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Specify a name for the group, which will be used in pull request titles
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># and branch names
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">support-dependencies</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># Define patterns to include dependencies in the group (based on
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># dependency name)
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">applies-to</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">version-updates </span><span style="color:#65737e;"># Applies the group rule to version updates
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">patterns</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          - "</span><span style="color:#a3be8c;">rubocop</span><span style="color:#c0c5ce;">" </span><span style="color:#65737e;"># A single dependency name
+</span><span style="color:#c0c5ce;">          - "</span><span style="color:#a3be8c;">rspec*</span><span style="color:#c0c5ce;">"  </span><span style="color:#65737e;"># A wildcard string that matches multiple dependency names
+</span><span style="color:#c0c5ce;">          - "</span><span style="color:#a3be8c;">*</span><span style="color:#c0c5ce;">"       </span><span style="color:#65737e;"># A wildcard that matches all dependencies in the package
+</span><span style="color:#c0c5ce;">                      </span><span style="color:#65737e;"># ecosystem. Note: using "*" may open a large pull request
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># Define patterns to exclude dependencies from the group (based on
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># dependency name)
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">exclude-patterns</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          - "</span><span style="color:#a3be8c;">gc_ruboconfig</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">          - "</span><span style="color:#a3be8c;">gocardless-*</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<p>As a result:</p>
+<ul>
+<li>The majority of dependencies for bundler are consolidated into the <code>support-dependencies</code> group due to the wildcard ("<span data-escaped-char="">*</span>") pattern, apart from</li>
+<li>Dependencies that match <code>gc_ruboconfig</code> and <code>gocardless-*</code> are excluded from the group, and Dependabot continues to raise single pull requests for these dependencies. This can be helpful if updates for these dependencies need to be reviewed with closer scrutiny.</li>
+<li>For <code>support-dependencies</code>, Dependabot will only raise pull requests for version updates.</li>
+</ul>
+<h3 title="Prioritizing meaningful updates / Example 3: Individual pull requests for major updates and grouped for minor/patch updates"><a href="#example-3-individual-pull-requests-for-major-updates-and-grouped-for-minorpatch-updates" aria-hidden="true" class="anchor" id="example-3-individual-pull-requests-for-major-updates-and-grouped-for-minorpatch-updates"></a>Example 3: Individual pull requests for major updates and grouped for minor/patch updates</h3>
+<p>In this example, the <code>dependabot.yml</code> file:</p>
+<ul>
+<li>Creates a group called "<code>angular</code>."</li>
+<li>Uses <code>patterns</code> that match with the name of a dependency to include dependencies in the group.</li>
+<li>Uses <code>update-type</code> to only include <code>minor</code> or <code>patch</code> updates in the group.</li>
+<li>Applies the grouping to version updates only, since <code>applies-to: version-updates</code> is used.</li>
+</ul>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">npm</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">groups</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Specify a name for the group, which will be used in pull request titles
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># and branch names
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">angular</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">applies-to</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">version-updates
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">patterns</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          - "</span><span style="color:#a3be8c;">@angular*</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">update-types</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          - "</span><span style="color:#a3be8c;">minor</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">          - "</span><span style="color:#a3be8c;">patch</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<p>As a result:</p>
+<ul>
+<li>Dependabot will create a grouped pull request for all Angular dependencies that have a minor or patch update.</li>
+<li>All major updates will continue to be raised as individual pull requests.</li>
+</ul>
+<h3 title="Prioritizing meaningful updates / Example 4: Grouped pull requests for minor/patch updates and no pull requests for major updates"><a href="#example-4-grouped-pull-requests-for-minorpatch-updates-and-no-pull-requests-for-major-updates" aria-hidden="true" class="anchor" id="example-4-grouped-pull-requests-for-minorpatch-updates-and-no-pull-requests-for-major-updates"></a>Example 4: Grouped pull requests for minor/patch updates and no pull requests for major updates</h3>
+<p>In this example, the <code>dependabot.yml</code> file:</p>
+<ul>
+<li>Creates two groups called "<code>angular</code>" and "<code>minor-and-patch</code>".</li>
+<li>Uses <code>applies-to</code> so that the first group applies to version updates only, and the second group applies to security updates only.</li>
+<li>Uses <code>update-type</code> to only include <code>minor</code> or <code>patch</code> updates for both groups.</li>
+<li>Uses an <code>ignore</code> condition to exclude updates to <code>major</code> versions of <code>@angular*</code> packages.</li>
+</ul>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Keep npm dependencies up to date
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">npm</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">groups</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">angular</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">applies-to</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">version-updates
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">patterns</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          - "</span><span style="color:#a3be8c;">@angular*</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">update-types</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          - "</span><span style="color:#a3be8c;">minor</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">          - "</span><span style="color:#a3be8c;">patch</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">minor-and-patch</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">applies-to</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">security-updates
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">patterns</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          - "</span><span style="color:#a3be8c;">@angular*</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">update-types</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          - "</span><span style="color:#a3be8c;">patch</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">          - "</span><span style="color:#a3be8c;">minor</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">ignore</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">dependency-name</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">@angular*</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">update-types</span><span style="color:#c0c5ce;">: ["</span><span style="color:#a3be8c;">version-update:semver-major</span><span style="color:#c0c5ce;">"]
+</span></code></pre>
+<p>As a result:</p>
+<ul>
+<li>Minor and patch version updates for Angular dependencies are grouped into a single pull request.</li>
+<li>Minor and patch security updates for Angular dependencies are also grouped together into a single pull request.</li>
+<li>Dependabot won't automatically open pull requests for major updates for Angular.</li>
+</ul>
+<h3 title="Prioritizing meaningful updates / Grouping updates across directories in a monorepo"><a href="#grouping-updates-across-directories-in-a-monorepo" aria-hidden="true" class="anchor" id="grouping-updates-across-directories-in-a-monorepo"></a>Grouping updates across directories in a monorepo</h3>
+<p>If you manage a monorepo with multiple directories that share common dependencies, you can reduce the number of pull requests for version updates by grouping updates by dependency name across all directories.</p>
+<p>When you configure Dependabot to monitor multiple directories and enable grouping by dependency name, Dependabot will:</p>
+<ul>
+<li>Create a single pull request for each dependency update that affects multiple directories</li>
+<li>Update the same dependency to the same version across all directories in one operation</li>
+<li>Reduce the number of pull requests you need to review</li>
+<li>Minimize CI/CD costs by running tests once instead of per directory</li>
+</ul>
+<p>For more information, see <a href="../../reference/supply-chain-security/dependabot-options-reference.html#group-by-groups"><code>group-by</code></a>.</p>
+<p>This configuration example groups updates by dependency name across the <code>/frontend</code>, <code>/admin-panel</code>, and <code>/mobile-app</code> directories. If <code>lodash</code> needs to be updated in all three directories, Dependabot will create a single pull request named "Bump lodash in monorepo-dependencies group" that updates <code>lodash</code> in all three locations.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">npm</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directories</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - "</span><span style="color:#a3be8c;">/frontend</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      - "</span><span style="color:#a3be8c;">/admin-panel</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      - "</span><span style="color:#a3be8c;">/mobile-app</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">groups</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">monorepo-dependencies</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">group-by</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dependency-name
+</span></code></pre>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

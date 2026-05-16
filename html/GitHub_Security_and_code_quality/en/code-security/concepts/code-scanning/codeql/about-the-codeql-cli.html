@@ -1,0 +1,94 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>About the CodeQL CLI</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">Concepts</a> / <a href="../index.html">Code scanning</a> / <a href="index.html">CodeQL</a> / </nav><h1><a href="#about-the-codeql-cli" aria-hidden="true" class="anchor" id="about-the-codeql-cli"></a>About the CodeQL CLI</h1>
+<p>You can use the CodeQL CLI to run CodeQL processes locally on software projects or to generate code scanning results for upload to GitHub.</p>
+<p>Software developers and security researchers can secure their code<br>
+using CodeQL analysis. For more information about CodeQL, see <a href="about-code-scanning-with-codeql.html#about-codeql">About code scanning with CodeQL</a>.</p>
+<p>The CodeQL CLI is a standalone, command-line tool that you can use to analyze code. Its main purpose is to generate a database representation of a codebase, a CodeQL database. Once the database is ready, you can query it interactively, or run a suite of queries to generate a set of results in SARIF format and upload the results to GitHub.</p>
+<p>You can use the CodeQL CLI to:</p>
+<ul>
+<li>Run CodeQL analyses using queries provided by GitHub engineers and the open source community</li>
+<li>Generate code scanning alerts that you can upload to display in GitHub</li>
+<li>Create CodeQL databases to use in the CodeQL for Visual Studio Code extension.</li>
+<li>Develop and test custom CodeQL queries to use in your own analyses</li>
+</ul>
+<p>The CodeQL CLI can analyze:</p>
+<ul>
+<li>Dynamic languages, for example, JavaScript and Python.</li>
+<li>Compiled languages, for example, C/C++, C#, Go, Java, Kotlin, Rust, and Swift</li>
+<li>Codebases written in a mixture of languages.</li>
+</ul>
+<h2 title="About using the CodeQL CLI for code scanning"><a href="#about-using-the-codeql-cli-for-code-scanning" aria-hidden="true" class="anchor" id="about-using-the-codeql-cli-for-code-scanning"></a>About using the CodeQL CLI for code scanning</h2>
+<p>You can use the CodeQL CLI to run code scanning on code that you're processing in a third-party continuous integration (CI) system. Code scanning is a feature that you use to analyze the code in a GitHub repository to find security vulnerabilities and coding errors. Any problems identified by the analysis are shown in your repository. For an overview of using code scanning with external CI systems, see <a href="../../../how-tos/find-and-fix-code-vulnerabilities/integrate-with-existing-tools/using-code-scanning-with-your-existing-ci-system.html">Using code scanning with your existing CI system</a>. For recommended specifications (RAM, CPU cores, and disk) for running CodeQL analysis, see <a href="../../../reference/code-scanning/codeql/recommended-hardware-resources-for-running-codeql.html">Recommended hardware resources for running CodeQL</a>.</p>
+<p>Alternatively, you can use GitHub Actions or Azure DevOps pipelines to scan code using the CodeQL CLI. For more information, see <a href="../../../how-tos/find-and-fix-code-vulnerabilities/configure-code-scanning/configuring-default-setup-for-code-scanning.html">Configuring default setup for code scanning</a> or <a href="https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features" class="external">Configure GitHub Advanced Security for Azure DevOps</a> in Microsoft Learn.</p>
+<p>For an overview of all the options for using CodeQL analysis for code scanning, see <a href="about-code-scanning-with-codeql.html">About code scanning with CodeQL</a>.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<ul>
+<li>The CodeQL CLI is free to use on public repositories. The CodeQL CLI is also available in private repositories owned by organizations that use GitHub Team or GitHub Enterprise Cloud and have a license for GitHub Code Security. For information, see <a href="https://securitylab.github.com/tools/codeql/license" class="external">GitHub CodeQL Terms and Conditions</a> and <a href="https://codeql.github.com/docs/codeql-cli/" class="external">CodeQL CLI</a>.</li>
+<li>The CodeQL CLI is currently not compatible with non-glibc Linux distributions such as (musl-based) Alpine Linux.</li>
+</ul>
+</div>
+<h2 title="About generating code scanning results with the CodeQL CLI"><a href="#about-generating-code-scanning-results-with-the-codeql-cli" aria-hidden="true" class="anchor" id="about-generating-code-scanning-results-with-the-codeql-cli"></a>About generating code scanning results with the CodeQL CLI</h2>
+<p>If you choose to run the CodeQL CLI directly, you first have to install the CodeQL CLI locally. If you are planning to use the CodeQL CLI with an external CI system, you need to make the CodeQL CLI available to servers in your CI system.</p>
+<p>Once the CodeQL CLI is set up, you can use three different commands to generate results and upload them to GitHub:</p>
+<ol>
+<li><code>database create</code> to create a CodeQL database to represent the hierarchical structure of each supported programming language in the repository. For more information, see <a href="../../../tutorials/customize-code-scanning/preparing-your-code-for-codeql-analysis.html">Preparing your code for CodeQL analysis</a>.</li>
+<li><code>database analyze</code> to run queries to analyze each CodeQL database and summarize the results in a SARIF file. For more information, see <a href="../../../tutorials/customize-code-scanning/analyzing-your-code-with-codeql-queries.html">Analyzing your code with CodeQL queries</a>.</li>
+<li><code>github upload-results</code> to upload the resulting SARIF files to GitHub where the results are matched to a branch or pull request and displayed as code scanning alerts. For more information, see <a href="../../../tutorials/customize-code-scanning/uploading-codeql-analysis-results-to-github.html">Uploading CodeQL analysis results to GitHub</a>.</li>
+</ol>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Uploading SARIF data to display as code scanning results in GitHub is supported for organization-owned repositories with GitHub Code Security enabled, and public repositories on GitHub.com. For more information, see <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-security-and-analysis-settings-for-your-repository" class="external">Managing security and analysis settings for your repository</a>.</p>
+</div>
+<h3 title="About generating code scanning results with the CodeQL CLI / Example CI configuration for CodeQL analysis"><a href="#example-ci-configuration-for-codeql-analysis" aria-hidden="true" class="anchor" id="example-ci-configuration-for-codeql-analysis"></a>Example CI configuration for CodeQL analysis</h3>
+<p>This is an example of the full series of commands for the CodeQL CLI that you might use to analyze a codebase with two supported languages and then upload the results to GitHub.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;"># Create CodeQL databases for Java and Python in the 'codeql-dbs' directory
+</span><span style="color:#c0c5ce;"># Call the normal build script for the codebase: 'myBuildScript'
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">codeql database create codeql-dbs --source-root=src \
+</span><span style="color:#c0c5ce;">    --db-cluster --language=java,python --command=./myBuildScript
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;"># Analyze the CodeQL database for Java, 'codeql-dbs/java'
+</span><span style="color:#c0c5ce;"># Tag the data as 'java' results and store in: 'java-results.sarif'
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">codeql database analyze codeql-dbs/java java-code-scanning.qls \
+</span><span style="color:#c0c5ce;">    --format=sarif-latest --sarif-category=java --output=java-results.sarif
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;"># Analyze the CodeQL database for Python, 'codeql-dbs/python'
+</span><span style="color:#c0c5ce;"># Tag the data as 'python' results and store in: 'python-results.sarif'
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">codeql database analyze codeql-dbs/python python-code-scanning.qls \
+</span><span style="color:#c0c5ce;">    --format=sarif-latest --sarif-category=python --output=python-results.sarif
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;"># Upload the SARIF file with the Java results: 'java-results.sarif'
+</span><span style="color:#c0c5ce;"># The GitHub App or personal access token created for authentication
+</span><span style="color:#c0c5ce;"># with GitHub's REST API is available in the `GITHUB_TOKEN` environment variable.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">codeql github upload-results \
+</span><span style="color:#c0c5ce;">    --repository=my-org/example-repo \
+</span><span style="color:#c0c5ce;">    --ref=refs/heads/main --commit=deb275d2d5fe9a522a0b7bd8b6b6a1c939552718 \
+</span><span style="color:#c0c5ce;">    --sarif=java-results.sarif
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;"># Upload the SARIF file with the Python results: 'python-results.sarif'
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">codeql github upload-results \
+</span><span style="color:#c0c5ce;">    --repository=my-org/example-repo \
+</span><span style="color:#c0c5ce;">    --ref=refs/heads/main --commit=deb275d2d5fe9a522a0b7bd8b6b6a1c939552718 \
+</span><span style="color:#c0c5ce;">    --sarif=python-results.sarif
+</span></code></pre>
+<h3 title="About generating code scanning results with the CodeQL CLI / Database extraction"><a href="#database-extraction" aria-hidden="true" class="anchor" id="database-extraction"></a>Database extraction</h3>
+<p>The CodeQL CLI uses special programs, called extractors, to extract information from the source code of a software system into a database that can be queried. You can customize the behavior of extractors by setting extractor configuration options through the CodeQL CLI. See <a href="../../../reference/code-scanning/codeql/codeql-cli/extractor-options.html">Extractor options</a>.</p>
+<h2 title="About the GitHub CodeQL license"><a href="#about-the-github-codeql-license" aria-hidden="true" class="anchor" id="about-the-github-codeql-license"></a>About the GitHub CodeQL license</h2>
+<p><strong>License notice:</strong> If you don’t have a license for GitHub Code Security then, by installing this product, you are agreeing to the <a href="https://github.com/github/codeql-cli-binaries/blob/main/LICENSE.md" class="external">GitHub CodeQL Terms and Conditions</a>.</p>
+<p>For information about how you can try GitHub Enterprise with GitHub Advanced Security for free, see <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/overview/setting-up-a-trial-of-github-enterprise-cloud" class="external">Setting up a trial of GitHub Enterprise Cloud</a> and <a href="https://docs.github.com/en/enterprise-cloud@latest/billing/managing-billing-for-your-products/managing-billing-for-github-advanced-security/setting-up-a-trial-of-github-advanced-security#setting-up-your-trial-of-github-advanced-security" class="external">Setting up a trial of GitHub Advanced Security</a> in the GitHub Enterprise Cloud documentation.</p>
+<h2 title="About CodeQL CLI database bundles"><a href="#about-codeql-cli-database-bundles" aria-hidden="true" class="anchor" id="about-codeql-cli-database-bundles"></a>About CodeQL CLI database bundles</h2>
+<p>The CodeQL CLI database bundle command can be used to create a relocatable archive of a CodeQL database.</p>
+<p>A copy of a database bundle can be used to share troubleshooting information with your team members or with GitHub Support. See <a href="../../../how-tos/find-and-fix-code-vulnerabilities/scan-from-the-command-line/creating-database-bundle-for-troubleshooting.html">Creating CodeQL CLI database bundles</a>.</p>
+<h2 title="Getting started"><a href="#getting-started" aria-hidden="true" class="anchor" id="getting-started"></a>Getting started</h2>
+<p>For the simplest way to get started, see <a href="../../../how-tos/find-and-fix-code-vulnerabilities/scan-from-the-command-line/setting-up-the-codeql-cli.html">Setting up the CodeQL CLI</a>.</p>
+<p>More advanced setup options are available if you need them. For example, if you:</p>
+<ul>
+<li>Want to contribute to open source shared CodeQL queries and prefer working with the CodeQL source code directly. See <a href="../../../how-tos/find-and-fix-code-vulnerabilities/scan-from-the-command-line/check-out-source-code.html">Checking out the CodeQL CLI source code</a>.</li>
+<li>Need to install multiple versions of the CodeQL CLI side by side. For example, if one codebase requires a specific version while another uses the latest. You can download each version and unpack both CLI archives in the same parent directory.</li>
+<li>Are researching or developing queries and want to download databases from GitHub.com. See <a href="../../../how-tos/find-and-fix-code-vulnerabilities/scan-from-the-command-line/download-databases.html">Downloading CodeQL databases from GitHub</a>.</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Verifying attestations offline</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">GitHub Actions</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Secure your work</a> / <a href="index.html">Use artifact attestations</a> / </nav><h1><a href="#verifying-attestations-offline" aria-hidden="true" class="anchor" id="verifying-attestations-offline"></a>Verifying attestations offline</h1>
+<p>Artifact attestations can be verified without an internet connection.</p>
+<h2 title="Prerequisites"><a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<p>Before starting this guide, you should be generating artifact attestations for your builds. See <a href="use-artifact-attestations.html">Using artifact attestations to establish provenance for builds</a>.</p>
+<h2 title="Step 1: Download attestation bundle"><a href="#step-1-download-attestation-bundle" aria-hidden="true" class="anchor" id="step-1-download-attestation-bundle"></a>Step 1: Download attestation bundle</h2>
+<p>First, get the attestation bundle from the attestation API.</p>
+<p>You can do so with the following command from a machine that is online:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> attestation download PATH/TO/YOUR/BUILD/ARTIFACT-BINARY</span><span style="color:#bf616a;"> -R</span><span style="color:#c0c5ce;"> ORGANIZATION_NAME/REPOSITORY_NAME
+</span></code></pre>
+<p>Here is example output from that command:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">Wrote</span><span style="color:#c0c5ce;"> attestations to file sha256:ae57936def59bc4c75edd3a837d89bcefc6d3a5e31d55a6fa7a71624f92c3c3b.jsonl.
+</span><span style="color:#8fa1b3;">Any</span><span style="color:#c0c5ce;"> previous content has been overwritten
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#8fa1b3;">The</span><span style="color:#c0c5ce;"> trusted metadata is now available at sha256:ae57936def59bc4c75edd3a837d89bcefc6d3a5e31d55a6fa7a71624f92c3c3b.jsonl
+</span></code></pre>
+<h2 title="Step 2: Download trusted roots"><a href="#step-2-download-trusted-roots" aria-hidden="true" class="anchor" id="step-2-download-trusted-roots"></a>Step 2: Download trusted roots</h2>
+<p>Next, get the key material from the trusted roots.</p>
+<p>Artifact attestations uses the Sigstore public good instance for public repositories, and GitHub's Sigstore instance for private repositories. You can use one command to get both trusted roots:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> attestation trusted-root &gt; trusted_root.jsonl
+</span></code></pre>
+<h3 title="Step 2: Download trusted roots / Updating trusted root information in an offline environment"><a href="#updating-trusted-root-information-in-an-offline-environment" aria-hidden="true" class="anchor" id="updating-trusted-root-information-in-an-offline-environment"></a>Updating trusted root information in an offline environment</h3>
+<p>It's best practice to generate a new <code>trusted_root.jsonl</code> file any time you are importing new signed material into your offline environment.</p>
+<p>The key material in <code>trusted_root.jsonl</code> does not have a built-in expiration date, so anything signed before you generate the trusted root file will continue to successfully verify. Anything signed after the file is generated will verify until that Sigstore instance rotates its key material, which typically happens a few times per year. You will not know if key material has been revoked since you last generated the trusted root file.</p>
+<h2 title="Step 3: Perform offline verification"><a href="#step-3-perform-offline-verification" aria-hidden="true" class="anchor" id="step-3-perform-offline-verification"></a>Step 3: Perform offline verification</h2>
+<p>Now, you are ready to verify the artifact offline.</p>
+<p>You should import into your offline environment:</p>
+<ul>
+<li>GitHub CLI</li>
+<li>Your artifact</li>
+<li>The bundle file</li>
+<li>The trusted root file</li>
+</ul>
+<p>You can then perform offline verification with the following command:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> attestation verify PATH/TO/YOUR/BUILD/ARTIFACT-BINARY</span><span style="color:#bf616a;"> -R</span><span style="color:#c0c5ce;"> ORGANIZATION_NAME/REPOSITORY_NAME</span><span style="color:#bf616a;"> --bundle</span><span style="color:#c0c5ce;"> sha256:ae57936def59bc4c75edd3a837d89bcefc6d3a5e31d55a6fa7a71624f92c3c3b.jsonl</span><span style="color:#bf616a;"> --custom-trusted-root</span><span style="color:#c0c5ce;"> trusted_root.jsonl
+</span></code></pre>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

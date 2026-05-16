@@ -1,0 +1,33 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Delegated alert dismissal</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Security at scale</a> / </nav><h1><a href="#delegated-alert-dismissal" aria-hidden="true" class="anchor" id="delegated-alert-dismissal"></a>Delegated alert dismissal</h1>
+<p>Increase your governance over security alerts with delegated alert dismissal.</p>
+<p>Delegated alert dismissal lets you restrict which users can directly dismiss an alert. When you enable the feature:</p>
+<ul>
+<li>Users with write access to a repository must request to dismiss alerts in that repository.</li>
+<li>Organization owners and security managers can approve or deny dismissal requests, as well as dismiss alerts directly themselves.</li>
+</ul>
+<p>Reviewers are notified of dismissal requests via email, and can either approve the request to dismiss the alert, or deny the request to leave the alert open. After a request is reviewed, the requester is notified of the outcome via email.</p>
+<h2 title="Availability"><a href="#availability" aria-hidden="true" class="anchor" id="availability"></a>Availability</h2>
+<p>You can enable delegated alert dismissal for:</p>
+<ul>
+<li>Code scanning alerts (available on GitHub.com and GitHub Enterprise Server 3.17+)</li>
+<li>Secret scanning alerts (available on GitHub.com and GitHub Enterprise Server 3.17+)</li>
+<li>Dependabot alerts (available on GitHub.com and GitHub Enterprise Server 3.21+)</li>
+</ul>
+<h2 title="Custom roles for delegated alert dismissal"><a href="#custom-roles-for-delegated-alert-dismissal" aria-hidden="true" class="anchor" id="custom-roles-for-delegated-alert-dismissal"></a>Custom roles for delegated alert dismissal</h2>
+<p>You can use a custom role to let team members who are not organization owners or security managers respond to dismissal requests and dismiss alerts directly. The custom role needs the following permissions:</p>
+<ul>
+<li>Organization permissions for reviewing and bypassing alert dismissal requests. To find the exact permissions required for a particular product, see <a href="https://docs.github.com/en/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles#permissions-for-organization-access" class="external">Permissions for organization access</a>.</li>
+<li>Repository permissions to view, dismiss, and reopen alerts. To find the exact permissions required for a particular product, see <a href="https://docs.github.com/en/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles#security" class="external">Security</a>.</li>
+</ul>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Adding repository permissions to a custom organization role is currently in public preview and subject to change.</p>
+</div>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>To configure delegated alert dismissal, see:</p>
+<ul>
+<li><a href="../../how-tos/manage-security-alerts/manage-code-scanning-alerts/enabling-delegated-alert-dismissal-for-code-scanning.html">Enabling delegated alert dismissal for code scanning</a></li>
+<li><a href="../../how-tos/manage-security-alerts/manage-secret-scanning-alerts/enabling-delegated-alert-dismissal-for-secret-scanning.html">Enabling delegated alert dismissal for secret scanning</a></li>
+<li><a href="../../how-tos/manage-security-alerts/manage-dependabot-alerts/enable-delegated-alert-dismissal.html">Enabling delegated alert dismissal for Dependabot</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

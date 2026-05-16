@@ -1,0 +1,39 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>About bypass requests for push protection</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Secret security</a> / </nav><h1><a href="#about-bypass-requests-for-push-protection" aria-hidden="true" class="anchor" id="about-bypass-requests-for-push-protection"></a>About bypass requests for push protection</h1>
+<p>Learn how bypass requests work when push protection blocks commits containing secrets.</p>
+<h2 title="About bypass requests for push protection"><a href="#about-bypass-requests-for-push-protection-1" aria-hidden="true" class="anchor" id="about-bypass-requests-for-push-protection-1"></a>About bypass requests for push protection</h2>
+<p>When push protection blocks a commit containing a secret, contributors may need to bypass the block to complete their push. If delegated bypass for push protection is enabled, contributors without bypass privileges must submit a bypass request and wait for approval from designated reviewers. This allows organizations to maintain security oversight while enabling legitimate exceptions when needed. For more information, see <a href="about-delegated-bypass-for-push-protection.html">About delegated bypass for push protection</a>.</p>
+<p>If delegated bypass for push protection is not enabled, contributors can bypass push protection at their own discretion.</p>
+<p>When enabling delegated bypass for push protection, organization owners or repository administrators decide which individuals, roles or teams can review (approve or deny) requests to bypass push protection.</p>
+<p>If you are a designated reviewer, you must review bypass requests and either approve or deny them based on the request details and your organization's security policies.</p>
+<h2 title="How bypass requests work"><a href="#how-bypass-requests-work" aria-hidden="true" class="anchor" id="how-bypass-requests-work"></a>How bypass requests work</h2>
+<p>When a contributor without bypass privileges requests to push a commit containing a secret, a bypass requests is sent to the reviewers. The designated group of reviewers:</p>
+<ul>
+<li>Receives an email notification containing a link to the request</li>
+<li>Reviews the request in the "Bypass requests" page of the repository, or in the organization's security overview.</li>
+<li>Has <strong>7 days</strong> to either approve or deny the request before the request expires</li>
+</ul>
+<h3 title="How bypass requests work / Information available to reviewers"><a href="#information-available-to-reviewers" aria-hidden="true" class="anchor" id="information-available-to-reviewers"></a>Information available to reviewers</h3>
+<p>GitHub displays the following information for each request:</p>
+<ul>
+<li>Name of the user who attempted the push</li>
+<li>Repository where the push was attempted</li>
+<li>Commit hash of the push</li>
+<li>Timestamp of the push</li>
+<li>File path and branch information (branch information is only available for pushes to single branches)</li>
+</ul>
+<h3 title="How bypass requests work / Outcomes"><a href="#outcomes" aria-hidden="true" class="anchor" id="outcomes"></a>Outcomes</h3>
+<p>The contributor is notified by email of the decision and must take the required action:</p>
+<ul>
+<li><strong>If the request is approved</strong>: The contributor can push the commit containing the secret to the repository.</li>
+<li><strong>If the request is denied</strong>: The contributor must remove the secret from the commit before successfully pushing the commit to the repository.</li>
+</ul>
+<h2 title="Automatic bypass request reviews"><a href="#automatic-bypass-request-reviews" aria-hidden="true" class="anchor" id="automatic-bypass-request-reviews"></a>Automatic bypass request reviews</h2>
+<p>You can use GitHub Apps with fine-grained permissions to programmatically review and approve push protection bypass requests. This enables you to enforce consistent security policies, integrate with external security tools, or reduce manual review burden.</p>
+<blockquote>
+<p>For more information about permissions, see <a href="https://docs.github.com/en/enterprise-cloud@latest/rest/authentication/permissions-required-for-github-apps?apiVersion=2022-11-28#organization-permissions-for-organization-bypass-requests-for-secret-scanning" class="external">Organization permissions for "Organization bypass requests for secret scanning"</a>.</p>
+</blockquote>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<ul>
+<li>To learn how to manage bypass requests for push protection as a reviewer, see <a href="../../how-tos/secure-your-secrets/manage-bypass-requests/managing-requests-to-bypass-push-protection.html">Managing requests to bypass push protection</a>.</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

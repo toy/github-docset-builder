@@ -1,0 +1,43 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Writing custom queries for the CodeQL CLI</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Find and fix code vulnerabilities</a> / <a href="index.html">Scan from the command line</a> / </nav><h1><a href="#writing-custom-queries-for-the-codeql-cli" aria-hidden="true" class="anchor" id="writing-custom-queries-for-the-codeql-cli"></a>Writing custom queries for the CodeQL CLI</h1>
+<p>You can write your own CodeQL queries to find specific vulnerabilities and errors.</p>
+<p>This article is specifically about writing queries to use with the <a href="../../../reference/code-scanning/codeql/codeql-cli-manual/database-analyze.html">database analyze</a> command to produce <a href="https://codeql.github.com/docs/codeql-overview/about-codeql/#interpret-query-results" class="external">interpreted results</a>. For conceptual information about custom queries, see <a href="../../../concepts/code-scanning/codeql/custom-codeql-queries.html">Custom CodeQL queries</a>.</p>
+<h2 title="Writing a valid query"><a href="#writing-a-valid-query" aria-hidden="true" class="anchor" id="writing-a-valid-query"></a>Writing a valid query</h2>
+<p>Before running a custom analysis you need to write a valid query, and save it in a file with a <code>.ql</code> extension. There is extensive documentation available to help you write queries. For more information, see <a href="https://codeql.github.com/docs/writing-codeql-queries/codeql-queries/#codeql-queries" class="external">CodeQL queries</a>.</p>
+<h2 title="Including query metadata"><a href="#including-query-metadata" aria-hidden="true" class="anchor" id="including-query-metadata"></a>Including query metadata</h2>
+<p>When running queries with the <code>database analyze</code> command, you must include the following two properties to ensure that the results are interpreted correctly:</p>
+<ul>
+<li>
+<p>Query identifier (<code>@id</code>): a sequence of words composed of lowercase letters or digits, delimited by <code>/</code> or <code>-</code>, identifying and classifying the query.</p>
+</li>
+<li>
+<p>Query type (<code>@kind</code>): identifies the query as a simple alert (<code>@kind problem</code>), an alert documented by a sequence of code locations (<code>@kind path-problem</code>), for extractor troubleshooting (<code>@kind diagnostic</code>), or a summary metric (<code>@kind metric</code> and <code>@tags summary</code>).</p>
+</li>
+</ul>
+<p>For more information about these metadata properties, see <a href="https://codeql.github.com/docs/writing-codeql-queries/metadata-for-codeql-queries/#metadata-for-codeql-queries" class="external">Metadata for CodeQL queries</a> and the <a href="https://github.com/github/codeql/blob/main/docs/query-metadata-style-guide.md" class="external">Query metadata style guide</a>.</p>
+<h2 title="Including query help for custom CodeQL queries in SARIF files"><a href="#including-query-help-for-custom-codeql-queries-in-sarif-files" aria-hidden="true" class="anchor" id="including-query-help-for-custom-codeql-queries-in-sarif-files"></a>Including query help for custom CodeQL queries in SARIF files</h2>
+<p>For information about query help and documentation formats, see <a href="../../../concepts/code-scanning/codeql/custom-codeql-queries.html#query-documentation">Custom CodeQL queries</a>.</p>
+<p>To include query help in SARIF files when running code scanning analyses:</p>
+<ol>
+<li>
+<p>Write your query help in one of the following formats:</p>
+<ul>
+<li><strong>Markdown file</strong>: Save a Markdown file alongside your query with the same name (for example, <code>my-query.md</code> for <code>my-query.ql</code>)</li>
+<li><strong><code>.qhelp</code> file</strong>: Write query help in <code>.qhelp</code> format, then convert it to Markdown before running the analysis. For more information, see <a href="https://codeql.github.com/docs/writing-codeql-queries/query-help-files/#query-help-files" class="external">Query help files</a> and <a href="testing-query-help-files.html">Testing query help files</a>.</li>
+</ul>
+</li>
+<li>
+<p>Run <code>codeql database analyze</code> with the <code>--sarif-add-query-help</code> option:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql database analyze &lt;database&gt; --format=sarif-latest --output=results.sarif --sarif-add-query-help
+</span></code></pre>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The <code>--sarif-add-query-help</code> option is available from CodeQL CLI v2.7.1 onwards.</p>
+</div>
+</li>
+<li>
+<p>Upload the SARIF file to GitHub.</p>
+</li>
+</ol>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>To share and use your custom queries, see <a href="publish-and-use-packs.html">Publishing and using CodeQL packs</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

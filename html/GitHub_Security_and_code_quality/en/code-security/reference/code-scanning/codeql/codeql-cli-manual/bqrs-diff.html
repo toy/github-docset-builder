@@ -1,0 +1,67 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>bqrs diff</title><link rel="stylesheet" href="../../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../../index.html">Security and code quality</a> / <a href="../../../index.html">Reference</a> / <a href="../../index.html">Code scanning</a> / <a href="../index.html">CodeQL</a> / <a href="index.html">CodeQL CLI manual</a> / </nav><h1><a href="#bqrs-diff" aria-hidden="true" class="anchor" id="bqrs-diff"></a>bqrs diff</h1>
+<p>Compute the difference between two result sets.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This content describes the most recent release of the CodeQL CLI. For more information about this release, see <a href="https://github.com/github/codeql-cli-binaries/releases" class="external">https://github.com/github/codeql-cli-binaries/releases</a>.</p>
+<p>To see details of the options available for this command in an earlier release, run the command with the <span style="white-space: nowrap;"><code>--help</code></span> option in your terminal.</p>
+</div>
+<h2 title="Synopsis"><a href="#synopsis" aria-hidden="true" class="anchor" id="synopsis"></a>Synopsis</h2>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql bqrs diff &lt;options&gt;... -- &lt;file1&gt; &lt;file2&gt;
+</span></code></pre>
+<h2 title="Description"><a href="#description" aria-hidden="true" class="anchor" id="description"></a>Description</h2>
+<p>Compute the difference between two result sets.</p>
+<h2 title="Options"><a href="#options" aria-hidden="true" class="anchor" id="options"></a>Options</h2>
+<h3 title="Primary Options"><a href="#primary-options" aria-hidden="true" class="anchor" id="primary-options"></a>Primary Options</h3>
+<h4><a href="#file1" aria-hidden="true" class="anchor" id="file1"></a><code>&lt;file1&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Mandatory] First BQRS file to compare.</p>
+<h4><a href="#file2" aria-hidden="true" class="anchor" id="file2"></a><code>&lt;file2&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Mandatory] Second BQRS file to compare.</p>
+<h4><a href="#--leftfile" aria-hidden="true" class="anchor" id="--leftfile"></a><code>--left=&lt;file&gt;</code></h4>
+<p>Write rows only present in <code>file1</code> to this file.</p>
+<h4><a href="#--rightfile" aria-hidden="true" class="anchor" id="--rightfile"></a><code>--right=&lt;file&gt;</code></h4>
+<p>Write rows only present in <code>file2</code> to this file.</p>
+<h4><a href="#--bothfile" aria-hidden="true" class="anchor" id="--bothfile"></a><code>--both=&lt;file&gt;</code></h4>
+<p>Write rows present in both <code>file1</code> and <code>file2</code> to this file.</p>
+<h4><a href="#--retain-result-setsresult-setresult-set" aria-hidden="true" class="anchor" id="--retain-result-setsresult-setresult-set"></a><code>--retain-result-sets=&lt;result-set&gt;[,&lt;result-set&gt;...]</code></h4>
+<p>Comma-separated list of result set names to copy directly to the<br>
+corresponding output instead of comparing. If --both is given, that<br>
+output is taken from <code>file1</code>. Defaults to 'nodes,edges,subpaths' to<br>
+simplify handling of path-problem results.</p>
+<h4><a href="#--result-setsname1name2" aria-hidden="true" class="anchor" id="--result-setsname1name2"></a><code>--result-sets=&lt;name1&gt;,&lt;name2&gt;</code></h4>
+<p>Compare only the specified result sets. The format is<br>
+<span data-escaped-char="">&lt;</span>name1&gt;,<span data-escaped-char="">&lt;</span>name2&gt; where <span data-escaped-char="">&lt;</span>name1&gt; is the result set name in <code>file1</code><br>
+and <span data-escaped-char="">&lt;</span>name2&gt; is the result set name in <code>file2</code>. The two result sets<br>
+must be compatible. The option can be repeated.</p>
+<h4><a href="#--no-compare-internal-ids" aria-hidden="true" class="anchor" id="--no-compare-internal-ids"></a><code>--[no-]compare-internal-ids</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Include internal entity IDs in the comparison. Entity IDs<br>
+are not comparable across databases, but for result sets that originate<br>
+from the same database this can help distinguish entities with the same<br>
+location and label.</p>
+<h3 title="Options / Common options"><a href="#common-options" aria-hidden="true" class="anchor" id="common-options"></a>Common options</h3>
+<h4><a href="#-h---help" aria-hidden="true" class="anchor" id="-h---help"></a><code>-h, --help</code></h4>
+<p>Show this help text.</p>
+<h4><a href="#-jopt" aria-hidden="true" class="anchor" id="-jopt"></a><code>-J=&lt;opt&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Give option to the JVM running the command.</p>
+<p>(Beware that options containing spaces will not be handled correctly.)</p>
+<h4><a href="#-v---verbose" aria-hidden="true" class="anchor" id="-v---verbose"></a><code>-v, --verbose</code></h4>
+<p>Incrementally increase the number of progress messages printed.</p>
+<h4><a href="#-q---quiet" aria-hidden="true" class="anchor" id="-q---quiet"></a><code>-q, --quiet</code></h4>
+<p>Incrementally decrease the number of progress messages printed.</p>
+<h4><a href="#--verbositylevel" aria-hidden="true" class="anchor" id="--verbositylevel"></a><code>--verbosity=&lt;level&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Explicitly set the verbosity level to one of errors,<br>
+warnings, progress, progress+, progress++, progress+++. Overrides <code>-v</code><br>
+and <code>-q</code>.</p>
+<h4><a href="#--logdirdir" aria-hidden="true" class="anchor" id="--logdirdir"></a><code>--logdir=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Write detailed logs to one or more files in the given<br>
+directory, with generated names that include timestamps and the name of<br>
+the running subcommand.</p>
+<p>(To write a log file with a name you have full control over, instead<br>
+give <code>--log-to-stderr</code> and redirect stderr as desired.)</p>
+<h4><a href="#--common-cachesdir" aria-hidden="true" class="anchor" id="--common-cachesdir"></a><code>--common-caches=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Controls the location of cached data on disk that will<br>
+persist between several runs of the CLI, such as downloaded QL packs and<br>
+compiled query plans. If not set explicitly, this defaults to a<br>
+directory named <code>.codeql</code> in the user's home directory; it will be<br>
+created if it doesn't already exist.</p>
+<p>Available since <code>v2.15.2</code>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

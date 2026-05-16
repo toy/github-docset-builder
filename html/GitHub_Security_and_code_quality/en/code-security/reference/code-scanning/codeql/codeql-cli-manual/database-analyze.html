@@ -1,0 +1,403 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>database analyze</title><link rel="stylesheet" href="../../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../../index.html">Security and code quality</a> / <a href="../../../index.html">Reference</a> / <a href="../../index.html">Code scanning</a> / <a href="../index.html">CodeQL</a> / <a href="index.html">CodeQL CLI manual</a> / </nav><h1><a href="#database-analyze" aria-hidden="true" class="anchor" id="database-analyze"></a>database analyze</h1>
+<p>Analyze a database, producing meaningful results in the context of the<br>
+source code.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This content describes the most recent release of the CodeQL CLI. For more information about this release, see <a href="https://github.com/github/codeql-cli-binaries/releases" class="external">https://github.com/github/codeql-cli-binaries/releases</a>.</p>
+<p>To see details of the options available for this command in an earlier release, run the command with the <span style="white-space: nowrap;"><code>--help</code></span> option in your terminal.</p>
+</div>
+<h2 title="Synopsis"><a href="#synopsis" aria-hidden="true" class="anchor" id="synopsis"></a>Synopsis</h2>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql database analyze --format=&lt;format&gt; --output=&lt;output&gt; [--threads=&lt;num&gt;] [--ram=&lt;MB&gt;] &lt;options&gt;... -- &lt;database&gt; &lt;query|dir|suite|pack&gt;...
+</span></code></pre>
+<h2 title="Description"><a href="#description" aria-hidden="true" class="anchor" id="description"></a>Description</h2>
+<p>Analyze a database, producing meaningful results in the context of the<br>
+source code.</p>
+<p>Run a query suite (or some individual queries) against a CodeQL<br>
+database, producing results, styled as alerts or paths, in SARIF or<br>
+another interpreted format.</p>
+<p>This command combines the effect of the <a href="database-run-queries.html">codeql database run-queries</a> and <a href="database-interpret-results.html">codeql database interpret-results</a> commands. If you want to run queries whose results <em>don't</em> meet the requirements for<br>
+being interpreted as source-code alerts, use<br>
+<a href="database-run-queries.html">codeql database run-queries</a> or <a href="query-run.html">codeql query run</a> instead, and then <a href="bqrs-decode.html">codeql bqrs decode</a> to convert the raw results to a readable notation.</p>
+<h2 title="Options"><a href="#options" aria-hidden="true" class="anchor" id="options"></a>Options</h2>
+<h3 title="Primary Options"><a href="#primary-options" aria-hidden="true" class="anchor" id="primary-options"></a>Primary Options</h3>
+<h4><a href="#database" aria-hidden="true" class="anchor" id="database"></a><code>&lt;database&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Mandatory] Path to the CodeQL database to query.</p>
+<h4><a href="#querydirsuitepack" aria-hidden="true" class="anchor" id="querydirsuitepack"></a><code>&lt;query|dir|suite|pack&gt;...</code></h4>
+<p>Queries to execute. Each argument is in the form <code>scope/name@range:path</code><br>
+where:</p>
+<ul>
+<li><code>scope/name</code> is the qualified name of a CodeQL pack.</li>
+<li><code>range</code> is a semver range.</li>
+<li><code>path</code> is a file system path.</li>
+</ul>
+<p>If a <code>scope/name</code> is specified, the <code>range</code> and <code>path</code> are optional. A<br>
+missing <code>range</code> implies the latest version of the specified pack. A<br>
+missing <code>path</code> implies the default query suite of the specified pack.</p>
+<p>The <code>path</code> can be one of a <code>*.ql</code> query file, a directory containing one<br>
+or more queries, or a <code>.qls</code> query suite file. If there is no pack name<br>
+specified, then a <code>path</code> must be provided, and will be interpreted<br>
+relative to the current working directory of the current process.</p>
+<p>To specify a <code>path</code> that contains a literal <code>@</code> or <code>:</code>, use <code>path:</code> as a<br>
+prefix to the argument, like this: <code>path:directory/with:and@/chars</code>.</p>
+<p>If a <code>scope/name</code> and <code>path</code> are specified, then the <code>path</code> cannot be<br>
+absolute. It is considered relative to the root of the CodeQL pack.</p>
+<p>If no queries are specified, the CLI will automatically determine a<br>
+suitable set of queries to run. In particular, if a Code Scanning<br>
+configuration file was specified at database creation time using<br>
+<code>--codescanning-config</code> then the queries from this will be used.<br>
+Otherwise, the default queries for the language being analyzed will be<br>
+used.</p>
+<h4><a href="#--formatformat" aria-hidden="true" class="anchor" id="--formatformat"></a><code>--format=&lt;format&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Mandatory] The format in which to write the results. One of:</p>
+<p><code>csv</code>: Formatted comma-separated values, including columns with both<br>
+rule and alert metadata.</p>
+<p><code>sarif-latest</code>: Static Analysis Results Interchange Format (SARIF), a<br>
+JSON-based format for describing static analysis results. This format<br>
+option uses the most recent supported version (v2.1.0). This option is<br>
+not suitable for use in automation as it will produce different versions<br>
+of SARIF between different CodeQL versions.</p>
+<p><code>sarifv2.1.0</code>: SARIF v2.1.0.</p>
+<p><code>graphtext</code>: A textual format representing a graph. Only compatible with<br>
+queries with @kind graph.</p>
+<p><code>dgml</code>: Directed Graph Markup Language, an XML-based format for<br>
+describing graphs. Only compatible with queries with @kind graph.</p>
+<p><code>dot</code>: Graphviz DOT language, a text-based format for describing graphs.<br>
+Only compatible with queries with @kind graph.</p>
+<h4><a href="#-o---outputoutput" aria-hidden="true" class="anchor" id="-o---outputoutput"></a><code>-o, --output=&lt;output&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Mandatory] The output path to write results to. For graph formats<br>
+this should be a directory, and the result (or results if this command<br>
+supports interpreting more than one query) will be written within that<br>
+directory.</p>
+<h4><a href="#--no-rerun" aria-hidden="true" class="anchor" id="--no-rerun"></a><code>--[no-]rerun</code></h4>
+<p>Evaluate even queries that seem to have a BQRS result stored in the<br>
+database already.</p>
+<h4><a href="#--no-print-diagnostics-summary" aria-hidden="true" class="anchor" id="--no-print-diagnostics-summary"></a><code>--no-print-diagnostics-summary</code></h4>
+<p>Don't print a summary of the analyzed diagnostics to standard output.</p>
+<h4><a href="#--no-print-metrics-summary" aria-hidden="true" class="anchor" id="--no-print-metrics-summary"></a><code>--no-print-metrics-summary</code></h4>
+<p>Don't print a summary of the analyzed metrics to standard output.</p>
+<h4><a href="#--max-pathsmaxpaths" aria-hidden="true" class="anchor" id="--max-pathsmaxpaths"></a><code>--max-paths=&lt;maxPaths&gt;</code></h4>
+<p>The maximum number of paths to produce for each alert with paths.<br>
+(Default: 4)</p>
+<h4><a href="#--no-sarif-add-file-contents" aria-hidden="true" class="anchor" id="--no-sarif-add-file-contents"></a><code>--[no-]sarif-add-file-contents</code></h4>
+<p><span data-escaped-char="">[</span>SARIF formats only] Include the full file contents for all files<br>
+referenced in at least one result.</p>
+<h4><a href="#--no-sarif-add-snippets" aria-hidden="true" class="anchor" id="--no-sarif-add-snippets"></a><code>--[no-]sarif-add-snippets</code></h4>
+<p><span data-escaped-char="">[</span>SARIF formats only] Include code snippets for each location mentioned<br>
+in the results, with two lines of context before and after the reported<br>
+location.</p>
+<h4><a href="#--no-sarif-add-query-help" aria-hidden="true" class="anchor" id="--no-sarif-add-query-help"></a><code>--[no-]sarif-add-query-help</code></h4>
+<p><span data-escaped-char="">[</span>SARIF formats only] <span data-escaped-char="">[</span>Deprecated] Include Markdown query help for<br>
+all queries. It loads query help for /path/to/query.ql from the<br>
+/path/to/query.md file. If this flag is not supplied the default<br>
+behavior is to include help only for custom queries i.e. those in query<br>
+packs which are not of the form <span data-escaped-char="">`</span>codeql/<span data-escaped-char="">&lt;</span>lang<span data-escaped-char="">&amp;</span>rt;-queries<span data-escaped-char="">`</span>. This<br>
+option has no effect when passed to <a href="bqrs-interpret.html">codeql bqrs interpret</a>.</p>
+<h4><a href="#--sarif-include-query-helpmode" aria-hidden="true" class="anchor" id="--sarif-include-query-helpmode"></a><code>--sarif-include-query-help=&lt;mode&gt;</code></h4>
+<p><span data-escaped-char="">[</span>SARIF formats only] Specify whether to include query help in the<br>
+SARIF output. One of:</p>
+<p><code>always</code>: Include query help for all queries.</p>
+<p><code>custom_queries_only</code> <em>(default)</em>: Include query help only for custom<br>
+queries i.e. those in query packs which are not of the form<br>
+<span data-escaped-char="">`</span>codeql/<span data-escaped-char="">&lt;</span>lang<span data-escaped-char="">&amp;</span>rt;-queries<span data-escaped-char="">`</span>.</p>
+<p><code>never</code>: Do not include query help for any queries.</p>
+<p>This option has no effect when passed to <a href="bqrs-interpret.html">codeql bqrs interpret</a>.</p>
+<p>Available since <code>v2.15.2</code>.</p>
+<h4><a href="#--no-sarif-include-alert-provenance" aria-hidden="true" class="anchor" id="--no-sarif-include-alert-provenance"></a><code>--no-sarif-include-alert-provenance</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] <span data-escaped-char="">[</span>SARIF formats only] Do not include alert provenance<br>
+information in the SARIF output.</p>
+<p>Available since <code>v2.18.1</code>.</p>
+<h4><a href="#--no-sarif-group-rules-by-pack" aria-hidden="true" class="anchor" id="--no-sarif-group-rules-by-pack"></a><code>--[no-]sarif-group-rules-by-pack</code></h4>
+<p><span data-escaped-char="">[</span>SARIF formats only] Place the rule object for each query under its<br>
+corresponding QL pack in the <code>&lt;run&gt;.tool.extensions</code> property. This<br>
+option has no effect when passed to <a href="bqrs-interpret.html">codeql bqrs interpret</a>.</p>
+<h4><a href="#--no-sarif-multicause-markdown" aria-hidden="true" class="anchor" id="--no-sarif-multicause-markdown"></a><code>--[no-]sarif-multicause-markdown</code></h4>
+<p><span data-escaped-char="">[</span>SARIF formats only] For alerts that have multiple causes, include<br>
+them as a Markdown-formatted itemized list in the output in addition to<br>
+as a plain string.</p>
+<h4><a href="#--no-sarif-minify" aria-hidden="true" class="anchor" id="--no-sarif-minify"></a><code>--no-sarif-minify</code></h4>
+<p><span data-escaped-char="">[</span>SARIF formats only] Produce pretty-printed SARIF output. By default,<br>
+SARIF output is minified to reduce the size of the output file.</p>
+<h4><a href="#--sarif-run-propertystringstring" aria-hidden="true" class="anchor" id="--sarif-run-propertystringstring"></a><code>--sarif-run-property=&lt;String=String&gt;</code></h4>
+<p><span data-escaped-char="">[</span>SARIF formats only] A key value pair to add to the generated SARIF<br>
+'run' property bag. Can be repeated.</p>
+<h4><a href="#--no-group-results" aria-hidden="true" class="anchor" id="--no-group-results"></a><code>--no-group-results</code></h4>
+<p><span data-escaped-char="">[</span>SARIF formats only] Produce one result per message, rather than one<br>
+result per unique location.</p>
+<h4><a href="#--csv-location-formatcsvlocationformat" aria-hidden="true" class="anchor" id="--csv-location-formatcsvlocationformat"></a><code>--csv-location-format=&lt;csvLocationFormat&gt;</code></h4>
+<p>The format in which to produce locations in CSV output. One of: uri,<br>
+line-column, offset-length. (Default: line-column)</p>
+<h4><a href="#--dot-location-url-formatdotlocationurlformat" aria-hidden="true" class="anchor" id="--dot-location-url-formatdotlocationurlformat"></a><code>--dot-location-url-format=&lt;dotLocationUrlFormat&gt;</code></h4>
+<p>A format string defining the format in which to produce file location<br>
+URLs in DOT output. The following place holders can be used {path}<br>
+{start:line} {start:column} {end:line} {end:column}, {offset}, {length}</p>
+<h4><a href="#--no-sublanguage-file-coverage" aria-hidden="true" class="anchor" id="--no-sublanguage-file-coverage"></a><code>--[no-]sublanguage-file-coverage</code></h4>
+<p><span data-escaped-char="">[</span>GitHub.com and GitHub Enterprise Server v3.12.0+ only] Use<br>
+sub-language file coverage information. This calculates, displays, and<br>
+exports separate file coverage information for languages which share a<br>
+CodeQL extractor like C and C++, Java and Kotlin, and JavaScript and<br>
+TypeScript.</p>
+<p>Available since <code>v2.15.2</code>.</p>
+<h4><a href="#--sarif-categorycategory" aria-hidden="true" class="anchor" id="--sarif-categorycategory"></a><code>--sarif-category=&lt;category&gt;</code></h4>
+<p><span data-escaped-char="">[</span>SARIF formats only] <span data-escaped-char="">[</span>Recommended] Specify a category for this<br>
+analysis to include in the SARIF output. A category can be used to<br>
+distinguish multiple analyses performed on the same commit and<br>
+repository, but on different languages or different parts of the code.</p>
+<p>If you analyze the same version of a code base in several different ways<br>
+(e.g., for different languages) and upload the results to GitHub for<br>
+presentation in Code Scanning, this value should differ between each of<br>
+the analyses, which tells Code Scanning that the analyses <em>supplement</em><br>
+rather than <em>supersede</em> each other. (The values should be consistent<br>
+between runs of the same analysis for <em>different</em> versions of the code<br>
+base.)</p>
+<p>This value will appear (with a trailing slash appended if not already<br>
+present) as the <code>&lt;run&gt;.automationDetails.id</code> property.</p>
+<h4><a href="#--no-database-extension-packs" aria-hidden="true" class="anchor" id="--no-database-extension-packs"></a><code>--no-database-extension-packs</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Omit extension packs stored in the database during database<br>
+creation, either from a Code Scanning configuration file or from<br>
+extension files stored in the 'extensions' directory of the analyzed<br>
+codebase.</p>
+<h4><a href="#--no-database-threat-models" aria-hidden="true" class="anchor" id="--no-database-threat-models"></a><code>--no-database-threat-models</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Omit threat model configuration stored in the database<br>
+during database creation from a Code Scanning configuration file.</p>
+<h4><a href="#--no-download" aria-hidden="true" class="anchor" id="--no-download"></a><code>--[no-]download</code></h4>
+<p>Download any missing queries before analyzing.</p>
+<h3 title="Options to control the model packs to be used"><a href="#options-to-control-the-model-packs-to-be-used" aria-hidden="true" class="anchor" id="options-to-control-the-model-packs-to-be-used"></a>Options to control the model packs to be used</h3>
+<h4><a href="#--model-packsnamerange" aria-hidden="true" class="anchor" id="--model-packsnamerange"></a><code>--model-packs=&lt;</code><a href="mailto:name@range" class="external">name@range</a>&gt;...</h4>
+<p>A list of CodeQL pack names, each with an optional version range, to be<br>
+used as model packs to customize the queries that are about to be<br>
+evaluated.</p>
+<h3 title="Options to control the threat models to be used"><a href="#options-to-control-the-threat-models-to-be-used" aria-hidden="true" class="anchor" id="options-to-control-the-threat-models-to-be-used"></a>Options to control the threat models to be used</h3>
+<h4><a href="#--threat-modelname" aria-hidden="true" class="anchor" id="--threat-modelname"></a><code>--threat-model=&lt;name&gt;...</code></h4>
+<p>A list of threat models to enable or disable.</p>
+<p>The argument is the name of a threat model, optionally preceded by a<br>
+'!'. If no '!' is present, the named threat model and all of its<br>
+descendants are enabled. If a '!' is present, the named threat model<br>
+and all of its descendants are disabled.</p>
+<p>The 'default' threat model is enabled by default, but can be disabled<br>
+by specifying '--threat-model !default'.</p>
+<p>The 'all' threat model can be used to enable or disable all threat<br>
+models.</p>
+<p>The --threat-model options are processed in order. For example,<br>
+'--threat-model local --threat-model !environment' enables all of<br>
+the threat models in the 'local' group except for the 'environment'<br>
+threat model.</p>
+<p>This option only has an effect for languages that support threat models.</p>
+<p>Available since <code>v2.15.3</code>.</p>
+<h3 title="Options to control the query evaluator"><a href="#options-to-control-the-query-evaluator" aria-hidden="true" class="anchor" id="options-to-control-the-query-evaluator"></a>Options to control the query evaluator</h3>
+<h4><a href="#--no-tuple-counting" aria-hidden="true" class="anchor" id="--no-tuple-counting"></a><code>--[no-]tuple-counting</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Display tuple counts for each evaluation step in the query<br>
+evaluator logs. If the <code>--evaluator-log</code> option is provided, tuple<br>
+counts will be included in both the text-based and structured JSON logs<br>
+produced by the command. (This can be useful for performance<br>
+optimization of complex QL code).</p>
+<h4><a href="#--timeoutseconds" aria-hidden="true" class="anchor" id="--timeoutseconds"></a><code>--timeout=&lt;seconds&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Set the timeout length for query evaluation, in seconds.</p>
+<p>The timeout feature is intended to catch cases where a complex query<br>
+would take "forever" to evaluate. It is not an effective way to limit<br>
+the total amount of time the query evaluation can take. The evaluation<br>
+will be allowed to continue as long as each separately timed part of the<br>
+computation completes within the timeout. Currently these separately<br>
+timed parts are "RA layers" of the optimized query, but that might<br>
+change in the future.</p>
+<p>If no timeout is specified, or is given as 0, no timeout will be set<br>
+(except for <a href="test-run.html">codeql test run</a>, where the default timeout is 5 minutes).</p>
+<h4><a href="#-j---threadsnum" aria-hidden="true" class="anchor" id="-j---threadsnum"></a><code>-j, --threads=&lt;num&gt;</code></h4>
+<p>Use this many threads to evaluate queries.</p>
+<p>Defaults to 1. You can pass 0 to use one thread per core on the machine,<br>
+or -<em>N</em> to leave <em>N</em> cores unused (except still use at least one<br>
+thread).</p>
+<h4><a href="#--no-save-cache" aria-hidden="true" class="anchor" id="--no-save-cache"></a><code>--[no-]save-cache</code></h4>
+<p><span data-escaped-char="">[</span>Deprecated] <span data-escaped-char="">[</span>Advanced] This flag does nothing.</p>
+<h4><a href="#--no-expect-discarded-cache" aria-hidden="true" class="anchor" id="--no-expect-discarded-cache"></a><code>--[no-]expect-discarded-cache</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Make decisions about which predicates to evaluate, and what<br>
+to write to the disk cache, based on the assumption that the cache will<br>
+be discarded after the queries have been executed.</p>
+<h4><a href="#--no-keep-full-cache" aria-hidden="true" class="anchor" id="--no-keep-full-cache"></a><code>--[no-]keep-full-cache</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Don't clean up the disk cache after evaluation completes.<br>
+This may save time if you're going to do <a href="dataset-cleanup.html">codeql dataset cleanup</a> or <a href="database-cleanup.html">codeql database cleanup</a> afterwards anyway.</p>
+<h4><a href="#--max-disk-cachemb" aria-hidden="true" class="anchor" id="--max-disk-cachemb"></a><code>--max-disk-cache=&lt;MB&gt;</code></h4>
+<p>Set the maximum amount of space that the disk cache for intermediate<br>
+query results can use.</p>
+<p>If this size is not configured explicitly, the evaluator will try to use<br>
+a "reasonable" amount of cache space, based on the size of the dataset<br>
+and the complexity of the queries. Explicitly setting a higher limit<br>
+than this default usage will enable additional caching which can speed<br>
+up later queries.</p>
+<h4><a href="#--min-disk-freemb" aria-hidden="true" class="anchor" id="--min-disk-freemb"></a><code>--min-disk-free=&lt;MB&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Set target amount of free space on file system.</p>
+<p>If <code>--max-disk-cache</code> is not given, the evaluator will try hard to<br>
+curtail disk cache usage if the free space on the file system drops<br>
+below this value.</p>
+<h4><a href="#--min-disk-free-pctpct" aria-hidden="true" class="anchor" id="--min-disk-free-pctpct"></a><code>--min-disk-free-pct=&lt;pct&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Set target fraction of free space on file system.</p>
+<p>If <code>--max-disk-cache</code> is not given, the evaluator will try hard to<br>
+curtail disk cache usage if the free space on the file system drops<br>
+below this percentage.</p>
+<h4><a href="#--externalpredfilecsv" aria-hidden="true" class="anchor" id="--externalpredfilecsv"></a><code>--external=&lt;pred&gt;=&lt;file.csv&gt;</code></h4>
+<p>A CSV file that contains rows for external predicate <em><span data-escaped-char="">&lt;</span>pred&gt;</em>.<br>
+Multiple <code>--external</code> options can be supplied.</p>
+<h4><a href="#--xterm-progressmode" aria-hidden="true" class="anchor" id="--xterm-progressmode"></a><code>--xterm-progress=&lt;mode&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Controls whether to show progress tracking during QL<br>
+evaluation using xterm control sequences. Possible values are:</p>
+<p><code>no</code>: Never produce fancy progress; assume a dumb terminal.</p>
+<p><code>auto</code> <em>(default)</em>: Autodetect whether the command is running in an<br>
+appropriate terminal.</p>
+<p><code>yes</code>: Assume the terminal can understand xterm control sequences. The<br>
+feature still depends on being able to autodetect the <em>size</em> of the<br>
+terminal (which is not implemented on Windows, sorry), and will also be<br>
+disabled if <code>-q</code> is given.</p>
+<p><code>25x80</code> (or similar): Like <code>yes</code>, and also explicitly give the size of<br>
+the terminal. (Unlike <code>yes</code>, this should work on Windows.)</p>
+<p><code>25x80:/dev/pts/17</code> (or similar): show fancy progress on a <em>different</em><br>
+terminal than stderr. Mostly useful for internal testing.</p>
+<h3 title="Options for controlling outputting of structured evaluator logs"><a href="#options-for-controlling-outputting-of-structured-evaluator-logs" aria-hidden="true" class="anchor" id="options-for-controlling-outputting-of-structured-evaluator-logs"></a>Options for controlling outputting of structured evaluator logs</h3>
+<h4><a href="#--evaluator-logfile" aria-hidden="true" class="anchor" id="--evaluator-logfile"></a><code>--evaluator-log=&lt;file&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Output structured logs about evaluator performance to the<br>
+given file. The format of this log file is subject to change with no<br>
+notice, but will be a stream of JSON objects separated by either two<br>
+newline characters (by default) or one if the <code>--evaluator-log-minify</code><br>
+option is passed. Please use <code>codeql generate log-summary &lt;file&gt;</code> to<br>
+produce a more stable summary of this file, and avoid parsing the file<br>
+directly. The file will be overwritten if it already exists.</p>
+<h4><a href="#--evaluator-log-minify" aria-hidden="true" class="anchor" id="--evaluator-log-minify"></a><code>--evaluator-log-minify</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] If the <code>--evaluator-log</code> option is passed, also passing<br>
+this option will minimize the size of the JSON log produced, at the<br>
+expense of making it much less human readable.</p>
+<h3 title="Options to control RAM usage"><a href="#options-to-control-ram-usage" aria-hidden="true" class="anchor" id="options-to-control-ram-usage"></a>Options to control RAM usage</h3>
+<h4><a href="#-m---rammb" aria-hidden="true" class="anchor" id="-m---rammb"></a><code>-M, --ram=&lt;MB&gt;</code></h4>
+<p>The query evaluator will try hard to keep its total memory footprint<br>
+below this value. (However, for large databases it is possible that the<br>
+threshold may be broken by file-backed memory maps, which can be swapped<br>
+to disk in case of memory pressure).</p>
+<p>The value should be at least 2048 MB; smaller values will be<br>
+transparently rounded up.</p>
+<h3 title="Options to control QL compilation"><a href="#options-to-control-ql-compilation" aria-hidden="true" class="anchor" id="options-to-control-ql-compilation"></a>Options to control QL compilation</h3>
+<h4><a href="#--warningsmode" aria-hidden="true" class="anchor" id="--warningsmode"></a><code>--warnings=&lt;mode&gt;</code></h4>
+<p>How to handle warnings from the QL compiler. One of:</p>
+<p><code>hide</code>: Suppress warnings.</p>
+<p><code>show</code> <em>(default)</em>: Print warnings but continue with compilation.</p>
+<p><code>error</code>: Treat warnings as errors.</p>
+<h4><a href="#--no-debug-info" aria-hidden="true" class="anchor" id="--no-debug-info"></a><code>--no-debug-info</code></h4>
+<p>Don't emit source location info in RA for debugging.</p>
+<h4><a href="#--no-fast-compilation" aria-hidden="true" class="anchor" id="--no-fast-compilation"></a><code>--[no-]fast-compilation</code></h4>
+<p><span data-escaped-char="">[</span>Deprecated] <span data-escaped-char="">[</span>Advanced] Omit particularly slow optimization steps.</p>
+<h4><a href="#--no-release-compatibility" aria-hidden="true" class="anchor" id="--no-release-compatibility"></a><code>--no-release-compatibility</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Use the newest compiler features, at the cost of<br>
+portability.</p>
+<p>From time to time, new QL language features and evaluator optimizations<br>
+will be supported by the QL evaluator a few releases before they are<br>
+enabled by default in the QL compiler. This helps ensure that the<br>
+performance you experience when developing queries in the newest CodeQL<br>
+release can be matched by slightly older releases that may still be in<br>
+use for Code Scanning or CI integrations.</p>
+<p>If you do not care about your queries being compatible with other<br>
+(earlier or later) CodeQL releases, you can sometimes achieve a small<br>
+amount of extra performance by using this flag to enable recent<br>
+improvements in the compiler early.</p>
+<p>In releases where there are no recent improvements to enable, this<br>
+option silently does nothing. Thus it is safe to set it once and for all<br>
+in your global CodeQL config file.</p>
+<p>Available since <code>v2.11.1</code>.</p>
+<h4><a href="#--no-local-checking" aria-hidden="true" class="anchor" id="--no-local-checking"></a><code>--[no-]local-checking</code></h4>
+<p>Only perform initial checks on the part of the QL source that is used.</p>
+<h4><a href="#--no-metadata-verification" aria-hidden="true" class="anchor" id="--no-metadata-verification"></a><code>--no-metadata-verification</code></h4>
+<p>Don't check embedded query metadata in QLDoc comments for validity.</p>
+<h4><a href="#--compilation-cache-sizemb" aria-hidden="true" class="anchor" id="--compilation-cache-sizemb"></a><code>--compilation-cache-size=&lt;MB&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Override the default maximum size for a compilation cache<br>
+directory.</p>
+<h4><a href="#--fail-on-ambiguous-relation-name" aria-hidden="true" class="anchor" id="--fail-on-ambiguous-relation-name"></a><code>--fail-on-ambiguous-relation-name</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Fail compilation if an ambiguous relation name is generated<br>
+during compilation.</p>
+<h3 title="Options to set up compilation environment"><a href="#options-to-set-up-compilation-environment" aria-hidden="true" class="anchor" id="options-to-set-up-compilation-environment"></a>Options to set up compilation environment</h3>
+<h4><a href="#--search-pathdirdir" aria-hidden="true" class="anchor" id="--search-pathdirdir"></a><code>--search-path=&lt;dir&gt;[:&lt;dir&gt;...]</code></h4>
+<p>A list of directories under which QL packs may be found. Each directory<br>
+can either be a QL pack (or bundle of packs containing a<br>
+<code>.codeqlmanifest.json</code> file at the root) or the immediate parent of one<br>
+or more such directories.</p>
+<p>If the path contains more than one directory, their order defines<br>
+precedence between them: when a pack name that must be resolved is<br>
+matched in more than one of the directory trees, the one given first<br>
+wins.</p>
+<p>Pointing this at a checkout of the open-source CodeQL repository ought<br>
+to work when querying one of the languages that live there.</p>
+<p>If you have checked out the CodeQL repository as a sibling of the<br>
+unpacked CodeQL toolchain, you don't need to give this option; such<br>
+sibling directories will always be searched for QL packs that cannot be<br>
+found otherwise. (If this default does not work, it is strongly<br>
+recommended to set up <code>--search-path</code> once and for all in a per-user<br>
+configuration file).</p>
+<p>(Note: On Windows the path separator is <code>;</code>).</p>
+<h4><a href="#--additional-packsdirdir" aria-hidden="true" class="anchor" id="--additional-packsdirdir"></a><code>--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]</code></h4>
+<p>If this list of directories is given, they will be searched for packs<br>
+before the ones in <code>--search-path</code>. The order between these doesn't<br>
+matter; it is an error if a pack name is found in two different places<br>
+through this list.</p>
+<p>This is useful if you're temporarily developing a new version of a pack<br>
+that also appears in the default path. On the other hand, it is <em>not<br>
+recommended</em> to override this option in a config file; some internal<br>
+actions will add this option on the fly, overriding any configured<br>
+value.</p>
+<p>(Note: On Windows the path separator is <code>;</code>).</p>
+<h4><a href="#--library-pathdirdir" aria-hidden="true" class="anchor" id="--library-pathdirdir"></a><code>--library-path=&lt;dir&gt;[:&lt;dir&gt;...]</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] An optional list of directories that will be added to the<br>
+raw import search path for QL libraries. This should only be used if<br>
+you're using QL libraries that have not been packaged as QL packs.</p>
+<p>(Note: On Windows the path separator is <code>;</code>).</p>
+<h4><a href="#--dbschemefile" aria-hidden="true" class="anchor" id="--dbschemefile"></a><code>--dbscheme=&lt;file&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Explicitly define which dbscheme queries should be compiled<br>
+against. This should only be given by callers that are extremely sure<br>
+what they're doing.</p>
+<h4><a href="#--compilation-cachedir" aria-hidden="true" class="anchor" id="--compilation-cachedir"></a><code>--compilation-cache=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Specify an additional directory to use as a compilation<br>
+cache.</p>
+<h4><a href="#--no-default-compilation-cache" aria-hidden="true" class="anchor" id="--no-default-compilation-cache"></a><code>--no-default-compilation-cache</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Don't use compilation caches in standard locations such as<br>
+in the QL pack containing the query or in the CodeQL toolchain<br>
+directory.</p>
+<h3 title="Options for configuring the CodeQL package manager"><a href="#options-for-configuring-the-codeql-package-manager" aria-hidden="true" class="anchor" id="options-for-configuring-the-codeql-package-manager"></a>Options for configuring the CodeQL package manager</h3>
+<h4><a href="#--registries-auth-stdin" aria-hidden="true" class="anchor" id="--registries-auth-stdin"></a><code>--registries-auth-stdin</code></h4>
+<p>Authenticate to GitHub Enterprise Server Container registries by passing<br>
+a comma-separated list of <span data-escaped-char="">&lt;</span>registry<span data-escaped-char="">_</span>url&gt;=<span data-escaped-char="">&lt;</span>token&gt; pairs.</p>
+<p>For example, you can pass<br>
+<code>https://containers.GHEHOSTNAME1/v2/=TOKEN1,https://containers.GHEHOSTNAME2/v2/=TOKEN2</code><br>
+to authenticate to two GitHub Enterprise Server instances.</p>
+<p>This overrides the CODEQL<span data-escaped-char="">_</span>REGISTRIES<span data-escaped-char="">_</span>AUTH and GITHUB<span data-escaped-char="">_</span>TOKEN environment<br>
+variables. If you only need to authenticate to the github.com Container<br>
+registry, you can instead authenticate using the simpler<br>
+<code>--github-auth-stdin</code> option.</p>
+<h4><a href="#--github-auth-stdin" aria-hidden="true" class="anchor" id="--github-auth-stdin"></a><code>--github-auth-stdin</code></h4>
+<p>Authenticate to the github.com Container registry by passing a<br>
+github.com GitHub Apps token or personal access token via standard<br>
+input.</p>
+<p>To authenticate to GitHub Enterprise Server Container registries, pass<br>
+<code>--registries-auth-stdin</code> or use the CODEQL<span data-escaped-char="">_</span>REGISTRIES<span data-escaped-char="">_</span>AUTH environment<br>
+variable.</p>
+<p>This overrides the GITHUB<span data-escaped-char="">_</span>TOKEN environment variable.</p>
+<h3 title="Options / Common options"><a href="#common-options" aria-hidden="true" class="anchor" id="common-options"></a>Common options</h3>
+<h4><a href="#-h---help" aria-hidden="true" class="anchor" id="-h---help"></a><code>-h, --help</code></h4>
+<p>Show this help text.</p>
+<h4><a href="#-jopt" aria-hidden="true" class="anchor" id="-jopt"></a><code>-J=&lt;opt&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Give option to the JVM running the command.</p>
+<p>(Beware that options containing spaces will not be handled correctly.)</p>
+<h4><a href="#-v---verbose" aria-hidden="true" class="anchor" id="-v---verbose"></a><code>-v, --verbose</code></h4>
+<p>Incrementally increase the number of progress messages printed.</p>
+<h4><a href="#-q---quiet" aria-hidden="true" class="anchor" id="-q---quiet"></a><code>-q, --quiet</code></h4>
+<p>Incrementally decrease the number of progress messages printed.</p>
+<h4><a href="#--verbositylevel" aria-hidden="true" class="anchor" id="--verbositylevel"></a><code>--verbosity=&lt;level&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Explicitly set the verbosity level to one of errors,<br>
+warnings, progress, progress+, progress++, progress+++. Overrides <code>-v</code><br>
+and <code>-q</code>.</p>
+<h4><a href="#--logdirdir" aria-hidden="true" class="anchor" id="--logdirdir"></a><code>--logdir=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Write detailed logs to one or more files in the given<br>
+directory, with generated names that include timestamps and the name of<br>
+the running subcommand.</p>
+<p>(To write a log file with a name you have full control over, instead<br>
+give <code>--log-to-stderr</code> and redirect stderr as desired.)</p>
+<h4><a href="#--common-cachesdir" aria-hidden="true" class="anchor" id="--common-cachesdir"></a><code>--common-caches=&lt;dir&gt;</code></h4>
+<p><span data-escaped-char="">[</span>Advanced] Controls the location of cached data on disk that will<br>
+persist between several runs of the CLI, such as downloaded QL packs and<br>
+compiled query plans. If not set explicitly, this defaults to a<br>
+directory named <code>.codeql</code> in the user's home directory; it will be<br>
+created if it doesn't already exist.</p>
+<p>Available since <code>v2.15.2</code>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

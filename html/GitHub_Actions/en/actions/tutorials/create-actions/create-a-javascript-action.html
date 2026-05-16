@@ -1,0 +1,247 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Creating a JavaScript action</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Create actions</a> / </nav><h1><a href="#creating-a-javascript-action" aria-hidden="true" class="anchor" id="creating-a-javascript-action"></a>Creating a JavaScript action</h1>
+<p>In this tutorial, you'll learn how to build a JavaScript action using the actions toolkit.</p>
+<h2 title="Introduction"><a href="#introduction" aria-hidden="true" class="anchor" id="introduction"></a>Introduction</h2>
+<p>In this guide, you'll learn about the basic components needed to create and use a packaged JavaScript action. To focus this guide on the components needed to package the action, the functionality of the action's code is minimal. The action prints "Hello World" in the logs or "Hello <span data-escaped-char="">[</span>who-to-greet]" if you provide a custom name.</p>
+<p>This guide uses the GitHub Actions Toolkit Node.js module to speed up development. For more information, see the <a href="https://github.com/actions/toolkit" class="external">actions/toolkit</a> repository.</p>
+<p>Once you complete this project, you should understand how to build your own JavaScript action and test it in a workflow.</p>
+<p>To ensure your JavaScript actions are compatible with all GitHub-hosted runners (Ubuntu, Windows, and macOS), the packaged JavaScript code you write should be pure JavaScript and not rely on other binaries. JavaScript actions run directly on the runner and use binaries that already exist in the runner image.</p>
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>When creating workflows and actions, you should always consider whether your code might execute untrusted input from possible attackers. Certain contexts should be treated as untrusted input, as an attacker could insert their own malicious content. For more information, see <a href="../../reference/security/secure-use.html#understanding-the-risk-of-script-injections">Secure use reference</a>.</p>
+</div>
+<h2 title="Prerequisites"><a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<p>Before you begin, you'll need to download Node.js and create a public GitHub repository.</p>
+<ol>
+<li>
+<p>Download and install Node.js 20.x, which includes npm.</p>
+<p><a href="https://nodejs.org/en/download/" class="external">https://nodejs.org/en/download/</a></p>
+</li>
+<li>
+<p>Create a new public repository on GitHub and call it "hello-world-javascript-action". For more information, see <a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-new-repository" class="external">Creating a new repository</a>.</p>
+</li>
+<li>
+<p>Clone your repository to your computer. For more information, see <a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository" class="external">Cloning a repository</a>.</p>
+</li>
+<li>
+<p>From your terminal, change directories into your new repository.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">cd hello-world-javascript-action
+</span></code></pre>
+</li>
+<li>
+<p>From your terminal, initialize the directory with npm to generate a <code>package.json</code> file.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">npm init -y
+</span></code></pre>
+</li>
+</ol>
+<h2 title="Creating an action metadata file"><a href="#creating-an-action-metadata-file" aria-hidden="true" class="anchor" id="creating-an-action-metadata-file"></a>Creating an action metadata file</h2>
+<p>Create a new file named <code>action.yml</code> in the <code>hello-world-javascript-action</code> directory with the following example code. For more information, see <a href="../../reference/workflows-and-actions/metadata-syntax.html">Metadata syntax reference</a>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Hello World
+</span><span style="color:#bf616a;">description</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Greet someone and record the time
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">inputs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">who-to-greet</span><span style="color:#c0c5ce;">: </span><span style="color:#65737e;"># id of input
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">description</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Who to greet
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">required</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">default</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">World
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">outputs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">time</span><span style="color:#c0c5ce;">: </span><span style="color:#65737e;"># id of output
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">description</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">The time we greeted you
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">runs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">using</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">node20
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">main</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dist/index.js
+</span></code></pre>
+<p>This file defines the <code>who-to-greet</code> input and <code>time</code> output. It also tells the action runner how to start running this JavaScript action.</p>
+<h2 title="Adding actions toolkit packages"><a href="#adding-actions-toolkit-packages" aria-hidden="true" class="anchor" id="adding-actions-toolkit-packages"></a>Adding actions toolkit packages</h2>
+<p>The actions toolkit is a collection of Node.js packages that allow you to quickly build JavaScript actions with more consistency.</p>
+<p>The toolkit <a href="https://github.com/actions/toolkit/tree/main/packages/core" class="external"><code>@actions/core</code></a> package provides an interface to the workflow commands, input and output variables, exit statuses, and debug messages.</p>
+<p>The toolkit also offers a <a href="https://github.com/actions/toolkit/tree/main/packages/github" class="external"><code>@actions/github</code></a> package that returns an authenticated Octokit REST client and access to GitHub Actions contexts.</p>
+<p>The toolkit offers more than the <code>core</code> and <code>github</code> packages. For more information, see the <a href="https://github.com/actions/toolkit" class="external">actions/toolkit</a> repository.</p>
+<p>At your terminal, install the actions toolkit <code>core</code> and <code>github</code> packages.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">npm install @actions/core @actions/github
+</span></code></pre>
+<p>You should now see a <code>node_modules</code> directory and a <code>package-lock.json</code> file which track any installed dependencies and their versions. You should not commit the <code>node_modules</code> directory to your repository.</p>
+<h2 title="Writing the action code"><a href="#writing-the-action-code" aria-hidden="true" class="anchor" id="writing-the-action-code"></a>Writing the action code</h2>
+<p>This action uses the toolkit to get the <code>who-to-greet</code> input variable required in the action's metadata file and prints "Hello <span data-escaped-char="">[</span>who-to-greet]" in a debug message in the log. Next, the script gets the current time and sets it as an output variable that actions running later in a job can use.</p>
+<p>GitHub Actions provide context information about the webhook event, Git refs, workflow, action, and the person who triggered the workflow. To access the context information, you can use the <code>github</code> package. The action you'll write will print the webhook event payload to the log.</p>
+<p>Add a new file called <code>src/index.js</code>, with the following code.</p>
+<pre lang="javascript" style="background-color:#2b303b;"><code><span style="color:#b48ead;">import </span><span style="color:#d08770;">* </span><span style="color:#b48ead;">as </span><span style="color:#bf616a;">core </span><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">"</span><span style="color:#a3be8c;">@actions/core</span><span style="color:#c0c5ce;">";
+</span><span style="color:#b48ead;">import </span><span style="color:#d08770;">* </span><span style="color:#b48ead;">as </span><span style="color:#bf616a;">github </span><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">"</span><span style="color:#a3be8c;">@actions/github</span><span style="color:#c0c5ce;">";
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#b48ead;">try </span><span style="color:#c0c5ce;">{
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;">// `who-to-greet` input defined in action metadata file
+</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">const </span><span style="color:#bf616a;">nameToGreet </span><span style="color:#c0c5ce;">= </span><span style="color:#bf616a;">core</span><span style="color:#c0c5ce;">.</span><span style="color:#8fa1b3;">getInput</span><span style="color:#c0c5ce;">("</span><span style="color:#a3be8c;">who-to-greet</span><span style="color:#c0c5ce;">");
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">core</span><span style="color:#c0c5ce;">.</span><span style="color:#8fa1b3;">info</span><span style="color:#c0c5ce;">(`</span><span style="color:#a3be8c;">Hello </span><span style="color:#c0c5ce;">${</span><span style="color:#bf616a;">nameToGreet</span><span style="color:#c0c5ce;">}</span><span style="color:#a3be8c;">!</span><span style="color:#c0c5ce;">`);
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;">// Get the current time and set it as an output variable
+</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">const </span><span style="color:#bf616a;">time </span><span style="color:#c0c5ce;">= new </span><span style="color:#ebcb8b;">Date</span><span style="color:#c0c5ce;">().</span><span style="color:#8fa1b3;">toTimeString</span><span style="color:#c0c5ce;">();
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">core</span><span style="color:#c0c5ce;">.</span><span style="color:#8fa1b3;">setOutput</span><span style="color:#c0c5ce;">("</span><span style="color:#a3be8c;">time</span><span style="color:#c0c5ce;">", </span><span style="color:#bf616a;">time</span><span style="color:#c0c5ce;">);
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;">// Get the JSON webhook payload for the event that triggered the workflow
+</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">const </span><span style="color:#bf616a;">payload </span><span style="color:#c0c5ce;">= </span><span style="color:#bf616a;">JSON</span><span style="color:#c0c5ce;">.</span><span style="color:#8fa1b3;">stringify</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">github</span><span style="color:#c0c5ce;">.context.payload, </span><span style="color:#d08770;">undefined</span><span style="color:#c0c5ce;">, </span><span style="color:#d08770;">2</span><span style="color:#c0c5ce;">);
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">core</span><span style="color:#c0c5ce;">.</span><span style="color:#8fa1b3;">info</span><span style="color:#c0c5ce;">(`</span><span style="color:#a3be8c;">The event payload: </span><span style="color:#c0c5ce;">${</span><span style="color:#bf616a;">payload</span><span style="color:#c0c5ce;">}`);
+</span><span style="color:#c0c5ce;">} </span><span style="color:#b48ead;">catch </span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">error</span><span style="color:#c0c5ce;">) {
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">core</span><span style="color:#c0c5ce;">.</span><span style="color:#8fa1b3;">setFailed</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">error</span><span style="color:#c0c5ce;">.message);
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+<p>If an error is thrown in the above <code>index.js</code> example, <code>core.setFailed(error.message);</code> uses the actions toolkit <a href="https://github.com/actions/toolkit/tree/main/packages/core" class="external"><code>@actions/core</code></a> package to log a message and set a failing exit code. For more information, see <a href="../../how-tos/create-and-publish-actions/set-exit-codes.html">Setting exit codes for actions</a>.</p>
+<h2 title="Creating a README"><a href="#creating-a-readme" aria-hidden="true" class="anchor" id="creating-a-readme"></a>Creating a README</h2>
+<p>To let people know how to use your action, you can create a README file. A README is most helpful when you plan to share your action publicly, but is also a great way to remind you or your team how to use the action.</p>
+<p>In your <code>hello-world-javascript-action</code> directory, create a <code>README.md</code> file that specifies the following information:</p>
+<ul>
+<li>A detailed description of what the action does.</li>
+<li>Required input and output arguments.</li>
+<li>Optional input and output arguments.</li>
+<li>Secrets the action uses.</li>
+<li>Environment variables the action uses.</li>
+<li>An example of how to use your action in a workflow.</li>
+</ul>
+<pre lang="markdown" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;"># Hello world JavaScript action
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">This action prints "Hello World" or "Hello" + the name of a person to greet to the log.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#8fa1b3;">## Inputs
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#8fa1b3;">### </span><span style="color:#a3be8c;">`who-to-greet`
+</span><span style="color:#c0c5ce;">
+</span><span style="font-weight:bold;color:#ebcb8b;">**Required**</span><span style="color:#c0c5ce;"> The name of the person to greet. Default </span><span style="color:#a3be8c;">`"World"`</span><span style="color:#c0c5ce;">.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#8fa1b3;">## Outputs
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#8fa1b3;">### </span><span style="color:#a3be8c;">`time`
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">The time we greeted you.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#8fa1b3;">## Example usage
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">```</span><span style="color:#d08770;">yaml
+</span><span style="color:#c0c5ce;">uses: actions/hello-world-javascript-action@e76147da8e5c81eaf017dede5645551d4b94427b
+</span><span style="color:#c0c5ce;">with:
+</span><span style="color:#c0c5ce;">  who-to-greet: Mona the Octocat
+</span><span style="color:#c0c5ce;">```
+</span></code></pre>
+<h2 title="Commit, tag, and push your action"><a href="#commit-tag-and-push-your-action" aria-hidden="true" class="anchor" id="commit-tag-and-push-your-action"></a>Commit, tag, and push your action</h2>
+<p>GitHub downloads each action run in a workflow during runtime and executes it as a complete package of code before you can use workflow commands like <code>run</code> to interact with the runner machine. This means you must include any package dependencies required to run the JavaScript code. For example, this action uses <code>@actions/core</code> and <code>@actions/github</code> packages.</p>
+<p>Checking in your <code>node_modules</code> directory can cause problems. As an alternative, you can use tools such as <a href="https://github.com/rollup/rollup" class="external"><code>rollup.js</code></a> or <a href="https://github.com/vercel/ncc" class="external"><code>@vercel/ncc</code></a> to combine your code and dependencies into one file for distribution.</p>
+<ol>
+<li>
+<p>Install <code>rollup</code> and its plugins by running this command in your terminal.</p>
+<p><code>npm install --save-dev rollup @rollup/plugin-commonjs @rollup/plugin-node-resolve</code></p>
+</li>
+<li>
+<p>Create a new file called <code>rollup.config.js</code> in the root of your repository with the following code.</p>
+<pre lang="javascript" style="background-color:#2b303b;"><code><span style="color:#b48ead;">import </span><span style="color:#bf616a;">commonjs </span><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">"</span><span style="color:#a3be8c;">@rollup/plugin-commonjs</span><span style="color:#c0c5ce;">";
+</span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">{ </span><span style="color:#bf616a;">nodeResolve </span><span style="color:#c0c5ce;">} </span><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">"</span><span style="color:#a3be8c;">@rollup/plugin-node-resolve</span><span style="color:#c0c5ce;">";
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#b48ead;">const </span><span style="color:#bf616a;">config </span><span style="color:#c0c5ce;">= {
+</span><span style="color:#c0c5ce;">  input: "</span><span style="color:#a3be8c;">src/index.js</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  output: {
+</span><span style="color:#c0c5ce;">    esModule: </span><span style="color:#d08770;">true</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">    file: "</span><span style="color:#a3be8c;">dist/index.js</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    format: "</span><span style="color:#a3be8c;">es</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    sourcemap: </span><span style="color:#d08770;">true</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">  },
+</span><span style="color:#c0c5ce;">  plugins: [</span><span style="color:#8fa1b3;">commonjs</span><span style="color:#c0c5ce;">(), </span><span style="color:#8fa1b3;">nodeResolve</span><span style="color:#c0c5ce;">({ preferBuiltins: </span><span style="color:#d08770;">true </span><span style="color:#c0c5ce;">})],
+</span><span style="color:#c0c5ce;">};
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#b48ead;">export default </span><span style="color:#bf616a;">config</span><span style="color:#c0c5ce;">;
+</span></code></pre>
+</li>
+<li>
+<p>Compile your <code>dist/index.js</code> file.</p>
+<p><code>rollup --config rollup.config.js</code></p>
+<p>You'll see a new <code>dist/index.js</code> file with your code and any dependencies.</p>
+</li>
+<li>
+<p>From your terminal, commit the updates.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">git add src/index.js dist/index.js rollup.config.js package.json package-lock.json README.md action.yml
+</span><span style="color:#c0c5ce;">git commit -m "Initial commit of my first action"
+</span><span style="color:#c0c5ce;">git tag -a -m "My first action release" v1.1
+</span><span style="color:#c0c5ce;">git push --follow-tags
+</span></code></pre>
+</li>
+</ol>
+<p>When you commit and push your code, your updated repository should look like this:</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">hello-world-javascript-action/
+</span><span style="color:#c0c5ce;">├── action.yml
+</span><span style="color:#c0c5ce;">├── dist/
+</span><span style="color:#c0c5ce;">│   └── index.js
+</span><span style="color:#c0c5ce;">├── package.json
+</span><span style="color:#c0c5ce;">├── package-lock.json
+</span><span style="color:#c0c5ce;">├── README.md
+</span><span style="color:#c0c5ce;">├── rollup.config.js
+</span><span style="color:#c0c5ce;">└── src/
+</span><span style="color:#c0c5ce;">    └── index.js
+</span></code></pre>
+<h2 title="Testing out your action in a workflow"><a href="#testing-out-your-action-in-a-workflow" aria-hidden="true" class="anchor" id="testing-out-your-action-in-a-workflow"></a>Testing out your action in a workflow</h2>
+<p>Now you're ready to test your action out in a workflow.</p>
+<p>Public actions can be used by workflows in any repository. When an action is in a private repository, the repository settings dictate whether the action is available only within the same repository or also to other repositories owned by the same user or organization. For more information, see <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository" class="external">Managing GitHub Actions settings for a repository</a>.</p>
+<h3 title="Testing out your action in a workflow / Example using a public action"><a href="#example-using-a-public-action" aria-hidden="true" class="anchor" id="example-using-a-public-action"></a>Example using a public action</h3>
+<p>This example demonstrates how your new public action can be run from within an external repository.</p>
+<p>Copy the following YAML into a new file at <code>.github/workflows/main.yml</code>, and update the <code>uses: octocat/hello-world-javascript-action@1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b</code> line with your username and the name of the public repository you created above. You can also replace the <code>who-to-greet</code> input with your name.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">main
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">hello_world_job</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">A job to say hello
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Hello world action step
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">hello
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octocat/hello-world-javascript-action@1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">who-to-greet</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Mona the Octocat
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Use the output from the `hello` step
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Get the output time
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "The time was ${{ steps.hello.outputs.time }}"
+</span></code></pre>
+<p>When this workflow is triggered, the runner will download the <code>hello-world-javascript-action</code> action from your public repository and then execute it.</p>
+<h3 title="Testing out your action in a workflow / Example using a private action"><a href="#example-using-a-private-action" aria-hidden="true" class="anchor" id="example-using-a-private-action"></a>Example using a private action</h3>
+<p>Copy the workflow code into a <code>.github/workflows/main.yml</code> file in your action's repository. You can also replace the <code>who-to-greet</code> input with your name.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">main
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">hello_world_job</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">A job to say hello
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># To use this repository's private action,
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># you must check out the repository
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Checkout
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Hello world action step
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">./ </span><span style="color:#65737e;"># Uses an action in the root directory
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">hello
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">who-to-greet</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Mona the Octocat
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Use the output from the `hello` step
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Get the output time
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">echo "The time was ${{ steps.hello.outputs.time }}"
+</span></code></pre>
+<p>From your repository, click the <strong>Actions</strong> tab, and select the latest workflow run. Under <strong>Jobs</strong> or in the visualization graph, click <strong>A job to say hello</strong>.</p>
+<p>Click <strong>Hello world action step</strong>, and you should see "Hello Mona the Octocat" or the name you used for the <code>who-to-greet</code> input printed in the log. To see the timestamp, click <strong>Get the output time</strong>.</p>
+<h2 title="Template repositories for creating JavaScript actions"><a href="#template-repositories-for-creating-javascript-actions" aria-hidden="true" class="anchor" id="template-repositories-for-creating-javascript-actions"></a>Template repositories for creating JavaScript actions</h2>
+<p>GitHub provides template repositories for creating JavaScript and TypeScript actions. You can use these templates to quickly get started with creating a new action that includes tests, linting, and other recommended practices.</p>
+<ul>
+<li><a href="https://github.com/actions/javascript-action" class="external"><code>javascript-action</code> template repository</a></li>
+<li><a href="https://github.com/actions/typescript-action" class="external"><code>typescript-action</code> template repository</a></li>
+</ul>
+<h2 title="Example JavaScript actions on GitHub.com"><a href="#example-javascript-actions-on-githubcom" aria-hidden="true" class="anchor" id="example-javascript-actions-on-githubcom"></a>Example JavaScript actions on GitHub.com</h2>
+<p>You can find many examples of JavaScript actions on GitHub.com.</p>
+<ul>
+<li><a href="https://github.com/DevExpress/testcafe-action" class="external">DevExpress/testcafe-action</a></li>
+<li><a href="https://github.com/duckduckgo/privacy-configuration" class="external">duckduckgo/privacy-configuration</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

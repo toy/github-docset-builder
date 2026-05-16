@@ -1,0 +1,11 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Upload fails because GitHub Code Security is disabled</title><link rel="stylesheet" href="../../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../../index.html">Security and code quality</a> / <a href="../../../index.html">Reference</a> / <a href="../../index.html">Code scanning</a> / <a href="../index.html">SARIF files</a> / <a href="index.html">Troubleshoot SARIF uploads</a> / </nav><h1><a href="#upload-fails-because-github-code-security-is-disabled" aria-hidden="true" class="anchor" id="upload-fails-because-github-code-security-is-disabled"></a>Upload fails because GitHub Code Security is disabled</h1>
+<p>You can only upload SARIF results to repositories where GitHub Code Security is enabled.</p>
+<h2 title="About this error"><a href="#about-this-error" aria-hidden="true" class="anchor" id="about-this-error"></a>About this error</h2>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GitHub Code Security or GitHub Advanced Security not enabled
+</span><span style="color:#c0c5ce;">GitHub Code Security or GitHub Advanced Security blocked by a policy
+</span><span style="color:#c0c5ce;">403: GitHub Code Security or GitHub Advanced Security is not enabled
+</span></code></pre>
+<p>This error is reported if a process attempts to upload a SARIF file to a repository where GitHub Code Security is not enabled or where use of this feature is blocked by a policy.</p>
+<p>You will only see this error for SARIF files that contain results created using CodeQL and for uploads to repositories with private or internal visibility. GitHub Code Security is enabled by default for all public repositories.</p>
+<p>For information on how to confirm this error and fix the problem, see <a href="../../troubleshoot-analysis-errors/advanced-security-must-be-enabled.html">Error: "GitHub Code Security or GitHub Advanced Security must be enabled for this repository to use code scanning"</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Exit codes</title><link rel="stylesheet" href="../../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../../index.html">Security and code quality</a> / <a href="../../../index.html">Reference</a> / <a href="../../index.html">Code scanning</a> / <a href="../index.html">CodeQL</a> / <a href="index.html">CodeQL CLI</a> / </nav><h1><a href="#exit-codes" aria-hidden="true" class="anchor" id="exit-codes"></a>Exit codes</h1>
+<p>Exit codes signify the status of a command after the CodeQL CLI runs it.</p>
+<h2 title="About exit codes"><a href="#about-exit-codes" aria-hidden="true" class="anchor" id="about-exit-codes"></a>About exit codes</h2>
+<p>The CodeQL CLI reports the status of each command it runs as an exit code.<br>
+This exit code provides information for subsequent commands or for other tools that rely on the CodeQL CLI.</p>
+<h2 title="0"><a href="#0" aria-hidden="true" class="anchor" id="0"></a>0</h2>
+<p>Success, normal termination.</p>
+<h2 title="1"><a href="#1" aria-hidden="true" class="anchor" id="1"></a>1</h2>
+<p>The command successfully determined that the answer to your question is "no".</p>
+<p>This exit code is only used by a few commands, such as <a href="../codeql-cli-manual/test-run.html">test run</a>, <a href="../codeql-cli-manual/dataset-check.html">dataset check</a>, <a href="../codeql-cli-manual/query-format.html">query format</a>,and <a href="../codeql-cli-manual/resolve-extractor.html">resolve extractor</a>.<br>
+For more details, see the documentation for those commands.</p>
+<h2 title="2"><a href="#2" aria-hidden="true" class="anchor" id="2"></a>2</h2>
+<p>Something went wrong.</p>
+<p>The CLI writes a human-readable error message to stderr.<br>
+This includes cases where an extractor fails with an internal error, because the <code>codeql</code> driver can’t distinguish between internal and user-facing errors in extractor behavior.</p>
+<h2 title="3"><a href="#3" aria-hidden="true" class="anchor" id="3"></a>3</h2>
+<p>The launcher was unable to find the CodeQL installation directory.</p>
+<p>In this case, the launcher can’t start the Java code for the CodeQL CLI at all. This should only happen when something is severely wrong with the CodeQL installation.</p>
+<h2 title="32"><a href="#32" aria-hidden="true" class="anchor" id="32"></a>32</h2>
+<p>The extractor didn’t find any code to analyze when running <a href="../codeql-cli-manual/database-create.html">database create</a> or <a href="../codeql-cli-manual/database-finalize.html">database finalize</a>.</p>
+<h2 title="33"><a href="#33" aria-hidden="true" class="anchor" id="33"></a>33</h2>
+<p>One or more query evaluations timed out.</p>
+<p>It’s possible that some queries that were evaluated in parallel didn’t time out. The results for those queries are produced as usual.</p>
+<h2 title="98"><a href="#98" aria-hidden="true" class="anchor" id="98"></a>98</h2>
+<p>Evaluation was explicitly canceled.</p>
+<h2 title="99"><a href="#99" aria-hidden="true" class="anchor" id="99"></a>99</h2>
+<p>The CodeQL CLI ran out of memory.</p>
+<p>This doesn’t necessarily mean that all the machine’s physical RAM has been used.<br>
+If you don’t use the <code>--ram</code> option to set a limit explicitly, the JVM decides on a default limit at startup.</p>
+<h2 title="100"><a href="#100" aria-hidden="true" class="anchor" id="100"></a>100</h2>
+<p>A fatal internal error occurred.</p>
+<p>This should be considered a bug. The CLI usually writes an abbreviated error description to stderr.<br>
+If you can reproduce the bug, it’s helpful to use <code>--logdir</code> and send the log files to GitHub in a bug report.</p>
+<h2 title="Other"><a href="#other" aria-hidden="true" class="anchor" id="other"></a>Other</h2>
+<p>In the case of really severe problems within the JVM that runs <code>codeql</code>, it might return a nonzero exit code of its own choosing.<br>
+This should only happen if something is severely wrong with the CodeQL installation, or if there is a memory issue with the host system running the CodeQL process. For example, Unix systems may return Exit Code 137 to indicate that the kernel has killed a process that CodeQL has started. One way to troubleshoot this is to modify your <code>–ram=</code> flag for the <code>codeql database analyze</code> step and re-run your workflow.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

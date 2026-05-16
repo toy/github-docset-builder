@@ -1,0 +1,108 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Assessing adoption of security features</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">View and interpret data</a> / <a href="index.html">Analyze organization data</a> / </nav><h1><a href="#assessing-adoption-of-security-features" aria-hidden="true" class="anchor" id="assessing-adoption-of-security-features"></a>Assessing adoption of security features</h1>
+<p>See which teams and repositories have already enabled features for secure coding, and identify any that are not yet protected.</p>
+<p>You can use security overview to see which repositories and teams have already enabled each security feature, and where people need more encouragement to adopt these features.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>"Pull request alerts" are reported as enabled only when code scanning has analyzed at least one pull request since alerts were enabled for the repository.</p>
+</div>
+<h2 title="Viewing the enablement of security features for an organization"><a href="#viewing-the-enablement-of-security-features-for-an-organization" aria-hidden="true" class="anchor" id="viewing-the-enablement-of-security-features-for-an-organization"></a>Viewing the enablement of security features for an organization</h2>
+<p>You can view data to assess the enablement of features for secure coding across repositories in an organization.</p>
+<ol>
+<li>On GitHub, navigate to the main page of the organization.</li>
+<li>Under your organization name, click the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab.</li>
+<li>To display the "Security coverage" view, in the sidebar, click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-meter" aria-label="meter" role="img"><path d="M8 1.5a6.5 6.5 0 1 0 6.016 4.035.75.75 0 0 1 1.388-.57 8 8 0 1 1-4.37-4.37.75.75 0 1 1-.569 1.389A6.473 6.473 0 0 0 8 1.5Zm6.28.22a.75.75 0 0 1 0 1.06l-4.063 4.064a2.5 2.5 0 1 1-1.06-1.06L13.22 1.72a.75.75 0 0 1 1.06 0ZM7 8a1 1 0 1 0 2 0 1 1 0 0 0-2 0Z"></path></svg> Coverage</strong>.</li>
+<li>Use options in the page summary to filter results to show the repositories you want to assess. The list of repositories and metrics displayed on the page automatically update to match your current selection. For more information on filtering, see <a href="../../manage-security-alerts/remediate-alerts-at-scale/filtering-alerts-in-security-overview.html">Filtering alerts in security overview</a>.
+<ul>
+<li>Use the <strong>Teams</strong> dropdown to show information only for the repositories owned by one or more teams. For more information, see <a href="https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/managing-team-access-to-an-organization-repository" class="external">Managing team access to an organization repository</a>.</li>
+<li>Click <strong>NUMBER enabled</strong> or <strong>NUMBER not enabled</strong> in the header for any feature to show only the repositories with that feature enabled or not enabled.</li>
+<li>At the top of the list of repositories, click <strong>NUMBER Archived</strong> to show only repositories that are archived.</li>
+<li>Click in the search box to add further filters to the repositories displayed.</li>
+</ul>
+</li>
+</ol>
+<h2 title="Viewing the enablement of features for secure coding in an enterprise"><a href="#viewing-the-enablement-of-features-for-secure-coding-in-an-enterprise" aria-hidden="true" class="anchor" id="viewing-the-enablement-of-features-for-secure-coding-in-an-enterprise"></a>Viewing the enablement of features for secure coding in an enterprise</h2>
+<p>You can view data to assess the enablement of security features across organizations in an enterprise.</p>
+<ol>
+<li>Navigate to GitHub Enterprise Cloud.</li>
+<li>In the top-right corner of GitHub, click your profile picture.</li>
+<li>Depending on your environment, click <strong>Enterprise</strong>, or click <strong>Enterprises</strong> then click the enterprise you want to view.</li>
+<li>At the top of the page, click the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab.</li>
+<li>To display the "Security coverage" view, in the sidebar, click <strong>Coverage</strong>.</li>
+<li>Use options in the page summary to filter results to show the repositories you want to assess. The list of repositories and metrics displayed on the page automatically update to match your current selection. For more information on filtering, see <a href="../../manage-security-alerts/remediate-alerts-at-scale/filtering-alerts-in-security-overview.html">Filtering alerts in security overview</a>.
+<ul>
+<li>
+<p>Use the <strong>Teams</strong> dropdown to show information only for the repositories owned by one or more teams. For more information, see <a href="https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/managing-team-access-to-an-organization-repository" class="external">Managing team access to an organization repository</a>.</p>
+</li>
+<li>
+<p>Click <strong>NUMBER enabled</strong> or <strong>NUMBER not enabled</strong> in the header for any feature to show only the repositories with that feature enabled or not enabled.</p>
+</li>
+<li>
+<p>At the top of the list of repositories, click <strong>NUMBER Archived</strong> to show only repositories that are archived.</p>
+</li>
+<li>
+<p>Click in the search box to add further filters to the repositories displayed.</p>
+</li>
+</ul>
+<div class="markdown-alert markdown-alert-tip">
+<p class="markdown-alert-title">Tip</p>
+<p>You can use the <code>owner</code> filter in the search field to filter the data by organization. For more information, see <a href="../../manage-security-alerts/remediate-alerts-at-scale/filtering-alerts-in-security-overview.html#repository-owner-name-and-type-filters">Filtering alerts in security overview</a>.</p>
+</div>
+</li>
+</ol>
+<h2 title="Viewing enablement trends for an organization"><a href="#viewing-enablement-trends-for-an-organization" aria-hidden="true" class="anchor" id="viewing-enablement-trends-for-an-organization"></a>Viewing enablement trends for an organization</h2>
+<p>You can view data to assess the enablement status and enablement status trends of security features for an organization.</p>
+<ol>
+<li>On GitHub, navigate to the main page of the organization.</li>
+<li>Under your organization name, click the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab.</li>
+<li>In the sidebar, under "Insights," click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-meter" aria-label="meter" role="img"><path d="M8 1.5a6.5 6.5 0 1 0 6.016 4.035.75.75 0 0 1 1.388-.57 8 8 0 1 1-4.37-4.37.75.75 0 1 1-.569 1.389A6.473 6.473 0 0 0 8 1.5Zm6.28.22a.75.75 0 0 1 0 1.06l-4.063 4.064a2.5 2.5 0 1 1-1.06-1.06L13.22 1.72a.75.75 0 0 1 1.06 0ZM7 8a1 1 0 1 0 2 0 1 1 0 0 0-2 0Z"></path></svg> Enablement</strong>.</li>
+<li>Click on one of the tabs for "Dependabot," "Code scanning," or "Secret scanning" to view enablement trends and the percentage of repositories in your organization with that feature enabled. This data is displayed as a graph and a detailed table.</li>
+<li>Optionally, use the options at the top of the "Enablement trends" view page to filter the group of repositories you want to see enablement trends for.
+<ul>
+<li>
+<p>Use the date picker to set the time range that you want to view enablement trends for.</p>
+</li>
+<li>
+<p>Click in the search box to add further filters on the enablement trends displayed. The filters you can apply are the same as those for the "Overview" dashboard view. For more information, see <a href="../../manage-security-alerts/remediate-alerts-at-scale/filtering-alerts-in-security-overview.html">Filtering alerts in security overview</a>.</p>
+<p><img src="../../../../..//assets/images/help/security-overview/security-overview-enablement-trends.png" alt="Screenshot of the &quot;Enablement trends&quot; view for an organization, showing Dependabot status and trends over 30 days, with a filter applied."></p>
+</li>
+</ul>
+</li>
+</ol>
+<h2 title="Viewing enablement trends for an enterprise"><a href="#viewing-enablement-trends-for-an-enterprise" aria-hidden="true" class="anchor" id="viewing-enablement-trends-for-an-enterprise"></a>Viewing enablement trends for an enterprise</h2>
+<p>You can view data to assess the enablement status and enablement status trends of security features across organizations in an enterprise.</p>
+<ol>
+<li>Navigate to GitHub Enterprise Cloud.</li>
+<li>In the top-right corner of GitHub, click your profile picture.</li>
+<li>Depending on your environment, click <strong>Enterprise</strong>, or click <strong>Enterprises</strong> then click the enterprise you want to view.</li>
+<li>At the top of the page, click the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab.</li>
+<li>To display the "Enablement trends" view, in the sidebar, under "Insights", click <strong>Enablement</strong>.</li>
+<li>Click on one of the tabs for "Dependabot," "Code scanning," or "Secret scanning" to view enablement trends and the percentage of repositories across organizations in your enterprise with that feature enabled. This data is displayed as a graph and a detailed table.</li>
+<li>Optionally, use the options at the top of the "Enablement trends" view page to filter the group of repositories you want to see enablement trends for.
+<ul>
+<li>Use the date picker to set the time range that you want to view enablement trends for.</li>
+<li>Click in the search box to add further filters on the enablement trends displayed. For more information, see <a href="../../manage-security-alerts/remediate-alerts-at-scale/filtering-alerts-in-security-overview.html">Filtering alerts in security overview</a>.</li>
+</ul>
+</li>
+</ol>
+<div class="markdown-alert markdown-alert-tip">
+<p class="markdown-alert-title">Tip</p>
+<p>You can use the <code>owner:</code> filter in the search field to filter the data by organization. For more information, see <a href="../../manage-security-alerts/remediate-alerts-at-scale/filtering-alerts-in-security-overview.html">Filtering alerts in security overview</a>.</p>
+</div>
+<h2 title="Acting on enablement data"><a href="#acting-on-enablement-data" aria-hidden="true" class="anchor" id="acting-on-enablement-data"></a>Acting on enablement data</h2>
+<p>After you have reviewed enablement coverage, consider the following actions.</p>
+<ol>
+<li>
+<p>Check if your enterprise has configured overly restrictive policies that limit the use of security features. See <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-code-security-and-analysis-for-your-enterprise" class="external">Enforcing policies for code security and analysis for your enterprise</a>.</p>
+</li>
+<li>
+<p>Enable features that should be enabled on all repositories. For information on enabling features for a whole organization, see <a href="../../secure-at-scale/configure-organization-security/index.html">Configuring security features in your organization</a>.</p>
+<p>For example, secret scanning alerts and push protection reduce the risk of a security leak no matter what information is stored in the repository. If you see repositories that don't already use these features, you should either enable them or discuss an enablement plan with the team who owns the repository.</p>
+</li>
+<li>
+<p>For other features, consider whether the feature should be enabled in more repositories. For example, there would be no point in enabling Dependabot for repositories that only use ecosystems or languages that are unsupported. As such, it's normal to have some repositories where these features are not enabled.</p>
+</li>
+</ol>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>You can download a CSV file of the data displayed on the "Security coverage" page. This data file can be used for efforts like security research and in-depth data analysis, and can integrate easily with external datasets. See <a href="exporting-data-from-security-overview.html">Exporting data from security overview</a>.</p>
+<p>You can use the "Enablement trends" view to see enablement status and enablement status trends over time for Dependabot, code scanning, or secret scanning across repositories or organizations. See <a href="#viewing-enablement-trends-for-an-organization">Viewing enablement trends for an organization</a> or <a href="#viewing-enablement-trends-for-an-enterprise">Viewing enablement trends for an enterprise</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

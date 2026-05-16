@@ -1,0 +1,63 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Responsible use of GitHub Code Quality</title><link rel="stylesheet" href="../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../index.html">Security and code quality</a> / <a href="index.html">Responsible use</a> / </nav><h1><a href="#responsible-use-of-github-code-quality" aria-hidden="true" class="anchor" id="responsible-use-of-github-code-quality"></a>Responsible use of GitHub Code Quality</h1>
+<p>Use GitHub Code Quality responsibly by understanding its purposes, capabilities, and limitations.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>GitHub Code Quality is currently in public preview and subject to change.<br>
+During public preview, Code Quality will not be billed, although Code Quality scans will consume GitHub Actions minutes.</p>
+</div>
+<h2 title="About GitHub Code Quality"><a href="#about-github-code-quality" aria-hidden="true" class="anchor" id="about-github-code-quality"></a>About GitHub Code Quality</h2>
+<p>GitHub Code Quality helps users improve code reliability, maintainability, and overall project health by surfacing actionable feedback and offering automatic fixes for any findings in pull requests and on the default branch.</p>
+<p>When you enable Code Quality, two types of analysis run:</p>
+<ul>
+<li>
+<p><strong>CodeQL quality queries</strong> run using code scanning analysis and identify problems with the maintainability, reliability, or style of code. This runs on changed code in all pull requests against the default branch. It also runs periodically on the full default branch.</p>
+</li>
+<li>
+<p><strong>Large Language Model (LLM)-powered analysis</strong> provides additional insights into potential quality concerns beyond what is covered by deterministic engines like CodeQL. This runs automatically on files changed in recent pushes to the default branch. These findings are displayed in Code Quality's <strong>AI findings</strong> dashboard, under the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab of the repository.</p>
+</li>
+</ul>
+<p>When a quality issue is detected by either type of analysis, <strong>Copilot Autofix</strong> suggests a relevant fix that can be reviewed and applied by developers.</p>
+<p>On pull requests, Code Quality results are displayed as comments left by the <code>github-code-quality</code> bot, which includes a suggested autofix wherever possible.</p>
+<h2 title="LLM-powered analysis for recent pushes"><a href="#llm-powered-analysis-for-recent-pushes" aria-hidden="true" class="anchor" id="llm-powered-analysis-for-recent-pushes"></a>LLM-powered analysis for recent pushes</h2>
+<p>After each push to the default branch, the LLM analyzes recently changed files for maintainability, reliability, and other quality issues. Code Quality inspects your code and provides feedback using a combination of natural language processing and machine learning.</p>
+<h3 title="LLM-powered analysis for recent pushes / Input processing"><a href="#input-processing" aria-hidden="true" class="anchor" id="input-processing"></a>Input processing</h3>
+<p>The code changes are combined with other relevant, contextual information to form a prompt, and that prompt is sent to a large language model.</p>
+<h3 title="LLM-powered analysis for recent pushes / Language model analysis"><a href="#language-model-analysis" aria-hidden="true" class="anchor" id="language-model-analysis"></a>Language model analysis</h3>
+<p>The prompt is then passed through the Copilot language model, which is a neural network that has been trained on a large body of text data. The language model analyzes the input prompt.</p>
+<h3 title="LLM-powered analysis for recent pushes / Response generation"><a href="#response-generation" aria-hidden="true" class="anchor" id="response-generation"></a>Response generation</h3>
+<p>The language model generates a response based on its analysis of the input prompt. This response can take the form of natural language suggestions and code suggestions.</p>
+<h3 title="LLM-powered analysis for recent pushes / Output formatting"><a href="#output-formatting" aria-hidden="true" class="anchor" id="output-formatting"></a>Output formatting</h3>
+<p>The response generated by Code Quality is presented to the user directly, providing code feedback linked to specific lines of specific files. Where Code Quality has provided a code suggestion, the suggestion is presented as a suggested change, which can be applied with a couple of clicks.</p>
+<h2 title="GitHub Copilot Autofix suggestions"><a href="#github-copilot-autofix-suggestions" aria-hidden="true" class="anchor" id="github-copilot-autofix-suggestions"></a>GitHub Copilot Autofix suggestions</h2>
+<p>On pull requests, Code Quality results found by code scanning analysis send input to the LLM. If the LLM can generate a potential fix, the <code>github-code-quality</code> bot posts a comment with a suggested change directly in the pull request.</p>
+<p>In addition, users can request autofix generation for results in the default branch.</p>
+<p>For more information on the suggestion generation process for GitHub Copilot Autofix, see <a href="responsible-use-autofix-code-scanning.html">Responsible use of Copilot Autofix for code scanning</a>.</p>
+<h2 title="Use case for GitHub Code Quality"><a href="#use-case-for-github-code-quality" aria-hidden="true" class="anchor" id="use-case-for-github-code-quality"></a>Use case for GitHub Code Quality</h2>
+<p>The goal of GitHub Code Quality is to:</p>
+<ul>
+<li>Surface code quality issues across your repository, so developers and repository administrators can quickly identify, prioritize and report on areas of risk.</li>
+<li>Accelerate remediation work by offering Copilot Autofix suggestions for results found by scans of the default branch, as well as for findings in recent pushes to the default branch.</li>
+<li>Quickly provide actionable feedback on a developer's code. On pull requests, Code Quality combines information on best practices with details of the codebase and findings to suggest a potential fix to the developer.</li>
+</ul>
+<h2 title="Improving the performance of GitHub Code Quality"><a href="#improving-the-performance-of-github-code-quality" aria-hidden="true" class="anchor" id="improving-the-performance-of-github-code-quality"></a>Improving the performance of GitHub Code Quality</h2>
+<p>If you encounter any issues or limitations with suggested fixes on pull requests, we recommend that you provide feedback by using the thumbs up and thumbs down buttons on the <code>github-code-quality</code> bot's comments. This can help GitHub to improve the tool and address any concerns or limitations.</p>
+<h2 title="Limitations of GitHub Code Quality"><a href="#limitations-of-github-code-quality" aria-hidden="true" class="anchor" id="limitations-of-github-code-quality"></a>Limitations of GitHub Code Quality</h2>
+<h3 title="Limitations of GitHub Code Quality / Limitations of Code Quality's LLM-powered analysis"><a href="#limitations-of-code-qualitys-llm-powered-analysis" aria-hidden="true" class="anchor" id="limitations-of-code-qualitys-llm-powered-analysis"></a>Limitations of Code Quality's LLM-powered analysis</h3>
+<p>Code Quality's LLM-powered analysis uses the same underlying language model and analysis engine as GitHub Copilot code review. Therefore, it shares similar limitations when analyzing code quality. Key considerations include:</p>
+<ul>
+<li>Incomplete detection</li>
+<li>False positives</li>
+<li>Code suggestion accuracy</li>
+<li>Potential biases</li>
+</ul>
+<p>For detailed information about these limitations, see <a href="https://docs.github.com/en/copilot/responsible-use/code-review" class="external">Responsible use of GitHub Copilot code review</a>.</p>
+<p>You should always review the findings surfaced by GitHub Code Quality's LLM-powered analysis to verify their accuracy and applicability to your codebase.</p>
+<h3 title="Limitations of GitHub Code Quality / Limitations of Copilot Autofix"><a href="#limitations-of-copilot-autofix" aria-hidden="true" class="anchor" id="limitations-of-copilot-autofix"></a>Limitations of Copilot Autofix</h3>
+<p>Copilot Autofix for Code Quality findings won't be able to generate a fix for every finding in every situation. The feature operates on a best-effort basis and is not guaranteed to succeed 100% of the time.</p>
+<p>When you review a suggestion from Copilot Autofix, you must always consider the limitations of AI and edit the changes as needed before you accept the changes. You should always carefully review and verify Copilot Autofix suggestions before applying them.</p>
+<p>For more information on the limitations of Copilot Autofix, the quality of Copilot Autofix suggestions, and the best way to mitigate its limitations, see <a href="responsible-use-autofix-code-scanning.html">Responsible use of Copilot Autofix for code scanning</a></p>
+<h2 title="Provide feedback"><a href="#provide-feedback" aria-hidden="true" class="anchor" id="provide-feedback"></a>Provide feedback</h2>
+<p>You can provide feedback on GitHub Code Quality in the <a href="https://github.com/orgs/community/discussions/177488" class="external">community discussion</a>.</p>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>See how GitHub Code Quality works on your default branch to surface code quality issues and help you understand your repository's code health at a glance. See <a href="../tutorials/improve-code-quality/quickstart.html">Quickstart for GitHub Code Quality</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

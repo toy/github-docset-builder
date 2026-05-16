@@ -1,0 +1,100 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>How the dependency graph recognizes dependencies</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Supply chain security</a> / </nav><h1><a href="#how-the-dependency-graph-recognizes-dependencies" aria-hidden="true" class="anchor" id="how-the-dependency-graph-recognizes-dependencies"></a>How the dependency graph recognizes dependencies</h1>
+<p>The dependency graph automatically analyzes manifest files. You can submit data for dependencies that cannot be detected automatically.</p>
+<p>The dependency graph can identify your project's dependencies using the following methods.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>How it works</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Static analysis</strong></td>
+<td>Parses manifest and lock files in your repository</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Dependabot graph jobs</strong></td>
+<td>Uses a Dependabot GitHub Actions workflow to generate dependency snapshots</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Automatic submission</strong></td>
+<td>Runs a built-in GitHub Actions workflow to resolve build-time dependencies</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Dependency submission API</strong></td>
+<td>Accepts dependency data you submit programmatically</td>
+</tr>
+</tbody>
+</table>
+<p>Once dependencies are in the graph, you can receive Dependabot alerts and Dependabot security updates for any known vulnerabilities.</p>
+<h2 title="Static analysis"><a href="#static-analysis" aria-hidden="true" class="anchor" id="static-analysis"></a>Static analysis</h2>
+<p>When you enable the dependency graph, GitHub scans your repository for supported manifest files and parses each package's name and version. The graph updates when you change a supported manifest or lock file on your default branch, or when a dependency changes in its own repository.</p>
+<p>Static analysis can identify:</p>
+<ul>
+<li><strong>Direct dependencies</strong> explicitly defined in a manifest or lock file</li>
+<li><strong>Indirect dependencies</strong>—dependencies of these direct dependencies, also called "transitive dependencies"—but only if they are defined in a manifest or lock file, not if they are resolved at build time</li>
+</ul>
+<p>For the most reliable graph, you should use lock files (or their equivalent), because they define exactly which versions of the direct and indirect dependencies you currently use. Lock files also ensure that all contributors to the repository are using the same versions, which will make it easier for you to test and debug code. In addition, indirect dependencies inferred from manifest files (rather than lock files) are excluded from vulnerability checks.</p>
+<h2 title="Automatic dependency submission"><a href="#automatic-dependency-submission" aria-hidden="true" class="anchor" id="automatic-dependency-submission"></a>Automatic dependency submission</h2>
+<p>Some ecosystems resolve indirect dependencies at build time, so static analysis can't see the full dependency tree. When you enable automatic dependency submission for a repository, GitHub automatically identifies the transitive dependencies in the repository for supported ecosystems. See <a href="../../reference/supply-chain-security/dependency-graph-supported-package-ecosystems.html">Dependency graph supported package ecosystems</a>.</p>
+<p>In the background, automatic dependency submission runs a GitHub Actions workflow that generates the complete tree and uploads it using the dependency submission API. Automatic dependency submission runs on GitHub-hosted runners by default and counts toward your GitHub Actions minutes. Optionally, you can choose to run it on self-hosted runners or larger runners.</p>
+<p>To enable automatic dependency submission, see <a href="../../how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-automatic-dependency-submission-for-your-repository.html">Configuring automatic dependency submission for your repository</a>.</p>
+<h2 title="Dependabot graph jobs"><a href="#dependabot-graph-jobs" aria-hidden="true" class="anchor" id="dependabot-graph-jobs"></a>Dependabot graph jobs</h2>
+<p>Dependabot graph jobs use a special type of Dependabot job to build a dependency snapshot and upload it to the dependency submission API. Dependabot graph jobs are currently supported for <strong>Go</strong> and <strong>Python</strong> dependencies.</p>
+<p>For supported ecosystems, Dependabot graph jobs provide:</p>
+<ul>
+<li>Full transitive dependency coverage, which means Dependabot can alert you to vulnerabilities in indirect dependencies that static analysis may miss.</li>
+<li>Private registry access through Dependabot secrets configured at the organization or repository level. For more information, see <a href="../../how-tos/secure-your-supply-chain/manage-your-dependency-security/configuring-access-to-private-registries-for-dependabot.html">Configuring access to private registries for Dependabot</a>.</li>
+<li>Private packages that are not accessible through configured Dependabot secrets are gracefully omitted from the dependency graph without causing a failure.</li>
+</ul>
+<p>This approach is similar to automatic dependency submission, but does not incur charges for GitHub Actions minutes. It can also access organization-wide configurations for private registries you've set up for Dependabot.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Dependabot graph jobs take precedence over automatic dependency submission. For example, if your Python repository previously used automatic dependency submission, those jobs will no longer run once Dependabot graph jobs are active. The only requirement is that the dependency graph is enabled for your repository.</p>
+</div>
+<h2 title="The dependency submission API"><a href="#the-dependency-submission-api" aria-hidden="true" class="anchor" id="the-dependency-submission-api"></a>The dependency submission API</h2>
+<p>You can call the dependency submission API in your own script or workflow. This is useful if:</p>
+<ul>
+<li>You need to submit transitive dependencies that cannot be detected from lock files.</li>
+<li>You need to create custom logic or are using an external CI/CD system.</li>
+</ul>
+<p>Dependencies are submitted to the dependency submission API in the form of a snapshot. This is a list of dependencies associated with a commit SHA and other metadata, reflecting the current state of your repository.</p>
+<p>If you are calling the API in a GitHub Actions workflow, you can use a pre-made action for your ecosystem that automatically gathers the dependencies and submits them to the API. Otherwise, you can write your own action or call the API from an external system.</p>
+<p>Submitted dependencies will be shown in dependency review, but are <em>not</em> available in your organization's dependency insights.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>The dependency review API and the dependency submission API work together. This means that the dependency review API will include dependencies submitted via the dependency submission API.</p>
+</div>
+<p>For more information, see <a href="../../how-tos/secure-your-supply-chain/secure-your-dependencies/using-the-dependency-submission-api.html">Using the dependency submission API</a>.</p>
+<h2 title="Prioritization"><a href="#prioritization" aria-hidden="true" class="anchor" id="prioritization"></a>Prioritization</h2>
+<p>A repository can use multiple methods for dependency submission, which can cause the same package manifest to be scanned multiple times, potentially with different outputs from each scan. Dependency graph uses deduplication logic to parse the outputs, prioritizing the most accurate information for each manifest file.</p>
+<p>Dependency graph displays only one instance of each manifest file using the following precedence rules.</p>
+<ol>
+<li><strong>User submissions</strong> take the highest priority, because they are usually created during artifact builds they have the most complete information.
+<ul>
+<li>If there are multiple manual snapshots from different detectors, they are sorted alphabetically by correlator and the first one used.</li>
+<li>If there are two correlators with the same detector, the resolved dependencies are merged. For more information about correlators and detectors, see <a href="https://docs.github.com/en/rest/dependency-graph/dependency-submission" class="external">REST API endpoints for dependency submission</a>.</li>
+</ul>
+</li>
+<li><strong>Dependabot graph jobs</strong> have the second-highest priority. For ecosystems where Dependabot graph jobs are available (currently Go and Python), they take precedence over automatic dependency submission.</li>
+<li><strong>Automatic submissions</strong> have the next priority since they are also created during artifact builds, but are not submitted by users.</li>
+<li><strong>Static analysis results</strong> are used when no other data is available.</li>
+</ol>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

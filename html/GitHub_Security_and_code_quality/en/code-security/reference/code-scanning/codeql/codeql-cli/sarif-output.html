@@ -1,0 +1,483 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>CodeQL CLI SARIF output</title><link rel="stylesheet" href="../../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../../index.html">Security and code quality</a> / <a href="../../../index.html">Reference</a> / <a href="../../index.html">Code scanning</a> / <a href="../index.html">CodeQL</a> / <a href="index.html">CodeQL CLI</a> / </nav><h1><a href="#codeql-cli-sarif-output" aria-hidden="true" class="anchor" id="codeql-cli-sarif-output"></a>CodeQL CLI SARIF output</h1>
+<p>You can output SARIF from the CodeQL CLI and share static analysis results with other systems.</p>
+<h2 title="About SARIF output"><a href="#about-sarif-output" aria-hidden="true" class="anchor" id="about-sarif-output"></a>About SARIF output</h2>
+<p>SARIF is designed to represent the output of a broad range of static analysis tools, and there are many features in the SARIF specification that are<br>
+considered "optional". This document details the output produced when using the format type <code>sarifv2.1.0</code>, which corresponds to the SARIF v2.1.0.csd1 specification. For more information on selecting a file format for your analysis results, see <a href="../codeql-cli-manual/database-analyze.html">database analyze</a>.</p>
+<h2 title="SARIF specification and schema"><a href="#sarif-specification-and-schema" aria-hidden="true" class="anchor" id="sarif-specification-and-schema"></a>SARIF specification and schema</h2>
+<p>This article is intended to be read alongside the detailed SARIF specification. For more information on the specification and the SARIF schema, see the <a href="https://docs.oasis-open.org/sarif/sarif/v2.1.0/sarif-v2.1.0.html" class="external">SARIF specification documentation</a>.</p>
+<h2 title="Change notes"><a href="#change-notes" aria-hidden="true" class="anchor" id="change-notes"></a>Change notes</h2>
+<h3 title="Change notes / Changes between versions"><a href="#changes-between-versions" aria-hidden="true" class="anchor" id="changes-between-versions"></a>Changes between versions</h3>
+<table>
+<thead>
+<tr>
+<th>CodeQL version</th>
+<th>Format type</th>
+<th>Changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2.0.0</td>
+<td><code>sarifv2.1.0</code></td>
+<td>First version of this format.</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Change notes / Future changes to the output"><a href="#future-changes-to-the-output" aria-hidden="true" class="anchor" id="future-changes-to-the-output"></a>Future changes to the output</h3>
+<p>The output produced for a given specific format type (for example, <code>sarifv2.1.0</code>) may change in future CodeQL releases. We will endeavor to maintain backwards compatibility with consumers of the generated SARIF by ensuring that:</p>
+<ul>
+<li>
+<p>Fields that are marked as always being generated will never be removed.</p>
+</li>
+<li>
+<p>For fields that are marked as not always being generated, the circumstances under which the fields are generated may change. Consumers of the CodeQL SARIF output should be robust to the presence or absence of these fields.</p>
+</li>
+</ul>
+<p>New output fields may be added in future releases under the same format type–these are not considered to break backwards compatibility, and consumers should be robust to the presence of newly added fields.</p>
+<p>New format argument types may be added in future versions of CodeQL—for example, to support new versions of SARIF. These have no guarantee of backwards compatibility, unless explicitly documented.</p>
+<h2 title="Generated SARIF objects"><a href="#generated-sarif-objects" aria-hidden="true" class="anchor" id="generated-sarif-objects"></a>Generated SARIF objects</h2>
+<p>This details each SARIF component that may be generated, along with any specific circumstances. We omit any properties that are never generated.</p>
+<h3 title="Generated SARIF objects / sarifLog object"><a href="#sariflog-object" aria-hidden="true" class="anchor" id="sariflog-object"></a><code>sarifLog</code> object</h3>
+<table>
+<thead>
+<tr>
+<th>JSON property name</th>
+<th>Always generated?</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">$schema</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>Provides a link to the <a href="https://docs.oasis-open.org/sarif/sarif/v2.1.0/errata01/os/schemas/sarif-schema-2.1.0.json" class="external">SARIF schema</a>.</td>
+</tr>
+<tr>
+<td><code class="keyword">version</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>The version of the SARIF used to generate the output.</td>
+</tr>
+<tr>
+<td><code class="keyword">runs</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>An array containing a single run object, for one language.</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Generated SARIF objects / run object"><a href="#run-object" aria-hidden="true" class="anchor" id="run-object"></a><code>run</code> object</h3>
+<table>
+<thead>
+<tr>
+<th>JSON property name</th>
+<th>Always generated?</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">tool</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>None</td>
+</tr>
+<tr>
+<td><code class="keyword">artifacts</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>An array containing at least one artifact object for every file referenced in a result.</td>
+</tr>
+<tr>
+<td><code class="keyword">results</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>None</td>
+</tr>
+<tr>
+<td><code class="keyword">newLineSequences</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>None</td>
+</tr>
+<tr>
+<td><code class="keyword">columnKind</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>None</td>
+</tr>
+<tr>
+<td><code class="keyword">properties</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>The properties dictionary will contain the <code>semmle.formatSpecifier</code>, which identifies the format specifier passed to the CodeQL CLI.</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Generated SARIF objects / tool object"><a href="#tool-object" aria-hidden="true" class="anchor" id="tool-object"></a><code>tool</code> object</h3>
+<table>
+<thead>
+<tr>
+<th>JSON property name</th>
+<th>Always generated?</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>driver</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Generated SARIF objects / toolComponent object"><a href="#toolcomponent-object" aria-hidden="true" class="anchor" id="toolcomponent-object"></a><code>toolComponent</code> object</h3>
+<table>
+<thead>
+<tr>
+<th>JSON property name</th>
+<th>Always generated?</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">name</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>Set to "CodeQL command-line toolchain" for output from the CodeQL CLI tools. Note, if the output was generated using a different tool a different <code>name</code> is reported, and the format may not be as described here.</td>
+</tr>
+<tr>
+<td><code class="keyword">organization</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>Set to "GitHub".</td>
+</tr>
+<tr>
+<td><code class="keyword">version</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>Set to the CodeQL release version e.g. "2.0.0".</td>
+</tr>
+<tr>
+<td><code class="keyword">rules</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>An array of <code>reportingDescriptor</code> objects that represent rules. This array will contain, at a minimum, all the rules that were run during this analysis, but may contain rules which were available but not run. For more detail about enabling queries, see <code>defaultConfiguration</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Generated SARIF objects / reportingDescriptor object (for rule)"><a href="#reportingdescriptor-object-for-rule" aria-hidden="true" class="anchor" id="reportingdescriptor-object-for-rule"></a><code>reportingDescriptor</code> object (for rule)</h3>
+<p><code>reportingDescriptor</code> objects may be used in multiple places in the SARIF specification. When a <code>reportingDescriptor</code> is included&nbsp;in the rules array of a <code>toolComponent</code> object it has the following properties.</p>
+<table>
+<thead>
+<tr>
+<th>JSON property name</th>
+<th>Always generated?</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">id</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>Will contain the <code>@id</code> property specified in the query that defines the rule, which is usually of the format <code>language/rule-name</code> (for example <code>cpp/unsafe-format-string</code>). If your organization defines the <code>@opaqueid</code> property in the query it will be used instead.</td>
+</tr>
+<tr>
+<td><code class="keyword">name</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>Will contain the <code>@id</code> property specified in the query. See the <code>id</code> property above for an example.</td>
+</tr>
+<tr>
+<td><code class="keyword">shortDescription</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>Will contain the <code>@name</code> property specified in the query that defines the rule.</td>
+</tr>
+<tr>
+<td><code class="keyword">fullDescription</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>Will contain the <code>@description</code> property specified in the query that defines the rule.</td>
+</tr>
+<tr>
+<td><code class="keyword">defaultConfiguration</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>A <code>reportingConfiguration</code> object, with the enabled property set to true or false, and a level property set according to the <code>@severity</code> property specified in the query that defines the rule. Omitted if the <code>@severity</code> property was not specified.</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Generated SARIF objects / artifact object"><a href="#artifact-object" aria-hidden="true" class="anchor" id="artifact-object"></a><code>artifact</code> object</h3>
+<table>
+<thead>
+<tr>
+<th>JSON property name</th>
+<th>Always generated?</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">location</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>An <code>artifactLocation</code> object.</td>
+</tr>
+<tr>
+<td><code class="keyword">index</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>The index of the <code>artifact</code> object.</td>
+</tr>
+<tr>
+<td><code class="keyword">contents</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optionally" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>If results are generated using the <code>--sarif-add-file-contents</code> flag, and the source code is available at the time the SARIF file is generated, then the <code>contents</code> property is populated with an <code>artifactContent</code> object, with the <code>text</code> property set.</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Generated SARIF objects / artifactLocation object"><a href="#artifactlocation-object" aria-hidden="true" class="anchor" id="artifactlocation-object"></a><code>artifactLocation</code> object</h3>
+<table>
+<thead>
+<tr>
+<th>JSON property name</th>
+<th>Always generated?</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">uri</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>None</td>
+</tr>
+<tr>
+<td><code class="keyword">index</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>None</td>
+</tr>
+<tr>
+<td><code class="keyword">uriBaseId</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optionally" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>If the file is relative to some known abstract location, such as the root source location on the analysis machine, this will be set.</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Generated SARIF objects / result object"><a href="#result-object" aria-hidden="true" class="anchor" id="result-object"></a><code>result</code> object</h3>
+<p>The composition of the results is dependent on the options provided to CodeQL. By default, the results are grouped by unique message format string and primary location. Thus, two results that occur at the same location with the same underlying message, will appear as a single result in the output. This behavior can be disabled by using the flag <code>--ungroup-results</code>, in which case no results are grouped.</p>
+<table>
+<thead>
+<tr>
+<th>JSON property name</th>
+<th>Always generated?</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">ruleId</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>See the description of the <code>id</code> property in <code>reportingDescriptor</code> object (for rule) .</td>
+</tr>
+<tr>
+<td><code class="keyword">ruleIndex</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>None</td>
+</tr>
+<tr>
+<td><code class="keyword">message</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>A message describing the problem(s) occurring at this location. This message may be a SARIF "Message with placeholder", containing links that refer to locations in the <code>relatedLocations</code> property.</td>
+</tr>
+<tr>
+<td><code class="keyword">locations</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>An array containing a single <code>location</code> object.</td>
+</tr>
+<tr>
+<td><code class="keyword">partialFingerprints</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>A dictionary from named fingerprint types to the fingerprint. This will contain, at a minimum, a value for the <code>primaryLocationLineHash</code>, which provides a fingerprint based on the context of the primary location.</td>
+</tr>
+<tr>
+<td><code class="keyword">codeFlows</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optionally" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>This array may be populated with one or more <code>codeFlow</code> objects if the query that defines the rule for this result is of <code>@kind path-problem</code>.</td>
+</tr>
+<tr>
+<td><code class="keyword">relatedLocations</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optionally" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>This array will be populated if the query that defines the rule for this result has a message with placeholder options. Each unique location is included once.</td>
+</tr>
+<tr>
+<td><code class="keyword">suppressions</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optionally" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>If the result is suppressed, then this will contain a single <code>suppression</code> object, with the <code>@kind</code> property set to <code>IN_SOURCE</code>. If this result is not suppressed, but there is at least one result that has a suppression, then this will be set to an empty array, otherwise it will not be set.</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Generated SARIF objects / location object"><a href="#location-object" aria-hidden="true" class="anchor" id="location-object"></a><code>location</code> object</h3>
+<table>
+<thead>
+<tr>
+<th>JSON property name</th>
+<th>Always generated?</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">physicalLocation</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>None</td>
+</tr>
+<tr>
+<td><code class="keyword">id</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optionally" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td><code>location</code> objects that appear in the <code>relatedLocations</code> array of a <code>result</code> object may contain the <code>id</code> property.</td>
+</tr>
+<tr>
+<td><code class="keyword">message</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optionally" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td><code>location</code> objects may contain the <code>message</code> property if:<br><br>- They appear in the <code>relatedLocations</code> array of a <code>result</code> object may contain the <code>message</code> property.<br><br>- They appear in the <code>threadFlowLocation.location</code> property.</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Generated SARIF objects / physicalLocation object"><a href="#physicallocation-object" aria-hidden="true" class="anchor" id="physicallocation-object"></a><code>physicalLocation</code> object</h3>
+<table>
+<thead>
+<tr>
+<th>JSON property name</th>
+<th>Always generated?</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">artifactLocation</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>None</td>
+</tr>
+<tr>
+<td><code class="keyword">region</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optionally" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>If the given <code>physicalLocation</code> exists in a text file, such as a source code file, then the <code>region</code> property may be present.</td>
+</tr>
+<tr>
+<td><code class="keyword">contextRegion</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optionally" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>May be present if this location has an associated <code>snippet</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Generated SARIF objects / region object"><a href="#region-object" aria-hidden="true" class="anchor" id="region-object"></a><code>region</code> object</h3>
+<p>There are two types of <code>region</code> object produced by CodeQL:</p>
+<ul>
+<li>
+<p>Line/column offset regions</p>
+</li>
+<li>
+<p>Character offset and length regions</p>
+</li>
+</ul>
+<p>Any region produced by CodeQL may be specified in either format, and consumers should robustly handle either type.</p>
+<p>For line/column offset regions, the following properties will be set:</p>
+<table>
+<thead>
+<tr>
+<th>JSON property name</th>
+<th>Always generated?</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">startLine</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>None</td>
+</tr>
+<tr>
+<td><code class="keyword">startColumn</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optionally" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>Not included if equal to the default value of 1.</td>
+</tr>
+<tr>
+<td><code class="keyword">endLine</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optionally" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>Not included if identical to <code>startLine</code>.</td>
+</tr>
+<tr>
+<td><code class="keyword">endColumn</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>None</td>
+</tr>
+<tr>
+<td><code class="keyword">snippet</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optionally" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<p>For character offset and length regions, the following properties will be set:</p>
+<table>
+<thead>
+<tr>
+<th>JSON property name</th>
+<th>Always generated?</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">charOffset</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optionally" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>Provided if <code>startLine</code>, <code>startColumn</code>, <code>endLine</code>, and <code>endColumn</code> are not populated.</td>
+</tr>
+<tr>
+<td><code class="keyword">charLength</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optionally" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>Provided if <code>startLine</code>, <code>startColumn</code>, <code>endLine</code>, and <code>endColumn</code> are not populated.</td>
+</tr>
+<tr>
+<td><code class="keyword">snippet</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optionally" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Generated SARIF objects / codeFlow object"><a href="#codeflow-object" aria-hidden="true" class="anchor" id="codeflow-object"></a><code>codeFlow</code> object</h3>
+<table>
+<thead>
+<tr>
+<th>JSON property name</th>
+<th>Always generated?</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>threadFlows</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Generated SARIF objects / threadFlow object"><a href="#threadflow-object" aria-hidden="true" class="anchor" id="threadflow-object"></a><code>threadFlow</code> object</h3>
+<table>
+<thead>
+<tr>
+<th>JSON property name</th>
+<th>Always generated?</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>locations</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Generated SARIF objects / threadFlowLocation object"><a href="#threadflowlocation-object" aria-hidden="true" class="anchor" id="threadflowlocation-object"></a><code>threadFlowLocation</code> object</h3>
+<table>
+<thead>
+<tr>
+<th>JSON property name</th>
+<th>Always generated?</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>location</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Always" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

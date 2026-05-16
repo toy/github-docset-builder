@@ -1,0 +1,108 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Dependabot pull request comment commands</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Reference</a> / <a href="index.html">Supply chain security</a> / </nav><h1><a href="#dependabot-pull-request-comment-commands" aria-hidden="true" class="anchor" id="dependabot-pull-request-comment-commands"></a>Dependabot pull request comment commands</h1>
+<p>Dependabot responds to commands in comments on its pull requests, making it easy to triage and manage dependency updates.</p>
+<p>Dependabot responds to simple commands in comments. Each pull request contains details of the commands you can use to process the pull request (for example: to merge, squash, reopen, close, or rebase the pull request) under the "Dependabot commands and options" section. The aim is to make it as easy as possible for you to triage these automatically generated pull requests.</p>
+<h2 title="Commands for Dependabot pull requests"><a href="#commands-for-dependabot-pull-requests" aria-hidden="true" class="anchor" id="commands-for-dependabot-pull-requests"></a>Commands for Dependabot pull requests</h2>
+<p>You can use any of the following commands on a Dependabot pull request.</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">@dependabot cancel merge</code></td>
+<td>Cancels a previously requested merge.</td>
+</tr>
+<tr>
+<td><code class="keyword">@dependabot close</code></td>
+<td>Closes the pull request and prevents Dependabot from recreating that pull request. You can achieve the same result by closing the pull request manually.</td>
+</tr>
+<tr>
+<td><code class="keyword">@dependabot ignore this dependency</code></td>
+<td>Closes the pull request and prevents Dependabot from creating any more pull requests for this dependency (unless you reopen the pull request or upgrade to the suggested version yourself).</td>
+</tr>
+<tr>
+<td><code class="keyword">@dependabot ignore this major version</code></td>
+<td>Closes the pull request and prevents Dependabot from creating any more pull requests for this major version (unless you reopen the pull request or upgrade to this major version yourself).</td>
+</tr>
+<tr>
+<td><code class="keyword">@dependabot ignore this minor version</code></td>
+<td>Closes the pull request and prevents Dependabot from creating any more pull requests for this minor version (unless you reopen the pull request or upgrade to this minor version yourself).</td>
+</tr>
+<tr>
+<td><code class="keyword">@dependabot ignore this patch version</code></td>
+<td>Closes the pull request and prevents Dependabot from creating any more pull requests for this patch version (unless you reopen the pull request or upgrade to this patch version yourself).</td>
+</tr>
+<tr>
+<td><code class="keyword">@dependabot merge</code></td>
+<td>Merges the pull request once your CI tests have passed.</td>
+</tr>
+<tr>
+<td><code class="keyword">@dependabot rebase</code></td>
+<td>Rebases the pull request.</td>
+</tr>
+<tr>
+<td><code class="keyword">@dependabot recreate</code></td>
+<td>Recreates the pull request, overwriting any edits that have been made to the pull request.</td>
+</tr>
+<tr>
+<td><code class="keyword">@dependabot reopen</code></td>
+<td>Reopens the pull request if the pull request is closed.</td>
+</tr>
+<tr>
+<td><code class="keyword">@dependabot show DEPENDENCY_NAME ignore conditions</code></td>
+<td>Retrieves information on the ignore conditions for the specified dependency, and comments on the pull request with a table that displays all ignore conditions for the dependency. For example, <code>@dependabot show express ignore conditions</code> would find all <code>ignore</code> conditions stored for the Express dependency, and comment on the pull request with that information.</td>
+</tr>
+<tr>
+<td><code class="keyword">@dependabot squash and merge</code></td>
+<td>Squashes and merges the pull request once your CI tests have passed.</td>
+</tr>
+</tbody>
+</table>
+<h2 title="Commands for grouped version updates"><a href="#commands-for-grouped-version-updates" aria-hidden="true" class="anchor" id="commands-for-grouped-version-updates"></a>Commands for grouped version updates</h2>
+<p>In Dependabot pull requests for grouped version updates and security updates, you can use comment commands to ignore and un-ignore updates for specific dependencies and versions. You can use any of the following commands to manage ignore conditions for grouped updates.</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">@dependabot ignore DEPENDENCY_NAME</code></td>
+<td>Closes the pull request and prevents Dependabot from updating this dependency.</td>
+</tr>
+<tr>
+<td><code class="keyword">@dependabot ignore DEPENDENCY_NAME major version</code></td>
+<td>Closes the pull request and prevents Dependabot from updating this dependency's major version.</td>
+</tr>
+<tr>
+<td><code class="keyword">@dependabot ignore DEPENDENCY_NAME minor version</code></td>
+<td>Closes the pull request and prevents Dependabot from updating this dependency's minor version.</td>
+</tr>
+<tr>
+<td><code class="keyword">@dependabot ignore DEPENDENCY_NAME patch version</code></td>
+<td>Closes the pull request and prevents Dependabot from updating this dependency's patch version.</td>
+</tr>
+<tr>
+<td><code class="keyword">@dependabot unignore *</code></td>
+<td>Closes the current pull request, clears all <code>ignore</code> conditions stored for all dependencies in the group, then opens a new pull request.</td>
+</tr>
+<tr>
+<td><code class="keyword">@dependabot unignore DEPENDENCY_NAME</code></td>
+<td>Closes the current pull request, clears all <code>ignore</code> conditions stored for the dependency, then opens a new pull request that includes available updates for the specified dependency. For example, <code>@dependabot unignore lodash</code> would open a new pull request that includes updates for the Lodash dependency.</td>
+</tr>
+<tr>
+<td><code class="keyword">@dependabot unignore DEPENDENCY_NAME IGNORE_CONDITION</code></td>
+<td>Closes the current pull request, clears the stored <code>ignore</code> condition, then opens a new pull request that includes available updates for the specified ignore condition. For example, <code>@dependabot unignore express [&lt; 1.9, &gt; 1.8.0]</code> would open a new pull request that includes updates for Express between versions 1.8.0 and 1.9.0.</td>
+</tr>
+</tbody>
+</table>
+<div class="markdown-alert markdown-alert-tip">
+<p class="markdown-alert-title">Tip</p>
+<p>When you want to un-ignore a specific ignore condition, use the <code>@dependabot show DEPENDENCY_NAME ignore conditions</code> command to quickly check what ignore conditions a dependency currently has.</p>
+</div>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

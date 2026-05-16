@@ -1,0 +1,1858 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Security and code quality documentation</title><link rel="stylesheet" href="../../assets/style.css"></head><body class="markdown-body"><h1><a href="#security-and-code-quality-documentation" aria-hidden="true" class="anchor" id="security-and-code-quality-documentation"></a>Security and code quality documentation</h1>
+<p>Build security and code quality into your GitHub workflow with integrated tooling.</p>
+<h2 title="Recommended"><a href="#recommended" aria-hidden="true" class="anchor" id="recommended"></a>Recommended</h2>
+<ul>
+<li>
+<p><a href="getting-started/quickstart-for-securing-your-repository.html">Quickstart for securing your repository</a></p>
+<p>Manage access to your code. Find and fix vulnerable code and dependencies automatically.</p>
+</li>
+<li>
+<p><a href="getting-started/github-security-features.html">GitHub security features</a></p>
+<p>An overview of GitHub's security features.</p>
+</li>
+<li>
+<p><a href="tutorials/trialing-github-advanced-security/planning-a-trial-of-ghas.html">Planning a trial of GitHub Advanced Security</a></p>
+<p>Learn how to prepare for a successful trial of Advanced Security.</p>
+</li>
+<li>
+<p><a href="concepts/secret-security/about-secret-scanning.html">About secret scanning</a></p>
+<p>Prevent fraudulent use of your secrets by automatically detecting exposed credentials before they can be exploited.</p>
+</li>
+<li>
+<p><a href="concepts/code-scanning/about-code-scanning.html">About code scanning</a></p>
+<p>You can use code scanning to find security vulnerabilities and errors in the code for your project on GitHub.</p>
+</li>
+<li>
+<p><a href="tutorials/secure-your-dependencies/dependabot-quickstart-guide.html">Dependabot quickstart guide</a></p>
+<p>Find and fix vulnerable dependencies you rely on with Dependabot.</p>
+</li>
+<li>
+<p><a href="tutorials/secure-your-organization/best-practices-for-preventing-data-leaks-in-your-organization.html">Best practices for preventing data leaks in your organization</a></p>
+<p>Learn guidance and recommendations to help you avoid private or sensitive data present in your organization from being exposed.</p>
+</li>
+<li>
+<p><a href="concepts/supply-chain-security/best-practices-for-maintaining-dependencies.html">Best practices for maintaining dependencies</a></p>
+<p>Guidance and recommendations for maintaining the dependencies you use, including GitHub's security products that can help.</p>
+</li>
+</ul>
+<h2 title="Links"><a href="#links" aria-hidden="true" class="anchor" id="links"></a>Links</h2>
+<h3 title="Links / Getting started"><a href="#getting-started" aria-hidden="true" class="anchor" id="getting-started"></a>Getting started</h3>
+<ul>
+<li>
+<p><a href="getting-started/github-security-features.html">GitHub security features</a></p>
+<p>An overview of GitHub's security features.</p>
+</li>
+</ul>
+<h2 title="Articles"><a href="#articles" aria-hidden="true" class="anchor" id="articles"></a>Articles</h2>
+<ul>
+<li>
+<p><a href="getting-started/github-security-features.html">GitHub security features</a></p>
+<p>An overview of GitHub's security features.</p>
+</li>
+<li>
+<p><a href="getting-started/quickstart-for-securing-your-repository.html">Quickstart for securing your repository</a></p>
+<p>Manage access to your code. Find and fix vulnerable code and dependencies automatically.</p>
+</li>
+<li>
+<p><a href="concepts/secret-security/secret-leakage-risks.html">Secret leakage risks</a></p>
+<p>Secrets like API keys, passwords, and tokens committed to repositories can be exploited by unauthorized users, creating security, compliance, and financial risk to your organization.</p>
+</li>
+<li>
+<p><a href="concepts/secret-security/about-secret-scanning.html">About secret scanning</a></p>
+<p>Prevent fraudulent use of your secrets by automatically detecting exposed credentials before they can be exploited.</p>
+</li>
+<li>
+<p><a href="concepts/secret-security/about-push-protection.html">About push protection</a></p>
+<p>Secure your secrets by stopping them from ever reaching your repository with push protection.</p>
+</li>
+<li>
+<p><a href="concepts/secret-security/about-secret-security-with-github.html">About secret security with GitHub</a></p>
+<p>Learn how GitHub's security tools can help you identify, remediate, and prevent secret leaks.</p>
+</li>
+<li>
+<p><a href="concepts/secret-security/about-alerts.html">About secret scanning alerts</a></p>
+<p>Learn about the different types of secret scanning alerts.</p>
+</li>
+<li>
+<p><a href="concepts/secret-security/custom-patterns.html">Custom patterns</a></p>
+<p>Detect secret types specific to your organization with custom patterns.</p>
+</li>
+<li>
+<p><a href="concepts/secret-security/about-validity-checks.html">About validity checks</a></p>
+<p>Validity checks and extended metadata checks help you prioritize remediation of exposed credentials that pose immediate security risks.</p>
+</li>
+<li>
+<p><a href="concepts/secret-security/about-delegated-bypass-for-push-protection.html">About delegated bypass for push protection</a></p>
+<p>Maintain your secret security while unblocking trusted actors with delegated bypass for push protection.</p>
+</li>
+<li>
+<p><a href="concepts/secret-security/about-bypass-requests-for-push-protection.html">About bypass requests for push protection</a></p>
+<p>Learn how bypass requests work when push protection blocks commits containing secrets.</p>
+</li>
+<li>
+<p><a href="concepts/secret-security/about-secret-scanning-for-partners.html">About secret scanning for partners</a></p>
+<p>When secret scanning detects authentication details for a service provider in a public repository on GitHub, an alert is sent directly to the provider. This allows service providers who are GitHub partners to promptly take action to secure their systems.</p>
+</li>
+<li>
+<p><a href="concepts/secret-security/github-secret-types.html">GitHub secret types</a></p>
+<p>Learn about the different types of secrets used by GitHub.</p>
+</li>
+<li>
+<p><a href="concepts/secret-security/push-protection-metrics.html">Secret scanning push protection metrics</a></p>
+<p>Understand push protection's performance across your organizations.</p>
+</li>
+<li>
+<p><a href="concepts/secret-security/push-protection-from-the-command-line.html">Push protection from the command line</a></p>
+<p>Understand how GitHub uses push protection to prevent secret leaks from the command line.</p>
+</li>
+<li>
+<p><a href="concepts/secret-security/working-with-push-protection-and-the-github-mcp-server.html">Working with push protection and the GitHub MCP server</a></p>
+<p>Learn how you are protected from leaking secrets during interactions with the GitHub MCP server, and how to bypass a push protection block if you need to.</p>
+</li>
+<li>
+<p><a href="concepts/secret-security/working-with-push-protection-from-the-rest-api.html">Working with push protection from the REST API</a></p>
+<p>Learn your options for unblocking your push to GitHub using the REST API if secret scanning detects a secret in the content of your API request.</p>
+</li>
+<li>
+<p><a href="concepts/code-scanning/about-code-scanning.html">About code scanning</a></p>
+<p>You can use code scanning to find security vulnerabilities and errors in the code for your project on GitHub.</p>
+</li>
+<li>
+<p><a href="concepts/code-scanning/about-code-scanning-alerts.html">About code scanning alerts</a></p>
+<p>Learn about the different types of code scanning alerts and the information that helps you understand the problem each alert highlights.</p>
+</li>
+<li>
+<p><a href="concepts/code-scanning/code-security-risk-assessment.html">Code security risk assessment</a></p>
+<p>Generate a free code security risk assessment to understand your organization's exposure to vulnerabilities.</p>
+</li>
+<li>
+<p><a href="concepts/code-scanning/copilot-autofix-for-code-scanning.html">About Copilot Autofix for code scanning</a></p>
+<p>Copilot Autofix provides targeted recommendations to help you fix code scanning alerts and avoid introducing new security vulnerabilities.</p>
+</li>
+<li>
+<p><a href="concepts/code-scanning/setup-types.html">About setup types for code scanning</a></p>
+<p>Depending on your needs, GitHub offers a default or advanced setup for code scanning.</p>
+</li>
+<li>
+<p><a href="concepts/code-scanning/about-integration-with-code-scanning.html">About integration with code scanning</a></p>
+<p>You can perform code scanning externally and then display the results in GitHub, or configure webhooks that listen to code scanning activity in your repository.</p>
+</li>
+<li>
+<p><a href="concepts/code-scanning/sarif-files.html">About SARIF files for code scanning</a></p>
+<p>SARIF files convert third-party analyses into alerts on GitHub.</p>
+</li>
+<li>
+<p><a href="concepts/code-scanning/code-scanning-alert-tracking-using-issues.html">Code scanning alert tracking using issues</a></p>
+<p>Connect security findings to your team's workflow by linking code scanning alerts to issues for tracking and collaboration.</p>
+</li>
+<li>
+<p><a href="concepts/code-scanning/merge-protection.html">Code scanning merge protection</a></p>
+<p>Code scanning rules prevent pull requests with potential vulnerabilities from being merged.</p>
+</li>
+<li>
+<p><a href="concepts/code-scanning/multi-repository-variant-analysis.html">Multi-repository variant analysis</a></p>
+<p>MRVA lets you test a query in Visual Studio Code by running it against a large number of repositories.</p>
+</li>
+<li>
+<p><a href="concepts/code-scanning/codeql/about-code-scanning-with-codeql.html">About code scanning with CodeQL</a></p>
+<p>You can use CodeQL to identify vulnerabilities and errors in your code. The results are shown as code scanning alerts in GitHub.</p>
+</li>
+<li>
+<p><a href="concepts/code-scanning/codeql/about-codeql-code-scanning-for-compiled-languages.html">About CodeQL code scanning for compiled languages</a></p>
+<p>Understand how CodeQL analyzes compiled languages, the build options available, and learn how you can customize the database generation process if you need to.</p>
+</li>
+<li>
+<p><a href="concepts/code-scanning/codeql/codeql-query-suites.html">CodeQL query suites</a></p>
+<p>You can choose from different built-in CodeQL query suites to use in your CodeQL code scanning setup.</p>
+</li>
+<li>
+<p><a href="concepts/code-scanning/codeql/custom-codeql-queries.html">Custom CodeQL queries</a></p>
+<p>Custom queries extend CodeQL's built-in security analysis to detect vulnerabilities and enforce coding standards specific to your codebase.</p>
+</li>
+<li>
+<p><a href="concepts/code-scanning/codeql/about-the-codeql-cli.html">About the CodeQL CLI</a></p>
+<p>You can use the CodeQL CLI to run CodeQL processes locally on software projects or to generate code scanning results for upload to GitHub.</p>
+</li>
+<li>
+<p><a href="concepts/code-scanning/codeql/about-codeql-for-vs-code.html">About CodeQL for VS Code</a></p>
+<p>You can write, run, and test CodeQL queries inside Visual Studio Code with the CodeQL extension.</p>
+</li>
+<li>
+<p><a href="concepts/code-scanning/codeql/about-codeql-workspaces.html">About CodeQL workspaces</a></p>
+<p>CodeQL workspaces let you develop and maintain multiple related CodeQL packs together, resolving dependencies between them directly from source.</p>
+</li>
+<li>
+<p><a href="concepts/code-scanning/codeql/query-reference-files.html">Query reference files</a></p>
+<p>You can use query reference files to define the location of a query you want to run in tests.</p>
+</li>
+<li>
+<p><a href="concepts/code-scanning/codeql/codeql-query-packs.html">CodeQL query packs</a></p>
+<p>You can choose from different built-in CodeQL query suites to use in your CodeQL code scanning setup.</p>
+</li>
+<li>
+<p><a href="concepts/code-scanning/tool-status-page.html">About the tool status page</a></p>
+<p>The tool status page provides visibility into the health and performance of code scanning tools in your repository.</p>
+</li>
+<li>
+<p><a href="concepts/code-scanning/pull-request-alert-metrics.html">CodeQL pull request alert metrics</a></p>
+<p>Understand CodeQL's performance in pull requests across your organizations.</p>
+</li>
+<li>
+<p><a href="concepts/code-scanning/repository-properties.html">Repository properties for code scanning</a></p>
+<p>You can use repository properties to adjust code scanning to suit your needs.</p>
+</li>
+<li>
+<p><a href="concepts/about-code-quality.html">About GitHub Code Quality</a></p>
+<p>Use GitHub Code Quality to flag code quality issues in pull requests and repository scans, apply Copilot-powered autofixes, and enforce standards with rulesets.</p>
+</li>
+<li>
+<p><a href="concepts/supply-chain-security/about-supply-chain-security.html">About supply chain security</a></p>
+<p>GitHub helps you secure your supply chain, from understanding the dependencies in your environment, to knowing about vulnerabilities in those dependencies, and patching them.</p>
+</li>
+<li>
+<p><a href="concepts/supply-chain-security/best-practices-for-maintaining-dependencies.html">Best practices for maintaining dependencies</a></p>
+<p>Guidance and recommendations for maintaining the dependencies you use, including GitHub's security products that can help.</p>
+</li>
+<li>
+<p><a href="concepts/supply-chain-security/about-the-dependency-graph.html">About the dependency graph</a></p>
+<p>You can use the dependency graph to identify all your project's dependencies. The dependency graph supports a range of popular package ecosystems.</p>
+</li>
+<li>
+<p><a href="concepts/supply-chain-security/dependency-graph-data.html">How the dependency graph recognizes dependencies</a></p>
+<p>The dependency graph automatically analyzes manifest files. You can submit data for dependencies that cannot be detected automatically.</p>
+</li>
+<li>
+<p><a href="concepts/supply-chain-security/about-dependency-review.html">About dependency review</a></p>
+<p>Dependency review lets you catch insecure dependencies before you introduce them to your environment, and provides information on license, dependents, and age of dependencies.</p>
+</li>
+<li>
+<p><a href="concepts/supply-chain-security/about-dependabot-alerts.html">About Dependabot alerts</a></p>
+<p>Dependabot alerts help you find and fix vulnerable dependencies before they become security risks.</p>
+</li>
+<li>
+<p><a href="concepts/supply-chain-security/dependabot-malware-alerts.html">Dependabot malware alerts</a></p>
+<p>Dependabot malware alerts help you identify malware in your dependencies to protect your project and its users.</p>
+</li>
+<li>
+<p><a href="concepts/supply-chain-security/about-metrics-for-dependabot-alerts.html">About metrics for Dependabot alerts</a></p>
+<p>Use metrics to track and prioritize Dependabot alerts across your organization.</p>
+</li>
+<li>
+<p><a href="concepts/supply-chain-security/about-dependabot-security-updates.html">About Dependabot security updates</a></p>
+<p>Dependabot can fix vulnerable dependencies for you by raising pull requests with security updates.</p>
+</li>
+<li>
+<p><a href="concepts/supply-chain-security/about-dependabot-version-updates.html">About Dependabot version updates</a></p>
+<p>You can use Dependabot to keep the packages you use updated to the latest versions.</p>
+</li>
+<li>
+<p><a href="concepts/supply-chain-security/about-dependabot-pull-requests.html">About Dependabot pull requests</a></p>
+<p>Understand the frequency and customization options of pull requests for version and security updates.</p>
+</li>
+<li>
+<p><a href="concepts/supply-chain-security/multi-ecosystem-updates.html">Multi-ecosystem updates</a></p>
+<p>Multi-ecosystem updates combine dependency updates across multiple package ecosystems into a single pull request, reducing review overhead and simplifying your update workflow.</p>
+</li>
+<li>
+<p><a href="concepts/supply-chain-security/about-the-dependabot-yml-file.html">About the dependabot.yml file</a></p>
+<p>The <code>dependabot.yml</code> controls automated dependency updates in your repository.</p>
+</li>
+<li>
+<p><a href="concepts/supply-chain-security/about-dependabot-auto-triage-rules.html">About Dependabot auto-triage rules</a></p>
+<p>Control how Dependabot handles security alerts, including filtering, ignoring, snoozing, or triggering security updates.</p>
+</li>
+<li>
+<p><a href="concepts/supply-chain-security/about-dependabot-on-github-actions-runners.html">About Dependabot on GitHub Actions runners</a></p>
+<p>GitHub automatically runs the jobs that generate Dependabot pull requests on GitHub Actions if you have GitHub Actions enabled for the repository. When Dependabot is enabled, these jobs will run by bypassing Actions policy checks and disablement at the repository or organization level.</p>
+</li>
+<li>
+<p><a href="concepts/supply-chain-security/dependabot-job-logs.html">Dependabot job logs</a></p>
+<p>GitHub logs every update job run by Dependabot, giving you visibility into version updates, security patches, and automated rebases across your dependencies.</p>
+</li>
+<li>
+<p><a href="concepts/supply-chain-security/immutable-releases.html">Immutable releases</a></p>
+<p>Learn about immutable releases and how they can help you maintain the integrity of your software supply chain.</p>
+</li>
+<li>
+<p><a href="concepts/supply-chain-security/linked-artifacts.html">About linked artifacts</a></p>
+<p>The linked artifacts page helps you audit and prioritize your organization's builds on GitHub, regardless of where the artifacts are stored.</p>
+</li>
+<li>
+<p><a href="concepts/vulnerability-reporting-and-management/about-the-github-advisory-database.html">About the GitHub Advisory database</a></p>
+<p>The GitHub Advisory Database contains a list of known security vulnerabilities and malware, grouped in three categories: GitHub-reviewed advisories, unreviewed advisories, and malware advisories.</p>
+</li>
+<li>
+<p><a href="concepts/vulnerability-reporting-and-management/about-repository-security-advisories.html">About repository security advisories</a></p>
+<p>You can use repository security advisories to privately discuss, fix, and publish information about security vulnerabilities in your public repository.</p>
+</li>
+<li>
+<p><a href="concepts/vulnerability-reporting-and-management/about-global-security-advisories.html">About global security advisories</a></p>
+<p>Global security advisories are CVEs and GitHub-originated advisories affecting the open source world, located in the GitHub Advisory Database.</p>
+</li>
+<li>
+<p><a href="concepts/vulnerability-reporting-and-management/about-coordinated-disclosure-of-security-vulnerabilities.html">About coordinated disclosure of security vulnerabilities</a></p>
+<p>Vulnerability disclosure is a coordinated effort between security reporters and repository maintainers.</p>
+</li>
+<li>
+<p><a href="concepts/vulnerability-reporting-and-management/about-your-exposure-to-vulnerabilities-in-your-code-and-in-dependencies.html">About exposure to vulnerabilities in your code and in dependencies</a></p>
+<p>Understand how vulnerabilities in your own code and in third-party dependencies contribute to your organization's overall security exposure, and how to measure and reduce that risk.</p>
+</li>
+<li>
+<p><a href="concepts/security-at-scale/best-practices-for-selecting-pilot-repositories.html">Best practices for selecting pilot repositories</a></p>
+<p>The right pilot repositories demonstrate value quickly and prepare your organization for broader enablement of GitHub Secret Protection.</p>
+</li>
+<li>
+<p><a href="concepts/security-at-scale/about-enabling-security-features-at-scale.html">About enabling security features at scale</a></p>
+<p>You can quickly secure your organization at scale with security configurations and global settings.</p>
+</li>
+<li>
+<p><a href="concepts/security-at-scale/about-security-overview.html">About security overview</a></p>
+<p>You can gain insights into the overall security landscape of your organization or enterprise and identify repositories that require intervention using security overview.</p>
+</li>
+<li>
+<p><a href="concepts/security-at-scale/about-security-campaigns.html">About security campaigns</a></p>
+<p>You can fix security alerts at scale by creating security campaigns and collaborating with developers to burn down your security backlog.</p>
+</li>
+<li>
+<p><a href="concepts/security-at-scale/auditing-security-alerts.html">Auditing security alerts</a></p>
+<p>GitHub provides a variety of tools you can use to audit and monitor actions taken in response to security alerts.</p>
+</li>
+<li>
+<p><a href="concepts/security-at-scale/delegated-alert-dismissal.html">Delegated alert dismissal</a></p>
+<p>Increase your governance over security alerts with delegated alert dismissal.</p>
+</li>
+<li>
+<p><a href="https://docs.github.com/en/about-supply-chain-security-for-your-enterprise" class="external">About supply chain security for your enterprise</a></p>
+<p>You can enable features that help your developers understand and update the dependencies their code relies on.</p>
+</li>
+<li>
+<p><a href="https://docs.github.com/en/establish-complete-coverage" class="external">Establish complete coverage</a></p>
+<p>Learn how to establish comprehensive, enterprise-wide security coverage by enabling GitHub Advanced Security, applying recommended or custom security configurations, and configuring additional secret scanning settings across your enterprise.</p>
+</li>
+<li>
+<p><a href="https://docs.github.com/en/manage-your-coverage" class="external">Manage your coverage</a></p>
+<p>Review and manage your enterprise's repository security coverage by adjusting which repositories are included in your custom security configurations and removing unneeded configurations.</p>
+</li>
+<li>
+<p><a href="https://docs.github.com/en/enabling-the-dependency-graph-for-your-enterprise" class="external">Enabling the dependency graph for your enterprise</a></p>
+<p>You can allow users to identify their projects' dependencies by enabling the dependency graph.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-at-scale/configure-enterprise-security/configure-specific-tools/allow-github-code-quality-in-enterprise.html">Allowing use of GitHub Code Quality in your enterprise</a></p>
+<p>Control Code Quality enablement for your repositories by defining policies.</p>
+</li>
+<li>
+<p><a href="https://docs.github.com/en/configuring-code-scanning-for-your-appliance" class="external"></a></p>
+<p>You can enable, configure, and disable code scanning for your enterprise. Code scanning allows users to scan code for vulnerabilities and errors.</p>
+</li>
+<li>
+<p><a href="https://docs.github.com/en/configuring-dependency-review-for-your-appliance" class="external">Configuring dependency review for your appliance</a></p>
+<p>To help users understand dependency changes when reviewing pull requests, you can enable, configure, and disable dependency review for GitHub Enterprise Server.</p>
+</li>
+<li>
+<p><a href="https://docs.github.com/en/configuring-secret-scanning-for-your-appliance" class="external">Configuring secret scanning for your appliance</a></p>
+<p>You can enable, configure, and disable secret scanning for GitHub Enterprise Server. Secret scanning allows users to scan code for accidentally committed secrets.</p>
+</li>
+<li>
+<p><a href="https://docs.github.com/en/viewing-the-vulnerability-data-for-your-enterprise" class="external">Viewing the vulnerability data for your enterprise</a></p>
+<p>You can view vulnerability data from the GitHub Advisory Database on GitHub Enterprise Server.</p>
+</li>
+<li>
+<p><a href="https://docs.github.com/en/configuring-dependabot-to-work-with-limited-internet-access" class="external">Configuring Dependabot to work with limited internet access</a></p>
+<p>You can configure Dependabot to generate pull requests for version and security updates using private registries when GitHub Enterprise Server has limited, or no, internet access.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-at-scale/configure-enterprise-security/configure-specific-tools/setting-dependabot-to-run-on-github-hosted-runners-using-vnet.html">Setting up Dependabot to run on github-hosted action runners using the Azure Private Network</a></p>
+<p>You can configure an Azure Virtual Network (VNET) to run Dependabot on GitHub-hosted runners.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-at-scale/configure-organization-security/establish-complete-coverage/creating-a-custom-security-configuration.html">Creating a custom security configuration</a></p>
+<p>Build a custom security configuration to meet the specific security needs of repositories in your organization.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-at-scale/configure-organization-security/establish-complete-coverage/applying-a-custom-security-configuration.html">Applying a custom security configuration</a></p>
+<p>You can apply your custom security configuration to repositories in your organization to meet the specific security needs of those repositories.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-at-scale/configure-organization-security/establish-complete-coverage/configuring-global-security-settings-for-your-organization.html">Configuring global security settings for your organization</a></p>
+<p>Customize Advanced Security features for your organization by defining global settings that ensure consistent security standards and safeguard all your repositories.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-at-scale/configure-organization-security/manage-your-coverage/editing-a-custom-security-configuration.html">Editing a custom security configuration</a></p>
+<p>Meet the security needs of your repositories by editing your custom security configuration.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-at-scale/configure-organization-security/manage-your-coverage/filtering-repositories-in-your-organization-using-the-repository-table.html">Filtering repositories in your organization using the repository table</a></p>
+<p>You can filter the repository table for your organization to better manage the security settings of specific repositories.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-at-scale/configure-organization-security/manage-your-coverage/detaching-repositories-from-their-security-configurations.html">Detaching repositories from their security configurations</a></p>
+<p>Go back to managing a repository's security settings on an individual basis.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-at-scale/configure-organization-security/manage-your-coverage/deleting-a-custom-security-configuration.html">Deleting a custom security configuration</a></p>
+<p>You can delete unnecessary custom security configurations in your organization.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/assess-your-secret-risk.html">Running the secret risk assessment for your organization</a></p>
+<p>Determine your organization's exposure to leaked secrets by generating a secret risk assessment report.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/assess-your-vulnerability-risk.html">Running the code security risk assessment for your organization</a></p>
+<p>Determine your organization's exposure to vulnerabilities by generating a code security risk assessment report.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/viewing-your-security-risk-assessment-reports.html">Viewing your security risk assessment reports</a></p>
+<p>Understand your organization's exposure to leaked secrets and code vulnerabilities by viewing your most recent security risk assessment reports.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/estimating-the-price-of-secret-protection.html">Estimating the price of Secret Protection</a></p>
+<p>Learn how to use the pricing calculator to estimate the monthly cost of GitHub Secret Protection for your repositories.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/protect-your-secrets.html">Pricing and enabling GitHub Secret Protection</a></p>
+<p>Secure your organization's secrets within your budget by enabling GitHub Secret Protection.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/configuring-default-setup-for-code-scanning-at-scale.html">Configuring default setup for code scanning at scale</a></p>
+<p>You can quickly configure code scanning for repositories across your organization using default setup.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/configuring-advanced-setup-for-code-scanning-with-codeql-at-scale.html">Configuring advanced setup for code scanning with CodeQL at scale</a></p>
+<p>Establish a highly customizable code scanning setup at scale with a script.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/enforcing-dependency-review-across-an-organization.html">Enforcing dependency review across an organization</a></p>
+<p>Dependency review lets you catch insecure dependencies before you introduce them to your environment. You can enforce the use of the dependency review action across your organization.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-at-scale/configure-organization-security/manage-usage-and-access/giving-org-access-private-registries.html">Giving security features access to private registries</a></p>
+<p>If your organization uses private registries, you can improve the results of code scanning analysis and enable Dependabot to maintain more dependencies by setting up access to these registries.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-at-scale/configure-organization-security/manage-usage-and-access/managing-your-github-advanced-security-license-usage.html">Managing your paid use of Advanced Security</a></p>
+<p>Control the costs of GitHub Secret Protection and GitHub Code Security in your organization.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-secrets/detect-secret-leaks/enabling-secret-scanning-for-your-repository.html">Enabling secret scanning for your repository</a></p>
+<p>You can configure how GitHub scans your repositories for leaked secrets and generates alerts.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-secrets/detect-secret-leaks/enabling-secret-scanning-for-non-provider-patterns.html">Enabling secret scanning for non-provider patterns</a></p>
+<p>You can enable secret scanning to detect additional potential secrets at the repository and organization levels.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-secrets/detect-secret-leaks/enabling-ai-powered-generic-secret-detection.html">Enabling Copilot secret scanning's generic secret detection</a></p>
+<p>You can enable generic secret detection for your repository or organization. Alerts for generic secrets, such as passwords, are displayed in a separate list on the secret scanning alerts page.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-secrets/customize-leak-detection/defining-custom-patterns-for-secret-scanning.html">Defining custom patterns for secret scanning</a></p>
+<p>Protect your unique secret types by defining custom patterns with regular expressions.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-secrets/customize-leak-detection/generating-regular-expressions-for-custom-patterns-with-copilot-secret-scanning.html">Generating regular expressions for custom patterns with Copilot secret scanning</a></p>
+<p>You can use Copilot secret scanning's regular expression generator to write regular expressions for custom patterns. The generator uses an AI model to generate expressions that match your input, and optionally example strings.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-secrets/customize-leak-detection/managing-custom-patterns.html">Managing custom patterns</a></p>
+<p>You can view, edit, and remove custom patterns, as well as enable push protection for custom patterns.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-secrets/customize-leak-detection/excluding-folders-and-files-from-secret-scanning.html">Excluding folders and files from secret scanning</a></p>
+<p>You can customize secret scanning to automatically close alerts for secrets found in specific directories or files by configuring a <code>secret_scanning.yml</code> file in your repository.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-secrets/customize-leak-detection/enabling-validity-checks-for-your-repository.html">Enabling validity checks for your repository</a></p>
+<p>Enabling validity checks on your repository helps you prioritize the remediation of alerts as it tells you if a secret is active or inactive.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-secrets/customize-leak-detection/enabling-extended-metadata-checks-for-your-repository.html">Enabling extended metadata checks for your repository</a></p>
+<p>Learn how to enable extended metadata checks for detected secrets so alerts detected by secret scanning include additional information that help you assess and remediate leaks faster.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-secrets/prevent-future-leaks/enabling-push-protection-for-your-repository.html">Enabling push protection for your repository</a></p>
+<p>With push protection, secret scanning blocks contributors from pushing secrets to a repository and generates an alert whenever a contributor bypasses the block.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-secrets/prevent-future-leaks/manage-user-push-protection.html">Managing push protection for users</a></p>
+<p>You can control GitHub's ability to block your pushes that may contain secrets.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-secrets/work-with-leak-prevention/working-with-push-protection-from-the-command-line.html">Working with push protection from the command line</a></p>
+<p>Learn your options for unblocking your push from the command line to GitHub if secret scanning detects a secret in your changes.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-secrets/work-with-leak-prevention/working-with-push-protection-in-the-github-ui.html">Working with push protection in the GitHub UI</a></p>
+<p>Learn your options for unblocking your commit when secret scanning detects a secret in your changes.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-secrets/manage-bypass-requests/enabling-delegated-bypass-for-push-protection.html">Enabling delegated bypass for push protection</a></p>
+<p>Control who can push code containing secrets by requiring bypass approval from designated reviewers.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-secrets/manage-bypass-requests/grant-exemptions.html">Exempting trusted actors from push protection</a></p>
+<p>Reduce friction for trusted automation by granting exemptions from push protection.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-secrets/manage-bypass-requests/managing-requests-to-bypass-push-protection.html">Managing requests to bypass push protection</a></p>
+<p>As a member of the bypass list for an organization or repository, you can review bypass requests from other members of the organization or repository.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-secrets/manage-bypass-requests/reviewing-requests-to-bypass-push-protection.html">Reviewing requests to bypass push protection</a></p>
+<p>Approve or deny requests from contributors who need to push commits containing secrets to your organization's repositories.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/configure-code-scanning/configuring-default-setup-for-code-scanning.html">Configuring default setup for code scanning</a></p>
+<p>Quickly set up code scanning to find vulnerable code automatically.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/configure-code-scanning/configuring-advanced-setup-for-code-scanning.html">Configuring advanced setup for code scanning</a></p>
+<p>You can configure advanced setup for a repository to find security vulnerabilities in your code using a highly customizable code scanning configuration.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/editing-your-configuration-of-default-setup.html">Editing your configuration of default setup</a></p>
+<p>You can edit your existing configuration of default setup for code scanning to better meet your needs.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/use-the-tools-status-page-for-code-scanning.html">Use the tool status page for code scanning</a></p>
+<p>View real-time tool status, identify configuration problems, and download reports to keep your code scanning analysis running smoothly.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/set-code-scanning-merge-protection.html">Set code scanning merge protection</a></p>
+<p>Secure your codebase by blocking pull requests that fail code scanning checks.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/configuring-larger-runners-for-default-setup.html">Configuring larger runners for default setup</a></p>
+<p>Run code scanning default setup more quickly on bigger codebases using larger runners.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/codeql-code-scanning-for-compiled-languages.html">CodeQL code scanning for compiled languages</a></p>
+<p>Understand how CodeQL analyzes compiled languages, the build options available, and learn how you can customize the database generation process if you need to.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/scan-from-the-command-line/setting-up-the-codeql-cli.html">Setting up the CodeQL CLI</a></p>
+<p>To get started with the CodeQL CLI, you need to download and set up the CLI so that it can access the tools and libraries required to create and analyze databases.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/scan-from-the-command-line/write-custom-queries.html">Writing custom queries for the CodeQL CLI</a></p>
+<p>You can write your own CodeQL queries to find specific vulnerabilities and errors.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/scan-from-the-command-line/publish-and-use-packs.html">Publishing and using CodeQL packs</a></p>
+<p>Share or download a CodeQL pack, then analyze your CodeQL database.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/scan-from-the-command-line/testing-custom-queries.html">Testing custom queries</a></p>
+<p>Verify your custom CodeQL queries and catch breaking changes before they affect your code scanning results following new releases of the CodeQL CLI.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/scan-from-the-command-line/testing-query-help-files.html">Testing query help files</a></p>
+<p>Ensure your CodeQL query help files are valid by previewing them as Markdown.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/scan-from-the-command-line/download-databases.html">Downloading CodeQL databases from GitHub</a></p>
+<p>Expand the coverage of the CodeQL CLI by adding ready-made databases.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/scan-from-the-command-line/check-out-source-code.html">Checking out the CodeQL CLI source code</a></p>
+<p>Set up the CodeQL CLI directly from the source code.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/scan-from-the-command-line/specifying-command-options-in-a-codeql-configuration-file.html">Specifying command options in a CodeQL configuration file</a></p>
+<p>Save time by adding your frequently used command options and custom CodeQL packs to a CodeQL configuration file.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/scan-from-the-command-line/creating-database-bundle-for-troubleshooting.html">Creating CodeQL CLI database bundles</a></p>
+<p>Create a database bundle with CodeQL troubleshooting information.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/scan-from-vs-code/installing-codeql-for-vs-code.html">Installing CodeQL for Visual Studio Code</a></p>
+<p>To get started with CodeQL for Visual Studio Code, you need to install and set up the extension.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/scan-from-vs-code/managing-codeql-databases.html">Managing CodeQL databases</a></p>
+<p>You can work with CodeQL databases using the extension.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/scan-from-vs-code/running-codeql-queries.html">Running CodeQL queries</a></p>
+<p>You can run queries on CodeQL databases and view the results in Visual Studio Code.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/scan-from-vs-code/exploring-data-flow-with-path-queries.html">Exploring data flow with path queries</a></p>
+<p>Detect potential vulnerabilities by running path queries and analyzing your data flow.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/scan-from-vs-code/running-codeql-queries-at-scale-with-multi-repository-variant-analysis.html">Running CodeQL queries at scale with multi-repository variant analysis</a></p>
+<p>You can run CodeQL queries on a large number of repositories on GitHub from Visual Studio Code.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/scan-from-vs-code/using-the-codeql-model-editor.html">Using the CodeQL model editor</a></p>
+<p>You can view, write, and edit CodeQL model packs in Visual Studio Code.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/scan-from-vs-code/creating-a-custom-query.html">Creating a custom query</a></p>
+<p>You can work from a template to write your own code to create a custom query to analyze a specific language.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/scan-from-vs-code/managing-codeql-packs.html">Managing CodeQL query packs and library packs</a></p>
+<p>Download and install dependencies for your CodeQL query and library packs in Visual Studio Code using the CodeQL extension.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/scan-from-vs-code/exploring-the-structure-of-your-source-code.html">Exploring the structure of your source code</a></p>
+<p>Visualize how your code maps to CodeQL classes in VS Code.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/scan-from-vs-code/testing-codeql-queries-in-vs-code.html">Testing CodeQL queries in Visual Studio Code</a></p>
+<p>You can run unit tests for CodeQL queries using the Visual Studio Code extension.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/scan-from-vs-code/customizing-settings.html">Customizing settings</a></p>
+<p>You can edit the settings for the CodeQL for Visual Studio Code extension to suit your needs.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/scan-from-vs-code/setting-up-a-codeql-workspace.html">Setting up a CodeQL workspace</a></p>
+<p>When you're working with CodeQL, you need access to the standard libraries and queries.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/scan-from-vs-code/configuring-access-to-the-codeql-cli.html">Managing the CodeQL CLI in the VS Code extension</a></p>
+<p>The CodeQL for Visual Studio Code extension uses the CodeQL CLI to compile and run queries.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/scan-from-vs-code/accessing-logs.html">Accessing logs for CodeQL in Visual Studio Code</a></p>
+<p>If you need to troubleshoot problems with CodeQL for Visual Studio Code, there are several logs you can access.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/integrate-with-existing-tools/using-code-scanning-with-your-existing-ci-system.html">Using code scanning with your existing CI system</a></p>
+<p>You can analyze your code with the CodeQL CLI or another tool in a third-party continuous integration system and upload the results to GitHub. The resulting code scanning alerts are shown alongside any alerts generated within GitHub.</p>
+</li>
+<li>
+<p><a href="how-tos/find-and-fix-code-vulnerabilities/integrate-with-existing-tools/uploading-a-sarif-file-to-github.html">Uploading a SARIF file to GitHub</a></p>
+<p>You can upload SARIF files generated outside GitHub and see code scanning alerts from third-party tools in your repository.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-dependabot-alerts.html">Configuring Dependabot alerts</a></p>
+<p>Enable Dependabot alerts to be generated when a new vulnerable dependency is found in one of your repositories.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/secure-your-dependencies/configure-malware-alerts.html">Configuring Dependabot malware alerts</a></p>
+<p>Prevent malware attacks by identifying and remediating malicious dependencies.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-dependabot-security-updates.html">Configuring Dependabot security updates</a></p>
+<p>You can use Dependabot security updates or manual pull requests to easily update vulnerable dependencies.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-dependabot-version-updates.html">Configuring Dependabot version updates</a></p>
+<p>You can configure your repository so that Dependabot automatically updates the packages you use.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/secure-your-dependencies/keeping-your-actions-up-to-date-with-dependabot.html">Keeping your actions up to date with Dependabot</a></p>
+<p>You can use Dependabot to keep the actions you use updated to the latest versions.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-multi-ecosystem-updates.html">Configuring multi-ecosystem updates for Dependabot</a></p>
+<p>Reduce the number of Dependabot pull requests you receive by grouping updates across multiple ecosystems into a single, consolidated pull request.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/secure-your-dependencies/enabling-the-dependency-graph.html">Enabling the dependency graph</a></p>
+<p>You can allow users to identify their projects' dependencies by enabling the dependency graph.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/secure-your-dependencies/exploring-the-dependencies-of-a-repository.html">Exploring the dependencies of a repository</a></p>
+<p>You can use the dependency graph to see the packages your project depends on. In addition, you can see any vulnerabilities detected in its dependencies.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-automatic-dependency-submission-for-your-repository.html">Configuring automatic dependency submission for your repository</a></p>
+<p>You can use automatic dependency submission to submit transitive dependency data in your repository. This enables you to analyze these transitive dependencies using the dependency graph.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/secure-your-dependencies/using-the-dependency-submission-api.html">Using the dependency submission API</a></p>
+<p>You can use the dependency submission API to submit dependencies for projects, such as the dependencies resolved when a project is built or compiled.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/secure-your-dependencies/verifying-the-integrity-of-a-release.html">Verifying the integrity of a release</a></p>
+<p>You can avoid tampering and accidental changes by ensuring the releases you use have not been modified after publication.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/manage-your-dependency-security/customizing-auto-triage-rules-to-prioritize-dependabot-alerts.html">Customizing auto-triage rules to prioritize Dependabot alerts</a></p>
+<p>You can create your own auto-triage rules to control which alerts are dismissed or snoozed, and which alerts you want Dependabot to open pull requests for.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/manage-your-dependency-security/using-github-preset-rules-to-prioritize-dependabot-alerts.html">Using GitHub preset rules to prioritize Dependabot alerts</a></p>
+<p>Focus on alerts that matter by auto-dismissing low impact development alerts for npm dependencies.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/manage-your-dependency-security/customizing-dependabot-security-prs.html">Customizing pull requests for Dependabot security updates</a></p>
+<p>Learn how to customize Dependabot pull requests for security updates to align with your project's security priorities and workflows.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/manage-your-dependency-security/controlling-dependencies-updated.html">Controlling which dependencies are updated by Dependabot</a></p>
+<p>Learn how to configure your <code>dependabot.yml</code> file so that Dependabot automatically updates the packages you specify, in the way you define.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/manage-your-dependency-security/configuring-the-dependency-review-action.html">Configuring the dependency review action</a></p>
+<p>You can use the dependency review action to catch vulnerabilities before they are added to your project.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/manage-your-dependency-security/configuring-notifications-for-dependabot-alerts.html">Configuring notifications for Dependabot alerts</a></p>
+<p>Optimize how you receive notifications about Dependabot alerts.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/manage-your-dependency-security/configuring-access-to-private-registries-for-dependabot.html">Configuring access to private registries for Dependabot</a></p>
+<p>You can configure Dependabot to access dependencies stored in private registries. You can store authentication information, like passwords and access tokens, as encrypted secrets and then reference these in the Dependabot configuration file. If you have registries on private networks, you can also configure Dependabot access when running Dependabot on self-hosted runners.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/manage-your-dependency-security/removing-dependabot-access-to-public-registries.html">Removing Dependabot access to public registries</a></p>
+<p>Examples of how you can configure Dependabot to only access private registries by removing calls to public registries.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/manage-your-dependency-security/managing-pull-requests-for-dependency-updates.html">Managing pull requests for dependency updates</a></p>
+<p>You manage pull requests raised by Dependabot in much the same way as other pull requests, but there are some extra options.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/manage-your-dependency-security/configure-on-github-hosted-runners.html">Configuring Dependabot on GitHub-hosted runners</a></p>
+<p>Enable Dependabot on GitHub-hosted runners to more easily identify Dependabot job errors and manually detect and troubleshoot failed runs.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/manage-your-dependency-security/configure-on-self-hosted-runners.html">Configuring Dependabot on self-hosted runners</a></p>
+<p>You can configure self-hosted runners that Dependabot uses to access your private registries and internal network resources.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/manage-your-dependency-security/re-run-dependabot-jobs.html">Re-running Dependabot jobs on GitHub Actions</a></p>
+<p>Resolve run failures and manually update your dependencies by re-running Dependabot jobs.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/manage-your-dependency-security/listing-dependencies-configured-for-version-updates.html">Listing dependencies configured for version updates</a></p>
+<p>You can view the dependencies that Dependabot monitors for updates.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/manage-your-dependency-security/guidance-for-the-configuration-of-private-registries-for-dependabot.html">Guidance for the configuration of private registries for Dependabot</a></p>
+<p>This article contains detailed information about configuring private registries, as well as commands you can run from the command line to configure your package managers locally.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/establish-provenance-and-integrity/preventing-changes-to-your-releases.html">Preventing changes to your releases</a></p>
+<p>You can enforce immutable releases for a repository or organization to prevent potential vulnerabilities.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/establish-provenance-and-integrity/exporting-a-software-bill-of-materials-for-your-repository.html">Exporting a software bill of materials for your repository</a></p>
+<p>You can export a software bill of materials or SBOM for your repository from the dependency graph. SBOMs allow transparency into your open source usage and help expose supply chain vulnerabilities, reducing supply chain risks.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/establish-provenance-and-integrity/upload-linked-artifacts.html">Uploading storage and deployment data to the linked artifacts page</a></p>
+<p>Associate packages and builds in your organization with storage and deployment data.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/establish-provenance-and-integrity/view-linked-artifacts.html">Auditing your organization's builds on the linked artifacts page</a></p>
+<p>View or export metadata for build runs, storage details, and deployment context.</p>
+</li>
+<li>
+<p><a href="how-tos/secure-your-supply-chain/establish-provenance-and-integrity/remove-linked-artifacts.html">Removing artifacts from the linked artifacts page</a></p>
+<p>Set the storage and deployment status of artifacts to reflect that they are no longer in use.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-security-alerts/remediate-alerts-at-scale/filtering-alerts-in-security-overview.html">Filtering alerts in security overview</a></p>
+<p>Find the security alerts that matter most by filtering your security overview data.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-security-alerts/remediate-alerts-at-scale/creating-managing-security-campaigns.html">Creating and managing security campaigns</a></p>
+<p>You can manage security campaigns directly from the security overview for your organization.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-security-alerts/remediate-alerts-at-scale/tracking-security-campaigns.html">Tracking security campaigns</a></p>
+<p>Use the campaign tracking views to monitor remediation progress, identify stalled work, and measure campaign impact across your organization.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-security-alerts/remediate-alerts-at-scale/fixing-alerts-in-security-campaign.html">Fixing alerts in a security campaign</a></p>
+<p>Learn how to find and fix alerts in a security campaign.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-security-alerts/remediate-alerts-at-scale/review-alert-dismissal-requests.html">Reviewing alert dismissal requests</a></p>
+<p>Triage and resolve security alerts in your organization or enterprise by regularly reviewing alert dismissal requests.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-security-alerts/manage-secret-scanning-alerts/monitoring-alerts.html">Monitoring alerts from secret scanning</a></p>
+<p>You can configure how  secret scanning notifies you about secret scanning alerts, and audit how your team responds to these alerts.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-security-alerts/manage-secret-scanning-alerts/viewing-alerts.html">Viewing and filtering alerts from secret scanning</a></p>
+<p>Learn how to find and filter secret scanning alerts for your repository.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-security-alerts/manage-secret-scanning-alerts/resolving-alerts.html">Resolving alerts from secret scanning</a></p>
+<p>After reviewing the details of a secret scanning alert, you should fix and then close the alert.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-security-alerts/manage-secret-scanning-alerts/enabling-delegated-alert-dismissal-for-secret-scanning.html">Enabling delegated alert dismissal for secret scanning</a></p>
+<p>You can use delegated alert dismissal to control who can dismiss an alert found by secret scanning.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-security-alerts/manage-code-scanning-alerts/assessing-code-scanning-alerts-for-your-repository.html">Assessing code scanning alerts for your repository</a></p>
+<p>From the security view, you can explore and evaluate alerts for potential vulnerabilities or errors in your project's code.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-security-alerts/manage-code-scanning-alerts/triaging-code-scanning-alerts-in-pull-requests.html">Triaging code scanning alerts in pull requests</a></p>
+<p>When code scanning identifies a problem in a pull request, you can review the highlighted code and resolve the alert.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-security-alerts/manage-code-scanning-alerts/linking-code-scanning-alerts-to-github-issues.html">Linking code scanning alerts to GitHub issues</a></p>
+<p>Create or connect GitHub issues to code scanning alerts to track security fixes in your team's workflow.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-security-alerts/manage-code-scanning-alerts/resolving-code-scanning-alerts.html">Resolving code scanning alerts</a></p>
+<p>From the security view, you can view, fix, or dismiss alerts for potential vulnerabilities or errors in your project's code.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-security-alerts/manage-code-scanning-alerts/enabling-delegated-alert-dismissal-for-code-scanning.html">Enabling delegated alert dismissal for code scanning</a></p>
+<p>You can use delegated alert dismissal to control who can dismiss an alert found by code scanning.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-security-alerts/manage-code-scanning-alerts/disabling-autofix-for-code-scanning.html">Disabling Copilot Autofix for code scanning security alerts</a></p>
+<p>You can block availability of GitHub Copilot Autofix for security alerts for an enterprise or disable GitHub Copilot Autofix at the organization and repository level.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-security-alerts/manage-dependabot-alerts/viewing-and-updating-dependabot-alerts.html">Viewing and updating Dependabot alerts</a></p>
+<p>If GitHub discovers insecure dependencies in your project, you can view alert details on the Dependabot tab of your repository. Then, you can update your project to resolve or dismiss the alert.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-security-alerts/manage-dependabot-alerts/manage-malware-alerts.html">Managing Dependabot malware alerts</a></p>
+<p>Find and triage malicious dependencies in your project with Dependabot malware alerts.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-security-alerts/manage-dependabot-alerts/managing-automatically-dismissed-alerts.html">Managing alerts that have been automatically dismissed by a Dependabot auto-triage rule</a></p>
+<p>You can filter to see which alerts have been auto-dismissed by a rule, and you can reopen dismissed alerts.</p>
+</li>
+<li>
+<p><a href="how-tos/manage-security-alerts/manage-dependabot-alerts/enable-delegated-alert-dismissal.html">Enabling delegated alert dismissal for Dependabot</a></p>
+<p>Increase your governance over your Dependabot alerts with delegated alert dismissal.</p>
+</li>
+<li>
+<p><a href="how-tos/maintain-quality-code/enable-code-quality.html">Enabling GitHub Code Quality</a></p>
+<p>Use Code Quality to automatically catch, fix, and report on code quality issues in pull requests and on your default branch.</p>
+</li>
+<li>
+<p><a href="how-tos/maintain-quality-code/interpret-results.html">Interpreting the code quality results for your repository</a></p>
+<p>View GitHub Code Quality findings for your default branch.</p>
+</li>
+<li>
+<p><a href="how-tos/maintain-quality-code/set-pr-thresholds.html">Setting code quality thresholds for pull requests</a></p>
+<p>Create a Code Quality gate for pull requests to increase the quality of code merged into your repository.</p>
+</li>
+<li>
+<p><a href="how-tos/maintain-quality-code/unblock-your-pr.html">Resolving a block on your pull request</a></p>
+<p>Identify and resolve a code quality block on your pull request so you can merge your changes.</p>
+</li>
+<li>
+<p><a href="how-tos/report-and-fix-vulnerabilities/configure-vulnerability-reporting/adding-a-security-policy-to-your-repository.html">Adding a security policy to your repository</a></p>
+<p>You can give instructions for how to report a security vulnerability in your project by adding a security policy to your repository.</p>
+</li>
+<li>
+<p><a href="how-tos/report-and-fix-vulnerabilities/configure-vulnerability-reporting/configuring-private-vulnerability-reporting-for-a-repository.html">Configuring private vulnerability reporting for a repository</a></p>
+<p>Owners and administrators of public repositories can allow security researchers to report vulnerabilities securely in the repository by enabling private vulnerability reporting.</p>
+</li>
+<li>
+<p><a href="how-tos/report-and-fix-vulnerabilities/privately-reporting-a-security-vulnerability.html">Privately reporting a security vulnerability</a></p>
+<p>Some public repositories configure security advisories so that anyone can report security vulnerabilities directly and privately to the maintainers.</p>
+</li>
+<li>
+<p><a href="how-tos/report-and-fix-vulnerabilities/fix-reported-vulnerabilities/managing-privately-reported-security-vulnerabilities.html">Managing privately reported security vulnerabilities</a></p>
+<p>Repository maintainers can manage security vulnerabilities that have been privately reported to them by security researchers for repositories where private vulnerability reporting is enabled.</p>
+</li>
+<li>
+<p><a href="how-tos/report-and-fix-vulnerabilities/fix-reported-vulnerabilities/creating-a-repository-security-advisory.html">Creating a repository security advisory</a></p>
+<p>You can create a draft security advisory to privately discuss and fix a security vulnerability in your open source project.</p>
+</li>
+<li>
+<p><a href="how-tos/report-and-fix-vulnerabilities/fix-reported-vulnerabilities/publishing-a-repository-security-advisory.html">Publishing a repository security advisory</a></p>
+<p>You can publish a security advisory to alert your community about a security vulnerability in your project.</p>
+</li>
+<li>
+<p><a href="how-tos/report-and-fix-vulnerabilities/fix-reported-vulnerabilities/adding-a-collaborator-to-a-repository-security-advisory.html">Adding a collaborator to a repository security advisory</a></p>
+<p>Add other users or teams to collaborate on a security advisory with you.</p>
+</li>
+<li>
+<p><a href="how-tos/report-and-fix-vulnerabilities/fix-reported-vulnerabilities/removing-a-collaborator-from-a-repository-security-advisory.html">Removing a collaborator from a repository security advisory</a></p>
+<p>When you remove a collaborator from a repository security advisory, they lose read and write access to the security advisory's discussion and metadata.</p>
+</li>
+<li>
+<p><a href="how-tos/report-and-fix-vulnerabilities/fix-reported-vulnerabilities/editing-a-repository-security-advisory.html">Editing a repository security advisory</a></p>
+<p>You can edit the metadata and description for a repository security advisory if you need to update details or correct errors.</p>
+</li>
+<li>
+<p><a href="how-tos/report-and-fix-vulnerabilities/fix-reported-vulnerabilities/deleting-a-repository-security-advisory.html">Deleting a repository security advisory</a></p>
+<p>You can delete a repository security advisory that you've published by contacting Support.</p>
+</li>
+<li>
+<p><a href="how-tos/report-and-fix-vulnerabilities/fix-reported-vulnerabilities/browsing-security-advisories-in-the-github-advisory-database.html">Browsing security advisories in the GitHub Advisory Database</a></p>
+<p>You can browse the GitHub Advisory Database to find CVEs and GitHub-originated advisories affecting the open source world.</p>
+</li>
+<li>
+<p><a href="how-tos/report-and-fix-vulnerabilities/fix-reported-vulnerabilities/editing-security-advisories-in-the-github-advisory-database.html">Editing security advisories in the GitHub Advisory Database</a></p>
+<p>Improve advisories published in the GitHub Advisory Database by making community contributions.</p>
+</li>
+<li>
+<p><a href="how-tos/use-ghas-with-ai-coding-agents/scan-for-secrets-with-github-mcp-server.html">Scanning for secrets with the GitHub MCP server</a></p>
+<p>Detect exposed secrets in real time from your AI coding agent, before they ever reach your repository.</p>
+</li>
+<li>
+<p><a href="how-tos/view-and-interpret-data/analyze-organization-data/assessing-code-security-risk.html">Assessing the security risk of your code</a></p>
+<p>You can use security overview to see which teams and repositories are affected by security alerts, and identify repositories for urgent remedial action.</p>
+</li>
+<li>
+<p><a href="how-tos/view-and-interpret-data/analyze-organization-data/assessing-adoption-code-security.html">Assessing adoption of security features</a></p>
+<p>See which teams and repositories have already enabled features for secure coding, and identify any that are not yet protected.</p>
+</li>
+<li>
+<p><a href="how-tos/view-and-interpret-data/analyze-organization-data/explore-code-quality.html">Exploring GitHub Code Quality results in your organization</a></p>
+<p>Understand your organization's code health at a glance with the organization-level dashboard for Code Quality.</p>
+</li>
+<li>
+<p><a href="how-tos/view-and-interpret-data/analyze-organization-data/find-insecure-repositories.html">Finding repositories with security alerts using security overview</a></p>
+<p>Monitor and prioritize security alerts with security overview.</p>
+</li>
+<li>
+<p><a href="how-tos/view-and-interpret-data/analyze-organization-data/exporting-data-from-security-overview.html">Exporting data from security overview</a></p>
+<p>From security overview, you can export CSV files of the data used for your organization or enterprise's overview, risk, coverage, and CodeQL pull request insights pages.</p>
+</li>
+<li>
+<p><a href="how-tos/view-and-interpret-data/analyze-organization-data/viewing-security-insights.html">Viewing security insights</a></p>
+<p>Monitor your organization security posture, identify high-risk repositories, and track alert remediation progress using the overview dashboard in security overview.</p>
+</li>
+<li>
+<p><a href="how-tos/view-and-interpret-data/analyze-organization-data/viewing-metrics-for-pull-request-alerts.html">Viewing metrics for pull request alerts</a></p>
+<p>Monitor CodeQL's performance in pull requests across your organizations to identify repositories where you may need to take action.</p>
+</li>
+<li>
+<p><a href="how-tos/view-and-interpret-data/analyze-organization-data/viewing-metrics-for-secret-scanning-push-protection.html">Viewing metrics for secret scanning push protection</a></p>
+<p>Monitor push protection's performance across your organization to identify repositories where you may need to take action.</p>
+</li>
+<li>
+<p><a href="how-tos/view-and-interpret-data/analyze-organization-data/viewing-metrics-for-dependabot-alerts.html">Viewing metrics for Dependabot alerts</a></p>
+<p>You can use security overview to see how many Dependabot alerts are in repositories across your organization, to prioritize the most critical alerts to fix, and to identify repositories where you may need to take action.</p>
+</li>
+<li>
+<p><a href="how-tos/view-and-interpret-data/analyze-organization-data/export-risk-report-csv.html">Exporting the secret risk assessment report to CSV</a></p>
+<p>Export the secret risk assessment report to a CSV file for detailed investigation and stakeholder sharing.</p>
+</li>
+<li>
+<p><a href="how-tos/view-and-interpret-data/view-code-scanning-logs.html">Viewing code scanning logs from GitHub Actions</a></p>
+<p>View the output from a code scanning analysis in GitHub Actions.</p>
+</li>
+<li>
+<p><a href="how-tos/view-and-interpret-data/viewing-dependabot-job-logs.html">Viewing Dependabot job logs</a></p>
+<p>Access job logs to troubleshoot failed Dependabot updates and understand what is happening.</p>
+</li>
+<li>
+<p><a href="how-tos/view-and-interpret-data/view-custom-pattern-metrics.html">Viewing metrics for custom patterns</a></p>
+<p>Find out how many alerts are being raised and addressed for a custom pattern.</p>
+</li>
+<li>
+<p><a href="how-tos/view-and-interpret-data/change-used-by-data.html">Changing the "used by" data for a repository</a></p>
+<p>Display your repository's dependents for a different package.</p>
+</li>
+<li>
+<p><a href="reference/security-at-scale/security-overview-dashboard-metrics.html">Security overview dashboard metrics</a></p>
+<p>Detailed explanations of metrics, calculations, and data visualizations on the overview page of your security overview.</p>
+</li>
+<li>
+<p><a href="reference/security-at-scale/available-filters-for-security-overview.html">Available filters for security overview</a></p>
+<p>Reference for all available filters you can use to narrow security overview data.</p>
+</li>
+<li>
+<p><a href="reference/security-at-scale/security-configuration-enforcement.html">Security configuration enforcement</a></p>
+<p>Understand the complexities of enforcing security configurations.</p>
+</li>
+<li>
+<p><a href="reference/security-at-scale/security-configuration-statuses.html">Security configuration statuses</a></p>
+<p>Each repository that has a security configuration applied to it has a configuration status that reflects the current state of the relationship between the repository and the configuration.</p>
+</li>
+<li>
+<p><a href="reference/security-at-scale/troubleshoot-security-configurations/a-repository-is-using-advanced-setup-for-code-scanning.html">A repository is using advanced setup for code scanning</a></p>
+<p>You see an error when you try to attach a security configuration with default code scanning enabled to repositories that use advanced setup for code scanning.</p>
+</li>
+<li>
+<p><a href="https://docs.github.com/en/feature-disappears" class="external">A feature has disappeared from a security configuration</a></p>
+<p>Changes to your GitHub Enterprise Server instance's installation settings by a site administrator may affect which security features are available to your configuration.</p>
+</li>
+<li>
+<p><a href="reference/security-at-scale/troubleshoot-security-configurations/unexpected-default-setup.html">Default setup for code scanning overrides advanced setup</a></p>
+<p>You apply a security configuration with "Enabled with advanced setup allowed" and the existing advanced setup for code scanning is ignored in some repositories.</p>
+</li>
+<li>
+<p><a href="reference/security-at-scale/troubleshoot-security-configurations/diagnosing-security-configuration-issues.html">Diagnosing security configuration issues</a></p>
+<p>Identify repositories where the security configuration could not be attached, or where the configuration relationship has changed, and follow guidance to remediate the problem.</p>
+</li>
+<li>
+<p><a href="reference/security-at-scale/troubleshoot-security-configurations/not-enough-github-advanced-security-licenses.html">Not enough GitHub Advanced Security licenses</a></p>
+<p>If you are on a subscription-based billing model for GHAS, you need available GHAS licenses to enable GHAS features on a private repository.</p>
+</li>
+<li>
+<p><a href="reference/secret-security/understanding-github-secret-types.html">Understanding GitHub secret types</a></p>
+<p>Learn about the usage, scope, and access permissions for GitHub secrets.</p>
+</li>
+<li>
+<p><a href="reference/secret-security/supported-secret-scanning-patterns.html">Supported secret scanning patterns</a></p>
+<p>Lists of supported secrets and the partners that GitHub works with to prevent fraudulent use of secrets that were committed accidentally.</p>
+</li>
+<li>
+<p><a href="reference/secret-security/secret-scanning-detection-scope.html">Secret scanning detection scope</a></p>
+<p>Secret scanning uses pattern matching and validation to detect secrets. Detection varies based on pattern pairs, token types, and push protection settings.</p>
+</li>
+<li>
+<p><a href="reference/secret-security/custom-patterns.html">Custom patterns reference</a></p>
+<p>Use specific regular expression syntax to define accurate custom patterns for secret scanning.</p>
+</li>
+<li>
+<p><a href="reference/secret-security/risk-report-csv-contents.html">Contents of the secret risk assessment report CSV</a></p>
+<p>Understand the data included in the CSV export of the secret risk assessment report.</p>
+</li>
+<li>
+<p><a href="reference/secret-security/secret-scanning-pattern-configuration-data.html">Secret scanning pattern configuration data</a></p>
+<p>Understand the data displayed in the secret scanning pattern configuration page to make informed decisions about push protection settings.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/workflow-configuration-options.html">Workflow configuration options for code scanning</a></p>
+<p>Edit your workflow file to configure how advanced setup scans the code in your project for vulnerabilities and errors.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/sarif-files/sarif-support-for-code-scanning.html">SARIF support for code scanning</a></p>
+<p>Ensure your SARIF files from third-party tools comply with GitHub's standards.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/sarif-files/troubleshoot-sarif-uploads/missing-token.html">GitHub token is required to upload SARIF results</a></p>
+<p>You need to provide an authentication method for the upload process to use to access the repository.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/sarif-files/troubleshoot-sarif-uploads/sarif-invalid.html">SARIF file is invalid</a></p>
+<p>Code scanning can only process syntactically valid SARIF files. Invalid files are rejected.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/sarif-files/troubleshoot-sarif-uploads/results-exceed-limit.html">SARIF results exceed one or more limits</a></p>
+<p>Learn how to resolve problems when a SARIF file is rejected by code scanning because one or more limits is exceeded.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/sarif-files/troubleshoot-sarif-uploads/file-too-large.html">SARIF results file is too large</a></p>
+<p>You cannot upload a SARIF results file larger than 10 MB to code scanning. Explore ways to generate a smaller file containing the highest impact results.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/sarif-files/troubleshoot-sarif-uploads/ghas-required.html">Upload fails because GitHub Code Security is disabled</a></p>
+<p>You can only upload SARIF results to repositories where GitHub Code Security is enabled.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/sarif-files/troubleshoot-sarif-uploads/default-setup-enabled.html">Upload was rejected because CodeQL default setup is enabled for code scanning</a></p>
+<p>You cannot upload SARIF results generated by the CodeQL action or CodeQL CLI when default setup for code scanning is enabled. Check your configuration and decide whether to keep default setup or unblock SARIF upload.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/recommended-hardware-resources-for-running-codeql.html">Recommended hardware resources for running CodeQL</a></p>
+<p>Recommended specifications (RAM, CPU cores, and disk) for running CodeQL analysis on self-hosted machines, based on the size of your codebase.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-build-options-and-steps-for-compiled-languages.html">CodeQL build options and steps for compiled languages</a></p>
+<p>Learn how CodeQL builds compiled languages, including available build modes and language-specific autobuild behavior for C/C++, C#, Go, Java, Kotlin, Rust, and Swift.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-queries/about-built-in-queries.html">About built-in CodeQL queries</a></p>
+<p>Learn about the CodeQL queries that code scanning uses to analyze code.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-queries/actions-built-in-queries.html">GitHub Actions queries for CodeQL analysis</a></p>
+<p>Explore the queries that CodeQL uses to analyze code written in GitHub Actions workflow files when you select the <code>default</code> or the <code>security-extended</code> query suite.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-queries/c-cpp-built-in-queries.html">C and C++ queries for CodeQL analysis</a></p>
+<p>Explore the queries that CodeQL uses to analyze code written in C or C++ when you select the <code>default</code> or the <code>security-extended</code> query suite.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-queries/csharp-built-in-queries.html">C# queries for CodeQL analysis</a></p>
+<p>Explore the queries that CodeQL uses to analyze code written in C# when you select the <code>default</code> or the <code>security-extended</code> query suite.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-queries/go-built-in-queries.html">Go queries for CodeQL analysis</a></p>
+<p>Explore the queries that CodeQL uses to analyze code written in Go (Golang) when you select the <code>default</code> or the <code>security-extended</code> query suite.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-queries/java-kotlin-built-in-queries.html">Java and Kotlin queries for CodeQL analysis</a></p>
+<p>Explore the queries that CodeQL uses to analyze code written in Java or Kotlin when you select the <code>default</code> or the <code>security-extended</code> query suite.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-queries/javascript-typescript-built-in-queries.html">JavaScript and TypeScript queries for CodeQL analysis</a></p>
+<p>Explore the queries that CodeQL uses to analyze code written in JavaScript or TypeScript when you select the <code>default</code> or the <code>security-extended</code> query suite.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-queries/python-built-in-queries.html">Python queries for CodeQL analysis</a></p>
+<p>Explore the queries that CodeQL uses to analyze code written in Python when you select the <code>default</code> or the <code>security-extended</code> query suite.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-queries/ruby-built-in-queries.html">Ruby queries for CodeQL analysis</a></p>
+<p>Explore the queries that CodeQL uses to analyze code written in Ruby when you select the <code>default</code> or the <code>security-extended</code> query suite.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-queries/rust-built-in-queries.html">Rust queries for CodeQL analysis</a></p>
+<p>Explore the queries that CodeQL uses to analyze code written in Rust when you select the <code>default</code> or the <code>security-extended</code> query suite.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-queries/swift-built-in-queries.html">Swift queries for CodeQL analysis</a></p>
+<p>Explore the queries that CodeQL uses to analyze code written in Swift when you select the <code>default</code> or the <code>security-extended</code> query suite.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli/sarif-output.html">CodeQL CLI SARIF output</a></p>
+<p>You can output SARIF from the CodeQL CLI and share static analysis results with other systems.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli/csv-output.html">CodeQL CLI CSV output</a></p>
+<p>Understand CSV results from the CodeQL CLI.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli/codeql-query-packs.html">CodeQL query packs reference</a></p>
+<p>Understand the compatibility, contents, and structure of CodeQL packs.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli/extractor-options.html">Extractor options</a></p>
+<p>Control how the CodeQL CLI builds databases for analysis with extractor options.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli/exit-codes.html">Exit codes</a></p>
+<p>Exit codes signify the status of a command after the CodeQL CLI runs it.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/bqrs-decode.html">bqrs decode</a></p>
+<p>Convert result data from BQRS into other forms.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/bqrs-diff.html">bqrs diff</a></p>
+<p>Compute the difference between two result sets.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/bqrs-hash.html">bqrs hash</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Compute a stable hash of a BQRS file.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/bqrs-info.html">bqrs info</a></p>
+<p>Display metadata for a BQRS file.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/bqrs-interpret.html">bqrs interpret</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Interpret data in a single BQRS.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/database-add-diagnostic.html">database add-diagnostic</a></p>
+<p><span data-escaped-char="">[</span>Experimental] Add a piece of diagnostic information to a database.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/database-analyze.html">database analyze</a></p>
+<p>Analyze a database, producing meaningful results in the context of the<br>
+source code.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/database-bundle.html">database bundle</a></p>
+<p>Create a relocatable archive of a CodeQL database.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/database-cleanup.html">database cleanup</a></p>
+<p>Compact a CodeQL database on disk.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/database-create.html">database create</a></p>
+<p>Create a CodeQL database for a source tree that can be analyzed using<br>
+one of the CodeQL products.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/database-export-diagnostics.html">database export-diagnostics</a></p>
+<p><span data-escaped-char="">[</span>Experimental] Export diagnostic information from a database for a<br>
+failed analysis.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/database-finalize.html">database finalize</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Final steps in database creation.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/database-import.html">database import</a></p>
+<p><span data-escaped-char="">[</span>Advanced] <span data-escaped-char="">[</span>Plumbing] Import unfinalized database(s) into another<br>
+unfinalized database.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/database-index-files.html">database index-files</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Index standalone files with a given CodeQL extractor.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/database-init.html">database init</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Create an empty CodeQL database.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/database-interpret-results.html">database interpret-results</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Interpret computed query results into meaningful formats<br>
+such as SARIF or CSV.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/database-print-baseline.html">database print-baseline</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Print a summary of the baseline lines of code seen.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/database-run-queries.html">database run-queries</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Run a set of queries together.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/database-trace-command.html">database trace-command</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Run a single command as part of a traced build.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/database-unbundle.html">database unbundle</a></p>
+<p>Extracts a CodeQL database archive.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/database-upgrade.html">database upgrade</a></p>
+<p>Upgrade a database so it is usable by the current tools.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/dataset-check.html">dataset check</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Check a particular dataset for internal consistency.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/dataset-cleanup.html">dataset cleanup</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Clean up temporary files from a dataset.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/dataset-import.html">dataset import</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Import a set of TRAP files to a raw dataset.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/dataset-measure.html">dataset measure</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Collect statistics about the relations in a particular<br>
+dataset.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/dataset-upgrade.html">dataset upgrade</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Upgrade a dataset so it is usable by the current tools.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/diagnostic-add.html">diagnostic add</a></p>
+<p><span data-escaped-char="">[</span>Experimental] <span data-escaped-char="">[</span>Plumbing] Add a piece of diagnostic information.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/diagnostic-export.html">diagnostic export</a></p>
+<p><span data-escaped-char="">[</span>Experimental] Export diagnostic information for a failed analysis.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/execute-cli-server.html">execute cli-server</a></p>
+<p><span data-escaped-char="">[</span>Deep plumbing] Server for running multiple commands while avoiding<br>
+repeated JVM initialization.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/execute-language-server.html">execute language-server</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] On-line support for the QL language in IDEs.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/execute-queries.html">execute queries</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Run one or more queries against a dataset.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/execute-query-server.html">execute query-server</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Support for running queries from IDEs.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/execute-query-server2.html">execute query-server2</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Support for running queries from IDEs.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/execute-upgrades.html">execute upgrades</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Run upgrade scripts on an existing raw QL dataset.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/generate-extensible-predicate-metadata.html">generate extensible-predicate-metadata</a></p>
+<p><span data-escaped-char="">[</span>Experimental] <span data-escaped-char="">[</span>Deep plumbing] Report the extensible predicates<br>
+found in the given pack.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/generate-log-summary.html">generate log-summary</a></p>
+<p><span data-escaped-char="">[</span>Advanced] Create a summary of a structured log file.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/generate-overlay-changes.html">generate overlay-changes</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Generate a file that can be used for the</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/generate-query-help.html">generate query-help</a></p>
+<p>Generate end-user query help from .qhelp files.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/github-merge-results.html">github merge-results</a></p>
+<p><span data-escaped-char="">[</span>Deep plumbing] Merges multiple SARIF files into a single SARIF file.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/github-upload-results.html">github upload-results</a></p>
+<p>Uploads a SARIF file to GitHub code scanning.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/pack-add.html">pack add</a></p>
+<p>Adds a list of QL library packs with optional version<br>
+ranges as dependencies of the current package, and then installs them.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/pack-bundle.html">pack bundle</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Bundle a QL library pack.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/pack-ci.html">pack ci</a></p>
+<p>Install dependencies for this pack, verifying that the<br>
+existing lock file is up to date.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/pack-create.html">pack create</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Builds the contents of a QL package from<br>
+source code.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/pack-download.html">pack download</a></p>
+<p>Download the set of qlpacks referenced by the query<br>
+spec of the command line from the registry. Packs can be provided by<br>
+name or implicitly inside of a query suite (.qls) file.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/pack-init.html">pack init</a></p>
+<p>Initializes a qlpack in the specified directory.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/pack-install.html">pack install</a></p>
+<p>Install dependencies for this pack.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/pack-ls.html">pack ls</a></p>
+<p><span data-escaped-char="">[</span>Deep plumbing] List the CodeQL packages rooted at<br>
+this directory. This directory must contain a qlpack.yml or<br>
+.codeqlmanifest.json file.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/pack-packlist.html">pack packlist</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Compute the set of files to be included in<br>
+a QL query pack or library pack.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/pack-publish.html">pack publish</a></p>
+<p>Publishes a QL library pack to a package registry.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/pack-resolve-dependencies.html">pack resolve-dependencies</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Compute the set of required dependencies<br>
+for this QL pack.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/pack-upgrade.html">pack upgrade</a></p>
+<p>Update the dependencies for this pack to the latest<br>
+available versions.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/query-compile.html">query compile</a></p>
+<p>Compile or check QL code.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/query-decompile.html">query decompile</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Read an intermediate representation of a compiled query<br>
+from a .qlo file.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/query-format.html">query format</a></p>
+<p>Autoformat QL source code.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/query-run.html">query run</a></p>
+<p>Run a single query.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/resolve-database.html">resolve database</a></p>
+<p><span data-escaped-char="">[</span>Deep plumbing] Report metadata about the database.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/resolve-extensions.html">resolve extensions</a></p>
+<p><span data-escaped-char="">[</span>Experimental] <span data-escaped-char="">[</span>Deep plumbing] Determine accessible extensions. This<br>
+includes machine learning models and data extensions.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/resolve-extensions-by-pack.html">resolve extensions-by-pack</a></p>
+<p><span data-escaped-char="">[</span>Experimental] <span data-escaped-char="">[</span>Deep plumbing] Determine accessible extensions for<br>
+the given paths to pack roots. This includes machine learning models and<br>
+data extensions.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/resolve-extractor.html">resolve extractor</a></p>
+<p><span data-escaped-char="">[</span>Deep plumbing] Determine the extractor pack to use for a given<br>
+language.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/resolve-files.html">resolve files</a></p>
+<p><span data-escaped-char="">[</span>Deep plumbing] Expand a set of file inclusion/exclusion globs.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/resolve-languages.html">resolve languages</a></p>
+<p>List installed CodeQL extractor packs.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/resolve-library-path.html">resolve library-path</a></p>
+<p><span data-escaped-char="">[</span>Deep plumbing] Determine QL library path and dbscheme for a query.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/resolve-metadata.html">resolve metadata</a></p>
+<p><span data-escaped-char="">[</span>Deep plumbing] Resolve and return the key-value metadata pairs from a<br>
+query source file.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/resolve-ml-models.html">resolve ml-models</a></p>
+<p><span data-escaped-char="">[</span>Deprecated] <span data-escaped-char="">[</span>Experimental] <span data-escaped-char="">[</span>Deep plumbing] Determine accessible<br>
+machine learning models.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/resolve-packs.html">resolve packs</a></p>
+<p>Display a list of available CodeQL packs and their locations.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/resolve-qlpacks.html">resolve qlpacks</a></p>
+<p>Create a list of installed QL packs and their locations.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/resolve-qlref.html">resolve qlref</a></p>
+<p><span data-escaped-char="">[</span>Deep plumbing] Dereferences a .qlref file to return a .ql one.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/resolve-queries.html">resolve queries</a></p>
+<p><span data-escaped-char="">[</span>Deep plumbing] Expand query directories and suite specifications.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/resolve-ram.html">resolve ram</a></p>
+<p><span data-escaped-char="">[</span>Deep plumbing] Prepare RAM options.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/resolve-tests.html">resolve tests</a></p>
+<p><span data-escaped-char="">[</span>Deep plumbing] Find QL unit tests in given directories.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/resolve-upgrades.html">resolve upgrades</a></p>
+<p><span data-escaped-char="">[</span>Deep plumbing] Determine upgrades to run for a raw dataset.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/test-accept.html">test accept</a></p>
+<p>Accept results of failing unit tests.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/test-extract.html">test extract</a></p>
+<p><span data-escaped-char="">[</span>Plumbing] Build a dataset for a test directory.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/test-run.html">test run</a></p>
+<p>Run unit tests for QL queries.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-cli-manual/version.html">version</a></p>
+<p>Show the version of the CodeQL toolchain.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-for-vs-code/telemetry-in-codeql-for-visual-studio-code.html">Telemetry in CodeQL for Visual Studio Code</a></p>
+<p>If VS Code telemetry is enabled, GitHub will collect usage data and metrics for the purposes of helping the core developers to improve the CodeQL extension for VS Code.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/codeql/codeql-for-vs-code/warning-problem-with-controller-repository.html">Problem with controller repository</a></p>
+<p>If you see this warning, update your controller repository to a private repository.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/troubleshoot-analysis-errors/alerts-in-generated-code.html">Alerts found in generated code</a></p>
+<p>When analyzing your code with code scanning, you may wish to build only the code which you wish to analyze.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/troubleshoot-analysis-errors/automatic-build-failed.html">Automatic build failed for a compiled language</a></p>
+<p>If automatic build fails, you can configure code scanning to use specific build steps for compiled languages.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/troubleshoot-analysis-errors/c-sharp-compiler-unexpectedly-failing.html">C# compiler unexpectedly failing</a></p>
+<p>If your MSBuild C# compilation is unexpectedly failing, you may need to amend your application project file.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/troubleshoot-analysis-errors/cannot-enable-codeql-in-a-private-repository.html">Cannot enable CodeQL in a private repository</a></p>
+<p>GitHub Code Security must be enabled in order to use code scanning on private repositories.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/troubleshoot-analysis-errors/analysis-takes-too-long.html">Code scanning analysis takes too long</a></p>
+<p>You can fine tune your code scanning configuration to minimize analysis time.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/troubleshoot-analysis-errors/fewer-lines-scanned-than-expected.html">CodeQL scanned fewer lines than expected</a></p>
+<p>If CodeQL analyzed less code than you expected, you may need to use a custom build command.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/troubleshoot-analysis-errors/enabling-default-setup-takes-too-long.html">Enabling default setup takes too long</a></p>
+<p>If you think that enabling default setup has stalled, you can restart the process.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/troubleshoot-analysis-errors/advanced-security-must-be-enabled.html">Error: "GitHub Code Security or GitHub Advanced Security must be enabled for this repository to use code scanning"</a></p>
+<p>If you see this error, make sure that GitHub Code Security is enabled.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/troubleshoot-analysis-errors/out-of-disk-or-memory.html">"Out of disk" and "Out of memory" errors</a></p>
+<p>If you see one of these errors with GitHub Actions, you can try alternative runners.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/troubleshoot-analysis-errors/resource-not-accessible.html">Error: 403 "Resource not accessible by integration"</a></p>
+<p>This error may be seen on pull requests created by Dependabot and can be resolved in a couple of different ways.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/troubleshoot-analysis-errors/not-recognized.html">Error: "is not a .ql file, .qls file, a directory, or a query pack specification"</a></p>
+<p>CodeQL was unable to locate one of the queries or sets of queries that are specified for analysis.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/troubleshoot-analysis-errors/no-source-code-seen-during-build.html">Error: "No source code was seen during the build"</a></p>
+<p>When CodeQL fails to find any source code, you need to resolve this problem to unblock code scanning analysis.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/troubleshoot-analysis-errors/server-error.html">Error: "Server error"</a></p>
+<p>If you see this error, it may be transient. Check the current GitHub Actions service status, and try running your workflow again.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/troubleshoot-analysis-errors/extraction-errors-in-the-database.html">Extraction errors in the database</a></p>
+<p>You can check whether or not extraction errors affect the health of the CodeQL database created.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/troubleshoot-analysis-errors/logs-not-detailed-enough.html">Logs are not detailed enough</a></p>
+<p>Increase log verbosity and generate debugging artifacts when logs lack diagnostic detail.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/troubleshoot-analysis-errors/results-different-than-expected.html">Results are different than expected</a></p>
+<p>If your code scanning results are different than you expected, you can check which configurations are active.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/troubleshoot-analysis-errors/some-languages-not-analyzed.html">Some languages were not analyzed with CodeQL advanced setup</a></p>
+<p>If some languages were not analyzed, you can modify your code scanning workflow to add a matrix specifying the languages you want to analyze.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/troubleshoot-analysis-errors/two-codeql-workflows.html">Two CodeQL workflows</a></p>
+<p>If you see two workflows named "CodeQL", one workflow may be a pre-existing CodeQL workflow file which has been disabled by default setup.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/troubleshoot-analysis-errors/unclear-what-triggered-a-workflow.html">Unclear what triggered a workflow run</a></p>
+<p>If you don't know what triggered an analysis, investigate the tool status page or look at the log for the last scan.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/troubleshoot-analysis-errors/unnecessary-step-found.html">Warning: "1 issue was detected with this workflow: git checkout HEAD^2 is no longer necessary"</a></p>
+<p>If you see this warning, you should update your workflow to follow current best practice.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/troubleshoot-analysis-errors/kotlin-detected-in-no-build.html">Warning: Detected X Kotlin files in your project that could not be processed without a build</a></p>
+<p>CodeQL databases can be created for Java without building the code, but Kotlin files are excluded unless the code is built.</p>
+</li>
+<li>
+<p><a href="reference/code-scanning/code-scanning-logs.html">Code scanning logs</a></p>
+<p>You can view the output generated during code scanning analysis in GitHub.</p>
+</li>
+<li>
+<p><a href="reference/supply-chain-security/automatic-dependency-submission.html">Automatic dependency submission</a></p>
+<p>Network access requirements, troubleshooting, and ecosystem-specific behavior for automatic dependency submission.</p>
+</li>
+<li>
+<p><a href="reference/supply-chain-security/dependabot-options-reference.html">Dependabot options reference</a></p>
+<p>Detailed information for all the options you can use to customize how Dependabot maintains your repositories.</p>
+</li>
+<li>
+<p><a href="reference/supply-chain-security/dependabot-alerts-filters.html">Dependabot alert filters</a></p>
+<p>Dependabot alerts filters help you prioritize and manage alerts for vulnerable dependencies in your repositories.</p>
+</li>
+<li>
+<p><a href="reference/supply-chain-security/supported-ecosystems-and-manifests-for-dependency-scope.html">Supported ecosystems and manifests for dependency scope</a></p>
+<p>Dependabot alerts supports a variety of ecosystems and manifests for dependency scope.</p>
+</li>
+<li>
+<p><a href="reference/supply-chain-security/dependabot-pull-request-comment-commands.html">Dependabot pull request comment commands</a></p>
+<p>Dependabot responds to commands in comments on its pull requests, making it easy to triage and manage dependency updates.</p>
+</li>
+<li>
+<p><a href="reference/supply-chain-security/supported-ecosystems-and-repositories.html">Dependabot supported ecosystems and repositories</a></p>
+<p>Dependabot supports a variety of ecosystems and repositories</p>
+</li>
+<li>
+<p><a href="reference/supply-chain-security/dependabot-security-updates.html">Dependabot security updates reference</a></p>
+<p>Find usage information for Dependabot security updates.</p>
+</li>
+<li>
+<p><a href="reference/supply-chain-security/dependency-graph-supported-package-ecosystems.html">Dependency graph supported package ecosystems</a></p>
+<p>Dependency graph supports a variety of ecosystems.</p>
+</li>
+<li>
+<p><a href="reference/supply-chain-security/dependabot-on-actions.html">Dependabot on GitHub Actions</a></p>
+<p>Detailed information on using Dependabot with GitHub Actions.</p>
+</li>
+<li>
+<p><a href="reference/supply-chain-security/criteria-for-preset-rules.html">CWEs used by GitHub's preset Dependabot rules</a></p>
+<p>GitHub uses industry-standard criteria to help you filter Dependabot alerts.</p>
+</li>
+<li>
+<p><a href="reference/supply-chain-security/troubleshoot-dependabot/troubleshooting-the-dependency-graph.html">Troubleshooting the dependency graph</a></p>
+<p>If the dependency information reported by the dependency graph is not what you expected, there are a number of points to consider, and various things you can check.</p>
+</li>
+<li>
+<p><a href="reference/supply-chain-security/troubleshoot-dependabot/dependabot-updates-stopped.html">Dependabot update pull requests no longer generated</a></p>
+<p>Dependabot can pause updates based on your interaction with Dependabot pull requests. Learn more about the automatic deactivation of Dependabot updates.</p>
+</li>
+<li>
+<p><a href="reference/supply-chain-security/troubleshoot-dependabot/troubleshooting-dependabot-on-github-actions.html">Troubleshooting Dependabot on GitHub Actions</a></p>
+<p>This article provides troubleshooting information for issues you may encounter when using Dependabot with GitHub Actions.</p>
+</li>
+<li>
+<p><a href="reference/supply-chain-security/troubleshoot-dependabot/vulnerable-dependency-detection.html">Vulnerable dependency detection</a></p>
+<p>If the dependency information reported by GitHub is not what you expected, there are a number of points to consider, and various things you can check.</p>
+</li>
+<li>
+<p><a href="reference/supply-chain-security/troubleshoot-dependabot/dependabot-errors.html">Dependabot errors</a></p>
+<p>Dependabot automatically maintains your dependencies, keeping your code secure and current. This reference helps you diagnose and resolve issues so automated updates can continue.</p>
+</li>
+<li>
+<p><a href="reference/supply-chain-security/java-package-metadata-dependabot.html">Java package metadata for Dependabot updates</a></p>
+<p>Include metadata in your <code>pom.xml</code> file to provide helpful links and context in Dependabot pull requests for Java package updates.</p>
+</li>
+<li>
+<p><a href="reference/code-quality/metrics-and-ratings.html">Metrics and ratings reference</a></p>
+<p>Understand the terminology used by GitHub to assess the quality of your repository's code.</p>
+</li>
+<li>
+<p><a href="reference/code-quality/codeql-detection.html">CodeQL-powered analysis for Code Quality</a></p>
+<p>Information on how CodeQL-powered analysis for Code Quality works, the workflow used, and the status checks reported on pull requests.</p>
+</li>
+<li>
+<p><a href="reference/code-quality/codeql-queries/csharp-queries.html">C# CodeQL queries for Code Quality</a></p>
+<p>Explore the queries that CodeQL uses to analyze code quality for code written in C#.</p>
+</li>
+<li>
+<p><a href="reference/code-quality/codeql-queries/go-queries.html">Go CodeQL queries for Code Quality</a></p>
+<p>Explore the queries that CodeQL uses to analyze code quality for code written in Go.</p>
+</li>
+<li>
+<p><a href="reference/code-quality/codeql-queries/java-queries.html">Java CodeQL queries for Code Quality</a></p>
+<p>Explore the queries that CodeQL uses to analyze code quality for code written in Java.</p>
+</li>
+<li>
+<p><a href="reference/code-quality/codeql-queries/javascript-queries.html">JavaScript CodeQL queries for Code Quality</a></p>
+<p>Explore the queries that CodeQL uses to analyze code quality for code written in JavaScript.</p>
+</li>
+<li>
+<p><a href="reference/code-quality/codeql-queries/python-queries.html">Python CodeQL queries for Code Quality</a></p>
+<p>Explore the queries that CodeQL uses to analyze code quality for code written in Python.</p>
+</li>
+<li>
+<p><a href="reference/code-quality/codeql-queries/ruby-queries.html">Ruby CodeQL queries for Code Quality</a></p>
+<p>Explore the queries that CodeQL uses to analyze code quality for code written in Ruby.</p>
+</li>
+<li>
+<p><a href="reference/permissions/permission-levels-for-repository-security-advisories.html">Repository security advisories</a></p>
+<p>The actions you can take in a repository security advisory depend on whether you have admin or write permissions to the security advisory.</p>
+</li>
+<li>
+<p><a href="reference/permissions/security-overview-permissions.html">Security overview permissions</a></p>
+<p>The actions you can take in security overview depend on your permissions for the repositories in your organization or enterprise.</p>
+</li>
+<li>
+<p><a href="reference/security-incident-response/investigation-tools.html">Investigation tools for security incidents</a></p>
+<p>The core GitHub tools you can use to investigate security incidents, what each tool is best used for, and common considerations that affect what data is available.</p>
+</li>
+<li>
+<p><a href="reference/security-incident-response/investigation-areas.html">Common security incident investigation areas</a></p>
+<p>Reference for investigating security incidents across multiple attack vectors, including the key surfaces and tools to check on GitHub.</p>
+</li>
+<li>
+<p><a href="tutorials/secret-protection-adoption-path.html">Secure your secrets at scale with GitHub</a></p>
+<p>Leaked credentials expose your organization to data breaches. GitHub Secret Protection detects and prevents secret leaks automatically. Follow this adoption path to assess risk, pilot the solution, and scale protection organization-wide.</p>
+</li>
+<li>
+<p><a href="tutorials/trialing-github-advanced-security/planning-a-trial-of-ghas.html">Planning a trial of GitHub Advanced Security</a></p>
+<p>Learn how to prepare for a successful trial of Advanced Security.</p>
+</li>
+<li>
+<p><a href="tutorials/trialing-github-advanced-security/trial-advanced-security.html">Setting up a trial of GitHub Advanced Security</a></p>
+<p>You can try the full set of GitHub Advanced Security features for free.</p>
+</li>
+<li>
+<p><a href="tutorials/trialing-github-advanced-security/enable-security-features-trial.html">Enabling security features in your trial enterprise</a></p>
+<p>Quickly create an enterprise-level configuration and apply Secret Protection and Code Security features across all repositories in your trial enterprise.</p>
+</li>
+<li>
+<p><a href="tutorials/trialing-github-advanced-security/explore-trial-secret-scanning.html">Exploring your enterprise trial of GitHub Secret Protection</a></p>
+<p>Introduction to the features available with GitHub Secret Protection in GitHub Enterprise Cloud so you can assess their fit to your business needs.</p>
+</li>
+<li>
+<p><a href="tutorials/trialing-github-advanced-security/explore-trial-code-scanning.html">Exploring your enterprise trial of GitHub Code Security</a></p>
+<p>Introduction to the features of code and dependency scanning available with GitHub Code Security in GitHub Enterprise Cloud so you can assess their fit to your business needs.</p>
+</li>
+<li>
+<p><a href="https://docs.github.com/en/adopting-github-advanced-security-at-scale" class="external">Adopting GitHub Advanced Security at scale</a></p>
+<p>A phased approach to rolling out GitHub Advanced Security at your company using industry and GitHub best practices.</p>
+</li>
+<li>
+<p><a href="tutorials/secure-your-organization/best-practices-for-preventing-data-leaks-in-your-organization.html">Best practices for preventing data leaks in your organization</a></p>
+<p>Learn guidance and recommendations to help you avoid private or sensitive data present in your organization from being exposed.</p>
+</li>
+<li>
+<p><a href="tutorials/secure-your-organization/best-practice-fix-alerts-at-scale.html">Running a security campaign to fix alerts at scale</a></p>
+<p>Launch a focused security campaign to remediate a specific class of security alerts, such as cross-site scripting (XSS), across your organization.</p>
+</li>
+<li>
+<p><a href="tutorials/secure-your-organization/prioritize-alerts-in-production-code.html">Prioritizing Dependabot and code scanning alerts using production context</a></p>
+<p>Focus remediation on real risk by targeting Dependabot and code scanning alerts in artifacts deployed to production, using metadata from external systems and integrations like Dynatrace, JFrog Artifactory, Microsoft Defender for Cloud, or your own CI/CD workflows.</p>
+</li>
+<li>
+<p><a href="tutorials/secure-your-organization/interpreting-secret-risk-assessment-results.html">Interpreting secret risk assessment results</a></p>
+<p>Understand the results from your secret risk assessment and prioritize leak remediation.</p>
+</li>
+<li>
+<p><a href="tutorials/secure-your-organization/interpreting-code-security-risk-assessment-results.html">Interpreting code security risk assessment results</a></p>
+<p>Understand the results from your code security risk assessment and prioritize vulnerability remediation.</p>
+</li>
+<li>
+<p><a href="tutorials/secure-your-organization/organizing-remediation-efforts-for-leaked-secrets.html">Organizing remediation efforts for leaked secrets</a></p>
+<p>Systematically organize and manage the remediation of leaked secrets using security campaigns and alert assignments.</p>
+</li>
+<li>
+<p><a href="tutorials/secure-your-organization/protect-against-threats.html">Protecting against security threats</a></p>
+<p>What steps should I take now, in the near future, and on an ongoing basis to reduce exposure to security threats across my organizations on GitHub?</p>
+</li>
+<li>
+<p><a href="tutorials/secure-your-organization/preparing-for-security-incidents.html">Preparing for a security incident</a></p>
+<p>Ensure you have the tools and processes in place to respond effectively to a security incident.</p>
+</li>
+<li>
+<p><a href="tutorials/secure-your-organization/responding-to-security-incidents.html">Responding to a security incident</a></p>
+<p>Respond strategically to a security incident affecting organizations or repositories in your GitHub enterprise.</p>
+</li>
+<li>
+<p><a href="tutorials/remediate-leaked-secrets/calculating-the-cost-savings-of-push-protection.html">Calculating the cost savings of push protection</a></p>
+<p>Estimate the remediation time and labor costs you'll avoid by preventing leaked secrets.</p>
+</li>
+<li>
+<p><a href="tutorials/remediate-leaked-secrets/assessing-ghsp-impact.html">Assessing the impact of GitHub Secret Protection</a></p>
+<p>Measure how GitHub Secret Protection reduces secret exposure across your organization, so you can demonstrate value and identify areas to strengthen your security posture.</p>
+</li>
+<li>
+<p><a href="tutorials/remediate-leaked-secrets/evaluating-alerts.html">Evaluating alerts from secret scanning</a></p>
+<p>Learn about additional features that can help you evaluate alerts and prioritize their remediation, such as checking a secret's validity.</p>
+</li>
+<li>
+<p><a href="tutorials/remediate-leaked-secrets/remediating-a-leaked-secret.html">Remediating a leaked secret in your repository</a></p>
+<p>Learn how to respond effectively to a leaked secret in your GitHub repository.</p>
+</li>
+<li>
+<p><a href="tutorials/secret-scanning-partner-program.html">Secret scanning partner program</a></p>
+<p>As a service provider, you can partner with GitHub to have your secret token formats secured through secret scanning, which searches for accidental commits of your secret format and can be sent to a service provider's verify endpoint.</p>
+</li>
+<li>
+<p><a href="tutorials/customize-code-scanning/evaluating-default-setup-for-code-scanning.html">Evaluating default setup for code scanning</a></p>
+<p>Learn how to assess how code scanning is working for you, and how you can customize your setup to best meet your needs.</p>
+</li>
+<li>
+<p><a href="tutorials/customize-code-scanning/preparing-your-code-for-codeql-analysis.html">Preparing your code for CodeQL analysis</a></p>
+<p>You can build a CodeQL database containing the data needed to analyze your code.</p>
+</li>
+<li>
+<p><a href="tutorials/customize-code-scanning/analyzing-your-code-with-codeql-queries.html">Analyzing your code with CodeQL queries</a></p>
+<p>You can run queries against a CodeQL database extracted from a codebase.</p>
+</li>
+<li>
+<p><a href="tutorials/customize-code-scanning/uploading-codeql-analysis-results-to-github.html">Uploading CodeQL analysis results to GitHub</a></p>
+<p>You can use the CodeQL CLI to upload CodeQL analysis results to GitHub.</p>
+</li>
+<li>
+<p><a href="tutorials/customize-code-scanning/running-codeql-code-scanning-in-a-container.html">Running CodeQL code scanning in a container</a></p>
+<p>You can run code scanning in a container by ensuring that all processes run in the same container.</p>
+</li>
+<li>
+<p><a href="tutorials/customize-code-scanning/customizing-analysis-with-codeql-packs.html">Customizing analysis with CodeQL packs</a></p>
+<p>You can use CodeQL packs to run CodeQL queries maintained by other people, or to share CodeQL queries that you've developed.</p>
+</li>
+<li>
+<p><a href="tutorials/customize-code-scanning/creating-codeql-query-suites.html">Creating CodeQL query suites</a></p>
+<p>You can create query suites for queries you frequently use in your CodeQL analyses.</p>
+</li>
+<li>
+<p><a href="tutorials/customize-code-scanning/creating-and-working-with-codeql-packs.html">Creating and working with CodeQL packs</a></p>
+<p>You can use CodeQL packs to create, share, depend on, and run CodeQL queries and libraries.</p>
+</li>
+<li>
+<p><a href="tutorials/secure-your-dependencies/dependabot-quickstart-guide.html">Dependabot quickstart guide</a></p>
+<p>Find and fix vulnerable dependencies you rely on with Dependabot.</p>
+</li>
+<li>
+<p><a href="tutorials/secure-your-dependencies/automating-dependabot-with-github-actions.html">Automating Dependabot with GitHub Actions</a></p>
+<p>Examples of how you can use GitHub Actions to automate common Dependabot related tasks.</p>
+</li>
+<li>
+<p><a href="tutorials/secure-your-dependencies/optimizing-pr-creation-version-updates.html">Optimizing the creation of pull requests for Dependabot version updates</a></p>
+<p>Learn how to streamline and efficiently manage your Dependabot pull requests.</p>
+</li>
+<li>
+<p><a href="tutorials/secure-your-dependencies/setting-dependabot-to-run-on-self-hosted-runners-using-arc.html">Setting up Dependabot to run on self-hosted action runners using the Actions Runner Controller</a></p>
+<p>You can configure the Actions Runner Controller to run Dependabot on self-hosted runners.</p>
+</li>
+<li>
+<p><a href="tutorials/secure-your-dependencies/customizing-dependabot-prs.html">Customizing Dependabot pull requests to fit your processes</a></p>
+<p>Learn how to tailor your Dependabot pull requests to better suit your own internal workflows.</p>
+</li>
+<li>
+<p><a href="tutorials/secure-your-dependencies/customizing-your-dependency-review-action-configuration.html">Customizing your dependency review action configuration</a></p>
+<p>Learn how to add a basic customization to your dependency review action configuration.</p>
+</li>
+<li>
+<p><a href="tutorials/implement-supply-chain-best-practices/end-to-end-supply-chain-overview.html">Securing your end-to-end supply chain</a></p>
+<p>Introducing best practice guides on complete end-to-end supply chain security including personal accounts, code, and build processes.</p>
+</li>
+<li>
+<p><a href="tutorials/implement-supply-chain-best-practices/securing-accounts.html">Best practices for securing accounts</a></p>
+<p>Guidance on how to protect accounts with access to your software supply chain.</p>
+</li>
+<li>
+<p><a href="tutorials/implement-supply-chain-best-practices/securing-code.html">Best practices for securing code in your supply chain</a></p>
+<p>Guidance on how to protect the center of your supply chain—the code you write and the code you depend on.</p>
+</li>
+<li>
+<p><a href="tutorials/implement-supply-chain-best-practices/securing-builds.html">Best practices for securing your build system</a></p>
+<p>Guidance on how to protect the end of your supply chain—the systems you use to build and distribute artifacts.</p>
+</li>
+<li>
+<p><a href="tutorials/manage-security-alerts/prioritizing-dependabot-alerts-using-metrics.html">Prioritizing Dependabot alerts using metrics</a></p>
+<p>You can prioritize Dependabot alerts in your organization by analyzing the provided metrics. Using this approach, you can tell your developers to focus on the most important vulnerabilities first.</p>
+</li>
+<li>
+<p><a href="tutorials/manage-security-alerts/best-practices-for-participating-in-a-security-campaign.html">Participating in a code security campaign</a></p>
+<p>If you've been assigned alerts as part of a security campaign, this guide explains what campaigns are, what to expect, and how to resolve alerts effectively.</p>
+</li>
+<li>
+<p><a href="tutorials/improve-code-quality/quickstart.html">Quickstart for GitHub Code Quality</a></p>
+<p>Review code quality findings, generate a Copilot Autofix, and merge a pull request to improve reliability and maintainability with GitHub Code Quality.</p>
+</li>
+<li>
+<p><a href="tutorials/improve-code-quality/fix-findings-in-prs.html">Fixing code quality findings before merging your pull request</a></p>
+<p>Catch quality issues before they reach your default branch and fix them with Copilot Autofix and Copilot cloud agent.</p>
+</li>
+<li>
+<p><a href="tutorials/improve-code-quality/improve-your-codebase.html">Improving the quality of your repository's code</a></p>
+<p>Assess and remediate code quality issues detected on your default branch so you can improve the quality of your codebase. As you progress, you'll see your repository's code quality rating rise as a result.</p>
+</li>
+<li>
+<p><a href="tutorials/improve-code-quality/improve-recent-merges.html">Improving the quality of recently merged code with AI</a></p>
+<p>Explore GitHub Code Quality findings for recently merged code and fix with Copilot Autofix or delegate remediation work to Copilot cloud agent.</p>
+</li>
+<li>
+<p><a href="tutorials/fix-reported-vulnerabilities/collaborate-in-a-fork.html">Collaborating in a temporary private fork to resolve a repository security vulnerability</a></p>
+<p>You can create a temporary private fork to privately collaborate on fixing a security vulnerability in your public repository.</p>
+</li>
+<li>
+<p><a href="tutorials/fix-reported-vulnerabilities/write-security-advisories.html">Best practices for writing repository security advisories</a></p>
+<p>When you create or edit security advisories, the information you provide is easier for other users to understand when you specify the ecosystem, package name, and affected versions using the standard formats.</p>
+</li>
+<li>
+<p><a href="responsible-use/responsible-use-autofix-code-scanning.html">Responsible use of Copilot Autofix for code scanning</a></p>
+<p>Learn how GitHub uses AI to suggest potential fixes for code scanning alerts and find out how best to mitigate limitations in the AI suggestions.</p>
+</li>
+<li>
+<p><a href="responsible-use/responsible-ai-generic-secrets.html">Responsible detection of generic secrets with Copilot secret scanning</a></p>
+<p>Learn how Copilot secret scanning uses AI responsibly to scan and create alerts for unstructured secrets, such as passwords.</p>
+</li>
+<li>
+<p><a href="responsible-use/responsible-ai-regex-generator.html">Responsible generation of regular expressions with Copilot secret scanning</a></p>
+<p>Learn about the capabilities and limitations of the regular expression generator in helping you to define custom patterns to extend the capabilities of secret scanning.</p>
+</li>
+<li>
+<p><a href="responsible-use/code-quality.html">Responsible use of GitHub Code Quality</a></p>
+<p>Use GitHub Code Quality responsibly by understanding its purposes, capabilities, and limitations.</p>
+</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>About Dependabot auto-triage rules</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Supply chain security</a> / </nav><h1><a href="#about-dependabot-auto-triage-rules" aria-hidden="true" class="anchor" id="about-dependabot-auto-triage-rules"></a>About Dependabot auto-triage rules</h1>
+<p>Control how Dependabot handles security alerts, including filtering, ignoring, snoozing, or triggering security updates.</p>
+<h2 title="About Dependabot auto-triage rules"><a href="#about-dependabot-auto-triage-rules-1" aria-hidden="true" class="anchor" id="about-dependabot-auto-triage-rules-1"></a>About Dependabot auto-triage rules</h2>
+<p>Dependabot auto-triage rules allow you to instruct Dependabot to automatically triage Dependabot alerts and Dependabot malware alerts. You can use auto-triage rules to:</p>
+<ul>
+<li>Automatically dismiss or snooze certain alerts</li>
+<li>Specify the Dependabot alerts you want Dependabot to open pull requests for</li>
+</ul>
+<p>Rules are applied before alert notifications are sent, so enabling rules that auto-dismiss low-risk alerts will help reduce notification noise.</p>
+<p>There are two types of Dependabot auto-triage rules:</p>
+<ul>
+<li>GitHub presets</li>
+<li>Custom auto-triage rules</li>
+</ul>
+<h3 title="About Dependabot auto-triage rules / About GitHub presets"><a href="#about-github-presets" aria-hidden="true" class="anchor" id="about-github-presets"></a>About GitHub presets</h3>
+<p>GitHub presets are rules curated by GitHub that are available for all repositories.</p>
+<h4><a href="#dismiss-low-impact-issues-for-development-scoped-dependencies" aria-hidden="true" class="anchor" id="dismiss-low-impact-issues-for-development-scoped-dependencies"></a>Dismiss low impact issues for development-scoped dependencies</h4>
+<p>The <code>Dismiss low impact issues for development-scoped dependencies</code> rule is a GitHub preset that auto-dismisses certain types of vulnerabilities that are found in npm dependencies used in development. These alerts cover cases that feel like false alarms to most developers as the associated vulnerabilities:</p>
+<ul>
+<li>Are unlikely to be exploitable in a developer (non-production or runtime) environment.</li>
+<li>May relate to resource management, programming and logic, and information disclosure issues.</li>
+<li>At worst, have limited effects like slow builds or long-running tests.</li>
+<li>Are not indicative of issues in production.</li>
+</ul>
+<p>The rule is enabled by default for public repositories and can be opted into for private repositories. For instructions, see <a href="../../how-tos/secure-your-supply-chain/manage-your-dependency-security/using-github-preset-rules-to-prioritize-dependabot-alerts.html#enabling-the-dismiss-low-impact-issues-for-development-scoped-dependencies-rule-for-your-private-repository">Enabling the <code>Dismiss low impact issues for development-scoped dependencies</code> rule for your private repository</a>.</p>
+<p>For more information about the criteria used by the rule, see <a href="../../reference/supply-chain-security/criteria-for-preset-rules.html">CWEs used by GitHub's preset Dependabot rules</a>.</p>
+<h4><a href="#dismiss-package-malware-alerts" aria-hidden="true" class="anchor" id="dismiss-package-malware-alerts"></a>Dismiss package malware alerts</h4>
+<p>The <code>Dismiss package malware alerts</code> rule is a GitHub preset that auto-dismisses alerts that flag all versions of a package as malicious. If your project depends on an <strong>internal</strong> package with the same ecosystem and name as a malicious <strong>public</strong> package, Dependabot can generate a false positive alert, which the rule then auto-dismisses.</p>
+<div class="markdown-alert markdown-alert-important">
+<p class="markdown-alert-title">Important</p>
+<p>Be aware that if a contributor adds a dependency that is truly malicious across all versions, this rule will auto-dismiss the related alert.</p>
+</div>
+<p>The <code>Dismiss package malware alerts</code> rule is disabled by default, but can be enabled for any repository using Dependabot malware alerts.</p>
+<h3 title="About Dependabot auto-triage rules / About custom auto-triage rules"><a href="#about-custom-auto-triage-rules" aria-hidden="true" class="anchor" id="about-custom-auto-triage-rules"></a>About custom auto-triage rules</h3>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Custom auto-triage rules for Dependabot alerts are available on public repositories and on any organization-owned repositories in GitHub Team with <a href="https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security" class="external">GitHub Code Security</a> enabled.</p>
+</div>
+<p>With custom auto-triage rules, you can create your own rules to automatically dismiss or reopen alerts based on targeted metadata, such as severity, package name, CWE, and more. You can also specify which Dependabot alerts you want Dependabot to open pull requests for. For more information, see <a href="../../how-tos/secure-your-supply-chain/manage-your-dependency-security/customizing-auto-triage-rules-to-prioritize-dependabot-alerts.html">Customizing auto-triage rules to prioritize Dependabot alerts</a>.</p>
+<p>You can create custom rules from the <strong>Settings</strong> tab of the repository, provided the repository belongs to an organization that has a license for GitHub Code Security or GitHub Advanced Security. For more information, see <a href="../../how-tos/secure-your-supply-chain/manage-your-dependency-security/customizing-auto-triage-rules-to-prioritize-dependabot-alerts.html#adding-custom-auto-triage-rules-to-your-repository">Adding custom auto-triage rules to your repository</a>.</p>
+<h3 title="About Dependabot auto-triage rules / About auto-dismissing alerts"><a href="#about-auto-dismissing-alerts" aria-hidden="true" class="anchor" id="about-auto-dismissing-alerts"></a>About auto-dismissing alerts</h3>
+<p>Whilst you may find it useful to use auto-triage rules to auto-dismiss alerts, you can still reopen auto-dismissed alerts and filter to see which alerts have been auto-dismissed. For more information, see <a href="../../how-tos/manage-security-alerts/manage-dependabot-alerts/managing-automatically-dismissed-alerts.html">Managing alerts that have been automatically dismissed by a Dependabot auto-triage rule</a>.</p>
+<p>Additionally, auto-dismissed alerts are still available for reporting and reviewing, and can be auto-reopened if the alert metadata changes, for example:</p>
+<ul>
+<li>If you change the scope of a dependency from development to production.</li>
+<li>If GitHub modifies certain metadata for the related advisory.</li>
+</ul>
+<p>Auto-dismissed alerts are defined by the <code>resolution:auto-dismiss</code> close reason. Automatic dismissal activity is included in alert webhooks, REST and GraphQL APIs, and the audit log. For more information, see <a href="https://docs.github.com/en/rest/dependabot/alerts" class="external">REST API endpoints for Dependabot alerts</a>, and the "<code>repository_vulnerability_alert</code>" section in <a href="https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization#repository_vulnerability_alert-category-actions" class="external">Reviewing the audit log for your organization</a>.</p>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>To get started with Dependabot auto-triage rules, see <a href="../../how-tos/secure-your-supply-chain/manage-your-dependency-security/using-github-preset-rules-to-prioritize-dependabot-alerts.html">Using GitHub preset rules to prioritize Dependabot alerts</a>.</p>
+<p>To customize your auto-triage experience, see <a href="../../how-tos/secure-your-supply-chain/manage-your-dependency-security/customizing-auto-triage-rules-to-prioritize-dependabot-alerts.html">Customizing auto-triage rules to prioritize Dependabot alerts</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

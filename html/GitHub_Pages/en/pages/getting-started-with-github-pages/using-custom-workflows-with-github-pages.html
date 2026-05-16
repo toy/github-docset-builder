@@ -1,0 +1,108 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Using custom workflows with GitHub Pages</title><link rel="stylesheet" href="../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../index.html">GitHub Pages</a> / <a href="index.html">Get started</a> / </nav><h1><a href="#using-custom-workflows-with-github-pages" aria-hidden="true" class="anchor" id="using-custom-workflows-with-github-pages"></a>Using custom workflows with GitHub Pages</h1>
+<p>You can take advantage of using GitHub Actions and GitHub Pages by creating a workflow file or choosing from the predefined workflows.</p>
+<h2 title="About custom workflows"><a href="#about-custom-workflows" aria-hidden="true" class="anchor" id="about-custom-workflows"></a>About custom workflows</h2>
+<p>Custom workflows allow GitHub Pages sites to be built via the use of GitHub Actions. You can still select the branch you would like to use via the workflow file, but you are able to do much more with the use of custom workflows. To start using custom workflows you must first enable them for your current repository. For more information, see <a href="configuring-a-publishing-source-for-your-github-pages-site.html#publishing-with-a-custom-github-actions-workflow">Configuring a publishing source for your GitHub Pages site</a>.</p>
+<h2 title="Configuring the configure-pages action"><a href="#configuring-the-configure-pages-action" aria-hidden="true" class="anchor" id="configuring-the-configure-pages-action"></a>Configuring the <code>configure-pages</code> action</h2>
+<p>GitHub Actions enables the use of GitHub Pages through the <code>configure-pages</code> action, which also lets you gather different metadata about a website. For more information, see the <a href="https://github.com/marketplace/actions/configure-github-pages" class="external"><code>configure-pages</code></a> action.</p>
+<p>To use the action place this snippet under your <code>jobs</code> in the desired workflow.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Configure GitHub Pages
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/configure-pages@v5
+</span></code></pre>
+<p>This action helps support deployment from any static site generator to GitHub Pages. To make this process less repetitive you can use workflow templates for some of the most widely used static site generators. For more information, see <a href="https://docs.github.com/en/actions/learn-github-actions/using-starter-workflows" class="external">Using workflow templates</a>.</p>
+<h2 title="Configuring the upload-pages-artifact action"><a href="#configuring-the-upload-pages-artifact-action" aria-hidden="true" class="anchor" id="configuring-the-upload-pages-artifact-action"></a>Configuring the <code>upload-pages-artifact</code> action</h2>
+<p>The <code>upload-pages-artifact</code> actions enables you to package and upload artifacts. The GitHub Pages artifact should be a compressed <code>gzip</code> archive containing a single <code>tar</code> file. The <code>tar</code> file must be under 10GB in size and should not contain any symbolic or hard links. For more information, see the <a href="https://github.com/marketplace/actions/upload-github-pages-artifact" class="external"><code>upload-pages-artifact</code></a> action.</p>
+<p>To use the action in your current workflow place this snippet under <code>jobs</code>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Upload GitHub Pages artifact
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/upload-pages-artifact@v4
+</span></code></pre>
+<h2 title="Deploying GitHub Pages artifacts"><a href="#deploying-github-pages-artifacts" aria-hidden="true" class="anchor" id="deploying-github-pages-artifacts"></a>Deploying GitHub Pages artifacts</h2>
+<p>The <code>deploy-pages</code> action handles the necessary setup for deploying artifacts. To ensure proper functionality, the following requirements should be met:</p>
+<ul>
+<li>The job must have a minimum of <code>pages: write</code> and <code>id-token: write</code> permissions.</li>
+<li>The <code>needs</code> parameter must be set to the <code>id</code> of the build step. Not setting this parameter may result in an independent deployment that continuously searches for an artifact that hasn't been created.</li>
+<li>An <code>environment</code> must be established to enforce branch/deployment protection rules. The default environment is <code>github-pages</code>.</li>
+<li>To specify the URL of the page as an output, utilize the <code>url:</code> field.</li>
+</ul>
+<p>For more information, see the <a href="https://github.com/marketplace/actions/deploy-github-pages-site" class="external"><code>deploy-pages</code></a> action.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># ...
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">deploy</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">permissions</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">contents</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">pages</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">id-token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">needs</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">jekyll-build
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">environment</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github-pages
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{steps.deployment.outputs.page_url}}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Deploy artifact
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">deployment
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/deploy-pages@v4
+</span><span style="color:#65737e;"># ...
+</span></code></pre>
+<h2 title="Linking separate build and deploy jobs"><a href="#linking-separate-build-and-deploy-jobs" aria-hidden="true" class="anchor" id="linking-separate-build-and-deploy-jobs"></a>Linking separate build and deploy jobs</h2>
+<p>You can link your <code>build</code> and <code>deploy</code> jobs in a single workflow file, eliminating the need to create two separate files to get the same result. To get started on your workflow file, under <code>jobs</code> you can define a <code>build</code> and <code>deploy</code> job to execute your jobs.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># ...
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Build job
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Checkout
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup Pages
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">pages
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/configure-pages@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Build with Jekyll
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/jekyll-build-pages@v1
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">source</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">./
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">destination</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">./_site
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Upload artifact
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/upload-pages-artifact@v4
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Deployment job
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">deploy</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">environment</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github-pages
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{steps.deployment.outputs.page_url}}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">needs</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">build
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Deploy to GitHub Pages
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">deployment
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/deploy-pages@v4
+</span><span style="color:#65737e;"># ...
+</span></code></pre>
+<p>In certain cases, you might choose to combine everything into a single job, especially if there is no need for a build process. Consequently, you would solely focus on the deployment step.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># ...
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Single deploy job no building
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">deploy</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">environment</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github-pages
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{steps.deployment.outputs.page_url}}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Checkout
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup Pages
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/configure-pages@v5
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Upload Artifact
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/upload-pages-artifact@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#65737e;"># upload entire directory
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">.</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Deploy to GitHub Pages
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">id</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">deployment
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/deploy-pages@v4
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># ...
+</span></code></pre>
+<p>You can define your jobs to be run on different runners, sequentially, or in parallel. For more information, see <a href="https://docs.github.com/en/actions/using-jobs" class="external">Choosing what your workflow does</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

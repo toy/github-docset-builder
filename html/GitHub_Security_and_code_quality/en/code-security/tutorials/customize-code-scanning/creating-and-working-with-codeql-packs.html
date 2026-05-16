@@ -1,0 +1,86 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Creating and working with CodeQL packs</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Customize code scanning</a> / </nav><h1><a href="#creating-and-working-with-codeql-packs" aria-hidden="true" class="anchor" id="creating-and-working-with-codeql-packs"></a>Creating and working with CodeQL packs</h1>
+<p>You can use CodeQL packs to create, share, depend on, and run CodeQL queries and libraries.</p>
+<h2 title="About CodeQL packs and the CodeQL CLI"><a href="#about-codeql-packs-and-the-codeql-cli" aria-hidden="true" class="anchor" id="about-codeql-packs-and-the-codeql-cli"></a>About CodeQL packs and the CodeQL CLI</h2>
+<p>CodeQL packs are used to create, share, depend on, and run CodeQL queries and libraries.</p>
+<p>You can use the <code>pack</code> command in the CodeQL CLI to create CodeQL packs, add dependencies to packs, and install or update dependencies. You can also publish and download CodeQL packs using the <code>pack</code> command.</p>
+<h2 title="Creating a CodeQL pack"><a href="#creating-a-codeql-pack" aria-hidden="true" class="anchor" id="creating-a-codeql-pack"></a>Creating a CodeQL pack</h2>
+<p>You can create a CodeQL pack by running the following command from the checkout root of your project:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql pack init &lt;scope&gt;/&lt;pack&gt;
+</span></code></pre>
+<p>You must specify:</p>
+<ul>
+<li>
+<p><code>&lt;scope&gt;</code>: the name of the GitHub organization or user account that you will publish to.</p>
+</li>
+<li>
+<p><code>&lt;pack&gt;</code>: the name for the pack that you are creating.</p>
+</li>
+</ul>
+<p>The <code>codeql pack init</code> command creates the directory structure and configuration files for a CodeQL pack. By default, the command creates a query pack. If you want to create a library pack, you must edit the <code>qlpack.yml</code> file to explicitly declare the file as a library pack by including the <code>library:true</code> property.</p>
+<h2 title="Creating a CodeQL model pack"><a href="#creating-a-codeql-model-pack" aria-hidden="true" class="anchor" id="creating-a-codeql-model-pack"></a>Creating a CodeQL model pack</h2>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>CodeQL model packs are currently in public preview and subject to change. Model packs are supported for C/C++, C#, Java/Kotlin, Python, Ruby, and Rust analysis.</p>
+<p>The CodeQL model editor in the CodeQL extension for Visual Studio Code supports modeling dependencies for C#, Java/Kotlin, Python, and Ruby.</p>
+</div>
+<p>Model packs can be used to expand code scanning analysis to recognize libraries and frameworks that are not supported by default. Model packs use data extensions, which are implemented as YAML and describe how to add data for new dependencies. When a model pack is specified, the data extensions in that pack will be added to the code scanning analysis automatically. For more information about CodeQL model packs and data extensions, see <a href="../../how-tos/find-and-fix-code-vulnerabilities/scan-from-vs-code/using-the-codeql-model-editor.html">Using the CodeQL model editor</a>.</p>
+<p>A model pack is a CodeQL pack with the following characteristics in the <code>qlpack.yml</code> file:</p>
+<ul>
+<li>It defines <code>library: true</code>.</li>
+<li>It has no dependencies.</li>
+<li>It has one or more <code>extensionTargets</code>.</li>
+<li>It has a <code>dataExtensions</code> property that points to one or more data extension files.</li>
+</ul>
+<p>A model pack will inject its specified data extensions into each query pack that is named in <code>extensionTargets</code>, if it falls within the specified version range. For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">my-repo/my-java-model-pack
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">1.2.3
+</span><span style="color:#bf616a;">extensionTargets</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">codeql/java-all</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">~1.2.3
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">codeql/util</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">~4.5.6
+</span><span style="color:#bf616a;">dataExtensions</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#a3be8c;">models/**/*.yml
+</span></code></pre>
+<p>In this example, the model pack will inject all the data extensions in <code>models/**/</code> into a <code>codeql/java-all</code> query pack that is at a version from <code>1.2.3</code> up to and including <code>1.3.0</code>, and a <code>codeql/util</code> query pack that is at a version from <code>4.5.6</code> up to and including <code>4.6.0</code>. For more information, see <a href="https://docs.npmjs.com/about-semantic-versioning#using-semantic-versioning-to-specify-update-types-your-package-can-accept" class="external">Using semantic versioning</a> in the npm documentation and the <a href="https://semver.org/" class="external">Semantic versioning specification</a>.</p>
+<p>Once you've created a model pack, you can publish it in the same way as other CodeQL packs. For more information, see <a href="../../how-tos/find-and-fix-code-vulnerabilities/scan-from-the-command-line/publish-and-use-packs.html">Publishing and using CodeQL packs</a>. You can then use published model packs in a code scanning analysis with the <code>--model-packs</code> option. For more information, see <a href="customizing-analysis-with-codeql-packs.html#using-model-packs-to-analyze-calls-to-custom-dependencies">Customizing analysis with CodeQL packs</a>.</p>
+<h2 title="Adding and installing dependencies on a CodeQL pack"><a href="#adding-and-installing-dependencies-on-a-codeql-pack" aria-hidden="true" class="anchor" id="adding-and-installing-dependencies-on-a-codeql-pack"></a>Adding and installing dependencies on a CodeQL pack</h2>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This is only supported for CodeQL query and library packs.</p>
+</div>
+<p>You can add dependencies on CodeQL packs using the command <code>codeql pack add</code>. You must specify the scope, name, and (optionally) a compatible version range.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql pack add &lt;scope&gt;/&lt;name&gt;@x.x.x &lt;scope&gt;/&lt;other-name&gt;
+</span></code></pre>
+<p>If you don’t specify a version range, the latest version will be added. Otherwise, the latest version that satisfies the requested range will be added.</p>
+<p>This command updates the <code>qlpack.yml</code> file with the requested dependencies and downloads them into the package cache. Please note that this command will reformat the file and remove all comments.</p>
+<p>You can also manually edit the <code>qlpack.yml</code> file to include dependencies and install the dependencies with the command:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">codeql pack install
+</span></code></pre>
+<p>This command downloads all dependencies to the shared cache on the local disk.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<ul>
+<li>Running the <code>codeql pack add</code> and <code>codeql pack install</code> commands will generate or update the <code>codeql-pack.lock.yml</code> file. This file should be checked-in to version control. The <code>codeql-pack.lock.yml</code> file contains the precise version numbers used by the pack. For more information, see <a href="customizing-analysis-with-codeql-packs.html##about-codeql-packlockyml-files">About codeql-pack.lock.yml files</a>.</li>
+<li>By default <code>codeql pack install</code> will install dependencies from the Container registry on GitHub.com. You can install dependencies from a GitHub Enterprise Server Container registry by creating a <code>qlconfig.yml</code> file. For more information, see <a href="https://docs.github.com/en/enterprise-server@3.21/code-security/codeql-cli/using-the-advanced-functionality-of-the-codeql-cli/publishing-and-using-codeql-packs" class="external">Publishing and using CodeQL packs</a> in the GitHub Enterprise Server documentation.</li>
+</ul>
+</div>
+<h2 title="Organizing a CodeQL pack's directory structure"><a href="#organizing-a-codeql-packs-directory-structure" aria-hidden="true" class="anchor" id="organizing-a-codeql-packs-directory-structure"></a>Organizing a CodeQL pack's directory structure</h2>
+<p>A CodeQL pack must contain a file called <code>qlpack.yml</code> in its root directory. In the <code>qlpack.yml</code> file, the <code>name:</code> field must have a value that follows the format of <code>&lt;scope&gt;/&lt;pack&gt;</code>, where <code>&lt;scope&gt;</code> is the GitHub organization or user account that the pack will be published to and <code>&lt;pack&gt;</code> is the name of the pack.</p>
+<p>Additionally, query packs and library packs with CodeQL tests contain a <code>codeql-pack.lock.yml</code> file that contains the resolved dependencies of the pack. This file is generated during a call to the <code>codeql pack install</code> command, is not meant to be edited by hand, and should be added to your version control system.</p>
+<p>The other files and directories within the pack should be logically organized. For example, typically:</p>
+<ul>
+<li>Queries are organized into directories for specific categories.</li>
+<li>Queries for specific products, libraries, and frameworks are organized into<br>
+their own top-level directories.</li>
+</ul>
+<h2 title="Customizing a downloaded CodeQL pack"><a href="#customizing-a-downloaded-codeql-pack" aria-hidden="true" class="anchor" id="customizing-a-downloaded-codeql-pack"></a>Customizing a downloaded CodeQL pack</h2>
+<p>The recommended way to experiment with changes to a pack is to clone the repository containing its source code.</p>
+<p>If no source repository is available and you need to base modifications on a pack downloaded from the Container registry, be aware that these packs are not intended to be modified or customized after downloading, and their format may change in the future without much notice. We recommend taking the following steps after downloading a pack if you need to modify the content:</p>
+<ul>
+<li>
+<p>Change the pack <em>name</em> in <code>qlpack.yml</code> so you avoid confusion with results from the unmodified pack.</p>
+</li>
+<li>
+<p>Remove all files named <code>*.qlx</code> anywhere in the unpacked directory structure. These files contain precompiled versions of the queries, and in some situations CodeQL will use them in preference to the QL source you have modified.</p>
+</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

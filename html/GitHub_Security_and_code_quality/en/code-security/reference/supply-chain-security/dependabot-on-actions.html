@@ -1,0 +1,45 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Dependabot on GitHub Actions</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Reference</a> / <a href="index.html">Supply chain security</a> / </nav><h1><a href="#dependabot-on-github-actions" aria-hidden="true" class="anchor" id="dependabot-on-github-actions"></a>Dependabot on GitHub Actions</h1>
+<p>Detailed information on using Dependabot with GitHub Actions.</p>
+<h2 title="Restrictions when Dependabot triggers events"><a href="#restrictions-when-dependabot-triggers-events" aria-hidden="true" class="anchor" id="restrictions-when-dependabot-triggers-events"></a>Restrictions when Dependabot triggers events</h2>
+<p>Dependabot is able to trigger GitHub Actions workflows on its pull requests and comments; however, certain events are treated differently.</p>
+<p>For workflows initiated by Dependabot (<code>github.actor == 'dependabot[bot]'</code>) using the <code>pull_request</code>, <code>pull_request_review</code>, <code>pull_request_review_comment</code>, <code>push</code>, <code>create</code>, <code>deployment</code>, and <code>deployment_status</code> events, these restrictions apply:</p>
+<ul>
+<li><code>GITHUB_TOKEN</code> has read-only permissions by default.</li>
+<li>Secrets are populated from Dependabot secrets. GitHub Actions secrets are not available.</li>
+</ul>
+<p>For workflows initiated by Dependabot (<code>github.actor == 'dependabot[bot]'</code>) using the <code>pull_request_target</code> event, if the base ref of the pull request was created by Dependabot (<code>github.event.pull_request.user.login == 'dependabot[bot]'</code>), the <code>GITHUB_TOKEN</code> will be read-only and secrets are not available.</p>
+<p>These restrictions apply even if the workflow is re-run by a different actor.</p>
+<p>For more information, see <a href="https://securitylab.github.com/research/github-actions-preventing-pwn-requests/" class="external">Keeping your GitHub Actions and workflows secure: Preventing pwn requests</a>.</p>
+<h2 title="Requirements for using Dependabot with self-hosted runners"><a href="#requirements-for-using-dependabot-with-self-hosted-runners" aria-hidden="true" class="anchor" id="requirements-for-using-dependabot-with-self-hosted-runners"></a>Requirements for using Dependabot with self-hosted runners</h2>
+<p>To generate Dependabot updates using self-hosted runners, you need to properly configure your system, network, and certificates.</p>
+<h3 title="Requirements for using Dependabot with self-hosted runners / System requirements"><a href="#system-requirements" aria-hidden="true" class="anchor" id="system-requirements"></a>System requirements</h3>
+<p>Any virtual machine (VM) that you use for Dependabot runners must meet the requirements for self-hosted runners. In addition, they must meet the following requirements.</p>
+<ul>
+<li>
+<p>Linux operating system</p>
+</li>
+<li>
+<p>x64 architecture</p>
+</li>
+<li>
+<p>Docker installed with access for the runner users:</p>
+<ul>
+<li>We recommend installing Docker in rootless mode and configuring the runners to access Docker without <code>root</code> privileges.</li>
+<li>Alternatively, install Docker and give the runner users raised privileges to run Docker.</li>
+</ul>
+</li>
+</ul>
+<p>The CPU and memory requirements will depend on the number of concurrent runners you deploy on a given VM. As guidance, we have successfully set up 20 runners on a single 2 CPU 8GB machine, but ultimately, your CPU and memory requirements will heavily depend on the repositories being updated. Some ecosystems will require more resources than others.</p>
+<p>If you specify more than 14 concurrent runners on a VM, you must also update the Docker <code>/etc/docker/daemon.json</code> configuration to increase the default number of networks Docker can create.</p>
+<pre lang="json" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">{
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">default-address-pools</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">    {"</span><span style="color:#a3be8c;">base</span><span style="color:#c0c5ce;">":"</span><span style="color:#a3be8c;">10.10.0.0/16</span><span style="color:#c0c5ce;">","</span><span style="color:#a3be8c;">size</span><span style="color:#c0c5ce;">":</span><span style="color:#d08770;">24</span><span style="color:#c0c5ce;">}
+</span><span style="color:#c0c5ce;">  ]
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+<h3 title="Requirements for using Dependabot with self-hosted runners / Network requirements"><a href="#network-requirements" aria-hidden="true" class="anchor" id="network-requirements"></a>Network requirements</h3>
+<p>Dependabot runners require access to the public internet, GitHub.com, and any internal registries that will be used in Dependabot updates. To minimize the risk to your internal network, you should limit access from the Virtual Machine (VM) to your internal network. This reduces the potential for damage to internal systems if a runner were to download a hijacked dependency.</p>
+<p>You must also allow outbound traffic to <code>dependabot-actions.githubapp.com</code> to prevent the jobs for Dependabot security updates from failing. For more information, see <a href="https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/communicating-with-self-hosted-runners" class="external">Self-hosted runners reference</a>.</p>
+<h3 title="Requirements for using Dependabot with self-hosted runners / Certificate configuration"><a href="#certificate-configuration" aria-hidden="true" class="anchor" id="certificate-configuration"></a>Certificate configuration</h3>
+<p>If Dependabot needs to interact with registries that use self-signed certificates, those certificates must also be installed on the self-hosted runners that run Dependabot jobs. This security hardens the connection. You must also configure Node.js to use the certificate, because most actions are written in JavaScript and run using Node.js, which does not use the operating system certificate store.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

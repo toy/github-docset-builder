@@ -1,0 +1,39 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Managing CodeQL query packs and library packs</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Find and fix code vulnerabilities</a> / <a href="index.html">Scan from VS Code</a> / </nav><h1><a href="#managing-codeql-query-packs-and-library-packs" aria-hidden="true" class="anchor" id="managing-codeql-query-packs-and-library-packs"></a>Managing CodeQL query packs and library packs</h1>
+<p>Download and install dependencies for your CodeQL query and library packs in Visual Studio Code using the CodeQL extension.</p>
+<h2 title="Downloading CodeQL query packs"><a href="#downloading-codeql-query-packs" aria-hidden="true" class="anchor" id="downloading-codeql-query-packs"></a>Downloading CodeQL query packs</h2>
+<ol>
+<li>In VS Code, open the VS Code Command Palette and run <strong>CodeQL: Download Packs</strong>.</li>
+<li>You can download all the core query packs, or enter the full name of a specific pack to download. You can download query packs created by other users.</li>
+</ol>
+<h2 title="Installing dependencies for CodeQL query packs"><a href="#installing-dependencies-for-codeql-query-packs" aria-hidden="true" class="anchor" id="installing-dependencies-for-codeql-query-packs"></a>Installing dependencies for CodeQL query packs</h2>
+<ol>
+<li>In VS Code, open the VS Code Command Palette and run <strong>CodeQL: Install Pack Dependencies</strong>.</li>
+<li>Select the packs that you want to install dependencies for.</li>
+</ol>
+<h2 title="Viewing a CodeQL query pack and its dependencies"><a href="#viewing-a-codeql-query-pack-and-its-dependencies" aria-hidden="true" class="anchor" id="viewing-a-codeql-query-pack-and-its-dependencies"></a>Viewing a CodeQL query pack and its dependencies</h2>
+<ol>
+<li>
+<p>In VS Code, open the <code>qlpack.yml</code> file in the root of any CodeQL pack directory.</p>
+</li>
+<li>
+<p>In the <code>dependencies</code> section of the <code>qlpack.yml</code> file, you'll see what libraries the pack depends on.</p>
+</li>
+<li>
+<p>Optionally, you can use VS Code's IntelliSense features. For example, if you hover over an element from a library depended on by the pack, Visual Studio Code will resolve it so you can see documentation about the element.</p>
+</li>
+<li>
+<p>To view the full definition of an element of a query, you can right-click and select <strong>Go to Definition</strong>.</p>
+<ul>
+<li>If the library pack is present within the same Visual Studio Code workspace, this will take you to the definition within the workspace.</li>
+<li>Otherwise, you will see the definition stored in your package cache, where downloaded dependencies are saved. The package cache is a shared location that is stored in your home directory by default.</li>
+</ul>
+</li>
+</ol>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>CodeQL model packs are currently in public preview and subject to change. Model packs are supported for C/C++, C#, Java/Kotlin, Python, Ruby, and Rust analysis.</p>
+<p>The CodeQL model editor in the CodeQL extension for Visual Studio Code supports modeling dependencies for C#, Java/Kotlin, Python, and Ruby.</p>
+</div>
+<p>CodeQL model packs can be used to expand code scanning analysis to include dependencies that are not supported by default. The CodeQL extension for Visual Studio Code includes a dedicated editor for creating and editing model packs. See <a href="using-the-codeql-model-editor.html">Using the CodeQL model editor</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

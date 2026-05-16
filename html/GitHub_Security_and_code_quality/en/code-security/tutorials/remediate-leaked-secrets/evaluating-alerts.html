@@ -1,0 +1,182 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Evaluating alerts from secret scanning</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Remediate leaked secrets</a> / </nav><h1><a href="#evaluating-alerts-from-secret-scanning" aria-hidden="true" class="anchor" id="evaluating-alerts-from-secret-scanning"></a>Evaluating alerts from secret scanning</h1>
+<p>Learn about additional features that can help you evaluate alerts and prioritize their remediation, such as checking a secret's validity.</p>
+<h2 title="About evaluating alerts"><a href="#about-evaluating-alerts" aria-hidden="true" class="anchor" id="about-evaluating-alerts"></a>About evaluating alerts</h2>
+<p>There are some additional features that can help you to evaluate alerts in order to better prioritize and manage them. You can:</p>
+<ul>
+<li>Check the validity of a secret, to see if the secret is still active. <strong>Applies to GitHub tokens only</strong>. See <a href="#checking-a-secrets-validity">Checking a secret's validity</a>.</li>
+<li>Perform an "on-demand" validity check, to get the most up to date validation status. See <a href="#performing-an-on-demand-validity-check">Performing an on-demand validity check</a>.</li>
+<li>Review a token's metadata. <strong>Applies to GitHub tokens only</strong>. For example, to see when the token was last used. See <a href="#reviewing-github-token-metadata">Reviewing GitHub token metadata</a>.</li>
+<li>Review extended metadata checks for an exposed secret, to see details such as who owns the secret and how to contact the secret owner. <strong>Applies to OpenAI API, Google OAuth, and Slack tokens only</strong>. See <a href="#reviewing-extended-metadata-for-a-token">Reviewing extended metadata for a token</a>.</li>
+<li>Review the labels assigned to the alert. For more information, see <a href="#reviewing-alert-labels">Reviewing alert labels</a>.</li>
+</ul>
+<h2 title="Checking a secret's validity"><a href="#checking-a-secrets-validity" aria-hidden="true" class="anchor" id="checking-a-secrets-validity"></a>Checking a secret's validity</h2>
+<p>Validity checks help you prioritize alerts by telling you which secrets are <code>active</code> or <code>inactive</code>. An <code>active</code> secret is one that could still be exploited, so these alerts should be reviewed and remediated as a priority.</p>
+<p>By default, GitHub checks the validity of GitHub tokens and displays the validation status of the token in the alert view.</p>
+<p>Organizations using GitHub Team, GitHub Enterprise Cloud with a license for GitHub Secret Protection, or GitHub Enterprise Server with a license for GitHub Secret Protection can also enable validity checks for partner patterns. For more information, see <a href="#checking-a-secrets-validity">Checking a secret's validity</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Validity</th>
+<th>Status</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Active secret</td>
+<td><code>active</code></td>
+<td>GitHub checked with this secret's provider and found that the secret is active</td>
+</tr>
+<tr>
+<td>Possibly active secret</td>
+<td><code>unknown</code></td>
+<td>GitHub does not support validation checks for this token type yet</td>
+</tr>
+<tr>
+<td>Possibly active secret</td>
+<td><code>unknown</code></td>
+<td>GitHub could not verify this secret</td>
+</tr>
+<tr>
+<td>Secret inactive</td>
+<td><code>inactive</code></td>
+<td>You should make sure no unauthorized access has already occurred</td>
+</tr>
+</tbody>
+</table>
+<p>Validity checks for partner patterns are available for the following repository types:</p>
+<ul>
+<li>Organization-owned repositories on GitHub Team with <a href="https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security" class="external">GitHub Secret Protection</a> enabled</li>
+</ul>
+<p>For information on how to enable validity checks for partner patterns, see <a href="../../how-tos/secure-your-secrets/customize-leak-detection/enabling-validity-checks-for-your-repository.html">Enabling validity checks for your repository</a>, and for information on which partner patterns are currently supported, see <a href="../../reference/secret-security/supported-secret-scanning-patterns.html">Supported secret scanning patterns</a>.</p>
+<p>You can enable validity checks for partner patterns by using security configurations, either set at the enterprise or at the organization level. See <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/managing-code-security/securing-your-enterprise/creating-a-custom-security-configuration-for-your-enterprise" class="external">Creating a custom security configuration for your enterprise</a> and <a href="../../how-tos/secure-at-scale/configure-organization-security/establish-complete-coverage/creating-a-custom-security-configuration.html">Creating a custom security configuration</a>.</p>
+<p>For information on which partner patterns are currently supported, see <a href="../../reference/secret-security/supported-secret-scanning-patterns.html">Supported secret scanning patterns</a>.</p>
+<p>You can use the REST API to retrieve a list of the most recent validation status for each of your tokens. For more information, see <a href="https://docs.github.com/en/rest/secret-scanning" class="external">REST API endpoints for secret scanning</a> in the REST API documentation. You can also use webhooks to be notified of activity relating to a secret scanning alert. For more information, see the <code>secret_scanning_alert</code> event in <a href="https://docs.github.com/en/webhooks/webhook-events-and-payloads?actionType=created#secret_scanning_alert" class="external">Webhook events and payloads</a>.</p>
+<h2 title="Performing an on-demand validity check"><a href="#performing-an-on-demand-validity-check" aria-hidden="true" class="anchor" id="performing-an-on-demand-validity-check"></a>Performing an on-demand validity check</h2>
+<p>Once you have enabled validity checks for partner patterns for your repository, you can perform an "on-demand" validity check for any supported secret by clicking <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-sync" aria-label="sync" role="img"><path d="M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z"></path></svg> Verify secret</strong> in the alert view. GitHub will send the pattern to the relevant partner and display the validation status of the secret in the alert view.</p>
+<p><img src="../../../..//assets/images/help/security/secret-scanning-verify-secret.png" alt="Screenshot of the UI showing a secret scanning alert. A button, labeled &quot;Verify secret&quot; is highlighted with an orange outline."></p>
+<h2 title="Reviewing GitHub token metadata"><a href="#reviewing-github-token-metadata" aria-hidden="true" class="anchor" id="reviewing-github-token-metadata"></a>Reviewing GitHub token metadata</h2>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Metadata for GitHub tokens is currently in public preview and subject to change.</p>
+</div>
+<p>In the view for an active GitHub token alert, you can review certain metadata about the token. This metadata may help you identify the token and decide what remediation steps to take.</p>
+<p>Tokens, like personal access token and other credentials, are considered personal information. For more information about using GitHub tokens, see <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement" class="external">GitHub's Privacy Statement</a> and <a href="https://docs.github.com/en/site-policy/acceptable-use-policies/github-acceptable-use-policies" class="external">Acceptable Use Policies</a>.</p>
+<p><img src="../../../..//assets/images/help/repository/secret-scanning-github-token-metadata.png" alt="Screenshot of the UI for a GitHub token, showing the token metadata."></p>
+<p>Metadata for GitHub tokens is available for active tokens in any repository with secret scanning enabled. If a token has been revoked or its status cannot be validated, metadata will not be available. GitHub auto-revokes GitHub tokens in public repositories, so metadata for GitHub tokens in public repositories is unlikely to be available. The following metadata is available for active GitHub tokens:</p>
+<table>
+<thead>
+<tr>
+<th>Metadata</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Secret name</td>
+<td>The name given to the GitHub token by its creator</td>
+</tr>
+<tr>
+<td>Secret owner</td>
+<td>The GitHub handle of the token's owner</td>
+</tr>
+<tr>
+<td>Created on</td>
+<td>Date the token was created</td>
+</tr>
+<tr>
+<td>Expired on</td>
+<td>Date the token expired</td>
+</tr>
+<tr>
+<td>Last used on</td>
+<td>Date the token was last used</td>
+</tr>
+<tr>
+<td>Access</td>
+<td>Whether the token has organization access</td>
+</tr>
+</tbody>
+</table>
+<h2 title="Reviewing extended metadata for a token"><a href="#reviewing-extended-metadata-for-a-token" aria-hidden="true" class="anchor" id="reviewing-extended-metadata-for-a-token"></a>Reviewing extended metadata for a token</h2>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Extended metadata checks for tokens is in public preview and subject to change.</p>
+</div>
+<p>In the view for an active GitHub token alert, you can see extended metadata information, such as owner and contact details.</p>
+<p>The following table shows <strong>all the available metadata</strong>. Note that metadata checks are currently limited to OpenAI API, Google OAuth, and Slack tokens, and the metadata shown for each token may represent only a subset of what exists.</p>
+<table>
+<thead>
+<tr>
+<th>Metadata type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Owner ID</td>
+<td>Provider’s unique identifier for the user or service account that owns the secret</td>
+</tr>
+<tr>
+<td>Owner name</td>
+<td>Human‑readable username or display name of the secret’s owner</td>
+</tr>
+<tr>
+<td>Owner email</td>
+<td>Email address associated with the owner</td>
+</tr>
+<tr>
+<td>Org name</td>
+<td>Name of the organization / workspace / project the secret belongs to</td>
+</tr>
+<tr>
+<td>Org ID</td>
+<td>Provider’s unique identifier for that organization</td>
+</tr>
+<tr>
+<td>Secret issued date</td>
+<td>Timestamp when the secret (token or key) was created or most recently issued</td>
+</tr>
+<tr>
+<td>Secret expiry date</td>
+<td>Timestamp when the secret is scheduled to expire</td>
+</tr>
+<tr>
+<td>Secret name</td>
+<td>Human‑assigned display name or label for the secret</td>
+</tr>
+<tr>
+<td>Secret ID</td>
+<td>Provider’s unique identifier for the secret</td>
+</tr>
+</tbody>
+</table>
+<h2 title="Reviewing alert labels"><a href="#reviewing-alert-labels" aria-hidden="true" class="anchor" id="reviewing-alert-labels"></a>Reviewing alert labels</h2>
+<p>In the alert view, you can review any labels assigned to the alert. The labels provide additional details about the alert, which can inform the approach you take for remediation.</p>
+<p>Secret scanning alerts can have the following labels assigned to them. Depending on the labels assigned, you'll see additional information in the alert view.</p>
+<table>
+<thead>
+<tr>
+<th>Label</th>
+<th>Description</th>
+<th>Alert view information</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">public leak</code></td>
+<td>The secret detected in your repository has also been found as publicly leaked by at least one of GitHub's scans of code, discussions, gists, issues, pull requests, and wikis. This may require you to address the alert with greater urgency, or remediate the alert differently compared to a privately exposed token.</td>
+<td>You'll see links to any specific public locations where the leaked secret has been detected.</td>
+</tr>
+<tr>
+<td><code class="keyword">multi-repo</code></td>
+<td>The secret detected in your repository has been found across multiple repositories in your organization or enterprise. This information may help you more easily dedupe the alert across your organization or enterprise.</td>
+<td>If you have appropriate permissions, you'll see links to any specific alerts for the same secret in your organization or enterprise.</td>
+</tr>
+</tbody>
+</table>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<ul>
+<li><a href="../../how-tos/manage-security-alerts/manage-secret-scanning-alerts/resolving-alerts.html">Resolving alerts from secret scanning</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

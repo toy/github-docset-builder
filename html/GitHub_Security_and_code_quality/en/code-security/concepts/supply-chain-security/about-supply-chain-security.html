@@ -1,0 +1,155 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>About supply chain security</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Supply chain security</a> / </nav><h1><a href="#about-supply-chain-security" aria-hidden="true" class="anchor" id="about-supply-chain-security"></a>About supply chain security</h1>
+<p>GitHub helps you secure your supply chain, from understanding the dependencies in your environment, to knowing about vulnerabilities in those dependencies, and patching them.</p>
+<h2 title="About supply chain security at GitHub"><a href="#about-supply-chain-security-at-github" aria-hidden="true" class="anchor" id="about-supply-chain-security-at-github"></a>About supply chain security at GitHub</h2>
+<p>When developing a software project, you likely use other software to build and run your application, such as open-source libraries, frameworks or other tools. These resources are collectively referred to as your “dependencies”, because your project depends on them to function properly. Your project could rely on hundreds of these dependencies, forming what is known as your "supply chain".</p>
+<p>Your supply chain can pose a security problem. If one of your dependencies has a known security weakness or a bug, malicious actors could exploit this vulnerability to, for example, insert malicious code ("malware"), steal sensitive data, or cause some other type of disruption to your project. This type of threat is called a "supply chain attack". Having vulnerable dependencies in your supply chain compromises the security of your own project, and you put your users at risk, too.</p>
+<p>One of the most important things you can do to protect your supply chain is to patch your vulnerable dependencies and replace any malware.</p>
+<p>You add dependencies directly to your supply chain when you specify them in a manifest file or a lockfile. Dependencies can also be included transitively, that is, even if you don’t specify a particular dependency, but a dependency of yours uses it, then you’re also dependent on that dependency.</p>
+<p>GitHub offers a range of features to help you understand the dependencies in your environment, know about vulnerabilities in those dependencies, and patch them.</p>
+<p>The supply chain features on GitHub are:</p>
+<ul>
+<li><strong>Dependency graph</strong></li>
+<li><strong>Dependency review</strong></li>
+<li><strong>Dependabot alerts</strong>
+<ul>
+<li><strong>Dependabot malware alerts</strong></li>
+</ul>
+</li>
+<li><strong>Dependabot updates</strong>
+<ul>
+<li><strong>Dependabot security updates</strong></li>
+<li><strong>Dependabot version updates</strong></li>
+</ul>
+</li>
+<li><strong>Immutable releases</strong></li>
+<li><strong>Artifact attestations</strong></li>
+</ul>
+<p>The dependency graph is central to supply chain security. The dependency graph identifies all upstream dependencies and public downstream dependents of a repository or package. Your repository’s dependency graph tracks and displays its dependencies and some of their properties, like vulnerability information.</p>
+<p>The following supply chain features on GitHub rely on the information provided by the dependency graph.</p>
+<ul>
+<li>Dependency review uses the dependency graph to identify dependency changes and help you understand the security impact of these changes when you review pull requests.</li>
+<li>Dependabot cross-references dependency data provided by the dependency graph with the list of advisories published in the GitHub Advisory Database, scans your dependencies and generates Dependabot alerts when a potential vulnerability is detected.</li>
+<li>Dependabot security updates use the dependency graph and Dependabot alerts to help you update dependencies with known vulnerabilities in your repository.</li>
+</ul>
+<p>Dependabot version updates don't use the dependency graph and rely on the semantic versioning of dependencies instead. Dependabot version updates help you keep your dependencies updated, even when they don’t have any vulnerabilities.</p>
+<p>For best practice guides on end-to-end supply chain security including the protection of personal accounts, code, and build processes, see <a href="../../tutorials/implement-supply-chain-best-practices/end-to-end-supply-chain-overview.html">Securing your end-to-end supply chain</a>.</p>
+<h2 title="Feature overview"><a href="#feature-overview" aria-hidden="true" class="anchor" id="feature-overview"></a>Feature overview</h2>
+<h3 title="Feature overview / What is the dependency graph?"><a href="#what-is-the-dependency-graph" aria-hidden="true" class="anchor" id="what-is-the-dependency-graph"></a>What is the dependency graph?</h3>
+<p>To generate the dependency graph, GitHub looks at a repository’s explicit dependencies declared in the manifest and lockfiles. When enabled, the dependency graph automatically parses all known package manifest files in the repository, and uses this to construct a graph with known dependency names and versions.</p>
+<ul>
+<li>The dependency graph includes information on your <em>direct</em> dependencies and <em>transitive</em> dependencies.</li>
+<li>The dependency graph is automatically updated when you push a commit to GitHub that changes or adds a supported manifest or lock file to the default branch, and when anyone pushes a change to the repository of one of your dependencies.</li>
+<li>The dependency graph can also include information you provide as your project is building using GitHub Actions. Some package ecosystems pull in most of their transitive dependencies at build time, so submitting dependency information as the build is happening provides a more complete view of the supply chain.</li>
+<li>You can see the dependency graph by opening the repository's main page on GitHub, and navigating to the <strong>Insights</strong> tab.</li>
+<li>If you have at least read access to the repository, you can export the dependency graph for the repository as an SPDX-compatible, Software Bill of Materials (SBOM), via the GitHub UI or GitHub REST API. For more information, see <a href="../../how-tos/secure-your-supply-chain/establish-provenance-and-integrity/exporting-a-software-bill-of-materials-for-your-repository.html">Exporting a software bill of materials for your repository</a>.</li>
+</ul>
+<p>You can use the dependency submission API to submit dependencies from the package manager or ecosystem of your choice, even if the ecosystem is not supported by dependency graph for manifest or lock file analysis.<br>
+Dependencies submitted to a project using the dependency submission API will show which detector was used for their submission and when they were submitted. For more information on the dependency submission API, see <a href="../../how-tos/secure-your-supply-chain/secure-your-dependencies/using-the-dependency-submission-api.html">Using the dependency submission API</a>.</p>
+<p>For more information about the dependency graph, see <a href="about-the-dependency-graph.html">About the dependency graph</a>.</p>
+<h3 title="Feature overview / What is dependency review?"><a href="#what-is-dependency-review" aria-hidden="true" class="anchor" id="what-is-dependency-review"></a>What is dependency review?</h3>
+<p>Dependency review helps reviewers and contributors understand dependency changes and their security impact in every pull request.</p>
+<ul>
+<li>Dependency review tells you which dependencies were added, removed, or updated, in a pull request. You can use the release dates, popularity of dependencies, and vulnerability information to help you decide whether to accept the change.</li>
+<li>You can see the dependency review for a pull request by showing the rich diff on the <strong>Files Changed</strong> tab.</li>
+</ul>
+<p>For more information about dependency review, see <a href="about-dependency-review.html">About dependency review</a>.</p>
+<h3 title="Feature overview / What is Dependabot?"><a href="#what-is-dependabot" aria-hidden="true" class="anchor" id="what-is-dependabot"></a>What is Dependabot?</h3>
+<p>Dependabot keeps your dependencies up to date by informing you of any security vulnerabilities in your dependencies and automatically opening pull requests to upgrade your dependencies. Dependabot pull requests will target the next available secure version when a Dependabot alert is triggered, or to the latest version when a release is published.</p>
+<p>The term "Dependabot" encompasses the following features:</p>
+<ul>
+<li>Dependabot alerts: Displayed notification on the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab for the repository, and in the repository's dependency graph. The alert includes a link to the affected file in the project, and information about a fixed version.</li>
+<li>Dependabot updates:
+<ul>
+<li>Dependabot security updates: Triggered updates to upgrade your dependencies to a secure version when an alert is triggered.</li>
+<li>Dependabot version updates: Scheduled updates to keep your dependencies up to date with the latest version.</li>
+</ul>
+</li>
+</ul>
+<p>Pull requests opened by Dependabot can trigger workflows that run actions. For more information, see <a href="../../tutorials/secure-your-dependencies/automating-dependabot-with-github-actions.html">Automating Dependabot with GitHub Actions</a>.</p>
+<p>By default:</p>
+<ul>
+<li>
+<p>If GitHub Actions is enabled for the repository, GitHub runs Dependabot updates on GitHub Actions.</p>
+</li>
+<li>
+<p>If GitHub Actions is not enabled for the repository, GitHub generates Dependabot alerts using its built-in Dependabot application.</p>
+</li>
+</ul>
+<p>For more information, see <a href="about-dependabot-on-github-actions-runners.html">About Dependabot on GitHub Actions runners</a>.</p>
+<p>Dependabot security updates can fix vulnerable dependencies in GitHub Actions. When security updates are enabled, Dependabot will automatically raise a pull request to update vulnerable GitHub Actions used in your workflows to the minimum patched version. For more information, see <a href="about-dependabot-security-updates.html">About Dependabot security updates</a>.</p>
+<h4><a href="#what-are-dependabot-alerts" aria-hidden="true" class="anchor" id="what-are-dependabot-alerts"></a>What are Dependabot alerts?</h4>
+<p>Dependabot alerts highlight repositories affected by a newly discovered vulnerability based on the dependency graph and the GitHub Advisory Database, which contains advisories for known vulnerabilities.</p>
+<ul>
+<li>
+<p>Dependabot performs a scan to detect insecure dependencies and sends Dependabot alerts when:</p>
+<ul>
+<li>A new advisory is added to the GitHub Advisory Database</li>
+<li>The dependency graph for the repository changes</li>
+</ul>
+</li>
+<li>
+<p>Dependabot alerts are displayed on the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab for the repository and in the repository's dependency graph. The alert includes a link to the affected file in the project, and information about a fixed version.</p>
+</li>
+</ul>
+<p>For more information, see <a href="about-dependabot-alerts.html">About Dependabot alerts</a>.</p>
+<h5><a href="#what-are-dependabot-malware-alerts" aria-hidden="true" class="anchor" id="what-are-dependabot-malware-alerts"></a>What are Dependabot malware alerts?</h5>
+<p>Dependabot malware alerts flag malicious dependencies in your repositories. Dependabot generates alerts using the GitHub Advisory Database, which contains advisories for known vulnerabilities and malicious packages.</p>
+<p>Dependabot scans for malicious packages and sends alerts when:</p>
+<ul>
+<li>A new advisory is added to the GitHub Advisory Database</li>
+<li>The dependency graph for a repository changes</li>
+</ul>
+<p>You can view malware alerts for a repository:</p>
+<ul>
+<li>From the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab</li>
+<li>In the dependency graph</li>
+</ul>
+<p>Each alert includes a link to the affected file in the project, as well as the patch version number for the package (if available).</p>
+<h4><a href="#what-are-dependabot-updates" aria-hidden="true" class="anchor" id="what-are-dependabot-updates"></a>What are Dependabot updates?</h4>
+<p>There are two types of Dependabot updates: Dependabot <em>security</em> updates and <em>version</em> updates. Dependabot generates automatic pull requests to update your dependencies in both cases, but there are several differences.</p>
+<p>Dependabot security updates:</p>
+<ul>
+<li>Triggered by a Dependabot alert</li>
+<li>Update dependencies to the minimum version that resolves a known vulnerability</li>
+<li>Supported for ecosystems the dependency graph supports</li>
+<li>Does not require a configuration file, but you can use one to override the default behavior</li>
+</ul>
+<p>Dependabot version updates:</p>
+<ul>
+<li>Requires a configuration file</li>
+<li>Run on a schedule you configure</li>
+<li>Update dependencies to the latest version that matches the configuration</li>
+<li>Supported for a different group of ecosystems</li>
+</ul>
+<p>For more information about Dependabot updates, see <a href="about-dependabot-security-updates.html">About Dependabot security updates</a> and <a href="about-dependabot-version-updates.html">About Dependabot version updates</a>.</p>
+<h3 title="Feature overview / What are immutable releases?"><a href="#what-are-immutable-releases" aria-hidden="true" class="anchor" id="what-are-immutable-releases"></a>What are immutable releases?</h3>
+<p>Repositories can enable immutable releases to prevent the assets and associated Git tag of a release from being changed after publication. This reduces the risk of supply chain attacks by preventing attackers from injecting vulnerabilities into releases you consume. It also means projects that rely on specific releases are less likely to break.</p>
+<p>Creating an immutable release automatically generates an attestation for the release. You can use this attestation to make sure the release and its artifacts match the published information.</p>
+<h3 title="Feature overview / What are artifact attestations?"><a href="#what-are-artifact-attestations" aria-hidden="true" class="anchor" id="what-are-artifact-attestations"></a>What are artifact attestations?</h3>
+<p>Software providers can generate attestations for software built with GitHub Actions. Attestations are cryptographically signed claims that establish the build's provenance (the source code and workflow run used to build it) or associated software bill of materials (SBOM).</p>
+<p>You can increase supply chain security by verifying attestations for your dependencies. Although attestations do not guarantee security, they give you information about where and how software was built, so you can be more confident that your dependencies haven't been tampered with. You can gate deployments using a tool like the Kubernetes admissions controller to prevent unattested builds from being deployed.</p>
+<p>When you use GitHub Actions to generate attestations for your organization's own builds, the built artifacts are automatically uploaded to the linked artifacts page. This platform allows you to view the storage and deployment records of all linked artifacts, so you can find the source code and workflow run used to build an artifact or filter security alerts based on deployment context.</p>
+<h2 title="Feature availability"><a href="#feature-availability" aria-hidden="true" class="anchor" id="feature-availability"></a>Feature availability</h2>
+<p>Public repositories:</p>
+<ul>
+<li><strong>Dependency graph:</strong> Enabled by default and cannot be disabled.</li>
+<li><strong>Dependency review:</strong> Enabled by default and cannot be disabled.</li>
+<li><strong>Dependabot alerts:</strong> Not enabled by default. GitHub detects insecure dependencies and displays information in the dependency graph, but does not generate Dependabot alerts by default. Repository owners or people with admin access can enable Dependabot alerts.<br>
+You can also enable or disable Dependabot alerts for all repositories owned by your user account or organization. For more information, see <a href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-personal-account-settings/managing-security-and-analysis-settings-for-your-personal-account" class="external">Managing security and analysis features</a> or <a href="https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/managing-security-and-analysis-settings-for-your-organization" class="external">Managing security and analysis settings for your organization</a>.</li>
+<li><strong>Artifact attestations:</strong> Available in all public repositories, but you must explicitly generate attestations in your build workflows. See <a href="https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations" class="external">Using artifact attestations to establish provenance for builds</a>.</li>
+</ul>
+<p>Private repositories:</p>
+<ul>
+<li><strong>Dependency graph:</strong> Not enabled by default. The feature can be enabled by repository administrators. For more information, see <a href="../../how-tos/secure-your-supply-chain/secure-your-dependencies/exploring-the-dependencies-of-a-repository.html#enabling-and-disabling-the-dependency-graph">Exploring the dependencies of a repository</a>.</li>
+<li><strong>Dependency review:</strong> Available in private repositories owned by organizations that use GitHub Team or GitHub Enterprise Cloud and have a license for GitHub Code Security or GitHub Advanced Security. For more information, see <a href="https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security" class="external">About GitHub Advanced Security</a> and <a href="../../how-tos/secure-your-supply-chain/secure-your-dependencies/exploring-the-dependencies-of-a-repository.html#enabling-and-disabling-the-dependency-graph">Exploring the dependencies of a repository</a>.</li>
+<li><strong>Dependabot alerts:</strong> Not enabled by default. Owners of private repositories, or people with admin access, can enable Dependabot alerts by enabling the dependency graph and Dependabot alerts for their repositories.<br>
+You can also enable or disable Dependabot alerts for all repositories owned by your user account or organization. For more information, see <a href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-personal-account-settings/managing-security-and-analysis-settings-for-your-personal-account" class="external">Managing security and analysis features</a> or <a href="https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/managing-security-and-analysis-settings-for-your-organization" class="external">Managing security and analysis settings for your organization</a>.</li>
+<li><strong>Artifact attestations:</strong> Only available in private repositories on GitHub Enterprise Cloud.</li>
+</ul>
+<p>Any repository type:</p>
+<ul>
+<li><strong>Dependabot security updates:</strong> Not enabled by default. You can enable Dependabot security updates for any repository that uses Dependabot alerts and the dependency graph. For information about enabling security updates, see <a href="../../how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-dependabot-security-updates.html">Configuring Dependabot security updates</a>.</li>
+<li><strong>Dependabot version updates:</strong> Not enabled by default. People with write permissions to a repository can enable Dependabot version updates. For information about enabling version updates, see <a href="../../how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-dependabot-version-updates.html">Configuring Dependabot version updates</a>.</li>
+<li>*<em>Immutable releases</em>:*<span data-escaped-char="">*</span> Not enabled by default. You can enable release immutability for a repository or organization. See <a href="../../how-tos/secure-your-supply-chain/establish-provenance-and-integrity/preventing-changes-to-your-releases.html">Preventing changes to your releases</a>.</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,836 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>SARIF support for code scanning</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">Reference</a> / <a href="../index.html">Code scanning</a> / <a href="index.html">SARIF files</a> / </nav><h1><a href="#sarif-support-for-code-scanning" aria-hidden="true" class="anchor" id="sarif-support-for-code-scanning"></a>SARIF support for code scanning</h1>
+<p>Ensure your SARIF files from third-party tools comply with GitHub's standards.</p>
+<p>GitHub can parse SARIF files produced by third-party tools to display code scanning alerts in repositories. For more information, see <a href="../../../concepts/code-scanning/sarif-files.html">About SARIF files for code scanning</a>.</p>
+<p>This article highlights key properties of SARIF files to help you upload SARIF files that meet GitHub's requirements and can be converted into useful alerts.</p>
+<p>If you're using GitHub Actions with the CodeQL analysis workflow or using the CodeQL CLI, then the code scanning results will automatically use the supported subset of SARIF 2.1.0.</p>
+<h2 title="Data for preventing duplicated alerts"><a href="#data-for-preventing-duplicated-alerts" aria-hidden="true" class="anchor" id="data-for-preventing-duplicated-alerts"></a>Data for preventing duplicated alerts</h2>
+<p>Each time the results of a new code scan are uploaded, the results are processed and alerts are added to the repository. To prevent duplicate alerts for the same problem, code scanning uses fingerprints to match results across various runs so they only appear once in the latest run for the selected branch. This makes it possible to match alerts to the correct line of code when files are edited. The <code>ruleId</code> for a result has to be the same across analysis.</p>
+<h3 title="Data for preventing duplicated alerts / Consistent filepaths"><a href="#consistent-filepaths" aria-hidden="true" class="anchor" id="consistent-filepaths"></a>Consistent filepaths</h3>
+<p>The filepath has to be consistent across the runs to enable a computation of a stable fingerprint. If the filepaths differ for the same result, each time there is a new analysis a new alert will be created, and the old one will be closed. This will cause having multiple alerts for the same result.</p>
+<h3 title="Data for preventing duplicated alerts / Fingerprint generation"><a href="#fingerprint-generation" aria-hidden="true" class="anchor" id="fingerprint-generation"></a>Fingerprint generation</h3>
+<p>GitHub uses the <code>partialFingerprints</code> property in the OASIS standard to detect when two results are logically identical. For more information, see the <a href="https://docs.oasis-open.org/sarif/sarif/v2.1.0/cs01/sarif-v2.1.0-cs01.html#_Toc16012611" class="external">partialFingerprints property</a> entry in the OASIS documentation.</p>
+<p>SARIF files created by the CodeQL analysis workflow, or using the CodeQL CLI include fingerprint data. If you upload a SARIF file using the <code>upload-sarif</code> action and this data is missing, GitHub attempts to populate the <code>partialFingerprints</code> field from the source files. For more information about uploading results, see <a href="../../../how-tos/find-and-fix-code-vulnerabilities/integrate-with-existing-tools/uploading-a-sarif-file-to-github.html">Uploading a SARIF file to GitHub</a>.</p>
+<p>If you upload a SARIF file without fingerprint data using the <code>/code-scanning/sarifs</code> API endpoint, the code scanning alerts will be processed and displayed, but users may see duplicate alerts. To avoid seeing duplicate alerts, you should calculate fingerprint data and populate the <code>partialFingerprints</code> property before you upload the SARIF file. You may find the script that the <code>upload-sarif</code> action uses a helpful starting point: <a href="https://github.com/github/codeql-action/blob/main/src/fingerprints.ts" class="external">https://github.com/github/codeql-action/blob/main/src/fingerprints.ts</a>. For more information about the API, see <a href="https://docs.github.com/en/rest/code-scanning/code-scanning#upload-an-analysis-as-sarif-data" class="external">REST API endpoints for code scanning</a>.</p>
+<h2 title="Rules and results"><a href="#rules-and-results" aria-hidden="true" class="anchor" id="rules-and-results"></a>Rules and results</h2>
+<p>SARIF files support both rules and results. The information stored in these elements is similar but serves different purposes.</p>
+<ul>
+<li>Rules are an array of <code>reportingDescriptor</code> objects that are included in the <code>toolComponent</code> object. This is where you store details of the rules that are run during analysis. Information in these objects should change infrequently, typically when you update the tool.</li>
+<li>Results are stored as a series of <code>result</code> objects under <code>results</code> in the <code>run</code> object. Each <code>result</code> object contains details for one alert in the codebase. Within the <code>results</code> object, you can reference the rule that detected the alert.</li>
+</ul>
+<p>When you compare SARIF files generated by analyzing different codebases with the same tool and rules, you should see differences in the results of the analyses but not in the rules.</p>
+<h2 title="Source file locations"><a href="#source-file-locations" aria-hidden="true" class="anchor" id="source-file-locations"></a>Source file locations</h2>
+<p>Specifying source file locations and lines of code ensures code scanning alerts are displayed accurately within the file containing the identified problem, allowing for targeted issue resolution.</p>
+<p>This precision enhances the efficiency of code review and resolution processes, streamlining development workflows by enabling developers to address issues directly in the context of their codebase.</p>
+<p>Code scanning will also display alerts in pull request check results when all the lines of code identified by the alert exist in the pull request diff.</p>
+<p>For display in a pull request check, an alert must meet all the following conditions:</p>
+<ul>
+<li>All the lines of code identified by the alert exist in the pull request diff, including the first line of the alert.</li>
+<li>The alert must exist in the lines of code added or edited in the pull request, not lines that were deleted.</li>
+</ul>
+<p>The <code>physicalLocation</code> object in a submitted SARIF file identifies the lines of code for an alert. For more information, see <a href="#physicallocation-object"><code>physicalLocation</code> object</a>.</p>
+<h3 title="Source file locations / Root location for source files"><a href="#root-location-for-source-files" aria-hidden="true" class="anchor" id="root-location-for-source-files"></a>Root location for source files</h3>
+<p>Code scanning interprets results that are reported with relative paths as relative to the root of the repository analyzed. If a result contains an absolute URI, the URI is converted to a relative URI. The relative URI can then be matched against a file committed to the repository.</p>
+<p>You can provide the source root for conversion from absolute to relative URIs in one of the following ways.</p>
+<ul>
+<li><a href="https://github.com/github/codeql-action/blob/c2c0a2908e95769d01b907f9930050ecb5cf050d/analyze/action.yml#L44-L47" class="external"><code>checkout_path</code></a> input to the <code>github/codeql-action/analyze</code> action</li>
+<li><code>checkout_uri</code> parameter to the SARIF upload API endpoint. For more information, see <a href="https://docs.github.com/en/rest/code-scanning/code-scanning#upload-an-analysis-as-sarif-data" class="external">REST API endpoints for code scanning</a>.</li>
+<li><a href="https://docs.oasis-open.org/sarif/sarif/v2.1.0/csprd01/sarif-v2.1.0-csprd01.html#_Toc9244365" class="external"><code>invocations[0].workingDirectory.uri</code></a> property in the <code>run</code> object in the SARIF file</li>
+</ul>
+<p>If you provide a source root, any location of an artifact specified using an absolute URI must use the same URI scheme. If there is a mismatch between the URI scheme for the source root and one or more of the absolute URIs, the upload is rejected.</p>
+<p>For example, a SARIF file is uploaded using a source root of <code>file:///github/workspace</code>.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;"># Conversion of absolute URIs to relative URIs for location artifacts
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">file:///github/workspace/src/main.go -&gt; src/main.go
+</span><span style="color:#c0c5ce;">file:///tmp/go-build/tmp.go          -&gt; file:///tmp/go-build/tmp.go
+</span></code></pre>
+<p>The file is successfully uploaded as both absolute URIs use the same URI scheme as the source root.</p>
+<h3 title="Source file locations / Symlink resolution"><a href="#symlink-resolution" aria-hidden="true" class="anchor" id="symlink-resolution"></a>Symlink resolution</h3>
+<p>If the relative URI for a result is matched against a file defined using a symlink, code scanning is unable to display the result. So you need to resolve any symlinked files, and report any results in those files using the resolved URI.</p>
+<h2 title="File compatibility"><a href="#file-compatibility" aria-hidden="true" class="anchor" id="file-compatibility"></a>File compatibility</h2>
+<!--UI-LINK: When code scanning fails, the error banner shown in the Security > Code scanning alerts view links to this anchor.-->
+<p>You can check a SARIF file is compatible with code scanning by testing it against the GitHub ingestion rules. For more information, visit the <a href="https://sarifweb.azurewebsites.net/" class="external">Microsoft SARIF validator</a>.</p>
+<p>For each gzip-compressed SARIF file, SARIF upload supports a maximum size of 10 MB. Any uploads over this limit will be rejected. If your SARIF file is too large because it contains too many results, you should update the configuration to focus on results for the most important rules or queries. For more information, see <a href="troubleshoot-sarif-uploads/file-too-large.html">SARIF results file is too large</a>.</p>
+<p>Code scanning supports uploading a maximum number of entries for the data objects in the following table. If any of these objects exceeds its maximum value the SARIF file is rejected. For some objects, there is also an additional limit on the number of values that will be displayed. Whenever possible the most important values are shown. To get the most out of your analysis when it includes data above the supported limits, try to optimize the analysis configuration (for example, for the CodeQL tool, identify and disable the most noisy queries). For more information, see <a href="troubleshoot-sarif-uploads/results-exceed-limit.html">SARIF results exceed one or more limits</a>.</p>
+<div class="ghd-tool rowheaders">
+<table>
+<thead>
+<tr>
+<th><strong>SARIF data</strong></th>
+<th align="center"><strong>Maximum values</strong></th>
+<th><strong>Data truncation limits</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Runs per file</td>
+<td align="center">20</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Results per run</td>
+<td align="center">25,000</td>
+<td>Only the top 5,000 results will be included, prioritized by severity.</td>
+</tr>
+<tr>
+<td>Rules per run</td>
+<td align="center">25,000</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Tool extensions per run</td>
+<td align="center">100</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Thread Flow Locations per result</td>
+<td align="center">10,000</td>
+<td>Only the top 1,000 Thread Flow Locations will be included, using prioritization.</td>
+</tr>
+<tr>
+<td>Location per result</td>
+<td align="center">1,000</td>
+<td>Only 100 locations will be included.</td>
+</tr>
+<tr>
+<td>Tags per rule</td>
+<td align="center">20</td>
+<td>Only 10 tags will be included.</td>
+</tr>
+<tr>
+<td>Alert Limit</td>
+<td align="center">1,000,000</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>For information about other errors, see <a href="troubleshoot-sarif-uploads/index.html">Troubleshooting SARIF uploads</a>.</p>
+<h2 title="Supported properties"><a href="#supported-properties" aria-hidden="true" class="anchor" id="supported-properties"></a>Supported properties</h2>
+<p>If you use a code analysis engine other than CodeQL, you can review the supported SARIF properties to optimize how your analysis results will appear on GitHub.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>You must supply an explicit value for any property marked as "required". The empty string is not supported for required properties.</p>
+</div>
+<p>Any valid SARIF 2.1.0 output file can be uploaded, however, code scanning will only use the following supported properties.</p>
+<h3 title="Supported properties / sarifLog object"><a href="#sariflog-object" aria-hidden="true" class="anchor" id="sariflog-object"></a><code>sarifLog</code> object</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">$schema</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Required" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>The URI of the SARIF JSON schema for version 2.1.0. For example, <code>https://json.schemastore.org/sarif-2.1.0.json</code>.</td>
+</tr>
+<tr>
+<td><code class="keyword">version</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Required" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>Code scanning only supports SARIF version <code>2.1.0</code>.</td>
+</tr>
+<tr>
+<td><code class="keyword">runs[]</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Required" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>A SARIF file contains an array of one or more runs. Each run represents a single run of an analysis tool. For more information about a <code>run</code>, see the <a href="#run-object"><code>run</code> object</a>.</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Supported properties / run object"><a href="#run-object" aria-hidden="true" class="anchor" id="run-object"></a><code>run</code> object</h3>
+<p>Code scanning uses the <code>run</code> object to filter results by tool and provide information about the source of a result. The <code>run</code> object contains the <code>tool.driver</code> tool component object, which contains information about the tool that generated the results. Each <code>run</code> can only have results for one analysis tool.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">tool.driver</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Required" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>A <code>toolComponent</code> object that describes the analysis tool. For more information, see the <a href="#toolcomponent-object"><code>toolComponent</code> object</a>.</td>
+</tr>
+<tr>
+<td><code class="keyword">tool.extensions[]</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>An array of <code>toolComponent</code> objects that represent any plugins or extensions used by the tool during analysis. For more information, see the <a href="#toolcomponent-object"><code>toolComponent</code> object</a>.</td>
+</tr>
+<tr>
+<td><code class="keyword">invocation.workingDirectory.uri</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>This field is used only when <code>checkout_uri</code> (SARIF upload API only) or <code>checkout_path</code> (GitHub Actions only) are not provided. The value is used to convert absolute URIs used in <a href="#physicallocation-object"><code>physicalLocation</code> objects</a> to relative URIs. For more information, see <a href="#root-location-for-source-files">Specifying the root for source files</a>.</td>
+</tr>
+<tr>
+<td><code class="keyword">results[]</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Required" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>The results of the analysis tool. Code scanning displays the results on GitHub. For more information, see the <a href="#result-object"><code>result</code> object</a>.</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Supported properties / toolComponent object"><a href="#toolcomponent-object" aria-hidden="true" class="anchor" id="toolcomponent-object"></a><code>toolComponent</code> object</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">name</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Required" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>The name of the analysis tool. Code scanning displays the name on GitHub to allow you to filter results by tool.</td>
+</tr>
+<tr>
+<td><code class="keyword">version</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>The version of the analysis tool. Code scanning uses the version number to track when results may have changed due to a tool version change rather than a change in the code being analyzed. If the SARIF file includes the <code>semanticVersion</code> field, <code>version</code> is not used by code scanning.</td>
+</tr>
+<tr>
+<td><code class="keyword">semanticVersion</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>The version of the analysis tool, specified by the Semantic Versioning 2.0 format. Code scanning uses the version number to track when results may have changed due to a tool version change rather than a change in the code being analyzed. If the SARIF file includes the <code>semanticVersion</code> field, <code>version</code> is not used by code scanning. For more information, see <a href="https://semver.org/" class="external">Semantic Versioning 2.0.0</a> in the Semantic Versioning documentation.</td>
+</tr>
+<tr>
+<td><code class="keyword">rules[]</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Required" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>An array of <code>reportingDescriptor</code> objects that represent rules. The analysis tool uses rules to find problems in the code being analyzed. For more information, see the <a href="#reportingdescriptor-object"><code>reportingDescriptor</code> object</a>.</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Supported properties / reportingDescriptor object"><a href="#reportingdescriptor-object" aria-hidden="true" class="anchor" id="reportingdescriptor-object"></a><code>reportingDescriptor</code> object</h3>
+<p>This is where you store details of the rules that are run during analysis. Information in these objects should change infrequently, typically when you update the tool. For more information, see <a href="#rules-and-results">Rules and results</a> above.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">id</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Required" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>A unique identifier for the rule. The <code>id</code> is referenced from other parts of the SARIF file and may be used by code scanning to display URLs on GitHub.</td>
+</tr>
+<tr>
+<td><code class="keyword">name</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>The name of the rule. Code scanning displays the name to allow results to be filtered by rule on GitHub. Limited to 255 characters.</td>
+</tr>
+<tr>
+<td><code class="keyword">shortDescription.text</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Required" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>A concise description of the rule. Code scanning displays the short description on GitHub next to the associated results. Limited to 1024 characters.</td>
+</tr>
+<tr>
+<td><code class="keyword">fullDescription.text</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Required" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>A description of the rule. Code scanning displays the full description on GitHub next to the associated results. Limited to 1024 characters.</td>
+</tr>
+<tr>
+<td><code class="keyword">defaultConfiguration.level</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>Default severity level of the rule. Code scanning uses severity levels to help you understand how critical the result is for a given rule. By default, the <code>defaultConfiguration.level</code> is set to <code>warning</code>. However, you can override the default level for a rule by setting the <code>level</code> attribute in the <code>result</code> object associated with the result. For more information, please refer to the documentation on the <a href="#result-object"><code>result</code> object</a>. The valid values for <code>defaultConfiguration.level</code> are: <code>note</code>, <code>warning</code> and <code>error</code>.</td>
+</tr>
+<tr>
+<td><code class="keyword">help.text</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Required" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>Documentation for the rule using text format. Code scanning displays this help documentation next to the associated results.</td>
+</tr>
+<tr>
+<td><code class="keyword">help.markdown</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>(Recommended) Documentation for the rule using Markdown format. Code scanning displays this help documentation next to the associated results. When <code>help.markdown</code> is available, it is displayed instead of <code>help.text</code>.</td>
+</tr>
+<tr>
+<td><code class="keyword">properties.tags[]</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>An array of strings. Code scanning uses <code>tags</code> to allow you to filter results on GitHub. For example, it is possible to filter to all results that have the tag <code>security</code>.</td>
+</tr>
+<tr>
+<td><code class="keyword">properties.precision</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>(Recommended) A string that indicates how often the results indicated by this rule are true. For example, if a rule has a known high false-positive rate, the precision should be <code>low</code>. Code scanning orders results by precision on GitHub so that the results with the highest <code>level</code>, and highest <code>precision</code> are shown first. Can be one of: <code>very-high</code>, <code>high</code>, <code>medium</code>, or <code>low</code>.</td>
+</tr>
+<tr>
+<td><code class="keyword">properties.problem.severity</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>(Recommended) A string that indicates the level of severity of any alerts generated by a non-security query. This, with the <code>properties.precision</code> property, determines whether the results are displayed by default on GitHub so that the results with the highest <code>problem.severity</code>, and highest <code>precision</code> are shown first. Can be one of: <code>error</code>, <code>warning</code>, or <code>recommendation</code>.</td>
+</tr>
+<tr>
+<td><code class="keyword">properties.security-severity</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>(Recommended only for security rules) If you include a value for this field, results for the rule are treated as security results. A string representing a score that indicates the level of severity, a value that is greater than 0.0 up to 10.0, for security queries (<code>@tags</code> includes <code>security</code>). This, with the <code>properties.precision</code> property, determines whether the results are displayed by default on GitHub so that the results with the highest <code>security-severity</code>, and highest <code>precision</code> are shown first. Code scanning translates numerical scores as follows: over 9.0 is <code>critical</code>, from 7.0 to 8.9 is <code>high</code>, from 4.0 to 6.9 is <code>medium</code> and from 0.1 to 3.9 is <code>low</code>. A value of 0.0 or any other value outside the given range is regarded as having no security severity.</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Supported properties / result object"><a href="#result-object" aria-hidden="true" class="anchor" id="result-object"></a><code>result</code> object</h3>
+<p>Each <code>result</code> object contains details for one alert in the codebase. Within the <code>results</code> object, you can reference the rule that detected the alert. For more information, see <a href="#rules-and-results">Rules and results</a> above.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">ruleId</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>The unique identifier of the rule (<code>reportingDescriptor.id</code>). For more information, see the <a href="#reportingdescriptor-object"><code>reportingDescriptor</code> object</a>. Code scanning uses the rule identifier to filter results by rule on GitHub.</td>
+</tr>
+<tr>
+<td><code class="keyword">ruleIndex</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>The index of the associated rule (<code>reportingDescriptor</code> object) in the tool component <code>rules</code> array. For more information, see the <a href="#run-object"><code>run</code> object</a>. The allowed range for this property 0 to 2^63 - 1.</td>
+</tr>
+<tr>
+<td><code class="keyword">rule</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>A reference used to locate the rule (reporting descriptor) for this result. For more information, see the <a href="#reportingdescriptor-object"><code>reportingDescriptor</code> object</a>.</td>
+</tr>
+<tr>
+<td><code class="keyword">level</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>The severity of the result. This level overrides the default severity defined by the rule. Code scanning uses the level to filter results by severity on GitHub.</td>
+</tr>
+<tr>
+<td><code class="keyword">message.text</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Required" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>A message that describes the result. Code scanning displays the message text as the title of the result. Only the first sentence of the message will be displayed when visible space is limited.</td>
+</tr>
+<tr>
+<td><code class="keyword">locations[]</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Required" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>The set of locations where the result was detected up to a maximum of 10. Only one location should be included unless the problem can only be corrected by making a change at every specified location. <strong>Note:</strong> At least one location is required for code scanning to display a result. Code scanning will use this property to decide which file to annotate with the result. Only the first value of this array is used. All other values are ignored.</td>
+</tr>
+<tr>
+<td><code class="keyword">partialFingerprints</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Required" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>A set of strings used to track the unique identity of the result. Code scanning uses <code>partialFingerprints</code> to accurately identify which results are the same across commits and branches. Code scanning will attempt to use <code>partialFingerprints</code> if they exist. If you are uploading third-party SARIF files with the <code>upload-action</code>, the action will create <code>partialFingerprints</code> for you when they are not included in the SARIF file. For more information, see <a href="#data-for-preventing-duplicated-alerts">Providing data to track code scanning alerts across runs</a>. <strong>Note:</strong> Code scanning only uses the <code>primaryLocationLineHash</code>.</td>
+</tr>
+<tr>
+<td><code class="keyword">codeFlows[].threadFlows[].locations[]</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>An array of <code>location</code> objects for a <code>threadFlow</code> object, which describes the progress of a program through a thread of execution. A <code>codeFlow</code> object describes a pattern of code execution used to detect a result. If code flows are provided, code scanning will expand code flows on GitHub for the relevant result. For more information, see the <a href="#location-object"><code>location</code> object</a>.</td>
+</tr>
+<tr>
+<td><code class="keyword">relatedLocations[]</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>A set of locations relevant to this result. Code scanning will link to related locations when they are embedded in the result message. For more information, see the <a href="#location-object"><code>location</code> object</a>.</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Supported properties / location object"><a href="#location-object" aria-hidden="true" class="anchor" id="location-object"></a><code>location</code> object</h3>
+<p>A location within a programming artifact, such as a file in the repository or a file that was generated during a build.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">location.id</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>A unique identifier that distinguishes this location from all other locations within a single result object. The allowed range for this property 0 to 2^63 - 1.</td>
+</tr>
+<tr>
+<td><code class="keyword">location.physicalLocation</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Required" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>Identifies the artifact and region. For more information, see the <a href="#physicallocation-object"><code>physicalLocation</code></a>.</td>
+</tr>
+<tr>
+<td><code class="keyword">location.message.text</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>A message relevant to the location.</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Supported properties / physicalLocation object"><a href="#physicallocation-object" aria-hidden="true" class="anchor" id="physicallocation-object"></a><code>physicalLocation</code> object</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="keyword">artifactLocation.uri</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Required" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>A URI indicating the location of an artifact, usually a file either in the repository or generated during a build. For the best results we recommend that this is a relative path from the root of the GitHub repository being analyzed. For example, <code>src/main.js</code>. For more information about artifact URIs, see <a href="#root-location-for-source-files">Specifying the root for source files</a>.</td>
+</tr>
+<tr>
+<td><code class="keyword">region.startLine</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Required" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>The line number of the first character in the region.</td>
+</tr>
+<tr>
+<td><code class="keyword">region.startColumn</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Required" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>The column number of the first character in the region.</td>
+</tr>
+<tr>
+<td><code class="keyword">region.endLine</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Required" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>The line number of the last character in the region.</td>
+</tr>
+<tr>
+<td><code class="keyword">region.endColumn</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Required" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td>The column number of the character following the end of the region.</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Supported properties / runAutomationDetails object"><a href="#runautomationdetails-object" aria-hidden="true" class="anchor" id="runautomationdetails-object"></a><code>runAutomationDetails</code> object</h3>
+<p>The <code>runAutomationDetails</code> object contains information that specifies the identity of a run.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Optional" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td>A string that identifies the category of the analysis and the run ID. Use if you want to upload multiple SARIF files for the same tool and commit, but performed on different languages or different parts of the code.</td>
+</tr>
+</tbody>
+</table>
+<p>The use of the <code>runAutomationDetails</code> object is optional.</p>
+<p>The <code>id</code> field can include an analysis category and a run ID. We don't use the run ID part of the <code>id</code> field, but we store it.</p>
+<p>Use the category to distinguish between multiple analyses for the same tool or commit, but performed on different languages or different parts of the code. Use the run ID to identify the specific run of the analysis, such as the date the analysis was run.</p>
+<p><code>id</code> is interpreted as <code>category/run-id</code>. If the <code>id</code> contains no forward slash (<code>/</code>), then the entire string is the <code>run_id</code> and the <code>category</code> is empty. Otherwise, <code>category</code> is everything in the string until the last forward slash, and <code>run_id</code> is everything after.</p>
+<table>
+<thead>
+<tr>
+<th><code>id</code></th>
+<th>category</th>
+<th><code>run_id</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>my-analysis/tool1/2022-01-02</td>
+<td>my-analysis/tool1</td>
+<td>2022-01-02</td>
+</tr>
+<tr>
+<td>my-analysis/tool1/</td>
+<td>my-analysis/tool1</td>
+<td>None</td>
+</tr>
+<tr>
+<td>my-analysis for tool1</td>
+<td>None</td>
+<td>my-analysis for tool1</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>The run with an <code>id</code> of "my-analysis/tool1/2021-02-01" belongs to the category "my-analysis/tool1".</li>
+<li>The run with an <code>id</code> of "my-analysis/tool1/" belongs to the category "my-analysis/tool1" but is not distinguished from other runs in that category.</li>
+<li>The run whose <code>id</code> is "my-analysis for tool1 " has a unique identifier but cannot be inferred to belong to any category.</li>
+</ul>
+<p>For more information about the <code>runAutomationDetails</code> object and the <code>id</code> field, see <a href="https://docs.oasis-open.org/sarif/sarif/v2.1.0/cs01/sarif-v2.1.0-cs01.html#_Toc16012479" class="external">runAutomationDetails object</a> in the OASIS documentation.</p>
+<p>Note that the rest of the supported fields are ignored.</p>
+<h2 title="SARIF output file examples"><a href="#sarif-output-file-examples" aria-hidden="true" class="anchor" id="sarif-output-file-examples"></a>SARIF output file examples</h2>
+<p>These example SARIF output files show supported properties and example values.</p>
+<h3 title="SARIF output file examples / Example with minimum required properties"><a href="#example-with-minimum-required-properties" aria-hidden="true" class="anchor" id="example-with-minimum-required-properties"></a>Example with minimum required properties</h3>
+<p>This SARIF output file has example values to show the minimum required properties for code scanning results to work as expected. If you remove any properties, omit values, or use an empty string, this data will not be displayed correctly or sync on GitHub.</p>
+<pre lang="json" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">{
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">$schema</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">https://json.schemastore.org/sarif-2.1.0.json</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">version</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">2.1.0</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">runs</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">    {
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">tool</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">driver</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">name</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">Tool Name</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">rules</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">            {
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">id</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">R01</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">                      </span><span style="background-color:#bf616a;color:#2b303b;">...</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">properties</span><span style="color:#c0c5ce;">" </span><span style="background-color:#bf616a;color:#2b303b;">:</span><span style="color:#c0c5ce;"> {
+</span><span style="color:#c0c5ce;">                 "</span><span style="color:#a3be8c;">id</span><span style="color:#c0c5ce;">" : "</span><span style="color:#a3be8c;">java/unsafe-deserialization</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">                 "</span><span style="color:#a3be8c;">kind</span><span style="color:#c0c5ce;">" : "</span><span style="color:#a3be8c;">path-problem</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">                 "</span><span style="color:#a3be8c;">name</span><span style="color:#c0c5ce;">" : "</span><span style="color:#a3be8c;">...</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">                 "</span><span style="color:#a3be8c;">problem.severity</span><span style="color:#c0c5ce;">" : "</span><span style="color:#a3be8c;">error</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">                 "</span><span style="color:#a3be8c;">security-severity</span><span style="color:#c0c5ce;">" : "</span><span style="color:#a3be8c;">9.8</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">               }
+</span><span style="color:#c0c5ce;">            }
+</span><span style="color:#c0c5ce;">          ]
+</span><span style="color:#c0c5ce;">        }
+</span><span style="color:#c0c5ce;">      },
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">results</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">        {
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">ruleId</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">R01</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">message</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">text</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">Result text. This result does not have a rule associated.</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">          },
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">locations</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">            {
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">physicalLocation</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">artifactLocation</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">uri</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">fileURI</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">                },
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">region</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">startLine</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">2</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">startColumn</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">7</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">endColumn</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">10
+</span><span style="color:#c0c5ce;">                }
+</span><span style="color:#c0c5ce;">              }
+</span><span style="color:#c0c5ce;">            }
+</span><span style="color:#c0c5ce;">          ],
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">partialFingerprints</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">primaryLocationLineHash</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">39fa2ee980eb94b0:1</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">          }
+</span><span style="color:#c0c5ce;">        }
+</span><span style="color:#c0c5ce;">      ]
+</span><span style="color:#c0c5ce;">    }
+</span><span style="color:#c0c5ce;">  ]
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+<h3 title="SARIF output file examples / Relative URI Guidance for SARIF Producers"><a href="#relative-uri-guidance-for-sarif-producers" aria-hidden="true" class="anchor" id="relative-uri-guidance-for-sarif-producers"></a>Relative URI Guidance for SARIF Producers</h3>
+<p>This SARIF output file has example of values for the field <code>originalUriBaseIds</code>, showing the minimum required properties a SARIF producer should include when using relative URI references.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>While this property is not required by GitHub for the code scanning results to be displayed correctly, it is required to produce a valid SARIF output when using relative URI references.</p>
+</div>
+<pre lang="json" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">{
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">$schema</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">https://json.schemastore.org/sarif-2.1.0.json</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">version</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">2.1.0</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">runs</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">    {
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">tool</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">driver</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">name</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">Tool Name</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">rules</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">            {
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">id</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">R01</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">                      </span><span style="background-color:#bf616a;color:#2b303b;">...</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">properties</span><span style="color:#c0c5ce;">" </span><span style="background-color:#bf616a;color:#2b303b;">:</span><span style="color:#c0c5ce;"> {
+</span><span style="color:#c0c5ce;">                 "</span><span style="color:#a3be8c;">id</span><span style="color:#c0c5ce;">" : "</span><span style="color:#a3be8c;">java/unsafe-deserialization</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">                 "</span><span style="color:#a3be8c;">kind</span><span style="color:#c0c5ce;">" : "</span><span style="color:#a3be8c;">path-problem</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">                 "</span><span style="color:#a3be8c;">name</span><span style="color:#c0c5ce;">" : "</span><span style="color:#a3be8c;">...</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">                 "</span><span style="color:#a3be8c;">problem.severity</span><span style="color:#c0c5ce;">" : "</span><span style="color:#a3be8c;">error</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">                 "</span><span style="color:#a3be8c;">security-severity</span><span style="color:#c0c5ce;">" : "</span><span style="color:#a3be8c;">9.8</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">               }
+</span><span style="color:#c0c5ce;">            }
+</span><span style="color:#c0c5ce;">          ]
+</span><span style="color:#c0c5ce;">        }
+</span><span style="color:#c0c5ce;">      },
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">originalUriBaseIds</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">PROJECTROOT</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">         "</span><span style="color:#a3be8c;">uri</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">file:///C:/Users/Mary/code/TheProject/</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">           "</span><span style="color:#a3be8c;">description</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">             "</span><span style="color:#a3be8c;">text</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">The root directory for all project files.</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">           }
+</span><span style="color:#c0c5ce;">        },
+</span><span style="color:#c0c5ce;">         "</span><span style="color:#a3be8c;">%SRCROOT%</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">           "</span><span style="color:#a3be8c;">uri</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">src/</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">           "</span><span style="color:#a3be8c;">uriBaseId</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">PROJECTROOT</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">           "</span><span style="color:#a3be8c;">description</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">             "</span><span style="color:#a3be8c;">text</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">The root of the source tree.</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">           }
+</span><span style="color:#c0c5ce;">         }
+</span><span style="color:#c0c5ce;">      },
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">results</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">        {
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">ruleId</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">R01</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">message</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">text</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">Result text. This result does not have a rule associated.</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">          },
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">locations</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">            {
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">physicalLocation</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">artifactLocation</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">uri</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">fileURI</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">uriBaseId</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">%SRCROOT%</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">                },
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">region</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">startLine</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">2</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">startColumn</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">7</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">endColumn</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">10
+</span><span style="color:#c0c5ce;">                }
+</span><span style="color:#c0c5ce;">              }
+</span><span style="color:#c0c5ce;">            }
+</span><span style="color:#c0c5ce;">          ],
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">partialFingerprints</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">primaryLocationLineHash</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">39fa2ee980eb94b0:1</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">          }
+</span><span style="color:#c0c5ce;">        }
+</span><span style="color:#c0c5ce;">      ]
+</span><span style="color:#c0c5ce;">    }
+</span><span style="color:#c0c5ce;">  ]
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+<h3 title="SARIF output file examples / Example showing all supported SARIF properties"><a href="#example-showing-all-supported-sarif-properties" aria-hidden="true" class="anchor" id="example-showing-all-supported-sarif-properties"></a>Example showing all supported SARIF properties</h3>
+<p>This SARIF output file has example values to show all supported SARIF properties for code scanning.</p>
+<pre lang="json" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">{
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">$schema</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">https://json.schemastore.org/sarif-2.1.0.json</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">version</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">2.1.0</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">  "</span><span style="color:#a3be8c;">runs</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">    {
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">tool</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">driver</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">name</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">Tool Name</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">semanticVersion</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">2.0.0</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">rules</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">            {
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">id</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">3f292041e51d22005ce48f39df3585d44ce1b0ad</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">name</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">js/unused-local-variable</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">shortDescription</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">text</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">Unused variable, import, function or class</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">              },
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">fullDescription</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">text</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">Unused variables, imports, functions or classes may be a symptom of a bug and should be examined carefully.</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">              },
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">defaultConfiguration</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">level</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">note</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">              },
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">properties</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">tags</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">maintainability</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">                ],
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">precision</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">very-high</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">              }
+</span><span style="color:#c0c5ce;">            },
+</span><span style="color:#c0c5ce;">            {
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">id</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">d5b664aefd5ca4b21b52fdc1d744d7d6ab6886d0</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">name</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">js/inconsistent-use-of-new</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">shortDescription</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">text</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">Inconsistent use of 'new'</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">              },
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">fullDescription</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">text</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">If a function is intended to be a constructor, it should always be invoked with 'new'. Otherwise, it should always be invoked as a normal function, that is, without 'new'.</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">              },
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">properties</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">tags</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">reliability</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">correctness</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">language-features</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">                ],
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">precision</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">very-high</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">              }
+</span><span style="color:#c0c5ce;">            },
+</span><span style="color:#c0c5ce;">            {
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">id</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">R01</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">            }
+</span><span style="color:#c0c5ce;">          ]
+</span><span style="color:#c0c5ce;">        }
+</span><span style="color:#c0c5ce;">      },
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">automationDetails</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">id</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">my-category/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      },
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">results</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">        {
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">ruleId</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">3f292041e51d22005ce48f39df3585d44ce1b0ad</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">ruleIndex</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">message</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">text</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">Unused variable foo.</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">          },
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">locations</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">            {
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">physicalLocation</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">artifactLocation</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">uri</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">main.js</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">uriBaseId</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">%SRCROOT%</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">                },
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">region</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">startLine</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">2</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">startColumn</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">7</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">endColumn</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">10
+</span><span style="color:#c0c5ce;">                }
+</span><span style="color:#c0c5ce;">              }
+</span><span style="color:#c0c5ce;">            }
+</span><span style="color:#c0c5ce;">          ],
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">partialFingerprints</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">primaryLocationLineHash</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">39fa2ee980eb94b0:1</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">primaryLocationStartColumnFingerprint</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">4</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">          }
+</span><span style="color:#c0c5ce;">        },
+</span><span style="color:#c0c5ce;">        {
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">ruleId</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">d5b664aefd5ca4b21b52fdc1d744d7d6ab6886d0</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">ruleIndex</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">message</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">text</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">Function resolvingPromise is sometimes invoked as a constructor (for example [here](1)), and sometimes as a normal function (for example [here](2)).</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">          },
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">locations</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">            {
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">physicalLocation</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">artifactLocation</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">uri</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">src/promises.js</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">uriBaseId</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">%SRCROOT%</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">                },
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">region</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">startLine</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">2
+</span><span style="color:#c0c5ce;">                }
+</span><span style="color:#c0c5ce;">              }
+</span><span style="color:#c0c5ce;">            }
+</span><span style="color:#c0c5ce;">          ],
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">partialFingerprints</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">primaryLocationLineHash</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">5061c3315a741b7d:1</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">primaryLocationStartColumnFingerprint</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">7</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">          },
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">relatedLocations</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">            {
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">id</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">physicalLocation</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">artifactLocation</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">uri</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">src/ParseObject.js</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">uriBaseId</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">%SRCROOT%</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">                },
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">region</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">startLine</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">2281</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">startColumn</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">33</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">endColumn</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">55
+</span><span style="color:#c0c5ce;">                }
+</span><span style="color:#c0c5ce;">              },
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">message</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">text</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">here</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">              }
+</span><span style="color:#c0c5ce;">            },
+</span><span style="color:#c0c5ce;">            {
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">id</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">2</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">physicalLocation</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">artifactLocation</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">uri</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">src/LiveQueryClient.js</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">uriBaseId</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">%SRCROOT%</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">                },
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">region</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">startLine</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">166
+</span><span style="color:#c0c5ce;">                }
+</span><span style="color:#c0c5ce;">              },
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">message</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">text</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">here</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">              }
+</span><span style="color:#c0c5ce;">            }
+</span><span style="color:#c0c5ce;">          ]
+</span><span style="color:#c0c5ce;">        },
+</span><span style="color:#c0c5ce;">        {
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">ruleId</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">R01</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">message</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">text</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">Specifying both [ruleIndex](1) and [ruleId](2) might lead to inconsistencies.</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">          },
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">level</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">error</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">locations</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">            {
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">physicalLocation</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">artifactLocation</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">uri</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">full.sarif</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">uriBaseId</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">%SRCROOT%</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">                },
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">region</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">startLine</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">54</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">startColumn</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">10</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">endLine</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">55</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">endColumn</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">25
+</span><span style="color:#c0c5ce;">                }
+</span><span style="color:#c0c5ce;">              }
+</span><span style="color:#c0c5ce;">            }
+</span><span style="color:#c0c5ce;">          ],
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">relatedLocations</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">            {
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">id</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">physicalLocation</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">artifactLocation</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">uri</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">full.sarif</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">                },
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">region</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">startLine</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">81</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">startColumn</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">10</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">endColumn</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">18
+</span><span style="color:#c0c5ce;">                }
+</span><span style="color:#c0c5ce;">              },
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">message</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">text</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">here</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">              }
+</span><span style="color:#c0c5ce;">            },
+</span><span style="color:#c0c5ce;">            {
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">id</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">2</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">physicalLocation</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">artifactLocation</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">uri</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">full.sarif</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">                },
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">region</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">startLine</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">82</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">startColumn</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">10</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">endColumn</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">21
+</span><span style="color:#c0c5ce;">                }
+</span><span style="color:#c0c5ce;">              },
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">message</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">text</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">here</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">              }
+</span><span style="color:#c0c5ce;">            }
+</span><span style="color:#c0c5ce;">          ],
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">codeFlows</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">            {
+</span><span style="color:#c0c5ce;">              "</span><span style="color:#a3be8c;">threadFlows</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">                {
+</span><span style="color:#c0c5ce;">                  "</span><span style="color:#a3be8c;">locations</span><span style="color:#c0c5ce;">": [
+</span><span style="color:#c0c5ce;">                    {
+</span><span style="color:#c0c5ce;">                      "</span><span style="color:#a3be8c;">location</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                        "</span><span style="color:#a3be8c;">physicalLocation</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                          "</span><span style="color:#a3be8c;">region</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                            "</span><span style="color:#a3be8c;">startLine</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">11</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">                            "</span><span style="color:#a3be8c;">endLine</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">29</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">                            "</span><span style="color:#a3be8c;">startColumn</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">10</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">                            "</span><span style="color:#a3be8c;">endColumn</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">18
+</span><span style="color:#c0c5ce;">                          },
+</span><span style="color:#c0c5ce;">                          "</span><span style="color:#a3be8c;">artifactLocation</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                            "</span><span style="color:#a3be8c;">uriBaseId</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">%SRCROOT%</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">                            "</span><span style="color:#a3be8c;">uri</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">full.sarif</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">                          }
+</span><span style="color:#c0c5ce;">                        },
+</span><span style="color:#c0c5ce;">                        "</span><span style="color:#a3be8c;">message</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                          "</span><span style="color:#a3be8c;">text</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">Rule has index 0</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">                        }
+</span><span style="color:#c0c5ce;">                      }
+</span><span style="color:#c0c5ce;">                    },
+</span><span style="color:#c0c5ce;">                    {
+</span><span style="color:#c0c5ce;">                      "</span><span style="color:#a3be8c;">location</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                        "</span><span style="color:#a3be8c;">physicalLocation</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                          "</span><span style="color:#a3be8c;">region</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                            "</span><span style="color:#a3be8c;">endColumn</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">47</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">                            "</span><span style="color:#a3be8c;">startColumn</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">12</span><span style="color:#c0c5ce;">,
+</span><span style="color:#c0c5ce;">                            "</span><span style="color:#a3be8c;">startLine</span><span style="color:#c0c5ce;">": </span><span style="color:#d08770;">12
+</span><span style="color:#c0c5ce;">                          },
+</span><span style="color:#c0c5ce;">                          "</span><span style="color:#a3be8c;">artifactLocation</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">                            "</span><span style="color:#a3be8c;">uriBaseId</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">%SRCROOT%</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">                            "</span><span style="color:#a3be8c;">uri</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">full.sarif</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">                          }
+</span><span style="color:#c0c5ce;">                        }
+</span><span style="color:#c0c5ce;">                      }
+</span><span style="color:#c0c5ce;">                    }
+</span><span style="color:#c0c5ce;">                  ]
+</span><span style="color:#c0c5ce;">                }
+</span><span style="color:#c0c5ce;">              ]
+</span><span style="color:#c0c5ce;">            }
+</span><span style="color:#c0c5ce;">          ],
+</span><span style="color:#c0c5ce;">          "</span><span style="color:#a3be8c;">partialFingerprints</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">primaryLocationLineHash</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">ABC:2</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">          }
+</span><span style="color:#c0c5ce;">        }
+</span><span style="color:#c0c5ce;">      ],
+</span><span style="color:#c0c5ce;">      "</span><span style="color:#a3be8c;">columnKind</span><span style="color:#c0c5ce;">": "</span><span style="color:#a3be8c;">utf16CodeUnits</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    }
+</span><span style="color:#c0c5ce;">  ]
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

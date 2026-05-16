@@ -1,0 +1,52 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Contents of the secret risk assessment report CSV</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Reference</a> / <a href="index.html">Secret security</a> / </nav><h1><a href="#contents-of-the-secret-risk-assessment-report-csv" aria-hidden="true" class="anchor" id="contents-of-the-secret-risk-assessment-report-csv"></a>Contents of the secret risk assessment report CSV</h1>
+<p>Understand the data included in the CSV export of the secret risk assessment report.</p>
+<p>The secret risk assessment report CSV file includes the following information:</p>
+<table>
+<thead>
+<tr>
+<th>CSV column</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td><code class="keyword">Organization Name</code></td>
+<td>The name of the organization the secret was detected in</td>
+</tr>
+<tr>
+<td>B</td>
+<td><code class="keyword">Name</code></td>
+<td>The token name for the type of secret</td>
+</tr>
+<tr>
+<td>C</td>
+<td><code class="keyword">Slug</code></td>
+<td>The normalized string for the token. This corresponds to <code>Token</code> in the table of supported secrets. See <a href="supported-secret-scanning-patterns.html#supported-secrets">Supported secret scanning patterns</a>.</td>
+</tr>
+<tr>
+<td>D</td>
+<td><code class="keyword">Push Protected</code></td>
+<td>A <code>boolean</code> to indicate whether the secret would be detected and blocked by push protection if it were enabled</td>
+</tr>
+<tr>
+<td>E</td>
+<td><code class="keyword">Non-Provider Pattern</code></td>
+<td>A <code>boolean</code> to indicate whether the secret matched a non-provider pattern and would generate an alert if secret scanning with non-provider patterns were enabled</td>
+</tr>
+<tr>
+<td>F</td>
+<td><code class="keyword">Secret Count</code></td>
+<td>An aggregate count of the active and inactive secrets found for the token type</td>
+</tr>
+<tr>
+<td>G</td>
+<td><code class="keyword">Repository Count</code></td>
+<td>An aggregate count of distinct repositories in which the secret type was found, including public, private, and archived repositories</td>
+</tr>
+</tbody>
+</table>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<p>To learn which secrets you should prioritize for remediation, see <a href="../../tutorials/secure-your-organization/interpreting-secret-risk-assessment-results.html#step-5-prioritizing-remediation-and-related-actions">Interpreting secret risk assessment results</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

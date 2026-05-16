@@ -1,0 +1,126 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Extractor options</title><link rel="stylesheet" href="../../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../../index.html">Security and code quality</a> / <a href="../../../index.html">Reference</a> / <a href="../../index.html">Code scanning</a> / <a href="../index.html">CodeQL</a> / <a href="index.html">CodeQL CLI</a> / </nav><h1><a href="#extractor-options" aria-hidden="true" class="anchor" id="extractor-options"></a>Extractor options</h1>
+<p>Control how the CodeQL CLI builds databases for analysis with extractor options.</p>
+<!--The CodeQL CLI man pages include a link to this article. If you rename this article,
+make sure that you also update the MS short link: https://aka.ms/codeql-cli-docs/extractor-options.-->
+<h2 title="Available extractor options"><a href="#available-extractor-options" aria-hidden="true" class="anchor" id="available-extractor-options"></a>Available extractor options</h2>
+<p>Each extractor defines its own set of configuration options for building a queryable CodeQL database from source code. To find out which options are available for a particular extractor, you can run either of the following commands:</p>
+<ul>
+<li><code>codeql resolve languages --format=betterjson</code></li>
+<li><code>codeql resolve extractor --language=LANGUAGE --format=betterjson</code></li>
+</ul>
+<p>The <code>betterjson</code> output format provides the root paths of extractors and additional information. The output of <code>codeql resolve extractor --language=LANGUAGE --format=betterjson</code> will often be formatted like the following example:</p>
+<pre lang="json" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">{
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">extractor_root</span><span style="color:#c0c5ce;">" : "</span><span style="color:#a3be8c;">/home/user/codeql/java</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">    "</span><span style="color:#a3be8c;">extractor_options</span><span style="color:#c0c5ce;">" : {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">option1</span><span style="color:#c0c5ce;">" : {
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">title</span><span style="color:#c0c5ce;">" : "</span><span style="color:#a3be8c;">Java extractor option 1</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">description</span><span style="color:#c0c5ce;">" : "</span><span style="color:#a3be8c;">An example string option for the Java extractor.</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">type</span><span style="color:#c0c5ce;">" : "</span><span style="color:#a3be8c;">string</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">pattern</span><span style="color:#c0c5ce;">" : "</span><span style="color:#a3be8c;">[a-z]+</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">        },
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">group1</span><span style="color:#c0c5ce;">" : {
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">title</span><span style="color:#c0c5ce;">" : "</span><span style="color:#a3be8c;">Java extractor group 1</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">description</span><span style="color:#c0c5ce;">" : "</span><span style="color:#a3be8c;">An example option group for the Java extractor.</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">type</span><span style="color:#c0c5ce;">" : "</span><span style="color:#a3be8c;">object</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">properties</span><span style="color:#c0c5ce;">" : {
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">option2</span><span style="color:#c0c5ce;">" : {
+</span><span style="color:#c0c5ce;">                    "</span><span style="color:#a3be8c;">title</span><span style="color:#c0c5ce;">" : "</span><span style="color:#a3be8c;">Java extractor option 2</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">                    "</span><span style="color:#a3be8c;">description</span><span style="color:#c0c5ce;">" : "</span><span style="color:#a3be8c;">An example array option for the Java extractor</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">                    "</span><span style="color:#a3be8c;">type</span><span style="color:#c0c5ce;">" : "</span><span style="color:#a3be8c;">array</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">                    "</span><span style="color:#a3be8c;">pattern</span><span style="color:#c0c5ce;">" : "</span><span style="color:#a3be8c;">[1-9][0-9]*</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">                }
+</span><span style="color:#c0c5ce;">            }
+</span><span style="color:#c0c5ce;">        }
+</span><span style="color:#c0c5ce;">    }
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+<p>The extractor option names and descriptions are listed under <code>extractor_options</code>. Each option may contain the following fields:</p>
+<ul>
+<li><code>title</code> (required): The title of the option</li>
+<li><code>description</code> (required): The description of the option</li>
+<li><code>type</code> (required): The type of the option, which can be
+<ul>
+<li><code>string</code>: indicating that the option can have a single string value</li>
+<li><code>array</code>: indicating that the option can have a sequence of string values</li>
+<li><code>object</code>: indicating that it is not an option itself, but a grouping that may contain other options and option groups</li>
+</ul>
+</li>
+<li><code>pattern</code> (optional): The regular expression patterns that all values of the option should match. Note that the extractor may impose additional constraints on option values that are not or cannot be expressed in this regular expression pattern. Such constraints, if they exist, would be explained under the description field.</li>
+<li><code>properties</code> (optional): A map from extractor option names in the option group to the corresponding extractor option descriptions. This field can only be present for option groups. For example, options of <code>object</code> type.</li>
+</ul>
+<p>In the example above, the extractor declares two options:</p>
+<ul>
+<li><code>option1</code> is a <code>string</code> option with value matching <code>[a-z]+</code></li>
+<li><code>group1.option2</code> is an <code>array</code> option with values matching <code>[1-9][0-9]\*</code></li>
+</ul>
+<h2 title="Commands for setting extractor options"><a href="#commands-for-setting-extractor-options" aria-hidden="true" class="anchor" id="commands-for-setting-extractor-options"></a>Commands for setting extractor options</h2>
+<p>The CodeQL CLI supports setting extractor options in subcommands that directly or indirectly invoke extractors. These commands are:</p>
+<ul>
+<li><code>codeql database create</code></li>
+<li><code>codeql database start-tracing</code></li>
+<li><code>codeql database trace-command</code></li>
+<li><code>codeql database index-files</code></li>
+</ul>
+<p>When running these subcommands, you can set extractor options with the <code>--extractor-option</code> CLI option. For example:</p>
+<ul>
+<li><code>codeql database create --extractor-option java.option1=abc ...</code></li>
+<li><code>codeql database start-tracing --extractor-option java.group1.option2=102 ...</code></li>
+</ul>
+<p><code>--extractor-option</code> requires exactly one argument of the form <code>extractor_option_name=extractor_option_value</code>:</p>
+<ul>
+<li><code>extractor_option_name</code> is the name of the extractor (in this example, <code>java</code>) followed by a period and then the name of the extractor option (in this example, either <code>option1</code> or <code>group1.option2</code>).</li>
+<li><code>extractor_option_value</code> is the value being assigned to the extractor option. The value must match the regular expression pattern of the extractor option (if it exists), and it must not contain newline characters.</li>
+</ul>
+<p>Using <code>--extractor-option</code> to assign an extractor option that does not exist is an error.</p>
+<p>The CodeQL CLI accepts multiple <code>--extractor-option</code> options in the same invocation. If you set a <code>string</code> extractor option multiple times, the last option value overwrites all previous ones. If you set an array extractor option multiple times, all option values are concatenated in order.</p>
+<p>You can also specify extractor option names without the extractor name. For example:</p>
+<ul>
+<li><code>codeql database create --extractor-option option1=abc ...</code></li>
+<li><code>codeql database start-tracing --extractor-option group1.option2=102 ...</code></li>
+</ul>
+<p>If you do not specify an extractor name, the extractor option settings will apply to all extractors that declare an option with the given name. In the above example, the first command would set the extractor option <code>option1</code> to <code>abc</code> for the <code>java</code> extractor and every extractor that has an option of <code>option1</code>, for example the <code>cpp</code> extractor, if the <code>option1</code> extractor option exists for that extractor.</p>
+<h2 title="File format for extractor options"><a href="#file-format-for-extractor-options" aria-hidden="true" class="anchor" id="file-format-for-extractor-options"></a>File format for extractor options</h2>
+<p>You can also set extractor options through a file. The CodeQL CLI subcommands that accept <code>--extractor-option</code> also accept <code>--extractor-options-file</code>, which has a required argument of the path to a YAML file (with extension <code>.yaml</code> or <code>.yml</code>) or a JSON file (with extension <code>.json</code>). For example:</p>
+<ul>
+<li><code>codeql database create --extractor-options-file options.yml ...</code></li>
+<li><code>codeql database start-tracing --extractor-options-file options.json ...</code></li>
+</ul>
+<p>Each option file contains a tree structure of nested maps. At the root is an extractor map key, and beneath it are map keys that correspond to extractor names. Starting at the third level, there are extractor options and option groups.</p>
+<p>In JSON:</p>
+<pre lang="json" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">{
+</span><span style="color:#c0c5ce;">     "</span><span style="color:#a3be8c;">extractor</span><span style="color:#c0c5ce;">" : {
+</span><span style="color:#c0c5ce;">        "</span><span style="color:#a3be8c;">java</span><span style="color:#c0c5ce;">": {
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">option1</span><span style="color:#c0c5ce;">" : "</span><span style="color:#a3be8c;">abc</span><span style="color:#c0c5ce;">",
+</span><span style="color:#c0c5ce;">            "</span><span style="color:#a3be8c;">group1</span><span style="color:#c0c5ce;">" : {
+</span><span style="color:#c0c5ce;">                "</span><span style="color:#a3be8c;">option2</span><span style="color:#c0c5ce;">" : [ </span><span style="color:#d08770;">102 </span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">            }
+</span><span style="color:#c0c5ce;">        }
+</span><span style="color:#c0c5ce;">    }
+</span><span style="color:#c0c5ce;">}
+</span></code></pre>
+<p>In YAML:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">extractor</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">java</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">option1</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">abc</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">group1</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">            </span><span style="color:#bf616a;">option2</span><span style="color:#c0c5ce;">: [ </span><span style="color:#d08770;">102 </span><span style="color:#c0c5ce;">]
+</span></code></pre>
+<p>The value for a <code>string</code> extractor option must be a string or a number (which will be converted to a string before further processing).</p>
+<p>The value for an <code>array</code> extractor option must be an array of strings or numbers.</p>
+<p>The value for an option group (of type <code>object</code>) must be a map, which may contain nested extractor options and option groups.</p>
+<p>Each extractor option value must match the regular expression pattern of the extractor option (if it exists), and it must not contain newline characters.</p>
+<p>Assigning an extractor option that does not exist is an error. You can make the CodeQL CLI ignore unknown extractor options by using a special <code>__allow_unknown_properties</code> Boolean field. For example, the following option file asks the CodeQL CLI to ignore all unknown extractor options and option groups under <code>group1</code>:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">extractor</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">java</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">option1</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">abc</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">group1</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">            </span><span style="color:#bf616a;">__allow_unknown_properties</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span><span style="color:#c0c5ce;">            </span><span style="color:#bf616a;">option2</span><span style="color:#c0c5ce;">: [ </span><span style="color:#d08770;">102 </span><span style="color:#c0c5ce;">]
+</span></code></pre>
+<p>You can specify <code>--extractor-options-file</code> multiple times. The extractor option assignments are processed in the following order:</p>
+<ol>
+<li>All extractor option files specified by <code>--extractor-options-file</code> are processed in the order they appear on the command line, then</li>
+<li>All extractor option assignments specified by <code>--extractor-option</code> are processed in the order they appear on the command line</li>
+</ol>
+<p>The same rules govern what happens when the same extractor option is set multiple times, regardless of whether the assignments are done using <code>--extractor-option</code>, using <code>--extractor-options-file</code>, or some combination of the two. If you set a <code>string</code> extractor option multiple times, the last option value overwrites all previous values. If you set an <code>array</code> extractor option multiple times, all option values are concatenated in order.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

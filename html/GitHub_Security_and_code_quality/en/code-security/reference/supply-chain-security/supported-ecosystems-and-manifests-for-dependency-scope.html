@@ -1,0 +1,154 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Supported ecosystems and manifests for dependency scope</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Reference</a> / <a href="index.html">Supply chain security</a> / </nav><h1><a href="#supported-ecosystems-and-manifests-for-dependency-scope" aria-hidden="true" class="anchor" id="supported-ecosystems-and-manifests-for-dependency-scope"></a>Supported ecosystems and manifests for dependency scope</h1>
+<p>Dependabot alerts supports a variety of ecosystems and manifests for dependency scope.</p>
+<p>The table below summarizes whether dependency scope is supported for various ecosystems and manifests, that is, whether Dependabot can identify if a dependency is used for development or production.</p>
+<table>
+<thead>
+<tr>
+<th align="left"><strong>Language</strong></th>
+<th align="center"><strong>Ecosystem</strong></th>
+<th align="center"><strong>Manifest file</strong></th>
+<th align="left"><strong>Dependency scope supported</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Dart</td>
+<td align="center">pub</td>
+<td align="center">pubspec.yaml</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left">Dart</td>
+<td align="center">pub</td>
+<td align="center">pubspec.lock</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left">Go</td>
+<td align="center">Go modules</td>
+<td align="center">go.mod</td>
+<td align="left">No, defaults to runtime</td>
+</tr>
+<tr>
+<td align="left">Java</td>
+<td align="center">Maven</td>
+<td align="center">pom.xml</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg> <code>test</code> maps to development, else scope defaults to runtime</td>
+</tr>
+<tr>
+<td align="left">JavaScript</td>
+<td align="center">npm</td>
+<td align="center">package.json</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left">JavaScript</td>
+<td align="center">npm</td>
+<td align="center">package-lock.json</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left">JavaScript</td>
+<td align="center">npm</td>
+<td align="center">pnpm-lock.yaml</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left">JavaScript</td>
+<td align="center">yarn v1</td>
+<td align="center">yarn.lock</td>
+<td align="left">No, defaults to runtime</td>
+</tr>
+<tr>
+<td align="left">PHP</td>
+<td align="center">Composer</td>
+<td align="center">composer.json</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left">PHP</td>
+<td align="center">Composer</td>
+<td align="center">composer.lock</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left">Python</td>
+<td align="center">Poetry</td>
+<td align="center">poetry.lock</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left">Python</td>
+<td align="center">Poetry</td>
+<td align="center">pyproject.toml</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left">Python</td>
+<td align="center">pip</td>
+<td align="center">requirements.txt</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg> Scope is development if the filename contains <code>test</code> or <code>dev</code>, else it is runtime</td>
+</tr>
+<tr>
+<td align="left">Python</td>
+<td align="center">pip</td>
+<td align="center">pipfile.lock</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left">Python</td>
+<td align="center">pip</td>
+<td align="center">pipfile</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left">Ruby</td>
+<td align="center">RubyGems</td>
+<td align="center">Gemfile</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left">Ruby</td>
+<td align="center">RubyGems</td>
+<td align="center">Gemfile.lock</td>
+<td align="left">No, defaults to runtime</td>
+</tr>
+<tr>
+<td align="left">Rust</td>
+<td align="center">Cargo</td>
+<td align="center">Cargo.toml</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+</tr>
+<tr>
+<td align="left">Rust</td>
+<td align="center">Cargo</td>
+<td align="center">Cargo.lock</td>
+<td align="left">No, defaults to runtime</td>
+</tr>
+<tr>
+<td align="left">YAML</td>
+<td align="center">GitHub Actions</td>
+<td align="center">-</td>
+<td align="left">No, defaults to runtime</td>
+</tr>
+<tr>
+<td align="left">.NET (C#, F#, VB, etc.)</td>
+<td align="center">NuGet</td>
+<td align="center">.csproj / .vbproj .vcxproj / .fsproj</td>
+<td align="left">No, defaults to runtime</td>
+</tr>
+<tr>
+<td align="left">.NET</td>
+<td align="center">NuGet</td>
+<td align="center">packages.config</td>
+<td align="left">No, defaults to runtime</td>
+</tr>
+<tr>
+<td align="left">.NET</td>
+<td align="center">NuGet</td>
+<td align="center">.nuspec</td>
+<td align="left"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg> When the tag != runtime</td>
+</tr>
+</tbody>
+</table>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

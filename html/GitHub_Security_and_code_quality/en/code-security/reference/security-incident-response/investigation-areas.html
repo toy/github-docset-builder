@@ -1,0 +1,222 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Common security incident investigation areas</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Reference</a> / <a href="index.html">Incident response</a> / </nav><h1><a href="#common-security-incident-investigation-areas" aria-hidden="true" class="anchor" id="common-security-incident-investigation-areas"></a>Common security incident investigation areas</h1>
+<p>Reference for investigating security incidents across multiple attack vectors, including the key surfaces and tools to check on GitHub.</p>
+<p>This reference article shows you which GitHub tools to use and which GitHub surfaces to check when you're responding to a security incident. Use this article to guide your investigation across major threat categories.</p>
+<p>For full guidance on how to respond to a security incident, including <strong>containment strategies</strong>, see <a href="../../tutorials/secure-your-organization/responding-to-security-incidents.html">Responding to a security incident</a>.</p>
+<div class="markdown-alert markdown-alert-important">
+<p class="markdown-alert-title">Important</p>
+<p>The availability of each tool (and the data it provides) varies by GitHub plan, role, permissions, feature enablement, and pre-incident configuration (for example, audit log streaming and IP address disclosure require prior set up). For more information, see <a href="investigation-tools.html">Investigation tools for security incidents</a>.</p>
+<p>Be aware that real-world security incidents rarely involve a single attack vector. A credential compromise may lead to malicious code injection, which may enable data exfiltration. As you investigate a threat signal, be prepared to move into other investigation areas, and to loop through containment, deeper investigation and remediation as you uncover new indicators of compromise and as your understanding of the threat model evolves.</p>
+</div>
+<h2 title="Exposed or compromised credentials"><a href="#exposed-or-compromised-credentials" aria-hidden="true" class="anchor" id="exposed-or-compromised-credentials"></a>Exposed or compromised credentials</h2>
+<p>This section may apply when:</p>
+<p>You suspect a token or key has been stolen or exploited, received a secret scanning alert, or found credentials exposed in code, logs or a public repository.</p>
+<h3 title="Exposed or compromised credentials / What to check"><a href="#what-to-check" aria-hidden="true" class="anchor" id="what-to-check"></a>What to check</h3>
+<ul>
+<li>Search the audit log for:
+<ul>
+<li>Actions taken by the compromised token, by searching for all events associated with that token. See <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/identifying-audit-log-events-performed-by-an-access-token" class="external">Identifying audit log events performed by an access token</a>.</li>
+<li>Actions taken by unexpected actors or unknown IP addresses (if IP address disclosure is enabled).</li>
+</ul>
+</li>
+<li>Review secret scanning alerts for relevant findings to assess a leaked secret's location, exposure and validity.</li>
+<li>Use security overview for your enterprise or organization to identify trends or activity across repositories.</li>
+<li>Use GitHub code search to check for secrets exposed in code, <code>.env</code> files, or configuration files across repositories.</li>
+</ul>
+<h3 title="Exposed or compromised credentials / Key tools"><a href="#key-tools" aria-hidden="true" class="anchor" id="key-tools"></a>Key tools</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="investigation-tools.html#audit-logs">Audit log</a></td>
+<td>Trace token usage</td>
+</tr>
+<tr>
+<td><a href="investigation-tools.html#security-overview">Security overview</a></td>
+<td>View organization- or enterprise-level security alerts and activity, particularly secret scanning alerts</td>
+</tr>
+<tr>
+<td><a href="investigation-tools.html#github-code-search">GitHub code search</a></td>
+<td>Search for exposed credentials in code</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Exposed or compromised credentials / Key resources"><a href="#key-resources" aria-hidden="true" class="anchor" id="key-resources"></a>Key resources</h3>
+<ul>
+<li><a href="../../tutorials/secure-your-organization/responding-to-security-incidents.html#step-2-contain-the-threat">Containment actions</a></li>
+<li><a href="../../tutorials/remediate-leaked-secrets/remediating-a-leaked-secret.html">Remediating a leaked secret in your repository</a></li>
+</ul>
+<h2 title="Unauthorized access and account compromise"><a href="#unauthorized-access-and-account-compromise" aria-hidden="true" class="anchor" id="unauthorized-access-and-account-compromise"></a>Unauthorized access and account compromise</h2>
+<p>This section may apply when:</p>
+<p>You noticed unusual login activity, saw unexpected commits or changes, or detected suspicious account behavior.</p>
+<h3 title="Unauthorized access and account compromise / What to check"><a href="#what-to-check-1" aria-hidden="true" class="anchor" id="what-to-check-1"></a>What to check</h3>
+<ul>
+<li>Search the audit log for <strong>member access, permissions, or role changes</strong>. For example, look for events such as <code>org.add_member</code>, <code>repo.add_member</code>, <code>org.add_outside_collaborator</code>, <code>org.update_member</code>, <code>repo.update_member</code>, <code>role.create</code>, <code>role.update</code>.</li>
+<li>For any suspicious events in the audit log, <strong>identify the actor</strong>. Check if the actor is an unknown user, a potentially compromised account, or an unrecognized app.</li>
+<li>If you have IP address visibility enabled, <strong>check if the IP address</strong> associated with unusual events or suspicious activity is recognized.</li>
+<li>Search the audit log for events relating to <strong>newly created deploy keys or apps,</strong> for example <code>public_key.create</code>, <code>integration_installation.create</code>.</li>
+<li>Review the audit log for <strong>unexpected repository changes</strong>, such as new public repositories or repository visibility changes (private to public), for example <code>repo.create</code>, <code>repo.access</code>.</li>
+<li>Use the activity view (repository-level) to <strong>build a timeline of recent pushes</strong>. Look for pushes from unexpected actors, force pushes, or unusual branch names.</li>
+</ul>
+<h3 title="Unauthorized access and account compromise / Key tools"><a href="#key-tools-1" aria-hidden="true" class="anchor" id="key-tools-1"></a>Key tools</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="investigation-tools.html#audit-logs">Audit logs</a></td>
+<td>Search and cross-check actions, actors and IP addresses</td>
+</tr>
+<tr>
+<td><a href="investigation-tools.html#activity-view">Activity view</a></td>
+<td>Review activity for specific repositories</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Unauthorized access and account compromise / Key resources"><a href="#key-resources-1" aria-hidden="true" class="anchor" id="key-resources-1"></a>Key resources</h3>
+<ul>
+<li><a href="../../tutorials/secure-your-organization/responding-to-security-incidents.html#step-2-contain-the-threat">Containment actions</a></li>
+</ul>
+<h2 title="Data exfiltration"><a href="#data-exfiltration" aria-hidden="true" class="anchor" id="data-exfiltration"></a>Data exfiltration</h2>
+<p>This section may apply when:</p>
+<p>You detected large downloads, unusual API activity, or received reports of your data appearing externally.</p>
+<h3 title="Data exfiltration / What to check"><a href="#what-to-check-2" aria-hidden="true" class="anchor" id="what-to-check-2"></a>What to check</h3>
+<ul>
+<li>Search audit logs for high-volume git operations (<code>git.clone</code>, <code>git.fetch</code>) or API requests, particularly from an unfamiliar actor (<code>actor</code>) or IP address (if IP address visibility is enabled), that indicate bulk data collection.
+<ul>
+<li>Note that Git events in the audit log have special access requirements and retention policies that differ from other audit log events. For GitHub Enterprise Cloud, you can access Git events via the REST API and data is retained for seven days, unless you are streaming the audit log. For GitHub Enterprise Server, Git events must be enabled in the audit log configuration and are not included in search results.</li>
+<li>Similarly, capturing API activity in the audit logs requires prior configuration and is not available by default.</li>
+</ul>
+</li>
+<li>Check the audit logs for repository replication or exposure events, for example, repository visibility changes (from private to public), unexpected new repositories being created (such as new public repositories) or repositories being renamed or transferred (<code>repo.create</code>, <code>repo.access</code> (visibility changes), <code>repo.rename</code>, <code>repo.transfer</code>).</li>
+<li>Check for outbound mechanisms, for example webhooks being created or updated (<code>hook.create</code> or similar events in the audit logs), and check if any webhook points to an unrecognized domain.</li>
+</ul>
+<h3 title="Data exfiltration / Key tools"><a href="#key-tools-2" aria-hidden="true" class="anchor" id="key-tools-2"></a>Key tools</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="investigation-tools.html#audit-logs">Audit logs</a></td>
+<td>Search for relevant actions</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Data exfiltration / Key resources"><a href="#key-resources-2" aria-hidden="true" class="anchor" id="key-resources-2"></a>Key resources</h3>
+<ul>
+<li><a href="../../tutorials/secure-your-organization/responding-to-security-incidents.html#step-2-contain-the-threat">Containment actions</a></li>
+</ul>
+<h2 title="Malicious code and workflow changes"><a href="#malicious-code-and-workflow-changes" aria-hidden="true" class="anchor" id="malicious-code-and-workflow-changes"></a>Malicious code and workflow changes</h2>
+<p>This section may apply when:</p>
+<p>You found suspicious code in your repository, a security researcher reported an issue, or you noticed unexpected workflow behavior.</p>
+<h3 title="Malicious code and workflow changes / What to check"><a href="#what-to-check-3" aria-hidden="true" class="anchor" id="what-to-check-3"></a>What to check</h3>
+<ul>
+<li>Review the <strong>Actions</strong> tab for unexpected workflow runs, especially those triggered by unfamiliar users or at unusual times.</li>
+<li>Inspect workflow run logs for suspicious output.</li>
+<li>Use GitHub code search to find suspicious files or code additions, particularly in workflow files (<code>.github/workflows/</code>), shell scripts, or configuration files.</li>
+<li>Use the Activity view to check for pushes to unusual branch names, force pushes, pushes from unexpected actors.</li>
+<li>Check the audit logs for changes to security settings or disablement actions (look for events like <code>repository_ruleset.destroy</code>, <code>repository_secret_scanning_push_protection.disable</code>, or other <code>.delete</code>, <code>.disable</code>, <code>.destroy</code> events).</li>
+<li>Check the audit logs for events relating to new self-hosted runners being added (for example, <code>org.register_self_hosted_runner</code>, <code>repo.register_self_hosted_runner</code> events).</li>
+<li>Check for Dependabot alerts or the <a href="https://github.com/advisories" class="external">GitHub Advisory Database</a> for advisories related to GitHub Actions used in your workflows.</li>
+</ul>
+<h3 title="Malicious code and workflow changes / Key tools"><a href="#key-tools-3" aria-hidden="true" class="anchor" id="key-tools-3"></a>Key tools</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="investigation-tools.html#workflow-runs-and-logs">Workflow runs and logs</a></td>
+<td>Review workflow execution and inspect log output</td>
+</tr>
+<tr>
+<td><a href="investigation-tools.html#activity-view">Activity view</a></td>
+<td>Identify unexpected pushes, force pushes, or pushes from unfamiliar actors</td>
+</tr>
+<tr>
+<td><a href="investigation-tools.html#github-code-search">GitHub code search</a></td>
+<td>Search for suspicious code patterns</td>
+</tr>
+<tr>
+<td><a href="investigation-tools.html#audit-logs">Audit logs</a></td>
+<td>Filter by action to find security setting changes</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Malicious code and workflow changes / Key resources"><a href="#key-resources-3" aria-hidden="true" class="anchor" id="key-resources-3"></a>Key resources</h3>
+<ul>
+<li><a href="../../tutorials/secure-your-organization/responding-to-security-incidents.html#step-2-contain-the-threat">Containment actions</a></li>
+</ul>
+<h2 title="Malware and supply chain attacks"><a href="#malware-and-supply-chain-attacks" aria-hidden="true" class="anchor" id="malware-and-supply-chain-attacks"></a>Malware and supply chain attacks</h2>
+<p>This section may apply when:</p>
+<p>You received a malware or dependency alert, suspect a malicious package, or noticed unexpected dependencies in your projects.</p>
+<h3 title="Malware and supply chain attacks / What to check"><a href="#what-to-check-4" aria-hidden="true" class="anchor" id="what-to-check-4"></a>What to check</h3>
+<ul>
+<li>Check for a Dependabot malware alert, which can tell you details about the malicious package (such package name, affected versions, and the patched version), as well as remediation steps. Currently supported for packages in the <code>npm</code> ecosystem only.</li>
+<li>Search the <a href="https://github.com/advisories" class="external">GitHub Advisory Database</a> to see if GitHub is reporting advisories for dependencies (or dependency versions) that your projects are using. For malware specifically, search <code>type:malware</code> in the advisory database.</li>
+<li>Use GitHub code search to search for references to the suspected package or action across your organization.</li>
+<li>Review the dependency graph for your repositories to identify any new or unexpected dependencies.</li>
+<li>Use activity view and check commit history to review recent changes to dependency manifests or lockfiles (for example, <code>package.json</code>, <code>package-lock.json</code>, <code>Gemfile.lock</code>). Check blame views and pull requests to identify who introduced the changes and whether they were reviewed.</li>
+<li>Review recently created security alerts in your organization's security overview.</li>
+</ul>
+<h3 title="Malware and supply chain attacks / Key tools"><a href="#key-tools-4" aria-hidden="true" class="anchor" id="key-tools-4"></a>Key tools</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="investigation-tools.html#github-code-search">GitHub code search</a></td>
+<td>Search for references to the suspected package or Action</td>
+</tr>
+<tr>
+<td><a href="investigation-tools.html#dependency-graph">Dependency graph</a></td>
+<td>Visualize and review dependencies</td>
+</tr>
+<tr>
+<td><a href="../../how-tos/manage-security-alerts/manage-dependabot-alerts/viewing-and-updating-dependabot-alerts.html">Dependabot alerts</a></td>
+<td>Review for alerts relating to vulnerable dependencies</td>
+</tr>
+<tr>
+<td><a href="https://github.com/advisories" class="external">GitHub Advisory Database</a></td>
+<td>Search for <code>type:malware</code></td>
+</tr>
+<tr>
+<td><a href="investigation-tools.html#activity-view">Activity view</a></td>
+<td>Review recent pushes to repositories</td>
+</tr>
+<tr>
+<td><a href="investigation-tools.html#security-overview">Security overview</a></td>
+<td>Review recent security alerts across an organization or enterprise</td>
+</tr>
+</tbody>
+</table>
+<h3 title="Malware and supply chain attacks / Key resources"><a href="#key-resources-4" aria-hidden="true" class="anchor" id="key-resources-4"></a>Key resources</h3>
+<ul>
+<li><a href="../../tutorials/secure-your-organization/responding-to-security-incidents.html#step-2-contain-the-threat">Containment actions</a></li>
+</ul>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li><a href="../../tutorials/secure-your-organization/responding-to-security-incidents.html">Responding to a security incident</a></li>
+<li><a href="https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization" class="external">Reviewing the audit log for your organization</a></li>
+<li><a href="https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/about-the-audit-log-for-your-enterprise" class="external">Audit log for an enterprise</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

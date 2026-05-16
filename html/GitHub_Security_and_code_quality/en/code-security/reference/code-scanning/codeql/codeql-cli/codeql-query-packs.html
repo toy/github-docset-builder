@@ -1,0 +1,365 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>CodeQL query packs reference</title><link rel="stylesheet" href="../../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../../index.html">Security and code quality</a> / <a href="../../../index.html">Reference</a> / <a href="../../index.html">Code scanning</a> / <a href="../index.html">CodeQL</a> / <a href="index.html">CodeQL CLI</a> / </nav><h1><a href="#codeql-query-packs-reference" aria-hidden="true" class="anchor" id="codeql-query-packs-reference"></a>CodeQL query packs reference</h1>
+<p>Understand the compatibility, contents, and structure of CodeQL packs.</p>
+<h2 title="CodeQL pack compatibility"><a href="#codeql-pack-compatibility" aria-hidden="true" class="anchor" id="codeql-pack-compatibility"></a>CodeQL pack compatibility</h2>
+<p>When a query pack is published, it includes pre-compiled representations of all the queries in it to increase analysis speed. However, if the version of CodeQL that performs the analysis is over 6 months newer than the the version that ran <code>codeql pack publish</code>, it may be necessary to compile the queries from source during analysis, slowing the process significantly.</p>
+<p>A pack published by the <em>latest</em> public release of CodeQL will be useable by the version of CodeQL that is used by code scanning and GitHub Actions, even though that is often a slightly older release.</p>
+<p>If your analysis contains lines like the following, then CodeQL is successfully using precompiled queries:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">[42/108] Loaded /long/path/to/query/Filename.qlx.
+</span></code></pre>
+<p>If your analysis instead contains lines that look like the following, then CodeQL manually recompiled the queries from source:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Compiling query plan for /long/path/to/query/Filename.ql.
+</span><span style="color:#c0c5ce;">[42/108 comp 25s] Compiled /long/path/to/query/Filename.ql.
+</span></code></pre>
+<p>To help users of your query pack benefit from pre-compiled queries, we recommend using a recent release of CodeQL to publish your packs. Additionally, you should publish a fresh version of your pack with an updated CodeQL version every 6 months.</p>
+<p>If you publish query packs with the intention of using them on a GitHub Enterprise Server installation that uses its bundled CodeQL binaries, use the same CodeQL version to run <code>codeql pack publish</code>.</p>
+<h2 title="qlpack.yml files"><a href="#qlpackyml-files" aria-hidden="true" class="anchor" id="qlpackyml-files"></a><code>qlpack.yml</code> files</h2>
+<p>When executing query-related commands, CodeQL first looks in siblings of the installation directory (and their subdirectories) for <code>qlpack.yml</code> files, then checks the package cache for downloaded CodeQL packs. This means that when your local packages in the installation directory override packages of the same name in the package cache, so you can test your local changes.</p>
+<p>The metadata in each <code>qlpack.yml</code> file tells CodeQL how to compile any queries in the pack, what libraries the pack depends on, and where to<br>
+find query suite definitions.</p>
+<p>The contents of the CodeQL pack (queries or libraries used in CodeQL analysis) is included in the same directory as <code>qlpack.yml</code>, or its subdirectories.</p>
+<p>The directory containing the <code>qlpack.yml</code> file serves as the root directory for the content of the CodeQL pack. That is, for all <code>.ql</code> and <code>.qll</code> files in the pack, CodeQL will resolve all import statements relative to the directory containing the <code>qlpack.yml</code> file at the pack’s root.</p>
+<h3 title="qlpack.yml files / qlpack.yml properties"><a href="#qlpackyml-properties" aria-hidden="true" class="anchor" id="qlpackyml-properties"></a><code>qlpack.yml</code> properties</h3>
+<p>The following properties are supported in <code>qlpack.yml</code> files.</p>
+<h4><a href="#name" aria-hidden="true" class="anchor" id="name"></a><code>name</code></h4>
+<ul>
+<li>
+<p>Required by all packs.</p>
+</li>
+<li>
+<p>Defines the scope of the pack, where the CodeQL pack is published, and the name of the pack defined using alphanumeric characters and hyphens. It must be unique as CodeQL cannot differentiate between CodeQL packs with identical names. Use the pack name to specify queries to run using <code>database analyze</code> and to define dependencies between CodeQL packs (see examples below). For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">octo-org/security-queries
+</span></code></pre>
+</li>
+</ul>
+<h4><a href="#version" aria-hidden="true" class="anchor" id="version"></a><code>version</code></h4>
+<ul>
+<li>
+<p>Required by all packs that are published.</p>
+</li>
+<li>
+<p>Defines a semantic version for this CodeQL pack that must adhere to the <a href="https://semver.org/spec/v2.0.0.html" class="external">SemVer v2.0.0 specification</a>. For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">0.0.0
+</span></code></pre>
+</li>
+</ul>
+<h4><a href="#dataextensions" aria-hidden="true" class="anchor" id="dataextensions"></a><code>dataExtensions</code></h4>
+<ul>
+<li>Required by model packs.</li>
+<li>Takes a list of glob patterns that specify where data extension files are located relative to the root of the query pack or library pack.</li>
+</ul>
+<h4><a href="#dependencies" aria-hidden="true" class="anchor" id="dependencies"></a><code>dependencies</code></h4>
+<ul>
+<li>
+<p>Required by query and library packs that define CodeQL package dependencies on other packs. Model packs cannot define any dependencies and use <code>extensionTargets</code> instead.</p>
+</li>
+<li>
+<p>Defines a map from pack references to the semantic version range that is compatible with this pack. Supported for CodeQL CLI versions v2.6.0 and later. For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">dependencies</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">codeql/cpp-all</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">^0.0.2
+</span></code></pre>
+<p>If you are unsure or it does not matter which version should be used, then you can use <code>"*"</code>, which indicates that any version of this dependency is compatible with this pack. In practice, this will usually resolve to the highest published version of the dependency.</p>
+<p>There is a special version placeholder, <code>${workspace}</code>, which indicates that this CodeQL pack depends on whatever version of the dependency is in the same workspace. For more information, see <a href="../../../../concepts/code-scanning/codeql/about-codeql-workspaces.html#using-workspace-as-a-version-range-in-qlpackyml-files">About CodeQL workspaces</a>.</p>
+</li>
+</ul>
+<h4><a href="#defaultsuitefile" aria-hidden="true" class="anchor" id="defaultsuitefile"></a><code>defaultSuiteFile</code></h4>
+<ul>
+<li>
+<p>Required by packs that export a set of default queries to run.</p>
+</li>
+<li>
+<p>Defines the path to a query suite file relative to the package root, containing all of the queries that are run by default when this pack is passed to the <code>codeql database analyze</code> command. Supported from CLI version v2.6.0 and onwards. Only one of <code>defaultSuiteFile</code> or <code>defaultSuite</code> can be defined. For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">defaultSuiteFile</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">cpp-code-scanning.qls
+</span></code></pre>
+</li>
+</ul>
+<h4><a href="#defaultsuite" aria-hidden="true" class="anchor" id="defaultsuite"></a><code>defaultSuite</code></h4>
+<ul>
+<li>
+<p>Required by packs that export a set of default queries to run.</p>
+</li>
+<li>
+<p>Defines an inlined query suite containing all of the queries that are run by default when this pack is passed to the <code>codeql database analyze</code> command. Supported from CLI version v2.6.0 and onwards. Only one of <code>defaultSuiteFile</code> or <code>defaultSuite</code> can be defined. For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">defaultSuite</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">queries</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">.
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">exclude</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">precision</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">medium
+</span></code></pre>
+</li>
+</ul>
+<h4><a href="#extensiontargets" aria-hidden="true" class="anchor" id="extensiontargets"></a><code>extensionTargets</code></h4>
+<ul>
+<li>Required by model packs.</li>
+<li>Declares which query packs the extensions in the model pack apply to. The extension pack will inject its data extensions into each pack that is named in the <code>extensionTargets</code> dictionary, if the pack falls within the specified version range and it is used in the evaluation.</li>
+</ul>
+<h4><a href="#groups" aria-hidden="true" class="anchor" id="groups"></a><code>groups</code></h4>
+<ul>
+<li>
+<p>Optional.</p>
+</li>
+<li>
+<p>Defines logical groupings of packs in a CodeQL workspace. Using groups is a way to apply pack operations to subsets of packs in a workspace. For example, the following pack is defined to be a part of the <code>java</code> and the <code>experimental</code> groups:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">groups</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#a3be8c;">java
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#a3be8c;">experimental
+</span></code></pre>
+<p>Running <code>codeql pack publish --groups java,-experimental</code> will publish all of the packs in the <code>java</code> group, <em>except</em> the <code>experimental</code> packs. You can run the <code>codeql pack ls --groups [-]&lt;group&gt;[,[-]&lt;group&gt;...]</code> command to list the packs in a workspace that match the specified set of groups.</p>
+<p>A CodeQL pack in the given workspace is included in the list if:</p>
+<ul>
+<li>It is in at least one of the groups listed without a minus sign (this condition is automatically satisfied if there are no groups listed without a minus sign), and</li>
+<li>It is not in any group listed with a minus sign.</li>
+</ul>
+</li>
+</ul>
+<h4><a href="#library" aria-hidden="true" class="anchor" id="library"></a><code>library</code></h4>
+<ul>
+<li>
+<p>Required by library packs.</p>
+</li>
+<li>
+<p>Defines a boolean value that indicates whether or not this pack is a library pack. Library packs do not contain queries and are not compiled. Query packs can ignore this field or explicitly set it to <code>false</code>. For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">library</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span></code></pre>
+</li>
+</ul>
+<h4><a href="#suites" aria-hidden="true" class="anchor" id="suites"></a><code>suites</code></h4>
+<ul>
+<li>Optional for packs that define query suites. This allows users to run query suites stored in the specified directory by specifying the pack name, without providing the full path.</li>
+<li>Currently supported only for the standard query packs included in CodeQL CLI bundle.</li>
+<li>This option is not supported for CodeQL packs downloaded from the GitHub container registry.</li>
+</ul>
+<h4><a href="#tests" aria-hidden="true" class="anchor" id="tests"></a><code>tests</code></h4>
+<ul>
+<li>
+<p>Optional for packs containing CodeQL tests. Ignored for packs without tests.</p>
+</li>
+<li>
+<p>Defines the path to a directory within the pack that contains tests, defined relative to the pack directory. Use <code>.</code> to specify the whole pack. Any queries in this directory are run as tests when <code>test run</code> is run with the <code>--strict-test-discovery</code> option. These queries are ignored by query suite definitions that use <code>queries</code> or <code>qlpack</code> instructions to ask for all queries in a particular pack. If this property is missing, then <code>.</code> is assumed. For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">tests</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">.
+</span></code></pre>
+</li>
+</ul>
+<h4><a href="#extractor" aria-hidden="true" class="anchor" id="extractor"></a><code>extractor</code></h4>
+<ul>
+<li>
+<p>Required by all packs containing CodeQL tests.</p>
+</li>
+<li>
+<p>Defines the CodeQL language extractor to use when running the CodeQL tests in the pack. For more information about testing queries, see <a href="../../../../how-tos/find-and-fix-code-vulnerabilities/scan-from-the-command-line/testing-custom-queries.html">Testing custom queries</a>. For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">extractor</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">javascript-typescript
+</span></code></pre>
+</li>
+</ul>
+<h4><a href="#authors" aria-hidden="true" class="anchor" id="authors"></a><code>authors</code></h4>
+<ul>
+<li>
+<p>Optional.</p>
+</li>
+<li>
+<p>Defines metadata that will be displayed on the packaging search page in the packages section of the account that the CodeQL pack is published to. For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">authors</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">author1@github.com,author2@github.com
+</span></code></pre>
+</li>
+</ul>
+<h4><a href="#license" aria-hidden="true" class="anchor" id="license"></a><code>license</code></h4>
+<ul>
+<li>
+<p>Optional.</p>
+</li>
+<li>
+<p>Defines metadata that will be displayed on the packaging search page in the packages section of the account that the CodeQL pack is published to. For a list of allowed licenses, see <a href="https://spdx.org/licenses/" class="external">SPDX License List</a> in the SPDX Specification. For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">license</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">MIT
+</span></code></pre>
+</li>
+</ul>
+<h4><a href="#description" aria-hidden="true" class="anchor" id="description"></a><code>description</code></h4>
+<ul>
+<li>
+<p>Optional.</p>
+</li>
+<li>
+<p>Defines metadata that will be displayed on the packaging search page in the packages section of the account that the CodeQL pack is published to. For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">description</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Human-readable description of the contents of the CodeQL pack.
+</span></code></pre>
+</li>
+</ul>
+<h4><a href="#librarypathdependencies" aria-hidden="true" class="anchor" id="librarypathdependencies"></a><code>libraryPathDependencies</code></h4>
+<ul>
+<li>
+<p>Optional, closing down. Use the <code>dependencies</code> property instead.</p>
+</li>
+<li>
+<p>Previously used to define the names of any CodeQL packs that this CodeQL pack depends on, as an array. This gives the pack access to any libraries, database schema, and query suites defined in the dependency. For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">libraryPathDependencies</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">codeql/javascript-all
+</span></code></pre>
+</li>
+</ul>
+<h4><a href="#dbscheme" aria-hidden="true" class="anchor" id="dbscheme"></a><code>dbscheme</code></h4>
+<ul>
+<li>
+<p>Required by core language packs only.</p>
+</li>
+<li>
+<p>Defines the path to the <a href="https://codeql.github.com/docs/codeql-overview/codeql-glossary/#codeql-database-schema" class="external">database schema</a> for all libraries and queries written for this CodeQL language (see example below). For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">dbscheme</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">semmlecode.python.dbscheme
+</span></code></pre>
+</li>
+</ul>
+<h4><a href="#upgrades" aria-hidden="true" class="anchor" id="upgrades"></a><code>upgrades</code></h4>
+<ul>
+<li>
+<p>Required by core language packs only.</p>
+</li>
+<li>
+<p>Defines the path to a directory within the pack that contains database upgrade scripts, defined relative to the pack directory. Database upgrades are used internally to ensure that a database created with a different version of the CodeQL CLI is compatible with the current version of the CLI. For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">upgrades</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">.
+</span></code></pre>
+</li>
+</ul>
+<h4><a href="#warnonimplicitthis" aria-hidden="true" class="anchor" id="warnonimplicitthis"></a><code>warnOnImplicitThis</code></h4>
+<ul>
+<li>
+<p>Optional. Defaults to <code>false</code> if the <code>warnOnImplicitThis</code> property is not defined.</p>
+</li>
+<li>
+<p>Defines a boolean that specifies whether or not the compiler should emit warnings about member predicate calls with implicit <code>this</code> call receivers, that is, without an explicit receiver. Available since CodeQL CLI v2.13.2. For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">warnOnImplicitThis</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span></code></pre>
+</li>
+</ul>
+<h2 title="codeql-pack.lock.yml files"><a href="#codeql-packlockyml-files" aria-hidden="true" class="anchor" id="codeql-packlockyml-files"></a><code>codeql-pack.lock.yml</code> files</h2>
+<p><code>codeql-pack.lock.yml</code> files store the versions of the resolved transitive dependencies of a CodeQL pack. This file is created by the <code>codeql pack install</code> command if it does not already exist and should be added to your version control system. The <code>dependencies</code> section of the <code>qlpack.yml</code> file contains version ranges that are compatible with the pack. The <code>codeql-pack.lock.yml</code> file locks the versions to precise dependencies. This ensures that running <code>codeql pack install</code> on this the pack will always retrieve the same versions of dependencies even if newer compatible versions exist.</p>
+<p>For example, if a <code>qlpack.yml</code> file contains the following dependencies:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">dependencies</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">codeql/cpp-all</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">^0.1.2
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">my-user/my-lib</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">^0.2.3
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">other-dependency/from-source</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">*</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<p>The <code>codeql-pack.lock.yml</code> file will contain something like the following:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">dependencies</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">codeql/cpp-all</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">0.1.4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">my-user/my-lib</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">0.2.4
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">my-user/transitive-dependency</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">1.2.4
+</span></code></pre>
+<p>The <code>codeql/cpp-all</code> dependency is locked to version 0.1.4. The <code>my-user/my-lib</code> dependency is locked to version 0.2.4. The <code>my-user/transitive-dependency</code>, which is a transitive dependency and is not specified in the <code>qlpack.yml</code> file, is locked to version 1.2.4. The <code>other-dependency/from-source</code> is absent from the lock file since it is resolved from source. This dependency must be available in the same CodeQL workspace as the pack. For more information about CodeQL workspaces and resolving dependencies from source, see <a href="../../../../concepts/code-scanning/codeql/about-codeql-workspaces.html">About CodeQL workspaces</a>.</p>
+<p>In most cases, the <code>codeql-pack.lock.yml</code> file is only relevant for query packs since library packs are non-executable and usually do not need their transitive dependencies to be fixed. The exception to this is for library packs that contain tests. In this case, the <code>codeql-pack.lock.yml</code> file is used to ensure that the tests are always run with the same versions of dependencies to avoid spurious failures when there are mismatched dependencies.</p>
+<h2 title="Example custom CodeQL packs"><a href="#example-custom-codeql-packs" aria-hidden="true" class="anchor" id="example-custom-codeql-packs"></a>Example custom CodeQL packs</h2>
+<p>You should save files for custom queries and tests in separate packs, and organize custom packs into specific folders for each target language.</p>
+<h3 title="Example custom CodeQL packs / CodeQL packs for custom libraries"><a href="#codeql-packs-for-custom-libraries" aria-hidden="true" class="anchor" id="codeql-packs-for-custom-libraries"></a>CodeQL packs for custom libraries</h3>
+<p>A custom CodeQL pack containing custom C++ libraries, with no queries or tests, may have a <code>qlpack.yml</code> file containing:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">my-github-user/my-custom-libraries
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">1.2.3
+</span><span style="color:#bf616a;">library</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span><span style="color:#bf616a;">dependencies</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">codeql/cpp-all</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">^0.1.2
+</span></code></pre>
+<p>where <code>codeql/cpp-all</code> is the name of the CodeQL pack for C/C++ analysis included in the CodeQL repository. The version range <code>^0.1.2</code> indicates that this pack is compatible with all versions of <code>codeql/cpp-all</code> that are greater than or equal to <code>0.1.2</code> and less than <code>0.2.0</code>. Any CodeQL library file (a file with a <code>.qll</code> extension) defined in this pack will be available to queries defined in any query pack that includes this pack in its dependencies block.</p>
+<p>The <code>library</code> property indicates that this pack is a library pack and does not contain any queries.</p>
+<h3 title="Example custom CodeQL packs / CodeQL packs for custom queries"><a href="#codeql-packs-for-custom-queries" aria-hidden="true" class="anchor" id="codeql-packs-for-custom-queries"></a>CodeQL packs for custom queries</h3>
+<p>A custom CodeQL pack containing custom C++ queries and libraries may have a <code>qlpack.yml</code> file containing:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">my-github-user/my-custom-queries
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">1.2.3
+</span><span style="color:#bf616a;">dependencies</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">codeql/cpp-all</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">^0.1.2
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">my-github-user/my-custom-libraries</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">^1.2.3
+</span></code></pre>
+<p>where <code>codeql/cpp-all</code> is the name of the CodeQL pack for C/C++ analysis included in the CodeQL repository. The version range <code>^0.1.2</code> indicates that this pack is compatible with all versions of <code>codeql/cpp-all</code> that are greater than or equal to <code>0.1.2</code> and less than <code>0.2.0</code>. <code>my-github-user/my-custom-libraries</code> is the name of a CodeQL pack containing custom CodeQL libraries for C++. Any CodeQL library file (a file with a <code>.qll</code> extension) defined in this pack will be available to queries in the <code>my-github-user/my-custom-queries</code> pack.</p>
+<h3 title="Example custom CodeQL packs / CodeQL packs for custom tests"><a href="#codeql-packs-for-custom-tests" aria-hidden="true" class="anchor" id="codeql-packs-for-custom-tests"></a>CodeQL packs for custom tests</h3>
+<p>For custom CodeQL packs containing test files, you also need to include an<br>
+<code>extractor</code> property so that the <code>test run</code> command knows how to create test<br>
+databases. You may also wish to specify the <code>tests</code> property.</p>
+<p>The following <code>qlpack.yml</code> file states that <code>my-github-user/my-query-tests</code> depends on <code>my-github-user/my-custom-queries</code> at a version greater than or equal to 1.2.3 and less than 2.0.0. It also declares that the CLI should use the Java <code>extractor</code> when creating test databases. The <code>tests: .</code> line declares that all <code>.ql</code> files in the pack should be run as tests when <code>codeql test run</code> is run with the <code>--strict-test-discovery</code> option. Typically, test packs do not contain a <code>version</code> property. This prevents you from accidentally publishing them.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">my-github-user/my-query-tests
+</span><span style="color:#bf616a;">dependencies</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">my-github-user/my-custom-queries</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">^1.2.3
+</span><span style="color:#bf616a;">extractor</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">java-kotlin
+</span><span style="color:#bf616a;">tests</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">.
+</span></code></pre>
+<p>For more information about running tests, see <a href="../../../../how-tos/find-and-fix-code-vulnerabilities/scan-from-the-command-line/testing-custom-queries.html">Testing custom queries</a>.</p>
+<h2 title="Example CodeQL packs in the CodeQL repository"><a href="#example-codeql-packs-in-the-codeql-repository" aria-hidden="true" class="anchor" id="example-codeql-packs-in-the-codeql-repository"></a>Example CodeQL packs in the CodeQL repository</h2>
+<p>Each of the languages in the CodeQL repository has four main CodeQL packs:</p>
+<ul>
+<li>
+<p>Core library pack for the language, with the database schema<br>
+used by the language, and CodeQL libraries, and queries at <code>&lt;language&gt;/ql/lib</code></p>
+</li>
+<li>
+<p>Core query pack for the language that includes the default queries for the language, along<br>
+with their query suites at <code>&lt;language&gt;/ql/src</code></p>
+</li>
+<li>
+<p>Tests for the core language libraries and queries at <code>&lt;language&gt;/ql/test</code></p>
+</li>
+<li>
+<p>Example queries for the language at <code>&lt;language&gt;/ql/examples</code></p>
+</li>
+</ul>
+<h3 title="Example CodeQL packs in the CodeQL repository / Core library pack"><a href="#core-library-pack" aria-hidden="true" class="anchor" id="core-library-pack"></a>Core library pack</h3>
+<p>Here is an example <code>qlpack.yml</code> file for the <a href="https://github.com/github/codeql/blob/main/cpp/ql/lib/qlpack.yml" class="external">C/C++ analysis libraries</a><br>
+core language pack:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">codeql/cpp-all
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">x.y.z-dev
+</span><span style="color:#bf616a;">dbscheme</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">semmlecode.cpp.dbscheme
+</span><span style="color:#bf616a;">library</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
+</span><span style="color:#bf616a;">upgrades</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">upgrades
+</span></code></pre>
+<p>Some extra notes on the following properties:</p>
+<ul>
+<li>
+<p><code>library</code>: Indicates that this is a library pack with no executable queries. It is only meant to be used as a dependency for other packs.</p>
+</li>
+<li>
+<p><code>dbscheme</code> and <code>upgrades</code>: These properties are internal to the CodeQL CLI and should only be defined in the core CodeQL query pack for a language.</p>
+</li>
+</ul>
+<h3 title="Example CodeQL packs in the CodeQL repository / Core query pack"><a href="#core-query-pack" aria-hidden="true" class="anchor" id="core-query-pack"></a>Core query pack</h3>
+<p>Here is an example <code>qlpack.yml</code> file for <a href="https://github.com/github/codeql/blob/main/cpp/ql/src/qlpack.yml" class="external">C/C++ analysis queries</a><br>
+core query pack:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">codeql/cpp-queries
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">x.y.z-dev
+</span><span style="color:#bf616a;">dependencies</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">codeql/cpp-all</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">*</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">codeql/suite-helpers</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">*</span><span style="color:#c0c5ce;">"
+</span><span style="color:#bf616a;">suites</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">codeql-suites
+</span><span style="color:#bf616a;">defaultSuiteFile</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">codeql-suites/cpp-code-scanning.qls
+</span></code></pre>
+<p>Some extra notes on the following properties:</p>
+<ul>
+<li>
+<p><code>dependencies</code>: This query pack depends on <code>codeql/cpp-all</code> and <code>codeql/suite-helpers</code>. Since these dependencies are resolved from source, it does not matter what version of the CodeQL pack they are compatible with. For more information about resolving dependencies from source, see <a href="../../../../concepts/code-scanning/codeql/about-codeql-workspaces.html#source-dependencies">Source Dependencies</a>.</p>
+</li>
+<li>
+<p><code>suites</code>: Indicates the directory containing "well-known" query suites.</p>
+</li>
+<li>
+<p><code>defaultSuiteFile</code>: The name of the default query suite file that is used when no query suite is specified.</p>
+</li>
+</ul>
+<h3 title="Example CodeQL packs in the CodeQL repository / Tests for the core CodeQL pack"><a href="#tests-for-the-core-codeql-pack" aria-hidden="true" class="anchor" id="tests-for-the-core-codeql-pack"></a>Tests for the core CodeQL pack</h3>
+<p>Here is an example <code>qlpack.yml</code> file for <a href="https://github.com/github/codeql/blob/main/cpp/ql/src/qlpack.yml" class="external">C/C++ analysis tests</a><br>
+core test pack:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">codeql/cpp-tests
+</span><span style="color:#bf616a;">dependencies</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">codeql/cpp-all</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">*</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">codeql/cpp-queries</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">*</span><span style="color:#c0c5ce;">"
+</span><span style="color:#bf616a;">extractor</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">cpp
+</span><span style="color:#bf616a;">tests</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">.
+</span></code></pre>
+<p>Some extra notes on the following properties:</p>
+<ul>
+<li>
+<p><code>dependencies</code>: This pack depends on the core CodeQL query and library packs for C++.</p>
+</li>
+<li>
+<p><code>extractor</code>: This specifies that all the tests will use the same C++ extractor to create the database for the tests.</p>
+</li>
+<li>
+<p><code>tests</code>: This specifies the location of the tests. In this case, the tests are in the root folder (and all sub-folders) of the pack.</p>
+</li>
+<li>
+<p><code>version</code>: There is no <code>version</code> property for the tests pack. This prevents test packs from accidentally being published.</p>
+</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

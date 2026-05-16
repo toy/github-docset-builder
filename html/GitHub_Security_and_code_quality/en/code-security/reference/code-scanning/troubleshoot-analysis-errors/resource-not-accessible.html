@@ -1,0 +1,38 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Error: 403 "Resource not accessible by integration"</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">Reference</a> / <a href="../index.html">Code scanning</a> / <a href="index.html">Troubleshoot analysis errors</a> / </nav><h1><a href="#error-403-resource-not-accessible-by-integration" aria-hidden="true" class="anchor" id="error-403-resource-not-accessible-by-integration"></a>Error: 403 "Resource not accessible by integration"</h1>
+<p>This error may be seen on pull requests created by Dependabot and can be resolved in a couple of different ways.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This troubleshooting article is <em>only</em> relevant if you're seeing this error with Dependabot. If you see this error with other GitHub products and have difficulty troubleshooting it, you can contact GitHub Support. For more information, see <a href="https://docs.github.com/en/support/contacting-github-support" class="external">Contacting GitHub Support</a>.</p>
+</div>
+<h2 title="About this error"><a href="#about-this-error" aria-hidden="true" class="anchor" id="about-this-error"></a>About this error</h2>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">403: Resource not accessible by integration
+</span></code></pre>
+<p>Dependabot is considered untrusted when it triggers a workflow run, if the workflow will run with read-only scopes.</p>
+<h2 title="Confirming the cause of the error"><a href="#confirming-the-cause-of-the-error" aria-hidden="true" class="anchor" id="confirming-the-cause-of-the-error"></a>Confirming the cause of the error</h2>
+<p>If you're using Dependabot in your code scanning workflow, investigate the scope it's using.</p>
+<p>Uploading code scanning results for a branch usually requires the <code>security-events: write</code> scope. However, code scanning always allows the uploading of results when the <code>pull_request</code> event triggers the action run. This is why, for Dependabot branches, we recommend you use the <code>pull_request</code> event instead of the <code>push</code> event.</p>
+<h2 title="Fixing the problem"><a href="#fixing-the-problem" aria-hidden="true" class="anchor" id="fixing-the-problem"></a>Fixing the problem</h2>
+<p>You can run on pushes to the default branch and any other important long-running branches, as well as pull requests opened against this set of branches:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">main
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">pull_request</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">main
+</span></code></pre>
+<p>Alternatively, you can run on all pushes except for Dependabot branches:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches-ignore</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - '</span><span style="color:#a3be8c;">dependabot/**</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">pull_request</span><span style="color:#c0c5ce;">:
+</span></code></pre>
+<h3 title="Fixing the problem / Analysis still failing on the default branch"><a href="#analysis-still-failing-on-the-default-branch" aria-hidden="true" class="anchor" id="analysis-still-failing-on-the-default-branch"></a>Analysis still failing on the default branch</h3>
+<p>If the CodeQL analysis workflow still fails on a commit made on the default branch, you need to check:</p>
+<ul>
+<li>Whether Dependabot authored the commit</li>
+<li>Whether the pull request that includes the commit has been merged using <code>@dependabot squash and merge</code></li>
+</ul>
+<p>This type of merge commit is authored by Dependabot and therefore, any workflows running on the commit will have read-only permissions. If you enabled code scanning and Dependabot security updates or version updates on your repository, we recommend you avoid using the Dependabot <code>@dependabot squash and merge</code> command. Instead, you can enable auto-merge for your repository. This means that pull requests will be automatically merged when all required reviews are met and status checks have passed. For more information about enabling auto-merge, see <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/automatically-merging-a-pull-request#enabling-auto-merge" class="external">Automatically merging a pull request</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

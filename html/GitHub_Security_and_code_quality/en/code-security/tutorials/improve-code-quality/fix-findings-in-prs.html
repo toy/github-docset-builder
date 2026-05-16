@@ -1,0 +1,61 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Fixing code quality findings before merging your pull request</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Improve code quality</a> / </nav><h1><a href="#fixing-code-quality-findings-before-merging-your-pull-request" aria-hidden="true" class="anchor" id="fixing-code-quality-findings-before-merging-your-pull-request"></a>Fixing code quality findings before merging your pull request</h1>
+<p>Catch quality issues before they reach your default branch and fix them with Copilot Autofix and Copilot cloud agent.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>GitHub Code Quality is currently in public preview and subject to change.<br>
+During public preview, Code Quality will not be billed, although Code Quality scans will consume GitHub Actions minutes.</p>
+</div>
+<h2 title="Introduction"><a href="#introduction" aria-hidden="true" class="anchor" id="introduction"></a>Introduction</h2>
+<p>This tutorial shows you how to work with GitHub Code Quality on pull requests to identify code quality issues that your changes may otherwise inadvertently introduce, and how to address and resolve code quality findings with Copilot Autofix and Copilot cloud agent.</p>
+<h3 title="Introduction / Benefits of catching issues early"><a href="#benefits-of-catching-issues-early" aria-hidden="true" class="anchor" id="benefits-of-catching-issues-early"></a>Benefits of catching issues early</h3>
+<p>Catching code quality issues early keeps your team's codebase in shape. GitHub Code Quality checks your code for:</p>
+<ul>
+<li><strong>Reliability</strong>: For example, logic errors, unsafe error handling, or race conditions that could cause your app to crash or behave unpredictably. By addressing this type of issue early, you make your software more robust and dependable for users.</li>
+<li><strong>Maintainability</strong>: For example, duplicated code, overly complex logic, unused variables, or violations of coding best practices. Fixing these issues makes your code cleaner and easier to read, so future changes are faster and less risky.</li>
+</ul>
+<h2 title="1. Understand how GitHub Code Quality works on pull requests"><a href="#1-understand-how-github-code-quality-works-on-pull-requests" aria-hidden="true" class="anchor" id="1-understand-how-github-code-quality-works-on-pull-requests"></a>1. Understand how GitHub Code Quality works on pull requests</h2>
+<p>When you open a pull request, GitHub Code Quality uses CodeQL to automatically scan your changes for quality issues like those described above.</p>
+<p>The results of the CodeQL scan are reported as comments on your pull request, left by the <code>github-code-quality[bot]</code>. Each comment corresponds to a specific code quality problem that was detected in your changes, and comes with a suggested autofix.</p>
+<p>Comments are labeled by severity (<strong>Error</strong>, <strong>Warning</strong>, <strong>Note</strong>), so you can see which findings are the most critical to address.</p>
+<h2 title="2. Prioritize fixes based on severity"><a href="#2-prioritize-fixes-based-on-severity" aria-hidden="true" class="anchor" id="2-prioritize-fixes-based-on-severity"></a>2. Prioritize fixes based on severity</h2>
+<p>Scan through the comments and identify the findings that have the highest severity level ("Error") first.</p>
+<p>If there are no "Error" findings, look for findings of the next severity level ("Warning"), and so on.</p>
+<p>High severity findings indicate more serious code quality issues that are more likely to introduce reliability or maintainability problems in your codebase. By resolving high severity findings, you're doing the most impactful work to maintain the quality of your team's code.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>A repository administrator may have set a code quality gate that <strong>blocks</strong> merging on your pull request, if the pull request contains Code Quality findings of a particular severity level or above. See <a href="../../how-tos/maintain-quality-code/unblock-your-pr.html">Resolving a block on your pull request</a>.</p>
+</div>
+<h2 title="3. Leverage Copilot Autofix or Copilot cloud agent to fix findings"><a href="#3-leverage-copilot-autofix-or-copilot-cloud-agent-to-fix-findings" aria-hidden="true" class="anchor" id="3-leverage-copilot-autofix-or-copilot-cloud-agent-to-fix-findings"></a>3. Leverage Copilot Autofix or Copilot cloud agent to fix findings</h2>
+<h3 title="3. Leverage Copilot Autofix or Copilot cloud agent to fix findings / Copilot Autofix"><a href="#copilot-autofix" aria-hidden="true" class="anchor" id="copilot-autofix"></a>Copilot Autofix</h3>
+<p>Comments on the pull request include a suggested <strong>autofix</strong> that you can commit directly to your pull request. Carefully review the suggested autofix for logic, security, and style, then click <strong>Commit suggestion</strong>.</p>
+<p>You don't need a Copilot license to apply these suggestions.</p>
+<h3 title="3. Leverage Copilot Autofix or Copilot cloud agent to fix findings / Copilot cloud agent"><a href="#copilot-cloud-agent" aria-hidden="true" class="anchor" id="copilot-cloud-agent"></a>Copilot cloud agent</h3>
+<p>Alternatively, if you have a Copilot license, you can delegate the remediation work to Copilot cloud agent. Comment on the pull request mentioning <code>@Copilot</code> and request that Copilot fix the detected issues.</p>
+<p><img src="../../../..//assets/images/help/code-quality/invoke-cloud-agent.png" alt="Screenshot showing a PR comment that invoked Copilot cloud agent."></p>
+<p>Copilot responds with an eyes emoji (👀) to your comment, starts a new agent session, and opens a pull request with the necessary fixes.</p>
+<p>You can track Copilot cloud agent's work:</p>
+<ul>
+<li>In the pull request, the summary is updated as work progresses.</li>
+<li>Using the <a href="https://github.com/copilot/agents?ref_product=copilot&amp;ref_type=engagement&amp;ref_style=text" class="external">agents page</a> or session logs, see <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/track-copilot-sessions" class="external">Tracking GitHub Copilot's sessions</a>.</li>
+</ul>
+<p>You need a Copilot license to invoke Copilot cloud agent. <br><a href="https://github.com/features/copilot/plans?ref_product=copilot&amp;ref_type=purchase&amp;ref_style=button" target="_blank" class="btn btn-primary mt-3 mr-3 no-underline external"><span>Sign up for Copilot</span> <svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-link-external" aria-label="link external icon" role="img"><path d="M3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2Zm6.854-1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1Z"></path></svg></a></p>
+<h2 title="4. Dismiss irrelevant findings"><a href="#4-dismiss-irrelevant-findings" aria-hidden="true" class="anchor" id="4-dismiss-irrelevant-findings"></a>4. Dismiss irrelevant findings</h2>
+<p>You can dismiss a finding if it isn’t relevant or actionable in the context of your codebase. Common reasons to dismiss a finding include:</p>
+<ul>
+<li>The finding is in legacy code that’s no longer maintained.</li>
+<li>It’s a known exception to your team’s coding standards.</li>
+<li>It’s a false positive that doesn’t pose a real quality risk.</li>
+</ul>
+<p>Dismissing irrelevant alerts keeps your quality checks focused on meaningful issues.</p>
+<h2 title="5. Push changes and wait for the scan"><a href="#5-push-changes-and-wait-for-the-scan" aria-hidden="true" class="anchor" id="5-push-changes-and-wait-for-the-scan"></a>5. Push changes and wait for the scan</h2>
+<p>After fixing or dismissing findings, push your changes to the branch associated with your pull request. GitHub Code Quality will automatically re-scan your changes and update the comments on your pull request accordingly.</p>
+<h2 title="6. Check your repository's code quality ratings"><a href="#6-check-your-repositorys-code-quality-ratings" aria-hidden="true" class="anchor" id="6-check-your-repositorys-code-quality-ratings"></a>6. Check your repository's code quality ratings</h2>
+<p>Anyone with write access can view the overall code quality ratings for a repository, which summarize the state of the code's reliability and maintainability across the default branch.</p>
+<p>To view your repository's ratings, navigate to the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab of your repository, expand <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-code-review" aria-label="code review" role="img"><path d="M1.75 1h12.5c.966 0 1.75.784 1.75 1.75v8.5A1.75 1.75 0 0 1 14.25 13H8.061l-2.574 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25v-8.5C0 1.784.784 1 1.75 1ZM1.5 2.75v8.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-8.5a.25.25 0 0 0-.25-.25H1.75a.25.25 0 0 0-.25.25Zm5.28 1.72a.75.75 0 0 1 0 1.06L5.31 7l1.47 1.47a.751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018l-2-2a.75.75 0 0 1 0-1.06l2-2a.75.75 0 0 1 1.06 0Zm2.44 0a.75.75 0 0 1 1.06 0l2 2a.75.75 0 0 1 0 1.06l-2 2a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L10.69 7 9.22 5.53a.75.75 0 0 1 0-1.06Z"></path></svg> Code quality</strong> in the sidebar, then click <strong>Standard findings</strong>.</p>
+<p>By resolving issues before merging your pull request, you've directly contributed to maintaining these ratings.</p>
+<h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
+<ul>
+<li>Address code quality findings in your default branch and understand your repository’s reliability and maintainability ratings. See <a href="improve-your-codebase.html">Improving the quality of your repository's code</a>.</li>
+<li>Provide feedback on GitHub Code Quality in the <a href="https://github.com/orgs/community/discussions/177488" class="external">community discussion</a>.</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

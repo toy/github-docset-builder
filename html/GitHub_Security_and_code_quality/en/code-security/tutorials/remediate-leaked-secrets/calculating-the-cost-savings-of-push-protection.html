@@ -1,0 +1,101 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Calculating the cost savings of push protection</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Tutorials</a> / <a href="index.html">Remediate leaked secrets</a> / </nav><h1><a href="#calculating-the-cost-savings-of-push-protection" aria-hidden="true" class="anchor" id="calculating-the-cost-savings-of-push-protection"></a>Calculating the cost savings of push protection</h1>
+<p>Estimate the remediation time and labor costs you'll avoid by preventing leaked secrets.</p>
+<h2 title="What is the cost savings calculator?"><a href="#what-is-the-cost-savings-calculator" aria-hidden="true" class="anchor" id="what-is-the-cost-savings-calculator"></a>What is the cost savings calculator?</h2>
+<p>You can use the ROI calculator to estimate the cost avoided by preventing leaked secrets with push protection. This information can help you:</p>
+<ul>
+<li>Determine how widely to enable GitHub Secret Protection in your organization.</li>
+<li>Compare the estimated impact of push protection in different teams or environments.</li>
+<li>Communicate time and cost implications of rollout decisions to stakeholders.</li>
+</ul>
+<p>Push protection is a paid feature which is available with GitHub Secret Protection. For more information, see <a href="../../how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/protect-your-secrets.html">Pricing and enabling GitHub Secret Protection</a>.</p>
+<h2 title="Prerequisites"><a href="#prerequisites" aria-hidden="true" class="anchor" id="prerequisites"></a>Prerequisites</h2>
+<ul>
+<li>You need to have generated a secret risk assessment for your organization. See <a href="../../how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/viewing-your-security-risk-assessment-reports.html">Viewing your security risk assessment reports</a>.</li>
+<li>You have realistic values for:
+<ul>
+<li>Average remediation time per leaked secret (hours)</li>
+<li>Average annual developer salary (USD)</li>
+</ul>
+</li>
+</ul>
+<h2 title="Estimating cost savings from push protection"><a href="#estimating-cost-savings-from-push-protection" aria-hidden="true" class="anchor" id="estimating-cost-savings-from-push-protection"></a>Estimating cost savings from push protection</h2>
+<ol>
+<li>On GitHub, navigate to the main page of the organization.</li>
+<li>Under your organization name, click the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab.</li>
+<li>In the sidebar, under "Security", click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-key" aria-label="key" role="img"><path d="M10.5 0a5.499 5.499 0 1 1-1.288 10.848l-.932.932a.749.749 0 0 1-.53.22H7v.75a.749.749 0 0 1-.22.53l-.5.5a.749.749 0 0 1-.53.22H5v.75a.749.749 0 0 1-.22.53l-.5.5a.749.749 0 0 1-.53.22h-2A1.75 1.75 0 0 1 0 14.25v-2c0-.199.079-.389.22-.53l4.932-4.932A5.5 5.5 0 0 1 10.5 0Zm-4 5.5c-.001.431.069.86.205 1.269a.75.75 0 0 1-.181.768L1.5 12.56v1.69c0 .138.112.25.25.25h1.69l.06-.06v-1.19a.75.75 0 0 1 .75-.75h1.19l.06-.06v-1.19a.75.75 0 0 1 .75-.75h1.19l1.023-1.025a.75.75 0 0 1 .768-.18A4 4 0 1 0 6.5 5.5ZM11 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg> Assessments</strong>.</li>
+<li>On the top right corner of the banner, click <strong>Get started</strong>.</li>
+<li>In the dropdown, select <strong>Estimate push protection savings</strong>.</li>
+<li>Review the non-editable value for "Preventable leaks" (P). If 0, a baseline value (such as 70) is shown for modeling purposes.</li>
+<li>Enter or adjust the average developer annual compensation (C), in USD.
+<ul>
+<li>Use blended fully loaded annual compensation (salary + benefits).</li>
+<li>Keep estimates conservative to avoid overstatement.</li>
+</ul>
+</li>
+<li>Enter or adjust the time to remediate each leaked secret (T), in hours. We recommend you use an average remediation time that reflects steps for revoking, rotating, and validating secrets, as well as notifying your teams or customers:
+<ul>
+<li>T = 1-1.5 hours for simple rotation, minimal coordination</li>
+<li>T = 2-3 hours to account for a distributed team or extra checks</li>
+<li>T = 3-4 hours if you work in a regulated / audited environment</li>
+</ul>
+</li>
+<li>Review the outputs from the <strong>Return on investment</strong> panel:
+<ul>
+<li><strong>Secrets prevented</strong>: The number of preventable secrets detected.</li>
+<li><strong>Time saved</strong>: Total hours saved by preventing these secrets, based on your input.</li>
+<li><strong>Potential savings with push protection</strong>: The total estimated labor cost avoided.</li>
+</ul>
+</li>
+</ol>
+<div class="ghd-alert ghd-alert-accent ghd-spotlight-accent">
+<p>Did you successfully use the ROI calculator to estimate the cost savings of using push protection on your organization?</p>
+<p><a href="https://docs.github.io/success-test/yes.html" target="_blank" class="btn btn-outline mt-3 mr-3 no-underline external"><span>Yes</span></a>  <a href="https://docs.github.io/success-test/no.html" target="_blank" class="btn btn-outline mt-3 mr-3 no-underline external"><span>No</span></a></p>
+</div>
+<h2 title="Understanding your results"><a href="#understanding-your-results" aria-hidden="true" class="anchor" id="understanding-your-results"></a>Understanding your results</h2>
+<p>Next, review the results to understand their implications and determine the appropriate scope for rolling out push protection in your organization. Keep the following information in mind as you interpret your results.</p>
+<p>The calculator <strong>does</strong>:</p>
+<ul>
+<li>Estimate savings for <strong>secrets blocked by push protection</strong> only.</li>
+<li>Base results on your risk assessment and assumptions you provide.</li>
+<li>Provide estimates based on <strong>labor cost avoidance</strong> only.</li>
+<li>Provide a modeled baseline for preventable leaks if no secrets were detected in the current scan window.</li>
+</ul>
+<p>The calculator does <strong>not</strong>:</p>
+<ul>
+<li>Include any costs related to data breaches or external impacts. For informational purposes, the cost of a data breach averaged $4.88M in 2024 according to IBM.</li>
+<li>Include time savings from other GitHub Secret Protection features.</li>
+<li>Support currencies other than USD.</li>
+</ul>
+<h2 title="Troubleshooting"><a href="#troubleshooting" aria-hidden="true" class="anchor" id="troubleshooting"></a>Troubleshooting</h2>
+<p>If you run into problems using the calculator, use the following table to troubleshoot.</p>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Preventable secrets = 0</strong></td>
+<td>When no preventable secrets are detected, the calculator displays a default baseline value (such as 70) for modeling purposes.<br> To replace the baseline with real data, enable push protection on more repositories and allow secret scanning to collect more information.</td>
+</tr>
+<tr>
+<td><strong>Estimated savings shows $5M+</strong></td>
+<td>The calculator is capped at $5M. If your modeled savings exceed this threshold, the value will be displayed as "$5M+" in the UI. To get the precise amount, export your input values (preventable secrets, time to remediate, and developer salary) and replicate the formula in a spreadsheet:<br><code>(Secrets prevented) × (Time to remediate) × (Hourly rate)</code> where hourly rate is calculated as <code>Salary ÷ 2080</code>.</td>
+</tr>
+<tr>
+<td><strong>Value seems low</strong></td>
+<td>Review your inputs for time to remediate and average developer compensation. Ensure you have included all steps involved in remediation (such as revoke, rotate, validate, and notify) and that the salary reflects a fully loaded annual cost.</td>
+</tr>
+<tr>
+<td><strong>Value seems high</strong></td>
+<td>Double-check your input values for time to remediate and average compensation to make sure they are realistic and not overstated. Remove any outliers that could be skewing the estimate.</td>
+</tr>
+</tbody>
+</table>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li><a href="https://github.com/resources/whitepapers/secret-scanning-a-key-to-your-cybersecurity-strategy" class="external">Detecting and Preventing Secret Leaks in Code</a> in  GitHub's <code>resources</code> repository</li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

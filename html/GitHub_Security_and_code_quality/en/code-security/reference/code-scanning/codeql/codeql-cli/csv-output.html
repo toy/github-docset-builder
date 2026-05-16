@@ -1,0 +1,60 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>CodeQL CLI CSV output</title><link rel="stylesheet" href="../../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../../index.html">Security and code quality</a> / <a href="../../../index.html">Reference</a> / <a href="../../index.html">Code scanning</a> / <a href="../index.html">CodeQL</a> / <a href="index.html">CodeQL CLI</a> / </nav><h1><a href="#codeql-cli-csv-output" aria-hidden="true" class="anchor" id="codeql-cli-csv-output"></a>CodeQL CLI CSV output</h1>
+<p>Understand CSV results from the CodeQL CLI.</p>
+<p>When you save analysis results from the CodeQL CLI in CSV format, each line corresponds to an alert, containing a comma-separated list with the following information:</p>
+<table>
+<thead>
+<tr>
+<th><strong>Property</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Example</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name</td>
+<td>Name of the query that identified the result.</td>
+<td><code>Inefficient regular expression</code></td>
+</tr>
+<tr>
+<td>Description</td>
+<td>Description of the query.</td>
+<td><code>A regular expression that requires exponential time to match certain inputs can be a performance bottleneck, and may be vulnerable to denial-of-service attacks.</code></td>
+</tr>
+<tr>
+<td>Severity</td>
+<td>Severity of the query.</td>
+<td><code>error</code></td>
+</tr>
+<tr>
+<td>Message</td>
+<td>Alert message.</td>
+<td><code>This part of the regular expression may cause exponential backtracking on strings containing many repetitions of '\\\\'.</code></td>
+</tr>
+<tr>
+<td>Path</td>
+<td>Path of the file containing the alert.</td>
+<td><code>/vendor/codemirror/markdown.js</code></td>
+</tr>
+<tr>
+<td>Start line</td>
+<td>Line of the file where the code that triggered the alert begins.</td>
+<td><code>617</code></td>
+</tr>
+<tr>
+<td>Start column</td>
+<td>Column of the start line that marks the start of the alert code. Not included when equal to 1.</td>
+<td><code>32</code></td>
+</tr>
+<tr>
+<td>End line</td>
+<td>Line of the file where the code that triggered the alert ends. Not included when the same value as the start line.</td>
+<td><code>64</code></td>
+</tr>
+<tr>
+<td>End column</td>
+<td>Where available, the column of the end line that marks the end of the alert code. Otherwise the end line is repeated.</td>
+<td><code>617</code></td>
+</tr>
+</tbody>
+</table>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

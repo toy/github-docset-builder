@@ -1,0 +1,69 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Disabling and enabling a workflow</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">How-tos</a> / <a href="index.html">Manage workflow runs</a> / </nav><h1><a href="#disabling-and-enabling-a-workflow" aria-hidden="true" class="anchor" id="disabling-and-enabling-a-workflow"></a>Disabling and enabling a workflow</h1>
+<p>You can disable and re-enable a workflow using the GitHub UI, the REST API, or GitHub CLI.</p>
+<p>Disabling a workflow allows you to stop a workflow from being triggered without having to delete the file from the repo. You can easily re-enable the workflow again on GitHub.</p>
+<p>Temporarily disabling a workflow can be useful in many scenarios. These are a few examples where disabling a workflow might be helpful:</p>
+<ul>
+<li>A workflow error that produces too many or wrong requests, impacting external services negatively.</li>
+<li>A workflow that is not critical and is consuming too many minutes on your account.</li>
+<li>A workflow that sends requests to a service that is down.</li>
+<li>Workflows on a forked repository that aren't needed (for example, scheduled workflows).</li>
+</ul>
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>To prevent unnecessary workflow runs, scheduled workflows may be disabled automatically. When a public repository is forked, scheduled workflows are disabled by default. In a public repository, scheduled workflows are automatically disabled when no repository activity has occurred in 60 days.</p>
+</div>
+<p>You can also disable and enable a workflow using the REST API. For more information, see <a href="https://docs.github.com/en/rest/actions/workflows" class="external">REST API endpoints for workflows</a>.</p>
+<h2 title="Disabling a workflow"><a href="#disabling-a-workflow" aria-hidden="true" class="anchor" id="disabling-a-workflow"></a>Disabling a workflow</h2>
+<div class="ghd-tool webui">
+<ol>
+<li>
+<p>On GitHub, navigate to the main page of the repository.</p>
+</li>
+<li>
+<p>Under your repository name, click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-play" aria-label="play" role="img"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm4.879-2.773 4.264 2.559a.25.25 0 0 1 0 .428l-4.264 2.559A.25.25 0 0 1 6 10.559V5.442a.25.25 0 0 1 .379-.215Z"></path></svg> Actions</strong>.</p>
+<p><img src="../../../..//assets/images/help/repository/actions-tab-global-nav-update.png" alt="Screenshot of the tabs for the &quot;github/docs&quot; repository. The &quot;Actions&quot; tab is highlighted with an orange outline."></p>
+</li>
+<li>
+<p>In the left sidebar, click the workflow you want to disable.</p>
+</li>
+<li>
+<p>Click <svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-kebab-horizontal" aria-label="Show workflow options" role="img"><path d="M8 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM1.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm13 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path></svg> to display a dropdown menu and click <strong>Disable workflow</strong>.</p>
+<p><img src="../../../..//assets/images/help/repository/actions-disable-workflow-2022.png" alt="Screenshot of a workflow. The &quot;Show workflow options&quot; button, shown with a kebab icon, and the &quot;Disable workflow&quot; menu item are outlined in orange."></p>
+</li>
+</ol>
+</div>
+<div class="ghd-tool cli">
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>To learn more about GitHub CLI, see <a href="https://docs.github.com/en/github-cli/github-cli/about-github-cli" class="external">About GitHub CLI</a>.</p>
+</div>
+<p>To disable a workflow, use the <code>workflow disable</code> subcommand. Replace <code>workflow</code> with either the name, ID, or file name of the workflow you want to disable. For example, <code>"Link Checker"</code>, <code>1234567</code>, or <code>"link-check-test.yml"</code>. If you don't specify a workflow, GitHub CLI returns an interactive menu for you to choose a workflow.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh workflow disable WORKFLOW
+</span></code></pre>
+</div>
+<h2 title="Enabling a workflow"><a href="#enabling-a-workflow" aria-hidden="true" class="anchor" id="enabling-a-workflow"></a>Enabling a workflow</h2>
+<div class="ghd-tool webui">
+<p>You can re-enable a workflow that was previously disabled.</p>
+<ol>
+<li>
+<p>On GitHub, navigate to the main page of the repository.</p>
+</li>
+<li>
+<p>Under your repository name, click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-play" aria-label="play" role="img"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm4.879-2.773 4.264 2.559a.25.25 0 0 1 0 .428l-4.264 2.559A.25.25 0 0 1 6 10.559V5.442a.25.25 0 0 1 .379-.215Z"></path></svg> Actions</strong>.</p>
+<p><img src="../../../..//assets/images/help/repository/actions-tab-global-nav-update.png" alt="Screenshot of the tabs for the &quot;github/docs&quot; repository. The &quot;Actions&quot; tab is highlighted with an orange outline."></p>
+</li>
+<li>
+<p>In the left sidebar, click the workflow you want to enable.</p>
+<p><img src="../../../..//assets/images/help/repository/actions-select-disabled-workflow-2022.png" alt="Screenshot of the &quot;Actions&quot; page. In the left sidebar, a workflow name is highlighted with an outline in dark orange."></p>
+</li>
+<li>
+<p>Click <strong>Enable workflow</strong>.</p>
+</li>
+</ol>
+</div>
+<div class="ghd-tool cli">
+<p>To enable a workflow, use the <code>workflow enable</code> subcommand. Replace <code>workflow</code> with either the name, ID, or file name of the workflow you want to enable. For example, <code>"Link Checker"</code>, <code>1234567</code>, or <code>"link-check-test.yml"</code>. If you don't specify a workflow, GitHub CLI returns an interactive menu for you to choose a workflow.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh workflow enable WORKFLOW
+</span></code></pre>
+</div>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

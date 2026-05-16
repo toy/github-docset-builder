@@ -1,0 +1,105 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Giving security features access to private registries</title><link rel="stylesheet" href="../../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../../index.html">Security and code quality</a> / <a href="../../../index.html">How-tos</a> / <a href="../../index.html">Secure at scale</a> / <a href="../index.html">Configure organization security</a> / <a href="index.html">Manage usage and access</a> / </nav><h1><a href="#giving-security-features-access-to-private-registries" aria-hidden="true" class="anchor" id="giving-security-features-access-to-private-registries"></a>Giving security features access to private registries</h1>
+<p>If your organization uses private registries, you can improve the results of code scanning analysis and enable Dependabot to maintain more dependencies by setting up access to these registries.</p>
+<h2 title="About the importance of providing access to private registries"><a href="#about-the-importance-of-providing-access-to-private-registries" aria-hidden="true" class="anchor" id="about-the-importance-of-providing-access-to-private-registries"></a>About the importance of providing access to private registries</h2>
+<p>When code in a repository has dependencies that are stored in a private registry, some security features need access to the registry to enable them to work effectively. Without access to all the dependencies of a repository, the effectiveness of Code Quality (public preview), code scanning default setup and Dependabot are limited.</p>
+<h2 title="Code scanning default setup access to private registries"><a href="#code-scanning-default-setup-access-to-private-registries" aria-hidden="true" class="anchor" id="code-scanning-default-setup-access-to-private-registries"></a>Code scanning default setup access to private registries</h2>
+<p>If you do not define access to the private registries your organization uses, then code scanning will only gather necessary data from dependencies available in public registries. Most times, this is enough for surfacing most of the vulnerabilities. However, in some cases the lack of access can lead to false negative results. In other words, code scanning is unable to detect a vulnerability in the code because it does not have all the information it needs to analyze the code. For example, some of the data flow paths may not be detected because steps are defined in dependencies that are not accessible and code scanning does not know how to interpret them.</p>
+<p>When you configure access to the private registries used in your organization, code scanning has access to all the information it needs and is much less likely to miss a vulnerability.</p>
+<p>Code scanning default setup supports the following registry types:</p>
+<table>
+<thead>
+<tr>
+<th>Language</th>
+<th>Registry types</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C#</td>
+<td>NuGet Feed</td>
+</tr>
+<tr>
+<td>Go</td>
+<td>GOPROXY server, Git Source</td>
+</tr>
+<tr>
+<td>Java</td>
+<td>Maven Repository</td>
+</tr>
+</tbody>
+</table>
+<div class="markdown-alert markdown-alert-tip">
+<p class="markdown-alert-title">Tip</p>
+<p>You can define one of each type of registry for each organization. If the codebases in your organization use more than one registry of a given type, you should set up a unified access point or define access to the most important registry for the codebases in that organization.</p>
+</div>
+<h3 title="Code scanning default setup access to private registries / Defining registry access for code scanning default setup"><a href="#defining-registry-access-for-code-scanning-default-setup" aria-hidden="true" class="anchor" id="defining-registry-access-for-code-scanning-default-setup"></a>Defining registry access for code scanning default setup</h3>
+<p>You need to be an <strong>organization owner</strong> to set up access to private registries in the user interface. You can also use the REST API with the organization owner or <code>{read,write}_org_private_registries</code> permissions.</p>
+<ol>
+<li>On the <strong>Settings</strong> tab for the organization, scroll down to the "Security" section and select <strong>Secrets and variables</strong>.</li>
+<li>In the expanded list of secrets and variables, select <strong>Private registries</strong> to display the "Private Registries" page.</li>
+<li>Select <strong>New private registry</strong> to add access details for a private registry.</li>
+<li>Use the <strong>URL</strong> and <strong>Type</strong> fields to define the location and type of the registry:
+<ul>
+<li><strong>URL</strong> is the location where you access the private registry. For example, to use the GitHub Packages registry for NuGet: <code>https://nuget.pkg.github.com/ORGANIZATION/index.json</code>, where <code>ORGANIZATION</code> is the name of your organization on GitHub.</li>
+<li><strong>Type</strong> is the type of registry.</li>
+</ul>
+</li>
+<li>Select the authentication method for the registry:
+<ul>
+<li>
+<p><strong>Token</strong>: Enter the token used to authenticate with the registry.</p>
+</li>
+<li>
+<p><strong>Username and password</strong>: Enter the username and password used to authenticate with the registry. Some types of authentication tokens, such as a GitHub Personal Access Token, are tied to a particular user identity. Select this option for these and enter the relevant username as <strong>Username</strong> and the token as <strong>Password</strong>.</p>
+</li>
+<li>
+<p><strong>OIDC (OpenID Connect)</strong>: Use short-lived credentials from a cloud identity provider instead of storing long-lived secrets. When you select this option, choose a provider and fill in the provider-specific fields. For more information, see <a href="#configuring-oidc-authentication-for-a-private-registry">Configuring OIDC authentication for a private registry</a>.</p>
+</li>
+</ul>
+</li>
+<li>Define which repositories in the organization can access the private registry using these details: all, private and internal, or selected repositories only.</li>
+<li>When you have finished defining the private registry, select <strong>Add Registry</strong> to save the registry information.</li>
+</ol>
+<div class="markdown-alert markdown-alert-tip">
+<p class="markdown-alert-title">Tip</p>
+<p>When you add a private registry to an organization using <strong>Token</strong> or <strong>Username and password</strong> authentication, the token or password is stored as an encrypted secret. Once the registry is created, the token or password cannot be viewed again.</p>
+</div>
+<h3 title="Code scanning default setup access to private registries / Enabling code scanning default setup to use a registry definition"><a href="#enabling-code-scanning-default-setup-to-use-a-registry-definition" aria-hidden="true" class="anchor" id="enabling-code-scanning-default-setup-to-use-a-registry-definition"></a>Enabling code scanning default setup to use a registry definition</h3>
+<p>When you enable code scanning default setup for a repository or group of repositories, GitHub checks whether the repositories have access to any existing private registries. If any private registries are available to a repository, code scanning will use the relevant definitions during analysis.</p>
+<p>When configuring private registries for the first time, you need to disable and re-enable code scanning default setup for any repositories that you want to use the new definition. New or modified configurations will be automatically picked up on subsequent runs.</p>
+<p>For languages supporting private package registries, code scanning default setup will produce information on the tool status page. This shows you which private registry configurations were available to an analysis, but not whether code scanning default setup was able to successfully download private dependencies from them. For more information about the tool status page, see <a href="../../../find-and-fix-code-vulnerabilities/manage-your-configuration/use-the-tools-status-page-for-code-scanning.html">Use the tool status page for code scanning</a>.</p>
+<p>Alternatively, you can confirm whether private registries were used successfully by code scanning analysis by looking in the Actions log files, see <a href="../../../../reference/code-scanning/code-scanning-logs.html#diagnostic-information-for-private-package-registries">Code scanning logs</a>.</p>
+<h2 title="Code scanning advanced setup access to private registries"><a href="#code-scanning-advanced-setup-access-to-private-registries" aria-hidden="true" class="anchor" id="code-scanning-advanced-setup-access-to-private-registries"></a>Code scanning advanced setup access to private registries</h2>
+<p>Code scanning advanced setup uses any private registries available to the workflow that runs the analysis using the <code>codeql-action</code>. It does not have access to the organization-level private registries used by default setup.</p>
+<p>For compiled languages, the <code>codeql-action</code> must observe a build of the code. You can either revise your existing build workflow to also run the <code>codeql-action</code> or create a new workflow that builds the production version of the code and also runs the <code>codeql-action</code>.</p>
+<p>Any private registries used by the build must also be accessible to the workflow that runs the <code>codeql-action</code>. For more information on advanced setup, see <a href="../../../find-and-fix-code-vulnerabilities/configure-code-scanning/configuring-advanced-setup-for-code-scanning.html#configuring-advanced-setup-for-code-scanning-with-codeql">Configuring advanced setup for code scanning</a>.</p>
+<h2 title="Dependabot updates access to private registries"><a href="#dependabot-updates-access-to-private-registries" aria-hidden="true" class="anchor" id="dependabot-updates-access-to-private-registries"></a>Dependabot updates access to private registries</h2>
+<p>Dependabot can use any of the org-level private registries, as well as uses any private registries defined in the <code>dependabot.yml</code> file in the repo.</p>
+<p>Dependabot cannot check for security or version updates for code stored in a private registry unless it can access the registry. If you do not configure access to the private registry, then Dependabot cannot raise pull requests to update any of the dependencies stored in the registry.</p>
+<p>When you configure access to one or more private registries, Dependabot can propose pull requests to upgrade a vulnerable dependency or to maintain a dependency, see <a href="../../../secure-your-supply-chain/manage-your-dependency-security/configuring-access-to-private-registries-for-dependabot.html">Configuring access to private registries for Dependabot</a> and <a href="../../../secure-your-supply-chain/manage-your-dependency-security/guidance-for-the-configuration-of-private-registries-for-dependabot.html">Guidance for the configuration of private registries for Dependabot</a>.</p>
+<h3 title="Dependabot updates access to private registries / Configuring OIDC authentication for a private registry"><a href="#configuring-oidc-authentication-for-a-private-registry" aria-hidden="true" class="anchor" id="configuring-oidc-authentication-for-a-private-registry"></a>Configuring OIDC authentication for a private registry</h3>
+<p>OIDC (OpenID Connect) authentication allows Dependabot to use short-lived credentials from your cloud identity provider to access private registries, eliminating the need to store long-lived secrets. With OIDC, credentials are generated dynamically for each Dependabot update job. You must configure a trust relationship between your cloud provider and GitHub before Dependabot can authenticate.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>OIDC authentication for organization-level private registries is currently supported by Dependabot. It is not supported by code scanning default setup.</p>
+</div>
+<p>When you select <strong>OIDC</strong> as the authentication method for a private registry, choose one of the supported providers and fill in the required fields:</p>
+<ul>
+<li><strong>Azure</strong>: Enter the <strong>Tenant ID</strong> (Azure AD tenant ID) and <strong>Client ID</strong> (Azure AD application client ID). You must configure a federated credential in Azure AD that trusts GitHub's OIDC provider.</li>
+<li><strong>AWS CodeArtifact</strong>: Enter the <strong>AWS Region</strong>, <strong>Account ID</strong> (AWS account ID), <strong>Role Name</strong> (IAM role name), <strong>Domain</strong> (CodeArtifact domain), and <strong>Domain Owner</strong> (CodeArtifact domain owner / AWS account ID). You can optionally provide an <strong>Audience</strong>. You must configure an IAM OIDC identity provider in AWS that trusts GitHub's OIDC provider.</li>
+<li><strong>Cloudsmith</strong>: Enter the <strong>Namespace</strong> (Cloudsmith Organization namespace), <strong>Service Account Slug</strong> (Cloudsmith service account slug), and <strong>Audience</strong> (required). You can optionally provide an <strong>API Host</strong> (defaults to <code>api.cloudsmith.io</code>). You must configure an OpenID Connect provider in Cloudsmith that trusts GitHub's OIDC provider.</li>
+<li><strong>Google Cloud Artifact Registry</strong>: Enter the <strong>Workload Identity Provider</strong> (the full resource name of the Workload Identity Provider, for example <code>projects/PROJECT-NUMBER/locations/global/workloadIdentityPools/POOL/providers/PROVIDER</code>) and <strong>Service Account</strong> (the email of the GCP service account to impersonate). You can optionally provide an <strong>Audience</strong>. You must configure a Workload Identity Pool and Provider in GCP that trusts GitHub's OIDC provider.</li>
+<li><strong>JFrog Artifactory</strong>: Enter the <strong>OIDC Provider Name</strong>. You can optionally provide an <strong>Audience</strong> and <strong>Identity Mapping Name</strong>.</li>
+</ul>
+<p>The authentication type of a private registry cannot be changed after creation. To switch from OIDC to another authentication method, or vice versa, delete the existing registry and create a new one.</p>
+<p>For more information about how OIDC works, see <a href="https://docs.github.com/en/actions/concepts/security/openid-connect" class="external">OpenID Connect</a>.</p>
+<h2 title="Code Quality access to private registries"><a href="#code-quality-access-to-private-registries" aria-hidden="true" class="anchor" id="code-quality-access-to-private-registries"></a>Code Quality access to private registries</h2>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>GitHub Code Quality is currently in public preview and subject to change.<br>
+During public preview, Code Quality will not be billed, although Code Quality scans will consume GitHub Actions minutes.</p>
+</div>
+<p>GitHub Code Quality can use any of the organization-level private registries that are available when it is enabled for a repository.</p>
+<p>If you add new registries to the organization, then you need to disable and re-enable Code Quality to ensure that the analysis detects and uses the new registries.</p>
+<p>To set up private registry access for your organization, see <a href="#defining-registry-access-for-code-scanning-default-setup">Defining registry access for code scanning default setup</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Uploading a SARIF file to GitHub</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Find and fix code vulnerabilities</a> / <a href="index.html">Integrate with existing tools</a> / </nav><h1><a href="#uploading-a-sarif-file-to-github" aria-hidden="true" class="anchor" id="uploading-a-sarif-file-to-github"></a>Uploading a SARIF file to GitHub</h1>
+<p>You can upload SARIF files generated outside GitHub and see code scanning alerts from third-party tools in your repository.</p>
+<p>If you use a third-party analysis tool or CI/CD system to scan code for vulnerabilities, you can generate SARIF file and upload it to GitHub. The best upload method depends on how you generate the SARIF file.</p>
+<p>For example, if you use:</p>
+<ul>
+<li>GitHub Actions to run the CodeQL action, there is no further action required. The CodeQL action uploads the SARIF file automatically when it completes analysis.</li>
+<li>GitHub Actions to run a SARIF-compatible analysis tool, you could update the workflow to include a final step that uploads the results. See <a href="#uploading-a-code-scanning-analysis-with-github-actions">Uploading a code scanning analysis with GitHub Actions</a>.</li>
+<li>The CodeQL CLI to run code scanning in your CI system, you can use the CLI to upload results to GitHub. See <a href="using-code-scanning-with-your-existing-ci-system.html">Using code scanning with your existing CI system</a>.</li>
+<li>A tool that generates results as an artifact outside of your repository, you can use the code scanning API to upload the file. See <a href="https://docs.github.com/en/rest/code-scanning/code-scanning#upload-an-analysis-as-sarif-data" class="external">REST API endpoints for code scanning</a>.</li>
+</ul>
+<p>By default, code scanning expects one SARIF results file per analysis for a repository. If you want to upload more than one set of results for a commit in a repository, you must identify each set of results as a unique set.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>For private and internal repositories, code scanning is available when GitHub Code Security features are enabled for the repository. If you see the error <code>GitHub Code Security or GitHub Advanced Security must be enabled for this repository to use code scanning</code>, check that GitHub Code Security is enabled. For more information, see <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-security-and-analysis-settings-for-your-repository" class="external">Managing security and analysis settings for your repository</a>.</p>
+</div>
+<h2 title="Uploading a code scanning analysis with GitHub Actions"><a href="#uploading-a-code-scanning-analysis-with-github-actions" aria-hidden="true" class="anchor" id="uploading-a-code-scanning-analysis-with-github-actions"></a>Uploading a code scanning analysis with GitHub Actions</h2>
+<p>To use GitHub Actions to upload a third-party SARIF file to a repository, you'll need a workflow. For more information, see <a href="https://docs.github.com/en/actions/learn-github-actions" class="external">Writing workflows</a>.</p>
+<p>Your workflow will need to use the <code>upload-sarif</code> action, which is part of the <code>github/codeql-action</code> repository. It has input parameters that you can use to configure the upload. The main input parameters you'll use are:</p>
+<ul>
+<li><code>sarif_file</code>, which configures the file or directory of SARIF files to be uploaded. The directory or file path is relative to the root of the repository.</li>
+<li><code>category</code> (optional), which assigns a category for results in the SARIF file. This enables you to analyze the same commit in multiple ways and review the results using the code scanning views in GitHub. For example, you can analyze using multiple tools, and in mono-repos, you can analyze different slices of the repository based on the subset of changed files.</li>
+</ul>
+<p>For more information, see the <a href="https://github.com/github/codeql-action/tree/v4/upload-sarif" class="external"><code>upload-sarif</code> action</a>.</p>
+<p>The <code>upload-sarif</code> action can be configured to run when the <code>push</code> and <code>scheduled</code> event occur. For more information about GitHub Actions events, see <a href="https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows" class="external">Events that trigger workflows</a>.</p>
+<p>If your SARIF file doesn't include <code>partialFingerprints</code>, the <code>upload-sarif</code> action will calculate the <code>partialFingerprints</code> field for you and attempt to prevent duplicate alerts. GitHub can only create <code>partialFingerprints</code> when the repository contains both the SARIF file and the source code used in the static analysis. For more information about preventing duplicate alerts, see <a href="../../../reference/code-scanning/sarif-files/sarif-support-for-code-scanning.html#data-for-preventing-duplicated-alerts">SARIF support for code scanning</a>.</p>
+<p>Check that the SARIF properties have the supported size for upload and that the file is compatible with code scanning. For more information, see <a href="../../../reference/code-scanning/sarif-files/sarif-support-for-code-scanning.html#file-compatibility">SARIF support for code scanning</a>.</p>
+<h3 title="Uploading a code scanning analysis with GitHub Actions / Example workflow for SARIF files generated outside of a repository"><a href="#example-workflow-for-sarif-files-generated-outside-of-a-repository" aria-hidden="true" class="anchor" id="example-workflow-for-sarif-files-generated-outside-of-a-repository"></a>Example workflow for SARIF files generated outside of a repository</h3>
+<p>You can create a new workflow that uploads SARIF files after you commit them to your repository. This is useful when the SARIF file is generated as an artifact outside of your repository.</p>
+<p>This example workflow runs anytime commits are pushed to the repository. The action uses the <code>partialFingerprints</code> property to determine if changes have occurred. In addition to running when commits are pushed, the workflow is scheduled to run once per week. For more information, see <a href="https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows" class="external">Events that trigger workflows</a>.</p>
+<p>This workflow uploads the <code>results.sarif</code> file located in the root of the repository. For more information about creating a workflow file, see <a href="https://docs.github.com/en/actions/learn-github-actions" class="external">Writing workflows</a>.</p>
+<p>Alternatively, you could modify this workflow to upload a directory of SARIF files. For example, you could place all SARIF files in a directory in the root of your repository called <code>sarif-output</code> and set the action's input parameter <code>sarif_file</code> to <code>sarif-output</code>. Note that if you upload a directory, each SARIF file must include a unique <code>runAutomationDetails.id</code> to define the category for the results. For more information, see <a href="../../../reference/code-scanning/sarif-files/sarif-support-for-code-scanning.html#runautomationdetails-object">SARIF support for code scanning</a>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">Upload SARIF</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># Run workflow each time code is pushed to your repository and on a schedule.
+</span><span style="color:#65737e;"># The scheduled workflow runs every Thursday at 15:45 UTC.
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">cron</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">45 15 * * 4</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">permissions</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># required for all workflows
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">security-events</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># only required for workflows in private repositories
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">actions</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">contents</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># This step checks out a copy of your repository.
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Checkout repository
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Upload SARIF file
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/upload-sarif@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#65737e;"># Path to SARIF file relative to the root of the repository
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">sarif_file</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">results.sarif
+</span><span style="color:#c0c5ce;">          </span><span style="color:#65737e;"># Optional category for the results
+</span><span style="color:#c0c5ce;">          </span><span style="color:#65737e;"># Used to differentiate multiple results for one commit
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">category</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">my-analysis-tool
+</span></code></pre>
+<h3 title="Uploading a code scanning analysis with GitHub Actions / Example workflow that runs the ESLint analysis tool"><a href="#example-workflow-that-runs-the-eslint-analysis-tool" aria-hidden="true" class="anchor" id="example-workflow-that-runs-the-eslint-analysis-tool"></a>Example workflow that runs the ESLint analysis tool</h3>
+<p>If you generate your third-party SARIF file as part of a continuous integration (CI) workflow, you can add the <code>upload-sarif</code> action as a step after running your CI tests. If you don't already have a CI workflow, you can create one using a GitHub Actions template. For more information, see the <a href="https://docs.github.com/en/actions/quickstart" class="external">Quickstart for GitHub Actions</a>.</p>
+<p>This example workflow runs anytime commits are pushed to the repository. The action uses the <code>partialFingerprints</code> property to determine if changes have occurred. In addition to running when commits are pushed, the workflow is scheduled to run once per week. For more information, see <a href="https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows" class="external">Events that trigger workflows</a>.</p>
+<p>The workflow shows an example of running the ESLint static analysis tool as a step in a workflow. The <code>Run ESLint</code> step runs the ESLint tool and outputs the <code>results.sarif</code> file. The workflow then uploads the <code>results.sarif</code> file to GitHub using the <code>upload-sarif</code> action. For more information about creating a workflow file, see <a href="https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions" class="external">Understanding GitHub Actions</a>.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">ESLint analysis</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#65737e;"># Run workflow each time code is pushed to your repository and on a schedule.
+</span><span style="color:#65737e;"># The scheduled workflow runs every Wednesday at 15:45 UTC.
+</span><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">push</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    - </span><span style="color:#bf616a;">cron</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">45 15 * * 3</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">permissions</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># required for all workflows
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">security-events</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># only required for workflows in private repositories
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">actions</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">contents</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Run npm install
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm install
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Runs the ESlint code analysis
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Run ESLint
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># eslint exits 1 if it finds anything to report
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">node_modules/.bin/eslint build docs lib script spec-main -f node_modules/@microsoft/eslint-formatter-sarif/sarif.js -o results.sarif || true
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Uploads results.sarif to GitHub repository using the upload-sarif action
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">github/codeql-action/upload-sarif@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#65737e;"># Path to SARIF file relative to the root of the repository
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">sarif_file</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">results.sarif
+</span></code></pre>
+<h2 title="Uploading more than one SARIF file for a commit"><a href="#uploading-more-than-one-sarif-file-for-a-commit" aria-hidden="true" class="anchor" id="uploading-more-than-one-sarif-file-for-a-commit"></a>Uploading more than one SARIF file for a commit</h2>
+<p>By default, code scanning expects one SARIF results file per analysis for a repository. Consequently, when you upload a second SARIF results file for a commit, it is treated as a replacement for the original set of data. You may want to upload two different SARIF files for one analysis if, for example, your analysis tool generates a different SARIF file for each language it analyzes or each set of rules it uses. If you want to upload more than one set of results for a commit in a repository, you must identify each set of results as a unique set.</p>
+<p>When you upload multiple SARIF files for a commit, you must indicate a "category" for each analysis. The way to specify a category varies according to the analysis method:</p>
+<ul>
+<li>Using the CodeQL CLI directly, pass the <code>--sarif-category</code> argument to the <code>codeql database analyze</code> command when you generate SARIF files. For more information, see <a href="../../../concepts/code-scanning/codeql/about-the-codeql-cli.html#about-generating-code-scanning-results-with-the-codeql-cli">About the CodeQL CLI</a>.</li>
+<li>Using GitHub Actions with <code>codeql-action/analyze</code>, the category is set automatically from the workflow name and any matrix variables (typically, <code>language</code>). You can override this by specifying a <code>category</code> input for the action, which is useful when you analyze different sections of a monorepo in a single workflow.</li>
+<li>Using GitHub Actions to upload results from other static analysis tools, then you must specify a <code>category</code> input if you upload more than one file of results for the same tool in one workflow. For more information, see <a href="#uploading-a-code-scanning-analysis-with-github-actions">Uploading a SARIF file to GitHub</a>.</li>
+<li>If you are not using either of these approaches, you must specify a unique <code>runAutomationDetails.id</code> in each SARIF file to upload. For more information about this property, see <a href="#runautomationdetails-object"><code>runAutomationDetails</code> object</a>.</li>
+</ul>
+<p>If you upload a second SARIF file for a commit with the same category and from the same tool, the earlier results are overwritten. However, if you try to upload multiple SARIF files for the same tool and category in a single GitHub Actions workflow run, the misconfiguration is detected and the run will fail.</p>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li><a href="../../../reference/code-scanning/sarif-files/troubleshoot-sarif-uploads/index.html">Troubleshooting SARIF uploads</a></li>
+<li><a href="https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions" class="external">Workflow syntax for GitHub Actions</a></li>
+<li><a href="https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/viewing-workflow-run-history" class="external">Viewing workflow run history</a></li>
+<li><a href="using-code-scanning-with-your-existing-ci-system.html">Using code scanning with your existing CI system</a></li>
+<li><a href="https://docs.github.com/en/rest/code-scanning/code-scanning#upload-an-analysis-as-sarif-data" class="external">REST API endpoints for code scanning</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

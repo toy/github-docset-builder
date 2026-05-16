@@ -1,0 +1,123 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Customizing pull requests for Dependabot security updates</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Secure your supply chain</a> / <a href="index.html">Manage your dependency security</a> / </nav><h1><a href="#customizing-pull-requests-for-dependabot-security-updates" aria-hidden="true" class="anchor" id="customizing-pull-requests-for-dependabot-security-updates"></a>Customizing pull requests for Dependabot security updates</h1>
+<p>Learn how to customize Dependabot pull requests for security updates to align with your project's security priorities and workflows.</p>
+<h2 title="Preparing to customize pull requests"><a href="#preparing-to-customize-pull-requests" aria-hidden="true" class="anchor" id="preparing-to-customize-pull-requests"></a>Preparing to customize pull requests</h2>
+<p>If you haven't yet configured a <code>dependabot.yml</code> file for your repository and you want to customize pull requests for security updates, you must first:</p>
+<ol>
+<li>Check in a <code>dependabot.yml</code> file into the <code>.github</code> directory of your repository. For more information, see <a href="../secure-your-dependencies/configuring-dependabot-version-updates.html#enabling-dependabot-version-updates">Configuring Dependabot version updates</a>.</li>
+<li>Set all the required keys. For more information, see <a href="../../../reference/supply-chain-security/dependabot-options-reference.html#required-keys">Required keys</a>.</li>
+<li>If you want the customization for a package ecosystem to <strong>only apply to security updates</strong> (and exclude version updates), set the <code>open-pull-requests-limit</code> key to <code>0</code>.</li>
+</ol>
+<p>You can then consider what your needs and priorities are for security updates, and apply a combination of the customization options outlined below.</p>
+<h2 title="Prioritizing meaningful updates"><a href="#prioritizing-meaningful-updates" aria-hidden="true" class="anchor" id="prioritizing-meaningful-updates"></a>Prioritizing meaningful updates</h2>
+<p>To create a more <strong>targeted review process</strong> that prioritizes meaningful updates, use <code>groups</code> to combine security updates for multiple dependencies into a single pull request.</p>
+<p>For detailed guidance, see <a href="../../../tutorials/secure-your-dependencies/optimizing-pr-creation-version-updates.html#prioritizing-meaningful-updates">Prioritizing meaningful updates</a>.</p>
+<h2 title="Automatically adding assignees"><a href="#automatically-adding-assignees" aria-hidden="true" class="anchor" id="automatically-adding-assignees"></a>Automatically adding assignees</h2>
+<p>Use <code>assignees</code> to automatically add individuals or teams as assignees to pull requests.</p>
+<p>For detailed guidance, see <a href="../../../tutorials/secure-your-dependencies/customizing-dependabot-prs.html#automatically-adding-assignees">Automatically adding assignees</a>.</p>
+<h2 title="Automatically adding reviewers"><a href="#automatically-adding-reviewers" aria-hidden="true" class="anchor" id="automatically-adding-reviewers"></a>Automatically adding reviewers</h2>
+<p>To ensure your project's security updates get addressed promptly by the appropriate team, you can automatically add reviewers to Dependabot pull requests using a CODEOWNERS file. See <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" class="external">About code owners</a>.</p>
+<h2 title="Labeling pull requests with custom labels"><a href="#labeling-pull-requests-with-custom-labels" aria-hidden="true" class="anchor" id="labeling-pull-requests-with-custom-labels"></a>Labeling pull requests with custom labels</h2>
+<p>To <strong>prioritize</strong> specific pull requests, or integrate them into CI/CD pipelines, use <code>labels</code> to apply your own <strong>custom labels</strong> to each pull request.</p>
+<p>For detailed guidance, see <a href="../../../tutorials/secure-your-dependencies/customizing-dependabot-prs.html#labeling-pull-requests-with-custom-labels">Labeling pull requests with custom labels</a>.</p>
+<h2 title="Adding a prefix to commit messages"><a href="#adding-a-prefix-to-commit-messages" aria-hidden="true" class="anchor" id="adding-a-prefix-to-commit-messages"></a>Adding a prefix to commit messages</h2>
+<p>To <strong>integrate</strong> with automations that process commit messages or pull requests titles, use <code>commit-message</code> to specify the prefix that you want for commit messages and pull request titles.</p>
+<p>For detailed guidance, see <a href="../../../tutorials/secure-your-dependencies/customizing-dependabot-prs.html#adding-a-prefix-to-commit-messages">Adding a prefix to commit messages</a>.</p>
+<h2 title="Associating pull requests with a milestone"><a href="#associating-pull-requests-with-a-milestone" aria-hidden="true" class="anchor" id="associating-pull-requests-with-a-milestone"></a>Associating pull requests with a milestone</h2>
+<p>To <strong>track progress</strong> towards a project goal or release, use <code>milestone</code> to associate Dependabot's pull requests with a milestone.</p>
+<p>For detailed guidance, see <a href="../../../tutorials/secure-your-dependencies/customizing-dependabot-prs.html#associating-pull-requests-with-a-milestone">Associating pull requests with a milestone</a>.</p>
+<h2 title="Changing the separator in the pull request branch name"><a href="#changing-the-separator-in-the-pull-request-branch-name" aria-hidden="true" class="anchor" id="changing-the-separator-in-the-pull-request-branch-name"></a>Changing the separator in the pull request branch name</h2>
+<p>To ensure your <strong>branch names align</strong> with your team's existing conventions, use <code>pull-request-branch-name.separator</code> to specify the separator you want Dependabot to use for branch names.</p>
+<p>For detailed guidance, see <a href="../../../tutorials/secure-your-dependencies/customizing-dependabot-prs.html#changing-the-separator-in-the-pull-request-branch-name">Changing the separator in the pull request branch name</a>.</p>
+<h2 title="Example 1: configuration for security updates only"><a href="#example-1-configuration-for-security-updates-only" aria-hidden="true" class="anchor" id="example-1-configuration-for-security-updates-only"></a>Example 1: configuration for security updates only</h2>
+<p>In this example, the <code>dependabot.yml</code> file:</p>
+<ul>
+<li>Uses a private registry for updates to npm dependencies.</li>
+<li>Disables version updates for dependencies, so that any customizations apply to security updates only.</li>
+<li>Is customized so that Dependabot applies custom labels to the pull requests and automatically adds assignees.</li>
+<li>Groups security updates for golang dependencies into a single pull request.</li>
+</ul>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># Example configuration file that:
+</span><span style="color:#65737e;">#  - Uses a private registry for npm updates
+</span><span style="color:#65737e;">#  - Ignores lodash dependency
+</span><span style="color:#65737e;">#  - Disables version-updates
+</span><span style="color:#65737e;">#  - Applies custom labels
+</span><span style="color:#65737e;">#  - Adds assignees
+</span><span style="color:#65737e;">#  - Group security updates for golang dependencies into a single pull request
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Define a private npm registry with the name `example`
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">example</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm-registry
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://example.com
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{secrets.NPM_TOKEN}}
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">npm</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/src/npm-project</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">daily</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># For Lodash, ignore all updates
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">ignore</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">dependency-name</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">lodash</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Disable version updates for npm dependencies
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">open-pull-requests-limit</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">0
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">registries</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Ask Dependabot to use the private registry for npm
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#a3be8c;">example
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Raise all npm pull requests for security updates with custom labels
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">labels</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - "</span><span style="color:#a3be8c;">npm dependencies</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      - "</span><span style="color:#a3be8c;">triage-board</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#65737e;"># Raise all npm pull requests for security updates with assignees
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">assignees</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - "</span><span style="color:#a3be8c;">user-name</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">gomod</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directories</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - "</span><span style="color:#a3be8c;">**/*</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">open-pull-requests-limit</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">0
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">groups</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># Group security updates for golang dependencies
+</span><span style="color:#c0c5ce;">      </span><span style="color:#65737e;"># into a single pull request
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">golang</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">applies-to</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">security-updates
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">patterns</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          - "</span><span style="color:#a3be8c;">golang.org*</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<h2 title="Example 2: configuration for version updates and security updates"><a href="#example-2-configuration-for-version-updates-and-security-updates" aria-hidden="true" class="anchor" id="example-2-configuration-for-version-updates-and-security-updates"></a>Example 2: configuration for version updates and security updates</h2>
+<p>In this example, the <code>dependabot.yml</code> file:</p>
+<ul>
+<li>Is customized so that Dependabot adds custom labels to both version updates and security updates.</li>
+<li>Uses the <code>groups</code> customization option to create two groups ("<code>angular</code>" and "<code>production-dependencies</code>") in order to group multiple updates into single pull requests.</li>
+<li>Specifies that the <code>groups</code> customization for <code>angular</code> applies to security updates only.</li>
+<li>Specifies that the <code>groups</code> customization for <code>production-dependencies</code> applies to version updates only.</li>
+</ul>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2
+</span><span style="color:#bf616a;">updates</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#65737e;"># Keep npm dependencies up to date
+</span><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">package-ecosystem</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">npm</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">directory</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">schedule</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">interval</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">weekly</span><span style="color:#c0c5ce;">"
+</span><span style="color:#65737e;"># Raise all npm pull requests for security and version updates with custom labels
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">labels</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - "</span><span style="color:#a3be8c;">npm dependencies</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      - "</span><span style="color:#a3be8c;">triage-board</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">groups</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">angular</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># Group security updates for Angular dependencies into a single pull request
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">applies-to</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">security-updates
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">patterns</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          - "</span><span style="color:#a3be8c;">@angular*</span><span style="color:#c0c5ce;">"
+</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">production-dependencies</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># Group version updates for dependencies of type "production" into a single pull request
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">applies-to</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">version-updates
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">dependency-type</span><span style="color:#c0c5ce;">: "</span><span style="color:#a3be8c;">production</span><span style="color:#c0c5ce;">"
+</span></code></pre>
+<h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
+<ul>
+<li><a href="../../../reference/supply-chain-security/dependabot-options-reference.html">Dependabot options reference</a></li>
+<li><a href="configuring-access-to-private-registries-for-dependabot.html">Configuring access to private registries for Dependabot</a></li>
+</ul>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

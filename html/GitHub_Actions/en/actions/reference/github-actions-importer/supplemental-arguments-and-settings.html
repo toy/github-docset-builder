@@ -1,0 +1,157 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Supplemental arguments and settings</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">Reference</a> / <a href="index.html">GitHub Actions Importer</a> / </nav><h1><a href="#supplemental-arguments-and-settings" aria-hidden="true" class="anchor" id="supplemental-arguments-and-settings"></a>Supplemental arguments and settings</h1>
+<p>GitHub Actions Importer has several supplemental arguments and settings to tailor the migration process to your needs.</p>
+<p>This article provides general information for configuring GitHub Actions Importer's supplemental arguments and settings, such as optional parameters, path arguments, and network settings.</p>
+<h2 title="Optional parameters"><a href="#optional-parameters" aria-hidden="true" class="anchor" id="optional-parameters"></a>Optional parameters</h2>
+<p>GitHub Actions Importer has several optional parameters that you can use to customize the migration process.</p>
+<h3 title="Optional parameters / Limiting allowed actions"><a href="#limiting-allowed-actions" aria-hidden="true" class="anchor" id="limiting-allowed-actions"></a>Limiting allowed actions</h3>
+<p>The following options can be used to limit which actions are allowed in converted workflows. When used in combination, these options expand the list of allowed actions. If none of these options are supplied, then all actions are allowed.</p>
+<ul>
+<li>
+<p><code>--allowed-actions</code> specifies a list of actions to allow in converted workflows. Wildcards are supported. Any other actions other than those provided will be disallowed.</p>
+<p>For example:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">--allowed-actions actions/checkout@v6 actions/upload-artifact@* my-org/*
+</span></code></pre>
+<p>You can provide an empty list to disallow all actions. For example, <code>--allowed-actions=</code>.</p>
+</li>
+<li>
+<p><code>--allow-verified-actions</code> specifies that all actions from verified creators are allowed.</p>
+</li>
+<li>
+<p><code>--allow-github-created-actions</code> specifies that actions published from the <code>github</code> or <code>actions</code> organizations are allowed.</p>
+<p>For example, such actions include <code>github/super-linter</code> and <code>actions/checkout</code>.</p>
+<p>This option is equivalent to <code>--allowed-actions actions/* github/*</code>.</p>
+</li>
+</ul>
+<h3 title="Optional parameters / Using a credentials file for authentication"><a href="#using-a-credentials-file-for-authentication" aria-hidden="true" class="anchor" id="using-a-credentials-file-for-authentication"></a>Using a credentials file for authentication</h3>
+<p>The <code>--credentials-file</code> parameter specifies the path to a file containing credentials for different servers that GitHub Actions Importer can authenticate to. This is useful when build scripts (such as <code>.travis.yml</code> or <code>jenkinsfile</code>) are stored in multiple GitHub Enterprise Server instances.</p>
+<p>A credentials file must be a YAML file containing a list of server and access token combinations. GitHub Actions Importer uses the credentials for the URL that most closely matches the network request being made.</p>
+<p>For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://github.com
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">access_token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ghp_mygeneraltoken
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://github.com/specific_org/
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">access_token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ghp_myorgspecifictoken
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://jenkins.org
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">access_token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">abc123
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">marty_mcfly
+</span></code></pre>
+<p>For the above credentials file, GitHub Actions Importer uses the access token <code>ghp_mygeneraltoken</code> to authenticate all network requests to <code>https://github.com</code>, <em>unless</em> the network request is for a repository in the <code>specific_org</code> organization. In that case, the <code>ghp_myorgspecifictoken</code> token is used to authenticate instead.</p>
+<h4><a href="#alternative-source-code-providers" aria-hidden="true" class="anchor" id="alternative-source-code-providers"></a>Alternative source code providers</h4>
+<p>GitHub Actions Importer can automatically fetch source code from non-GitHub repositories. A credentials file can specify the <code>provider</code>, the provider URL, and the credentials needed to retrieve the source code.</p>
+<p>For example:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">url</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">https://gitlab.com
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">access_token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">super_secret_token
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">provider</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">gitlab
+</span></code></pre>
+<p>For the above example, GitHub Actions Importer uses the token <code>super_secret_token</code> to retrieve any source code that is hosted on <code>https://gitlab.com</code>.</p>
+<p>Supported values for <code>provider</code> are:</p>
+<ul>
+<li><code>github</code> (default)</li>
+<li><code>gitlab</code></li>
+<li><code>bitbucket_server</code></li>
+<li><code>azure_devops</code></li>
+</ul>
+<h3 title="Optional parameters / Controlling optional features"><a href="#controlling-optional-features" aria-hidden="true" class="anchor" id="controlling-optional-features"></a>Controlling optional features</h3>
+<p>You can use the <code>--features</code> option to limit the features used in workflows that GitHub Actions Importer creates. This is useful for excluding newer GitHub Actions syntax from workflows when migrating to an older GitHub Enterprise Server instance. When using the <code>--features</code> option, you must specify the version of GitHub Enterprise Server that you are migrating to.</p>
+<p>For example:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer dry-run ... --features ghes-3.3
+</span></code></pre>
+<p>The supported values for <code>--features</code> are:</p>
+<ul>
+<li><code>all</code> (default value)</li>
+<li><code>ghes-latest</code></li>
+<li><code>ghes-&lt;number&gt;</code>, where <code>&lt;number&gt;</code> is the version of GitHub Enterprise Server, <code>3.0</code> or later. For example, <code>ghes-3.3</code>.</li>
+</ul>
+<p>You can view the list of available feature flags by GitHub Actions Importer by running the <code>list-features</code> command. For example:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer list-features
+</span></code></pre>
+<p>You should see an output similar to the following.</p>
+<!-- markdownlint-disable search-replace -->
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Available feature flags:
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">actions/cache (disabled):
+</span><span style="color:#c0c5ce;">        Control usage of actions/cache inside of workflows. Outputs a comment if not enabled.
+</span><span style="color:#c0c5ce;">        GitHub Enterprise Server &gt;= ghes-3.5 required.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">composite-actions (enabled):
+</span><span style="color:#c0c5ce;">        Minimizes resulting workflow complexity through the use of composite actions. See https://docs.github.com/en/actions/creating-actions/creating-a-composite-action for more information.
+</span><span style="color:#c0c5ce;">        GitHub Enterprise Server &gt;= ghes-3.4 required.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">reusable-workflows (disabled):
+</span><span style="color:#c0c5ce;">        Avoid duplication by re-using existing workflows. See https://docs.github.com/en/actions/using-workflows/reusing-workflows for more information.
+</span><span style="color:#c0c5ce;">        GitHub Enterprise Server &gt;= ghes-3.4 required.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">workflow-concurrency-option-allowed (enabled):
+</span><span style="color:#c0c5ce;">        Allows the use of the `concurrency` option in workflows. See https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#concurrency for more information.
+</span><span style="color:#c0c5ce;">        GitHub Enterprise Server &gt;= ghes-3.2 required.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">Enable features by passing --enable-features feature-1 feature-2
+</span><span style="color:#c0c5ce;">Disable features by passing --disable-features feature-1 feature-2
+</span></code></pre>
+<!-- markdownlint-enable search-replace -->
+<p>To toggle feature flags, you can use either of the following methods:</p>
+<ul>
+<li>Use the <code>--enable-features</code> and <code>--disable-features</code> options when running a <code>gh actions-importer</code> command.</li>
+<li>Use an environment variable for each feature flag.</li>
+</ul>
+<p>You can use the <code>--enable-features</code> and <code>--disable-features</code> options to select specific features to enable or disable for the duration of the command.<br>
+For example, the following command disables use of <code>actions/cache</code> and <code>composite-actions</code>:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer dry-run ... --disable-features=composite-actions actions/cache
+</span></code></pre>
+<p>You can use the <code>configure --features</code> command to interactively configure feature flags and automatically write them to your environment:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">$ gh actions-importer configure --features
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">✔ Which features would you like to configure?: actions/cache, reusable-workflows
+</span><span style="color:#c0c5ce;">✔ actions/cache (disabled): Enable
+</span><span style="color:#c0c5ce;">? reusable-workflows (disabled):
+</span><span style="color:#c0c5ce;">› Enable
+</span><span style="color:#c0c5ce;">  Disable
+</span></code></pre>
+<h3 title="Optional parameters / Disabling network response caching"><a href="#disabling-network-response-caching" aria-hidden="true" class="anchor" id="disabling-network-response-caching"></a>Disabling network response caching</h3>
+<p>By default, GitHub Actions Importer caches responses from network requests to reduce network load and reduce run time. You can use the <code>--no-http-cache</code> option to disable the network cache. For example:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer forecast ... --no-http-cache
+</span></code></pre>
+<h2 title="Path arguments"><a href="#path-arguments" aria-hidden="true" class="anchor" id="path-arguments"></a>Path arguments</h2>
+<p>When running GitHub Actions Importer, path arguments are relative to the container's disk, so absolute paths relative to the container's host machine are not supported. When GitHub Actions Importer is run, the container's <code>/data</code> directory is mounted to the directory where GitHub Actions Importer is run.</p>
+<p>For example, the following command, when used in the <code>/Users/mona</code> directory, outputs the GitHub Actions Importer audit summary to the <code>/Users/mona/out</code> directory:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer audit --output-dir /data/out
+</span></code></pre>
+<h2 title="Using a proxy"><a href="#using-a-proxy" aria-hidden="true" class="anchor" id="using-a-proxy"></a>Using a proxy</h2>
+<p>To access servers that are configured with a HTTP proxy, you must set the following environment variables with the proxy's URL:</p>
+<ul>
+<li><code>OCTOKIT_PROXY</code>: for any GitHub server.</li>
+<li><code>HTTP_PROXY</code> (or <code>HTTPS_PROXY</code>): for any other servers.</li>
+</ul>
+<p>For example:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">export OCTOKIT_PROXY=https://proxy.example.com:8443
+</span><span style="color:#c0c5ce;">export HTTPS_PROXY=$OCTOKIT_PROXY
+</span></code></pre>
+<p>If the proxy requires authentication, a username and password must be included in the proxy URL. For example, <code>https://username:password@proxy.url:port</code>.</p>
+<h2 title="Disabling SSL certificate verification"><a href="#disabling-ssl-certificate-verification" aria-hidden="true" class="anchor" id="disabling-ssl-certificate-verification"></a>Disabling SSL certificate verification</h2>
+<p>By default, GitHub Actions Importer verifies SSL certificates when making network requests. You can disable SSL certificate verification with the <code>--no-ssl-verify</code> option. For example:</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">gh actions-importer audit --output-dir ./output --no-ssl-verify
+</span></code></pre>
+<h2 title="Legal notice"><a href="#legal-notice" aria-hidden="true" class="anchor" id="legal-notice"></a>Legal notice</h2>
+<p>Portions have been adapted from <a href="https://github.com/github/gh-actions-importer/" class="external">https://github.com/github/gh-actions-importer/</a> under the MIT license:</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">MIT License
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">Copyright (c) 2022 GitHub
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">Permission is hereby granted, free of charge, to any person obtaining a copy
+</span><span style="color:#c0c5ce;">of this software and associated documentation files (the "Software"), to deal
+</span><span style="color:#c0c5ce;">in the Software without restriction, including without limitation the rights
+</span><span style="color:#c0c5ce;">to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+</span><span style="color:#c0c5ce;">copies of the Software, and to permit persons to whom the Software is
+</span><span style="color:#c0c5ce;">furnished to do so, subject to the following conditions:
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">The above copyright notice and this permission notice shall be included in all
+</span><span style="color:#c0c5ce;">copies or substantial portions of the Software.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+</span><span style="color:#c0c5ce;">IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+</span><span style="color:#c0c5ce;">FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+</span><span style="color:#c0c5ce;">AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+</span><span style="color:#c0c5ce;">LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+</span><span style="color:#c0c5ce;">OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+</span><span style="color:#c0c5ce;">SOFTWARE.
+</span></code></pre>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>
