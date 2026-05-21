@@ -47,6 +47,15 @@ jobs:
     - name: create/update branch for PR if there are changes
       if: github.ref == 'refs/heads/main'
       run: |
+        owner="${{ github.repository_owner }}"
+        branch=$(basename "${{ github.repository }}")
+        git -C "$CONTRIBUTIONS_REPO" remote add rw "https://github.com/$owner/$CONTRIBUTIONS_REPO"
+        if git -C "$CONTRIBUTIONS_REPO" fetch --depth=1 rw "$branch"; then
+          git -C "$CONTRIBUTIONS_REPO" checkout "$branch"
+        else
+          git -C "$CONTRIBUTIONS_REPO" checkout -b "$branch"
+        fi
+
         changes=()
         for src_json_path in results/*/docset.json; do
           dst_rel_json_path="docsets/${src_json_path#*/}"
@@ -59,16 +68,15 @@ jobs:
         done
 
         if (( ${#changes[@]} != 0 )); then
-          owner="${{ github.repository_owner }}"
-          branch=$(basename "${{ github.repository }}")
           message="$(ruby -e 'puts ARGV.join(", ")' -- "${changes[@]}")"
 
-          git -C "$CONTRIBUTIONS_REPO" checkout -b "$branch"
+          git -C "$CONTRIBUTIONS_REPO" checkout -
+          git -C "$CONTRIBUTIONS_REPO" checkout -B "$branch"
           git -C "$CONTRIBUTIONS_REPO" \
               -c user.name="$(git log -1 --format=%an)" \
               -c user.email="$(git log -1 --format=%ae)" \
               commit --message "$message"
-          git -C "$CONTRIBUTIONS_REPO" push --force "https://github.com/$owner/$CONTRIBUTIONS_REPO" HEAD
+          git -C "$CONTRIBUTIONS_REPO" push --force rw HEAD
 
           pr_url="https://github.com/Kapeli/$CONTRIBUTIONS_REPO/compare/master...$owner:$CONTRIBUTIONS_REPO:$branch?quick_pull=1"
           gh issue create \
