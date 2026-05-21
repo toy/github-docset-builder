@@ -6,6 +6,6 @@
 <li>For jobs that need to be canceled, the server sends a cancellation message to all the runner machines with jobs that need to be canceled.</li>
 <li>For jobs that continue to run, the server re-evaluates <code>if</code> conditions for the unfinished steps. If the condition evaluates to <code>true</code>, the step continues to run. You can use the <code>cancelled</code> expression to apply a status check of <code>cancelled()</code>. For more information, see <a href="expressions.html#cancelled">Evaluate expressions in workflows and actions</a>.</li>
 <li>For steps that need to be canceled, the runner machine sends <code>SIGINT/Ctrl-C</code> to the step's entry process (<code>node</code> for JavaScript actions, <code>docker</code> for container actions, and <code>bash/cmd/pwd</code> when using <code>run</code> in a step). If the process doesn't exit within 7500 ms, the runner will send <code>SIGTERM/Ctrl-Break</code> to the process, then wait for 2500 ms for the process to exit. If the process is still running, the runner kills the process tree.</li>
-<li>After the 5 minute cancellation timeout period, the server will forcibly terminate all jobs and steps that are still running.</li>
+<li>After the 5 minute cancellation timeout period, the server will forcibly terminate all jobs and steps marked for cancellation that are still running.</li>
 </ol>
 <footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

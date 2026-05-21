@@ -23,8 +23,10 @@
 The status and details on the alert page only reflect the state of the alert on the default branch of the repository, even if the alert exists in other branches. You can see the status of the alert on non-default branches in the <strong>Affected branches</strong> section on the right-hand side of the alert page. If an alert doesn't exist in the default branch, the status of the alert will display as "in pull request" or "in branch" and will be colored grey. The <strong>Development</strong> section shows linked branches and pull requests that will fix the alert.</p>
 </li>
 <li>
-<p>Optionally, if the alert highlights a problem with data flow, click <strong>Show paths</strong> to display the path from the data source to the sink where it's used.</p>
+<p>Optionally, if the alert highlights a problem with data flow, click <strong>Show paths</strong> to display the path from the data source to the sink where it's used. The path view shows each step in the data flow as a numbered list, from the point where user-provided data enters the code (the source) to the point where it's used in a potentially unsafe operation (the sink).</p>
 <p><img src="../../../../..//assets/images/help/repository/code-scanning-alert-details.png" alt="Screenshot of a code scanning alert. The &quot;Show paths&quot; and &quot;Show more&quot; links are outlined in dark orange."></p>
+<p>Some alerts identify multiple paths through the code that could trigger the same vulnerability. When an alert has multiple paths, a dropdown appears above the path view showing the number of paths available. You can select each path from the dropdown to review it individually.</p>
+<p><img src="../../../../..//assets/images/help/repository/multiple-paths-available.png" alt="Screenshot of a code scanning alert detail page showing the paths dropdown with &quot;3 paths available&quot;."></p>
 </li>
 <li>
 <p>Alerts from CodeQL analysis include a description of the problem. Click <strong>Show more</strong> for guidance on how to fix your code.</p>

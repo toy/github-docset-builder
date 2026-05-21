@@ -63,6 +63,11 @@ For example, you can use <code>npm install --verbose</code> for npm or <code>GIT
 <h3 title="Troubleshooting runners / Self-hosted runners"><a href="#self-hosted-runners" aria-hidden="true" class="anchor" id="self-hosted-runners"></a>Self-hosted runners</h3>
 <p>If you use self-hosted runners, you can view their activity and diagnose common issues.</p>
 <p>For more information, see <a href="manage-runners/self-hosted-runners/monitor-and-troubleshoot.html">Monitoring and troubleshooting self-hosted runners</a>.</p>
+<h3 title="Troubleshooting runners / Runner IP addresses flagged by security scanners"><a href="#runner-ip-addresses-flagged-by-security-scanners" aria-hidden="true" class="anchor" id="runner-ip-addresses-flagged-by-security-scanners"></a>Runner IP addresses flagged by security scanners</h3>
+<p>GitHub-hosted runners use dynamically assigned IP addresses from shared infrastructure. These IP addresses are published via the Meta API (for example, the <code>actions</code> and <code>actions_macos</code> keys). For more information, see <a href="https://docs.github.com/en/rest/meta/meta#get-github-meta-information" class="external">REST API endpoints for meta data</a>.</p>
+<p>Third-party threat intelligence services, IP reputation scanners, or firewall vendors may flag these IP addresses as "malicious" or "suspicious." Because the underlying infrastructure is shared, activity from other users of the same infrastructure can influence the reputation scores assigned to these addresses.</p>
+<p>GitHub does not control third-party IP reputation lists and cannot comment on their accuracy or update frequency. To verify whether an IP address belongs to GitHub-hosted runners, check the IP ranges returned by the Meta API.</p>
+<p>If you have a security concern about a Microsoft-owned IP address, report it to the <a href="https://msrc.microsoft.com/report/" class="external">Microsoft Security Response Center (MSRC)</a>.</p>
 <h2 title="Networking troubleshooting suggestions"><a href="#networking-troubleshooting-suggestions" aria-hidden="true" class="anchor" id="networking-troubleshooting-suggestions"></a>Networking troubleshooting suggestions</h2>
 <p>Our support is limited for network issues that involve:</p>
 <ul>
