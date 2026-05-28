@@ -1545,8 +1545,19 @@
 <td><code>alpha</code>, <code>beta</code>, <code>canary</code>, <code>dev</code>, <code>experimental</code>, <code>latest</code>, <code>legacy</code>, <code>next</code>, <code>nightly</code>, <code>rc</code>, <code>release</code>, <code>stable</code></td>
 <td><code>lodash@1.2.0-alpha</code>, <code>axios@latest</code>, <code>moment@nightly</code></td>
 </tr>
+<tr>
+<td>Bundler</td>
+<td><code>bundler</code></td>
+<td><code>alpha</code>, <code>beta</code>, <code>rc</code>, <code>pre</code></td>
+<td><code>rails@1.0.0.alpha</code>, <code>rack@1.0.0.beta1</code>, <code>rspec@1.0.0.rc2</code></td>
+</tr>
 </tbody>
 </table>
+<h4><a href="#ecosystem-specific-versioning-details" aria-hidden="true" class="anchor" id="ecosystem-specific-versioning-details"></a>Ecosystem-specific versioning details</h4>
+<p>The following details describe how Dependabot interprets versioning for specific ecosystems.</p>
+<ul>
+<li><strong>Bundler:</strong> Bundler does not use a fixed set of prerelease tags. Any version segment containing a letter is treated as a prerelease (for example, <code>.alpha</code>, <code>.beta1</code>, <code>.rc2</code>). Hyphens in version strings are normalized to <code>.pre.</code> internally (for example, <code>1.0.0-beta</code> becomes <code>1.0.0.pre.beta</code>).</li>
+</ul>
 <h4><a href="#versioning-tag-glossary" aria-hidden="true" class="anchor" id="versioning-tag-glossary"></a>Versioning tag glossary</h4>
 <ul>
 <li><strong><code>alpha</code>:</strong> Early version, may be unstable and have incomplete features.</li>
