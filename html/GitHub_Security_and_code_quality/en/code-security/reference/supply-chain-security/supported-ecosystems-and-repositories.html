@@ -520,6 +520,36 @@ Dependabot also supports dependencies in private registries. For more informatio
 <td align="center"></td>
 </tr>
 <tr>
+<td></td>
+<td></td>
+<td></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><a href="#sbt">sbt</a></td>
+<td><code>sbt</code></td>
+<td>Not applicable</td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Not supported" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Not supported" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
 <td><a href="#swift">Swift</a></td>
 <td><code>swift</code></td>
 <td>v5</td>
@@ -727,6 +757,16 @@ Dependabot also supports dependencies in private registries. For more informatio
 <ul>
 <li>Versioned toolchains such as <code>channel = "1.xx.yy"</code> and <code>channel = "1.xx"</code>.</li>
 <li>Dated toolchains such as <code>channel = "nightly-YYYY-MM-DD"</code> and <code>channel = "beta-YYYY-MM-DD"</code>.</li>
+</ul>
+<h3 title="Supported ecosystems maintained by GitHub / sbt"><a href="#sbt" aria-hidden="true" class="anchor" id="sbt"></a>sbt</h3>
+<p>Dependabot supports updates to sbt dependency files. sbt resolves artifacts from Maven repositories and uses the same version ordering as Maven.</p>
+<p>The following manifest files are supported:</p>
+<ul>
+<li><code>build.sbt</code> (root): fetched as a required file.</li>
+<li><code>project/plugins.sbt</code>: fetched if present.</li>
+<li><code>project/build.properties</code>: fetched if present.</li>
+<li><code>project/*.scala</code>: all <code>.scala</code> files in the <code>project/</code> directory.</li>
+<li><code>{subdir}/build.sbt</code>: scans root-level subdirectories (excluding <code>project/</code>, <code>target/</code>, <code>.git</code>, <code>.github</code>).</li>
 </ul>
 <h3 title="Supported ecosystems maintained by GitHub / Swift"><a href="#swift" aria-hidden="true" class="anchor" id="swift"></a>Swift</h3>
 <p>Private registry support applies to git registries only. Swift registries are not supported. Non-declarative manifests are not supported. For more information on non-declarative manifests, see <a href="https://github.com/apple/swift-evolution/blob/7003da1439ad60896ec14657dfce829f04b0632c/proposals/0301-package-editing-commands.md#editing-non-declarative-manifests" class="external">Editing Non-Declarative Manifests</a> in the Swift Evolution documentation.</p>

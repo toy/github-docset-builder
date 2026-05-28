@@ -11,11 +11,16 @@
 </ul>
 <p>The token is also available in the <code>github.token</code> context. For more information, see <a href="../../reference/workflows-and-actions/contexts.html#github-context">Contexts reference</a>.</p>
 <h2 title="When GITHUB_TOKEN triggers workflow runs"><a href="#when-github_token-triggers-workflow-runs" aria-hidden="true" class="anchor" id="when-github_token-triggers-workflow-runs"></a>When <code>GITHUB_TOKEN</code> triggers workflow runs</h2>
-<p>When you use the repository's <code>GITHUB_TOKEN</code> to perform tasks, events triggered by the <code>GITHUB_TOKEN</code> will not create a new workflow run, with the following exception:</p>
+<p>When you use the repository's <code>GITHUB_TOKEN</code> to perform tasks, events triggered by the <code>GITHUB_TOKEN</code> will not create a new workflow run, with the following exceptions:</p>
 <ul>
 <li><code>workflow_dispatch</code> and <code>repository_dispatch</code> events always create workflow runs.</li>
+<li><code>pull_request</code> events with the <code>opened</code>, <code>synchronize</code>, or <code>reopened</code> activity types: when a workflow using <code>GITHUB_TOKEN</code> creates or updates a pull request, the resulting <code>pull_request</code> event creates workflow runs in an <strong>approval-required</strong> state. The pull request displays a banner in the merge box, and a user with write access to the repository can start the runs by selecting <strong>Approve workflows to run</strong>. Other <code>pull_request</code> activity types (such as <code>labeled</code>, <code>edited</code>, or <code>closed</code>) do not create workflow runs. This prevents recursive workflow runs while still allowing CI workflows to run on pull requests created by automation. For more information about approving workflow runs, see <a href="../../how-tos/manage-workflow-runs/approve-runs-from-forks.html">Approving workflow runs from forks</a>.</li>
 </ul>
 <p>For all other events, this behavior prevents you from accidentally creating recursive workflow runs. For example, if a workflow run pushes code using the repository's <code>GITHUB_TOKEN</code>, a new workflow will not run even when the repository contains a workflow configured to run when <code>push</code> events occur.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>If you need workflow runs from workflow-created pull requests to execute without requiring approval, use a GitHub App installation access token or a personal access token instead of <code>GITHUB_TOKEN</code> when creating or updating the pull request.</p>
+</div>
 <p>Commits pushed by a GitHub Actions workflow that uses the <code>GITHUB_TOKEN</code> do not trigger a GitHub Pages build.</p>
 <h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
 <ul>

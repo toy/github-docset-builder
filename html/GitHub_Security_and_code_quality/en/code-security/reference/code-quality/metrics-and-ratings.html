@@ -87,6 +87,14 @@ During public preview, Code Quality will not be billed, although Code Quality sc
 </tr>
 </tbody>
 </table>
+<h2 title="Code coverage"><a href="#code-coverage" aria-hidden="true" class="anchor" id="code-coverage"></a>Code coverage</h2>
+<p>Code coverage measures what percentage of your source code is executed when your test suite runs. Code Quality displays a coverage percentage on pull requests after you upload a Cobertura XML coverage report.</p>
+<h3 title="Code coverage / How coverage is calculated"><a href="#how-coverage-is-calculated" aria-hidden="true" class="anchor" id="how-coverage-is-calculated"></a>How coverage is calculated</h3>
+<p>The coverage percentage represents the number of lines covered by tests divided by the total number of lines, expressed as a percentage. Code Quality stores the latest upload for each branch (including the default branch) and compares the PR branch coverage to the default branch coverage.</p>
+<p>For example, if your default branch has 44% coverage and your PR branch has 65% coverage, the PR gained 21 percentage points of coverage.</p>
+<h3 title="Code coverage / Per-file delta"><a href="#per-file-delta" aria-hidden="true" class="anchor" id="per-file-delta"></a>Per-file delta</h3>
+<p>The per-file breakdown on pull requests shows how coverage changed for each modified file. A positive delta means the file gained coverage on the PR branch compared to the default branch.</p>
+<p>To set up code coverage for your repository, see <a href="/en/code-security/how-tos/maintain-quality-code/set-up-code-coverage">Setting up code coverage for your repository</a>.</p>
 <h2 title="Further reading"><a href="#further-reading" aria-hidden="true" class="anchor" id="further-reading"></a>Further reading</h2>
 <ul>
 <li><a href="../../concepts/about-code-quality.html">About GitHub Code Quality</a></li>

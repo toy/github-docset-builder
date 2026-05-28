@@ -641,6 +641,7 @@
 <li>More than one activity type triggers this event. For information about each activity type, see <a href="https://docs.github.com/en/webhooks-and-events/webhooks/webhook-events-and-payloads#pull_request" class="external">Webhook events and payloads</a>. By default, a workflow only runs when a <code>pull_request</code> event's activity type is <code>opened</code>, <code>synchronize</code>, or <code>reopened</code>. To trigger workflows by different activity types, use the <code>types</code> keyword. For more information, see <a href="workflow-syntax.html#onevent_nametypes">Workflow syntax for GitHub Actions</a>.</li>
 <li>Workflows will not run on <code>pull_request</code> activity if the pull request has a merge conflict. The merge conflict must be resolved first. Conversely, workflows with the <code>pull_request_target</code> event will run even if the pull request has a merge conflict. Before using the <code>pull_request_target</code> trigger, you should be aware of the security risks. For more information, see <a href="#pull_request_target"><code>pull_request_target</code></a>.</li>
 <li>The <code>pull_request</code> webhook event payload is empty for merged pull requests and pull requests that come from forked repositories.</li>
+<li>When a pull request is created or updated by a workflow using <code>GITHUB_TOKEN</code>, <code>pull_request</code> events with the <code>opened</code>, <code>synchronize</code>, or <code>reopened</code> activity types create workflow runs that require approval. A user with write access to the repository can approve these runs from the pull request page. With the exception of <code>workflow_dispatch</code> and <code>repository_dispatch</code>, other <code>GITHUB_TOKEN</code>-triggered events do not create workflow runs at all.</li>
 <li>The value of <code>GITHUB_REF</code> varies for a closed pull request depending on whether the pull request has been merged or not. If a pull request was closed but not merged, it will be <code>refs/pull/PULL_REQUEST_NUMBER/merge</code>. If a pull request was closed as a result of being merged, it will be the fully qualified <code>ref</code> of the branch it was merged into, for example <code>/refs/heads/main</code>.</li>
 </ul>
 </div>
@@ -990,7 +991,7 @@
 <li>Events will not be created if more than 5,000 branches are pushed at once. Events will not be created for tags when more than three tags are pushed at once.</li>
 </ul>
 </div>
-<p>Runs your workflow when you push a commit or tag, or when you create a repository from a template.</p>
+<p>Runs your workflow when you push a commit or tag, or when you create a repository from a template. This includes workflows that are not merged into the default branch. For more information, see <a href="#running-your-workflow-only-when-a-push-to-specific-branches-occurs">Events that trigger workflows</a>.</p>
 <p>For example, you can run a workflow when the <code>push</code> event occurs.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">  </span><span style="color:#a3be8c;">push

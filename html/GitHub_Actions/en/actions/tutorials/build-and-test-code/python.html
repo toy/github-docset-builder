@@ -228,6 +228,10 @@
 </span><span style="color:#a3be8c;">    pip install pytest pytest-cov
 </span><span style="color:#a3be8c;">    pytest tests.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
 </span></code></pre>
+<div class="markdown-alert markdown-alert-tip">
+<p class="markdown-alert-title">Tip</p>
+<p>This example already produces a Cobertura XML coverage report (<code>--cov-report=xml</code>). To display coverage results directly on pull requests, upload the report using the <code>actions/upload-code-coverage</code> action. See <a href="https://docs.github.com/en/code-security/how-tos/maintain-quality-code/set-up-code-coverage" class="external">Setting up code coverage for your repository</a>.</p>
+</div>
 <h3 title="Testing your code / Using Ruff to lint and/or format code"><a href="#using-ruff-to-lint-andor-format-code" aria-hidden="true" class="anchor" id="using-ruff-to-lint-andor-format-code"></a>Using Ruff to lint and/or format code</h3>
 <p>The following example installs or upgrades <code>ruff</code> and uses it to lint all files. For more information, see <a href="https://docs.astral.sh/ruff" class="external">Ruff</a>.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:

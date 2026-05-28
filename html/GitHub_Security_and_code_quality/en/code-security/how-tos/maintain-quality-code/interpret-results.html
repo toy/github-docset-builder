@@ -34,6 +34,15 @@ During public preview, Code Quality will not be billed, although Code Quality sc
 <li>Large repositories with a lot of code in a fully supported language often have many results even if the majority of the code has good maintainability and reliability standards.</li>
 </ul>
 <p>To learn more about the metrics and how the ratings are calculated, see <a href="../../reference/code-quality/metrics-and-ratings.html">Metrics and ratings reference</a>.</p>
+<h2 title="Viewing code coverage on pull requests"><a href="#viewing-code-coverage-on-pull-requests" aria-hidden="true" class="anchor" id="viewing-code-coverage-on-pull-requests"></a>Viewing code coverage on pull requests</h2>
+<p>After code coverage is configured for your repository, the <code>github-code-quality[bot]</code> posts a coverage summary comment on each pull request. The comment includes:</p>
+<ul>
+<li><strong>Branch-vs-default-branch comparison:</strong> The aggregate coverage percentage for the pull request branch and the default branch (for example, "65% on pull request branch, 44% on default branch").</li>
+<li><strong>Most impacted files:</strong> The 10 files with the largest coverage changes between the default branch and the pull request branch. This list may include files not directly modified in the pull request. New or modified files are ranked above deleted files. Within each group, files are sorted by the absolute change in line coverage weighted by the number of lines in the file, with coverage magnitude and then filename as tiebreakers.</li>
+<li><strong>Per-file breakdown:</strong> An expandable section listing each file with its coverage percentage and delta value. A positive delta means the file gained coverage on this branch. A negative delta indicates coverage decreased, which may signal untested code paths introduced by the change.</li>
+</ul>
+<p>Use the coverage summary to identify files with low or declining coverage and prioritize review attention on untested changes.</p>
+<p>For more information about how the coverage percentage is calculated, see <a href="../../reference/code-quality/metrics-and-ratings.html#code-coverage">Metrics and ratings reference</a>.</p>
 <h2 title="Next steps"><a href="#next-steps" aria-hidden="true" class="anchor" id="next-steps"></a>Next steps</h2>
 <ul>
 <li>Remediate quality findings in your default branch and improve the maintainability and reliability rating for your repository. See <a href="../../tutorials/improve-code-quality/improve-your-codebase.html">Improving the quality of your repository's code</a>.</li>

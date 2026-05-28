@@ -47,6 +47,10 @@
 </span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">code-coverage-report
 </span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">output/test/code-coverage.html
 </span></code></pre>
+<div class="markdown-alert markdown-alert-tip">
+<p class="markdown-alert-title">Tip</p>
+<p>To display code coverage results directly on pull requests instead of downloading artifacts, you can upload a Cobertura XML coverage report to Code Quality. See <a href="https://docs.github.com/en/code-security/how-tos/maintain-quality-code/set-up-code-coverage" class="external">Setting up code coverage for your repository</a>.</p>
+</div>
 <h2 title="Configuring a custom artifact retention period"><a href="#configuring-a-custom-artifact-retention-period" aria-hidden="true" class="anchor" id="configuring-a-custom-artifact-retention-period"></a>Configuring a custom artifact retention period</h2>
 <p>You can define a custom retention period for individual artifacts created by a workflow. When using a workflow to create a new artifact, you can use <code>retention-days</code> with the <code>upload-artifact</code> action. This example demonstrates how to set a custom retention period of 5 days for the artifact named <code>my-artifact</code>:</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">  - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">Upload Artifact</span><span style="color:#c0c5ce;">'
