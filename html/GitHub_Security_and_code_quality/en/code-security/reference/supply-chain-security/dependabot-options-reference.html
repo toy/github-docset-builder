@@ -361,9 +361,19 @@
 <td align="center"></td>
 </tr>
 <tr>
+<td></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
 <td>Deno</td>
 <td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
 <td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+</tr>
+<tr>
+<td></td>
+<td align="center"></td>
+<td align="center"></td>
 </tr>
 <tr>
 <td>Devcontainers</td>
@@ -928,6 +938,21 @@
 <td>Conda</td>
 <td><code>conda</code></td>
 <td align="center">Not applicable</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td>Deno</td>
+<td><code>deno</code></td>
+<td align="center">&gt;=v2</td>
 </tr>
 <tr>
 <td></td>
@@ -1548,8 +1573,38 @@
 <tr>
 <td>Bundler</td>
 <td><code>bundler</code></td>
-<td><code>alpha</code>, <code>beta</code>, <code>rc</code>, <code>pre</code></td>
+<td>Any prerelease identifier (commonly <code>alpha</code>, <code>beta</code>, <code>rc</code>, <code>pre</code>)</td>
 <td><code>rails@1.0.0.alpha</code>, <code>rack@1.0.0.beta1</code>, <code>rspec@1.0.0.rc2</code></td>
+</tr>
+<tr>
+<td>Cargo</td>
+<td><code>cargo</code></td>
+<td>Any SemVer prerelease identifier (commonly <code>alpha</code>, <code>beta</code>, <code>rc</code>, <code>dev</code>)</td>
+<td><code>serde@1.0.0-alpha</code>, <code>tokio@0.2.0-preview.3</code>, <code>clap@4.0.0-rc.1</code>, <code>rand@1.0.0-dev</code></td>
+</tr>
+<tr>
+<td>pip</td>
+<td><code>pip</code></td>
+<td><code>a</code>, <code>b</code>, <code>rc</code>, <code>dev</code>, <code>post</code></td>
+<td><code>requests@1.0.0a1</code>, <code>numpy@2.0.0b3</code>, <code>django@4.0rc1</code>, <code>black@1.0.0.dev5</code>, <code>pandas@2.0.5.post1</code></td>
+</tr>
+<tr>
+<td>pipenv</td>
+<td><code>pip</code></td>
+<td><code>a</code>, <code>b</code>, <code>rc</code>, <code>dev</code>, <code>post</code></td>
+<td><code>requests@1.0.0a1</code>, <code>numpy@2.0.0b3</code>, <code>django@4.0rc1</code>, <code>black@1.0.0.dev5</code>, <code>pandas@2.0.5.post1</code></td>
+</tr>
+<tr>
+<td>pip-compile</td>
+<td><code>pip</code></td>
+<td><code>a</code>, <code>b</code>, <code>rc</code>, <code>dev</code>, <code>post</code></td>
+<td><code>requests@1.0.0a1</code>, <code>numpy@2.0.0b3</code>, <code>django@4.0rc1</code>, <code>black@1.0.0.dev5</code>, <code>pandas@2.0.5.post1</code></td>
+</tr>
+<tr>
+<td>poetry</td>
+<td><code>pip</code></td>
+<td><code>a</code>, <code>b</code>, <code>rc</code>, <code>dev</code>, <code>post</code></td>
+<td><code>requests@1.0.0a1</code>, <code>numpy@2.0.0b3</code>, <code>django@4.0rc1</code>, <code>black@1.0.0.dev5</code>, <code>pandas@2.0.5.post1</code></td>
 </tr>
 </tbody>
 </table>
@@ -1557,6 +1612,8 @@
 <p>The following details describe how Dependabot interprets versioning for specific ecosystems.</p>
 <ul>
 <li><strong>Bundler:</strong> Bundler does not use a fixed set of prerelease tags. Any version segment containing a letter is treated as a prerelease (for example, <code>.alpha</code>, <code>.beta1</code>, <code>.rc2</code>). Hyphens in version strings are normalized to <code>.pre.</code> internally (for example, <code>1.0.0-beta</code> becomes <code>1.0.0.pre.beta</code>).</li>
+<li><strong>Cargo:</strong> Follows SemVer 2.0.0 prerelease conventions. Anything after <code>-</code> is a prerelease identifier (dot-separated, <code>[0-9A-Za-z-]</code>). Build metadata (<code>+...</code>) is allowed but ignored for version precedence.</li>
+<li><strong>pip/pipenv/pip-compile/poetry (PEP 440):</strong> The table lists canonical prerelease and postrelease suffixes per PEP 440. Aliases are also recognized and normalized to their canonical forms (<code>alpha</code>→<code>a</code>, <code>beta</code>→<code>b</code>, <code>c</code>/<code>pre</code>/<code>preview</code>→<code>rc</code>, <code>rev</code>/<code>r</code>→<code>post</code>). Epoch versions (<code>N!...</code>) and local versions (<code>+local</code>) are supported; local version segments are used only to break ties when the public version is identical.</li>
 </ul>
 <h4><a href="#versioning-tag-glossary" aria-hidden="true" class="anchor" id="versioning-tag-glossary"></a>Versioning tag glossary</h4>
 <ul>

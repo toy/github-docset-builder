@@ -33,7 +33,7 @@
 <li>This event will only trigger a workflow run if the workflow file exists on the default branch.</li>
 </ul>
 </div>
-<p>Runs your workflow when branch protection rules in the workflow repository are changed. For more information about branch protection rules, see <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches" class="external">About protected branches</a>. For information about the branch protection rule APIs, see <a href="https://docs.github.com/en/graphql/reference/objects#branchprotectionrule" class="external">Objects</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/branches" class="external">REST API endpoints for branches and their settings</a>.</p>
+<p>Runs your workflow when branch protection rules in the workflow repository are changed. For more information about branch protection rules, see <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches" class="external">About protected branches</a>. For information about the branch protection rule APIs, see <a href="https://docs.github.com/en/graphql/reference/branches#object-branchprotectionrule" class="external">Branches</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/branches" class="external">REST API endpoints for branches and their settings</a>.</p>
 <p>For example, you can run a workflow when a branch protection rule has been <code>created</code> or <code>deleted</code>:</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">branch_protection_rule</span><span style="color:#c0c5ce;">:
@@ -66,7 +66,7 @@
 <li>To prevent recursive workflows, this event does not trigger workflows if the check run's check suite was created by GitHub Actions or if the check suite's head SHA is associated with GitHub Actions.</li>
 </ul>
 </div>
-<p>Runs your workflow when activity related to a check run occurs. A check run is an individual test that is part of a check suite. For information, see <a href="https://docs.github.com/en/rest/guides/using-the-rest-api-to-interact-with-checks" class="external">Using the REST API to interact with checks</a>. For information about the check run APIs, see <a href="https://docs.github.com/en/graphql/reference/objects#checkrun" class="external">Objects</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/checks/runs" class="external">REST API endpoints for check runs</a>.</p>
+<p>Runs your workflow when activity related to a check run occurs. A check run is an individual test that is part of a check suite. For information, see <a href="https://docs.github.com/en/rest/guides/using-the-rest-api-to-interact-with-checks" class="external">Using the REST API to interact with checks</a>. For information about the check run APIs, see <a href="https://docs.github.com/en/graphql/reference/checks#object-checkrun" class="external">Checks</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/checks/runs" class="external">REST API endpoints for check runs</a>.</p>
 <p>For example, you can run a workflow when a check run has been <code>rerequested</code> or <code>completed</code>.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">check_run</span><span style="color:#c0c5ce;">:
@@ -99,7 +99,7 @@
 <li>To prevent recursive workflows, this event does not trigger workflows if the check suite was created by GitHub Actions or if the check suite's head SHA is associated with GitHub Actions.</li>
 </ul>
 </div>
-<p>Runs your workflow when check suite activity occurs. A check suite is a collection of the check runs created for a specific commit. Check suites summarize the status and conclusion of the check runs that are in the suite. For information, see <a href="https://docs.github.com/en/rest/guides/using-the-rest-api-to-interact-with-checks" class="external">Using the REST API to interact with checks</a>. For information about the check suite APIs, see <a href="https://docs.github.com/en/graphql/reference/objects#checksuite" class="external">Objects</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/checks/suites" class="external">REST API endpoints for check suites</a>.</p>
+<p>Runs your workflow when check suite activity occurs. A check suite is a collection of the check runs created for a specific commit. Check suites summarize the status and conclusion of the check runs that are in the suite. For information, see <a href="https://docs.github.com/en/rest/guides/using-the-rest-api-to-interact-with-checks" class="external">Using the REST API to interact with checks</a>. For information about the check suite APIs, see <a href="https://docs.github.com/en/graphql/reference/checks#object-checksuite" class="external">Checks</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/checks/suites" class="external">REST API endpoints for check suites</a>.</p>
 <p>For example, you can run a workflow when a check suite has been <code>completed</code>.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">check_suite</span><span style="color:#c0c5ce;">:
@@ -128,7 +128,7 @@
 <p class="markdown-alert-title">Note</p>
 <p>An event will not be created when you create more than three tags at once.</p>
 </div>
-<p>Runs your workflow when someone creates a Git reference (Git branch or tag) in the workflow's repository. For information about the APIs to create a Git reference, see <a href="https://docs.github.com/en/graphql/reference/mutations#createref" class="external">Mutations</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/git/refs#create-a-reference" class="external">REST API endpoints for Git references</a>.</p>
+<p>Runs your workflow when someone creates a Git reference (Git branch or tag) in the workflow's repository. For information about the APIs to create a Git reference, see <a href="https://docs.github.com/en/graphql/reference/git#mutation-createref" class="external">Git</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/git/refs#create-a-reference" class="external">REST API endpoints for Git references</a>.</p>
 <p>For example, you can run a workflow when the <code>create</code> event occurs.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">  </span><span style="color:#a3be8c;">create
@@ -159,7 +159,7 @@
 <li>An event will not be created when you delete more than three tags at once.</li>
 </ul>
 </div>
-<p>Runs your workflow when someone deletes a Git reference (Git branch or tag) in the workflow's repository. For information about the APIs to delete a Git reference, see <a href="https://docs.github.com/en/graphql/reference/mutations#deleteref" class="external">Mutations</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/git/refs#delete-a-reference" class="external">REST API endpoints for Git references</a>.</p>
+<p>Runs your workflow when someone deletes a Git reference (Git branch or tag) in the workflow's repository. For information about the APIs to delete a Git reference, see <a href="https://docs.github.com/en/graphql/reference/git#mutation-deleteref" class="external">Git</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/git/refs#delete-a-reference" class="external">REST API endpoints for Git references</a>.</p>
 <p>For example, you can run a workflow when the <code>delete</code> event occurs.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">  </span><span style="color:#a3be8c;">delete
@@ -183,7 +183,7 @@
 </tr>
 </tbody>
 </table>
-<p>Runs your workflow when someone creates a deployment in the workflow's repository. Deployments created with a commit SHA may not have a Git ref. For information about the APIs to create a deployment, see <a href="https://docs.github.com/en/graphql/reference/mutations#createdeployment" class="external">Mutations</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/repos#deployments" class="external">REST API endpoints for repositories</a>.</p>
+<p>Runs your workflow when someone creates a deployment in the workflow's repository. Deployments created with a commit SHA may not have a Git ref. For information about the APIs to create a deployment, see <a href="https://docs.github.com/en/graphql/reference/deployments#mutation-createdeployment" class="external">Deployments</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/repos#deployments" class="external">REST API endpoints for repositories</a>.</p>
 <p>For example, you can run a workflow when the <code>deployment</code> event occurs.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">  </span><span style="color:#a3be8c;">deployment
@@ -211,7 +211,7 @@
 <p class="markdown-alert-title">Note</p>
 <p>When a deployment status's state is set to <code>inactive</code>, a workflow run will not be triggered.</p>
 </div>
-<p>Runs your workflow when a third party provides a deployment status. Deployments created with a commit SHA may not have a Git ref. For information about the APIs to create a deployment status, see <a href="https://docs.github.com/en/graphql/reference/mutations#createdeploymentstatus" class="external">Mutations</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/deployments#create-a-deployment-status" class="external">REST API endpoints for deployments</a>.</p>
+<p>Runs your workflow when a third party provides a deployment status. Deployments created with a commit SHA may not have a Git ref. For information about the APIs to create a deployment status, see <a href="https://docs.github.com/en/graphql/reference/deployments#mutation-createdeploymentstatus" class="external">Deployments</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/deployments#create-a-deployment-status" class="external">REST API endpoints for deployments</a>.</p>
 <p>For example, you can run a workflow when the <code>deployment_status</code> event occurs.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">  </span><span style="color:#a3be8c;">deployment_status
@@ -243,7 +243,7 @@
 <li>Webhook events for GitHub Discussions are currently in public preview and subject to change.</li>
 </ul>
 </div>
-<p>Runs your workflow when a discussion in the workflow's repository is created or modified. For activity related to comments on a discussion, use the <a href="#discussion_comment"><code>discussion_comment</code></a> event. For more information about discussions, see <a href="https://docs.github.com/en/discussions/collaborating-with-your-community-using-discussions/about-discussions" class="external">About discussions</a>. For information about the GraphQL API, see <a href="https://docs.github.com/en/graphql/reference/objects#discussion" class="external">Objects</a>.</p>
+<p>Runs your workflow when a discussion in the workflow's repository is created or modified. For activity related to comments on a discussion, use the <a href="#discussion_comment"><code>discussion_comment</code></a> event. For more information about discussions, see <a href="https://docs.github.com/en/discussions/collaborating-with-your-community-using-discussions/about-discussions" class="external">About discussions</a>. For information about the GraphQL API, see <a href="https://docs.github.com/en/graphql/reference/discussions#object-discussion" class="external">Discussions</a>.</p>
 <p>For example, you can run a workflow when a discussion has been <code>created</code>, <code>edited</code>, or <code>answered</code>.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">discussion</span><span style="color:#c0c5ce;">:
@@ -276,7 +276,7 @@
 <li>Webhook events for GitHub Discussions are currently in public preview and subject to change.</li>
 </ul>
 </div>
-<p>Runs your workflow when a comment on a discussion in the workflow's repository is created or modified. For activity related to a discussion as opposed to comments on the discussion, use the <a href="#discussion"><code>discussion</code></a> event. For more information about discussions, see <a href="https://docs.github.com/en/discussions/collaborating-with-your-community-using-discussions/about-discussions" class="external">About discussions</a>. For information about the GraphQL API, see <a href="https://docs.github.com/en/graphql/reference/objects#discussion" class="external">Objects</a>.</p>
+<p>Runs your workflow when a comment on a discussion in the workflow's repository is created or modified. For activity related to a discussion as opposed to comments on the discussion, use the <a href="#discussion"><code>discussion</code></a> event. For more information about discussions, see <a href="https://docs.github.com/en/discussions/collaborating-with-your-community-using-discussions/about-discussions" class="external">About discussions</a>. For information about the GraphQL API, see <a href="https://docs.github.com/en/graphql/reference/discussions#object-discussion" class="external">Discussions</a>.</p>
 <p>For example, you can run a workflow when a discussion comment has been <code>created</code> or <code>deleted</code>.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">discussion_comment</span><span style="color:#c0c5ce;">:
@@ -394,7 +394,7 @@
 <li>This event will only trigger a workflow run if the workflow file exists on the default branch.</li>
 </ul>
 </div>
-<p>Runs your workflow when an issue or pull request comment is created, edited, or deleted. For information about the issue comment APIs, see <a href="https://docs.github.com/en/graphql/reference/objects#issuecomment" class="external">Objects</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/webhooks-and-events/webhooks/webhook-events-and-payloads#issue_comment" class="external">Webhook events and payloads</a> in the REST API documentation.</p>
+<p>Runs your workflow when an issue or pull request comment is created, edited, or deleted. For information about the issue comment APIs, see <a href="https://docs.github.com/en/graphql/reference/issues#object-issuecomment" class="external">Issues</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/webhooks-and-events/webhooks/webhook-events-and-payloads#issue_comment" class="external">Webhook events and payloads</a> in the REST API documentation.</p>
 <p>For example, you can run a workflow when an issue or pull request comment has been <code>created</code> or <code>deleted</code>.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">issue_comment</span><span style="color:#c0c5ce;">:
@@ -441,7 +441,7 @@
 <tbody>
 <tr>
 <td><a href="https://docs.github.com/en/webhooks-and-events/webhooks/webhook-events-and-payloads#issues" class="external"><code>issues</code></a></td>
-<td>- <code>opened</code><br>- <code>edited</code><br>- <code>deleted</code><br>- <code>transferred</code><br>- <code>pinned</code><br>- <code>unpinned</code><br>- <code>closed</code><br>- <code>reopened</code><br>- <code>assigned</code><br>- <code>unassigned</code><br>- <code>labeled</code><br>- <code>unlabeled</code><br>- <code>locked</code><br>- <code>unlocked</code><br>- <code>milestoned</code><br> - <code>demilestoned</code><br> - <code>typed</code><br> - <code>untyped</code></td>
+<td>- <code>opened</code><br>- <code>edited</code><br>- <code>deleted</code><br>- <code>transferred</code><br>- <code>pinned</code><br>- <code>unpinned</code><br>- <code>closed</code><br>- <code>reopened</code><br>- <code>assigned</code><br>- <code>unassigned</code><br>- <code>labeled</code><br>- <code>unlabeled</code><br>- <code>locked</code><br>- <code>unlocked</code><br>- <code>milestoned</code><br> - <code>demilestoned</code><br> - <code>typed</code><br> - <code>untyped</code><br> - <code>field_added</code><br> - <code>field_removed</code></td>
 <td>Last commit on default branch</td>
 <td>Default branch</td>
 </tr>
@@ -454,11 +454,16 @@
 <li>This event will only trigger a workflow run if the workflow file exists on the default branch.</li>
 </ul>
 </div>
-<p>Runs your workflow when an issue in the workflow's repository is created or modified. For activity related to comments in an issue, use the <a href="#issue_comment"><code>issue_comment</code></a> event. For more information about issues, see <a href="https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues" class="external">About issues</a>. For information about the issue APIs, see <a href="https://docs.github.com/en/graphql/reference/objects#issue" class="external">Objects</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/issues" class="external">REST API endpoints for issues</a>.</p>
+<p>Runs your workflow when an issue in the workflow's repository is created or modified. For activity related to comments in an issue, use the <a href="#issue_comment"><code>issue_comment</code></a> event. For more information about issues, see <a href="https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues" class="external">About issues</a>. For information about the issue APIs, see <a href="https://docs.github.com/en/graphql/reference/issues#object-issue" class="external">Issues</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/issues" class="external">REST API endpoints for issues</a>.</p>
 <p>For example, you can run a workflow when an issue has been <code>opened</code>, <code>edited</code>, or <code>milestoned</code>.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">issues</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">opened</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">edited</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">milestoned</span><span style="color:#c0c5ce;">]
+</span></code></pre>
+<p>You can also run a workflow when an issue field value is set, changed, or cleared. The <code>field_added</code> activity type fires both when a field value is initially set and when an existing value is updated. The <code>field_removed</code> activity type fires when a field value is cleared.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">issues</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">field_added</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">field_removed</span><span style="color:#c0c5ce;">]
 </span></code></pre>
 <h2 title="label"><a href="#label" aria-hidden="true" class="anchor" id="label"></a><code>label</code></h2>
 <table>
@@ -486,7 +491,7 @@
 <li>This event will only trigger a workflow run if the workflow file exists on the default branch.</li>
 </ul>
 </div>
-<p>Runs your workflow when a label in your workflow's repository is created or modified. For more information about labels, see <a href="https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels" class="external">Managing labels</a>. For information about the label APIs, see <a href="https://docs.github.com/en/graphql/reference/objects#label" class="external">Objects</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/issues/labels" class="external">REST API endpoints for labels</a>.</p>
+<p>Runs your workflow when a label in your workflow's repository is created or modified. For more information about labels, see <a href="https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels" class="external">Managing labels</a>. For information about the label APIs, see <a href="https://docs.github.com/en/graphql/reference/issues#object-label" class="external">Issues</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/issues/labels" class="external">REST API endpoints for labels</a>.</p>
 <p>If you want to run your workflow when a label is added to or removed from an issue, pull request, or discussion, use the <code>labeled</code> or <code>unlabeled</code> activity types for the <a href="#issues"><code>issues</code></a>, <a href="#pull_request"><code>pull_request</code></a>, <a href="#pull_request_target"><code>pull_request_target</code></a>, or <a href="#discussion"><code>discussion</code></a> events instead.</p>
 <p>For example, you can run a workflow when a label has been <code>created</code> or <code>deleted</code>.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
@@ -553,7 +558,7 @@
 <li>This event will only trigger a workflow run if the workflow file exists on the default branch.</li>
 </ul>
 </div>
-<p>Runs your workflow when a milestone in the workflow's repository is created or modified. For more information about milestones, see <a href="https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/about-milestones" class="external">About milestones</a>. For information about the milestone APIs, see <a href="https://docs.github.com/en/graphql/reference/objects#milestone" class="external">Objects</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/issues/milestones" class="external">REST API endpoints for milestones</a>.</p>
+<p>Runs your workflow when a milestone in the workflow's repository is created or modified. For more information about milestones, see <a href="https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/about-milestones" class="external">About milestones</a>. For information about the milestone APIs, see <a href="https://docs.github.com/en/graphql/reference/issues#object-milestone" class="external">Issues</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/issues/milestones" class="external">REST API endpoints for milestones</a>.</p>
 <p>If you want to run your workflow when an issue is added to or removed from a milestone, use the <code>milestoned</code> or <code>demilestoned</code> activity types for the <a href="#issues"><code>issues</code></a> event instead.</p>
 <p>For example, you can run a workflow when a milestone has been <code>opened</code> or <code>deleted</code>.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
@@ -645,7 +650,7 @@
 <li>The value of <code>GITHUB_REF</code> varies for a closed pull request depending on whether the pull request has been merged or not. If a pull request was closed but not merged, it will be <code>refs/pull/PULL_REQUEST_NUMBER/merge</code>. If a pull request was closed as a result of being merged, it will be the fully qualified <code>ref</code> of the branch it was merged into, for example <code>/refs/heads/main</code>.</li>
 </ul>
 </div>
-<p>Runs your workflow when activity on a pull request in the workflow's repository occurs. For example, if no activity types are specified, the workflow runs when a pull request is opened or reopened or when the head branch of the pull request is updated. For activity related to pull request reviews, pull request review comments, or pull request comments, use the <a href="#pull_request_review"><code>pull_request_review</code></a>, <a href="#pull_request_review_comment"><code>pull_request_review_comment</code></a>, or <a href="#issue_comment"><code>issue_comment</code></a> events instead. For information about the pull request APIs, see <a href="https://docs.github.com/en/graphql/reference/objects#pullrequest" class="external">Objects</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/pulls" class="external">REST API endpoints for pull requests</a>.</p>
+<p>Runs your workflow when activity on a pull request in the workflow's repository occurs. For example, if no activity types are specified, the workflow runs when a pull request is opened or reopened or when the head branch of the pull request is updated. For activity related to pull request reviews, pull request review comments, or pull request comments, use the <a href="#pull_request_review"><code>pull_request_review</code></a>, <a href="#pull_request_review_comment"><code>pull_request_review_comment</code></a>, or <a href="#issue_comment"><code>issue_comment</code></a> events instead. For information about the pull request APIs, see <a href="https://docs.github.com/en/graphql/reference/pulls#object-pullrequest" class="external">Pull requests</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/pulls" class="external">REST API endpoints for pull requests</a>.</p>
 <p>Note that <code>GITHUB_SHA</code> for this event is the last merge commit of the pull request merge branch. If you want to get the commit ID for the last commit to the head branch of the pull request, use <code>github.event.pull_request.head.sha</code> instead. For more information about merge branches, see <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests#pull-request-refs-and-merge-branches" class="external">About pull requests</a>.</p>
 <h3 title="pull_request / How the merge branch affects your workflow"><a href="#how-the-merge-branch-affects-your-workflow" aria-hidden="true" class="anchor" id="how-the-merge-branch-affects-your-workflow"></a>How the merge branch affects your workflow</h3>
 <p>For open, mergeable pull requests, workflows triggered by the <code>pull_request</code> event set <code>GITHUB_REF</code> to the merge branch. Because <code>actions/checkout</code> uses <code>GITHUB_REF</code> by default, it checks out the merge branch. Your CI tests run against the merged result, not just the head branch alone:</p>
@@ -777,7 +782,7 @@
 <p class="markdown-alert-title">Note</p>
 <p>More than one activity type triggers this event. For information about each activity type, see <a href="https://docs.github.com/en/webhooks-and-events/webhooks/webhook-events-and-payloads#pull_request_review" class="external">Webhook events and payloads</a>. By default, all activity types trigger workflows that run on this event. You can limit your workflow runs to specific activity types using the <code>types</code> keyword. For more information, see <a href="workflow-syntax.html#onevent_nametypes">Workflow syntax for GitHub Actions</a>.</p>
 </div>
-<p>Runs your workflow when a pull request review is submitted, edited, or dismissed. A pull request review is a group of pull request review comments in addition to a body comment and a state. For activity related to pull request review comments or pull request comments, use the <a href="#pull_request_review_comment"><code>pull_request_review_comment</code></a> or <a href="#issue_comment"><code>issue_comment</code></a> events instead. For information about the pull request review APIs, see <a href="https://docs.github.com/en/graphql/reference/objects#pullrequest" class="external">Objects</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/pulls#reviews" class="external">REST API endpoints for pull requests</a>.</p>
+<p>Runs your workflow when a pull request review is submitted, edited, or dismissed. A pull request review is a group of pull request review comments in addition to a body comment and a state. For activity related to pull request review comments or pull request comments, use the <a href="#pull_request_review_comment"><code>pull_request_review_comment</code></a> or <a href="#issue_comment"><code>issue_comment</code></a> events instead. For information about the pull request review APIs, see <a href="https://docs.github.com/en/graphql/reference/pulls#object-pullrequest" class="external">Pull requests</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/pulls#reviews" class="external">REST API endpoints for pull requests</a>.</p>
 <p>For example, you can run a workflow when a pull request review has been <code>edited</code> or <code>dismissed</code>.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">pull_request_review</span><span style="color:#c0c5ce;">:
@@ -830,7 +835,7 @@
 <p class="markdown-alert-title">Note</p>
 <p>More than one activity type triggers this event. For information about each activity type, see <a href="https://docs.github.com/en/webhooks-and-events/webhooks/webhook-events-and-payloads#pull_request_review_comment" class="external">Webhook events and payloads</a>. By default, all activity types trigger workflows that run on this event. You can limit your workflow runs to specific activity types using the <code>types</code> keyword. For more information, see <a href="workflow-syntax.html#onevent_nametypes">Workflow syntax for GitHub Actions</a>.</p>
 </div>
-<p>Runs your workflow when a pull request review comment is modified. A pull request review comment is a comment on a pull request's diff. For activity related to pull request reviews or pull request comments, use the <a href="#pull_request_review"><code>pull_request_review</code></a> or <a href="#issue_comment"><code>issue_comment</code></a> events instead. For information about the pull request review comment APIs, see <a href="https://docs.github.com/en/graphql/reference/objects#pullrequestreviewcomment" class="external">Objects</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/pulls#comments" class="external">REST API endpoints for pull requests</a>.</p>
+<p>Runs your workflow when a pull request review comment is modified. A pull request review comment is a comment on a pull request's diff. For activity related to pull request reviews or pull request comments, use the <a href="#pull_request_review"><code>pull_request_review</code></a> or <a href="#issue_comment"><code>issue_comment</code></a> events instead. For information about the pull request review comment APIs, see <a href="https://docs.github.com/en/graphql/reference/pulls#object-pullrequestreviewcomment" class="external">Pull requests</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/pulls#comments" class="external">REST API endpoints for pull requests</a>.</p>
 <p>For example, you can run a workflow when a pull request review comment has been <code>created</code> or <code>deleted</code>.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">pull_request_review_comment</span><span style="color:#c0c5ce;">:
@@ -987,7 +992,7 @@
 <div class="markdown-alert markdown-alert-note">
 <p class="markdown-alert-title">Note</p>
 <ul>
-<li>The webhook payload available to GitHub Actions does not include the <code>added</code>, <code>removed</code>, and <code>modified</code> attributes in the <code>commit</code> object. You can retrieve the full commit object using the API. For information, see <a href="https://docs.github.com/en/graphql/reference/objects#commit" class="external">Objects</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/commits#get-a-commit" class="external">REST API endpoints for commits</a>.</li>
+<li>The webhook payload available to GitHub Actions does not include the <code>added</code>, <code>removed</code>, and <code>modified</code> attributes in the <code>commit</code> object. You can retrieve the full commit object using the API. For information, see <a href="https://docs.github.com/en/graphql/reference/commits#object-commit" class="external">Commits</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/commits#get-a-commit" class="external">REST API endpoints for commits</a>.</li>
 <li>Events will not be created if more than 5,000 branches are pushed at once. Events will not be created for tags when more than three tags are pushed at once.</li>
 </ul>
 </div>
@@ -1100,7 +1105,7 @@
 <li>The <code>prereleased</code> type will not trigger for pre-releases published from draft releases, but the <code>published</code> type will trigger. If you want a workflow to run when stable <em>and</em> pre-releases publish, subscribe to <code>published</code> instead of <code>released</code> and <code>prereleased</code>.</li>
 </ul>
 </div>
-<p>Runs your workflow when release activity in your repository occurs. For information about the release APIs, see <a href="https://docs.github.com/en/graphql/reference/objects#release" class="external">Objects</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/releases" class="external">REST API endpoints for releases and release assets</a> in the REST API documentation.</p>
+<p>Runs your workflow when release activity in your repository occurs. For information about the release APIs, see <a href="https://docs.github.com/en/graphql/reference/releases#object-release" class="external">Releases</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/releases" class="external">REST API endpoints for releases and release assets</a> in the REST API documentation.</p>
 <p>For example, you can run a workflow when a release has been <code>published</code>.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">release</span><span style="color:#c0c5ce;">:
@@ -1312,7 +1317,7 @@
 <p class="markdown-alert-title">Note</p>
 <p>This event will only trigger a workflow run if the workflow file exists on the default branch.</p>
 </div>
-<p>Runs your workflow when the status of a Git commit changes. For example, commits can be marked as <code>error</code>, <code>failure</code>, <code>pending</code>, or <code>success</code>. If you want to provide more details about the status change, you may want to use the <a href="#check_run"><code>check_run</code></a> event. For information about the commit status APIs, see <a href="https://docs.github.com/en/graphql/reference/objects#status" class="external">Objects</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/commits#commit-statuses" class="external">REST API endpoints for commits</a>.</p>
+<p>Runs your workflow when the status of a Git commit changes. For example, commits can be marked as <code>error</code>, <code>failure</code>, <code>pending</code>, or <code>success</code>. If you want to provide more details about the status change, you may want to use the <a href="#check_run"><code>check_run</code></a> event. For information about the commit status APIs, see <a href="https://docs.github.com/en/graphql/reference/commits#object-status" class="external">Commits</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/commits#commit-statuses" class="external">REST API endpoints for commits</a>.</p>
 <p>For example, you can run a workflow when the <code>status</code> event occurs.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">  </span><span style="color:#a3be8c;">status
@@ -1358,7 +1363,7 @@
 <li>This event will only trigger a workflow run if the workflow file exists on the default branch.</li>
 </ul>
 </div>
-<p>Runs your workflow when the workflow's repository is starred. For information about the pull request APIs, see <a href="https://docs.github.com/en/graphql/reference/mutations#addstar" class="external">Mutations</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/activity/starring" class="external">REST API endpoints for starring</a>.</p>
+<p>Runs your workflow when the workflow's repository is starred. For information about the pull request APIs, see <a href="https://docs.github.com/en/graphql/reference/activity#mutation-addstar" class="external">Activity</a> in the GraphQL API documentation or <a href="https://docs.github.com/en/rest/activity/starring" class="external">REST API endpoints for starring</a>.</p>
 <p>For example, you can run a workflow when someone stars a repository, which is the <code>started</code> activity type for a watch event.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">watch</span><span style="color:#c0c5ce;">:
