@@ -59,17 +59,21 @@ jobs:
         fi
 
         changes=()
+        changed_from_branch=0
         for src_json_path in results/*/docset.json; do
           dst_rel_json_path="docsets/${src_json_path#*/}"
           dst_json_path="$CONTRIBUTIONS_REPO/$dst_rel_json_path"
-          if ! diff -u "$src_json_path" <(git -C "$CONTRIBUTIONS_REPO" show "$branch:$dst_rel_json_path"); then
+          if ! diff -u "$src_json_path" "$dst_json_path"; then
+            if ! diff -u "$src_json_path" <(git -C "$CONTRIBUTIONS_REPO" show "$branch:$dst_rel_json_path"); then
+              changed_from_branch=1
+            fi
             rsync --archive --delete "$(dirname "$src_json_path")/" "$(dirname "$dst_json_path")/"
             git -C "$CONTRIBUTIONS_REPO" add "$(dirname "$dst_rel_json_path")"
             changes+=("$(jq --raw-output '.name + " " + .version' "$src_json_path")")
           fi
         done
 
-        if (( ${#changes[@]} != 0 )); then
+        if [ "$changed_from_branch" = 1 ]; then
           message="$(ruby -e 'puts ARGV.join(", ")' -- "${changes[@]}")"
 
           git -C "$CONTRIBUTIONS_REPO" checkout -B "$branch"
