@@ -49,9 +49,20 @@ module Fetch
   private
 
     def get_response(url)
-      wait
-      puts "fetching #{url}"
-      Net::HTTP.get_response(URI(url))
+      response = nil
+
+      10.times do |i|
+        i.zero? ? wait : sleep(i)
+        puts "fetching #{url} [#{i}]"
+        response = Net::HTTP.get_response(URI(url))
+
+        case response
+        when Net::HTTPServiceUnavailable
+        else break
+        end
+      end
+
+      response
     end
 
     def wait
