@@ -42,6 +42,7 @@
 <p class="markdown-alert-title">Note</p>
 <p>Secret scanning doesn't automatically close alerts when the corresponding token has been removed from the repository. You must manually close these alerts in the alert list on GitHub.</p>
 </div>
+<p>If a branch ruleset requires secret scanning alerts to be resolved, an open alert introduced by a pull request can block merging. After fixing the exposed secret, close the alert using the following steps. After all blocking alerts are closed, the alerts no longer prevent merging. The rule can continue to block merging until a secret scanning scan completes for the pull request's head commit.</p>
 <ol>
 <li>
 <p>On GitHub, navigate to the main page of the repository.</p>

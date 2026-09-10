@@ -19,7 +19,13 @@
 <p>The "AI findings" page for recently changed files is currently in public preview and subject to change.</p>
 </div>
 <p>For information on resolving AI findings, see <a href="fix-findings-in-recent-merges.html">Fixing code quality findings in recently merged files</a>.</p>
-<h2 id="resolving-a-standard-finding" title="Resolving a standard finding" data-entry-type="Section">Resolving a standard finding<a href="#resolving-a-standard-finding" aria-label="Link to heading 'Resolving a standard finding'" data-heading-content="Resolving a standard finding" class="anchor"></a></h2>
+<h2 id="resolving-standard-findings" title="Resolving standard findings" data-entry-type="Section">Resolving standard findings<a href="#resolving-standard-findings" aria-label="Link to heading 'Resolving standard findings'" data-heading-content="Resolving standard findings" class="anchor"></a></h2>
+<p>You can resolve findings individually or assign multiple findings to Copilot.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Agentic Autofix for GitHub Code Quality backlog findings is currently in public preview and subject to change.</p>
+</div>
+<h3 id="resolving-a-single-finding">Resolving a single finding<a href="#resolving-a-single-finding" aria-label="Link to heading 'Resolving a single finding'" data-heading-content="Resolving a single finding" class="anchor"></a></h3>
 <ol>
 <li>
 <p>Navigate to the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab of your repository.</p>
@@ -40,13 +46,10 @@
 <p><img src="../../../..//assets/images/help/code-quality/click-show-more.png" alt="Screenshot showing the results for a code quality rule. The text &quot;Show more&quot; is highlighted in dark orange."></p>
 </li>
 <li>
-<p>To the right of an individual finding, click <strong>Generate fix</strong>.</p>
+<p>To the right of an individual finding, click <strong>Assign to Copilot</strong>. Assigning a finding to Copilot consumes AI credits.</p>
 </li>
 <li>
-<p>Review the diff of the proposed change. If you agree with it, click <strong>Open pull request</strong>.</p>
-</li>
-<li>
-<p>In the "Commit autofix to branch" dialog, select "Open a pull request", then click <strong>Commit change</strong>.</p>
+<p>Review the draft pull request that Copilot opens with a fix for the finding.</p>
 </li>
 <li>
 <p>When the autofix pull request is ready for review, change its status from "Draft" to "Ready for review", and wait for CI checks to pass before merging.</p>
@@ -56,6 +59,28 @@
 </li>
 </ol>
 <p>To raise a maintainability or reliability score, you must resolve every finding at the highest severity level currently affecting that metric. See <a href="../../reference/code-quality/metrics-and-ratings.html">Metrics and scores reference</a>.</p>
+<h3 id="assigning-multiple-findings-to-copilot">Assigning multiple findings to Copilot<a href="#assigning-multiple-findings-to-copilot" aria-label="Link to heading 'Assigning multiple findings to Copilot'" data-heading-content="Assigning multiple findings to Copilot" class="anchor"></a></h3>
+<p>If you have many findings for a rule and want to remediate them efficiently, you can select these findings in bulk and assign them to Copilot for agentic remediation. Copilot will open a pull request with fixes for the selected findings.</p>
+<p>You don't need a Copilot license to use this feature, but your enterprise owner must allow Code Quality for your organization. See <a href="../secure-at-scale/configure-enterprise-security/configure-specific-tools/allow-github-code-quality-in-enterprise.html">Allowing use of GitHub Code Quality in your enterprise</a>.</p>
+<p>For the best results, start with a single rule that has many high-severity findings. This lets you validate the quality of the autofixes on a cohesive set of changes before expanding to other rules.</p>
+<ol>
+<li>
+<p>Navigate to the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab of your repository.</p>
+</li>
+<li>
+<p>Click to expand <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-code-review" aria-label="code review" role="img"><path d="M1.75 1h12.5c.966 0 1.75.784 1.75 1.75v8.5A1.75 1.75 0 0 1 14.25 13H8.061l-2.574 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25v-8.5C0 1.784.784 1 1.75 1ZM1.5 2.75v8.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-8.5a.25.25 0 0 0-.25-.25H1.75a.25.25 0 0 0-.25.25Zm5.28 1.72a.75.75 0 0 1 0 1.06L5.31 7l1.47 1.47a.751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018l-2-2a.75.75 0 0 1 0-1.06l2-2a.75.75 0 0 1 1.06 0Zm2.44 0a.75.75 0 0 1 1.06 0l2 2a.75.75 0 0 1 0 1.06l-2 2a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L10.69 7 9.22 5.53a.75.75 0 0 1 0-1.06Z"></path></svg> Code quality</strong>, then click <strong>Standard findings</strong>.</p>
+</li>
+<li>
+<p>Select the findings you want to remediate. You can select up to 25 findings per page, one page at a time.</p>
+</li>
+<li>
+<p>Click <strong>Assign to Copilot</strong>.</p>
+<p><img src="../../../..//assets/images/help/code-quality/assign-findings-bulk.png" alt="Screenshot of the &quot;Standard findings&quot; view. The &quot;3 of 3 selected&quot; checkbox and the &quot;Dismiss&quot; and &quot;Assign to Copilot&quot; buttons are outlined in orange."></p>
+</li>
+<li>
+<p>Copilot will open a pull request with fixes for the selected findings. Review the pull request carefully before merging.</p>
+</li>
+</ol>
 <h2 id="verifying-that-your-code-quality-scores-have-updated" title="Verifying that your code quality scores have updated" data-entry-type="Section">Verifying that your code quality scores have updated<a href="#verifying-that-your-code-quality-scores-have-updated" aria-label="Link to heading 'Verifying that your code quality scores have updated'" data-heading-content="Verifying that your code quality scores have updated" class="anchor"></a></h2>
 <p>After your autofix pull requests are merged, return to the "Standard findings" view to confirm that:</p>
 <ul>

@@ -136,7 +136,7 @@
 </tr>
 <tr>
 <td><code>event_name</code></td>
-<td>The name of the event that triggered the workflow run.</td>
+<td>The name of the event that triggered the workflow run. OIDC tokens requested for Dependabot update jobs use <code>dynamic</code> as the value.</td>
 </tr>
 <tr>
 <td><code>head_ref</code></td>
@@ -228,6 +228,7 @@
 </ul>
 <p>If you need more granular trust conditions, you can customize the subject (<code>sub</code>) claim that's included with the JWT. For more information, see <a href="#customizing-the-token-claims">Customizing the token claims</a>.</p>
 <p>There are also many additional claims supported in the OIDC token that can be used for setting these conditions. In addition, your cloud provider could allow you to assign a role to the access tokens, letting you specify even more granular permissions.</p>
+<p>OIDC tokens requested for Dependabot update jobs have an <code>event_name</code> claim of <code>dynamic</code>. If your trust policy is intended to authorize only GitHub Actions workflows and your cloud provider supports conditions on <code>event_name</code>, allow only the event names expected by your workflows.</p>
 <div class="markdown-alert markdown-alert-note">
 <p class="markdown-alert-title">Note</p>
 <p>To control how your cloud provider issues access tokens, you <strong>must</strong> define at least one condition, so that untrusted repositories can’t request access tokens for your cloud resources.</p>

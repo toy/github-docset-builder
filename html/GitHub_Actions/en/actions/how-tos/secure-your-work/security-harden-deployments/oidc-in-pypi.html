@@ -11,6 +11,9 @@
 <li>
 <p>Before proceeding, you must plan your security strategy to ensure that access tokens are only allocated in a predictable way. To control how your cloud provider issues access tokens, you <strong>must</strong> define at least one condition, so that untrusted repositories can’t request access tokens for your cloud resources. For more information, see <a href="../../../reference/security/oidc.html#oidc-claims-used-to-define-trust-conditions-on-cloud-roles">OpenID Connect reference</a>.</p>
 </li>
+<li>
+<p>OIDC tokens requested for Dependabot update jobs have an <code>event_name</code> claim of <code>dynamic</code>. If your trust policy is intended to authorize only GitHub Actions workflows and your cloud provider supports conditions on <code>event_name</code>, allow only the event names expected by your workflows. For more information, see <a href="../../../reference/security/oidc.html#oidc-claims-used-to-define-trust-conditions-on-cloud-roles">OpenID Connect reference</a>.</p>
+</li>
 </ul>
 <h2 id="adding-the-identity-provider-to-pypi" title="Adding the identity provider to PyPI" data-entry-type="Section">Adding the identity provider to PyPI<a href="#adding-the-identity-provider-to-pypi" aria-label="Link to heading 'Adding the identity provider to PyPI'" data-heading-content="Adding the identity provider to PyPI" class="anchor"></a></h2>
 <p>To use OIDC with PyPI, add a trust configuration that links each project on PyPI to each repository and workflow combination that's allowed to publish for it.</p>

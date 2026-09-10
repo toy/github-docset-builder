@@ -217,12 +217,108 @@ Workflow runs can restore caches created in either the current branch or the def
 <li><code>page_build</code></li>
 <li><code>schedule</code></li>
 </ul>
-<p>Runs triggered by any other event that resolves to the default branch are given read-only access to caches in the default branch's scope. These runs can restore existing caches but cannot create or overwrite them. This includes triggers whose payload or initiating actor can be influenced by someone outside the repository, such as <code>pull_request_target</code>, <code>issue_comment</code>, and <code>workflow_run</code>.</p>
+<p>Runs triggered by any other event that resolves to the default branch are given read-only access to caches in the default branch's scope. These runs can restore existing caches but cannot create or overwrite them. This includes triggers whose payload or initiating actor can be influenced by someone outside the repository, such as <code>pull_request_target</code>, <code>issue_comment</code>, and <code>workflow_run</code>. A repository can opt out of this restriction for a specific workflow or job by explicitly declaring a write-capable <code>cache-mode</code>. See <a href="#bypassing-the-default-untrusted-trigger-cache-restriction">Bypassing the default untrusted-trigger cache restriction</a>.</p>
 <p>The <code>pull_request</code> event is not affected. Caches created by a <code>pull_request</code> run are already scoped to the merge ref (<code>refs/pull/.../merge</code>) and cannot be written to the default branch's scope. For more information, see <a href="#restrictions-for-accessing-a-cache">Restrictions for accessing a cache</a>.</p>
 <p>When a run with read-only cache access tries to save a cache, the save fails but the step and the job do not. The workflow continues, and the failure is reported as a warning in the workflow log. In that case, consider the following:</p>
 <ul>
 <li>To retain the performance benefits of caching on the default branch scope, ensure there is a trusted workflow that keeps the cache updated, for example a CI build triggered by a <code>push</code> to the default branch. Those cache entries can then be restored by workflows triggered by low-trust events such as <code>pull_request_target</code>.</li>
 <li>In low-trust workflows, switch to a restore-only cache operation such as <code>actions/cache/restore</code> to make the intended cache usage clear and avoid the warning in the workflow run logs.</li>
+</ul>
+<h2 id="controlling-cache-access-with-cache-mode" title="Controlling cache access with cache-mode" data-entry-type="Section">Controlling cache access with <code>cache-mode</code><a href="#controlling-cache-access-with-cache-mode" aria-label="Link to heading 'Controlling cache access with cache-mode'" data-heading-content="Controlling cache access with cache-mode" class="anchor"></a></h2>
+<p>Use the <code>cache-mode</code> workflow key to grant jobs the least amount of cache access they need. You can set <code>cache-mode</code> at the workflow level, at the job level, or both. A job-level value overrides the workflow-level value for that job. For the syntax, see <a href="workflow-syntax.html#cache-mode">Workflow syntax for GitHub Actions</a>.</p>
+<p><code>cache-mode</code> controls the cache access granted to the job's token, and it is enforced with scoped cache tokens. The key accepts the following values.</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Restore caches</th>
+<th>Save caches</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>read</code></td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>write</code></td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>write-only</code></td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>none</code></td>
+<td>No</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p>If you omit <code>cache-mode</code>, a <code>read</code> or <code>write</code> default is used based on the trigger type. See <a href="#defaults">Defaults</a> and <a href="#bypassing-the-default-untrusted-trigger-cache-restriction">Bypassing the default untrusted-trigger cache restriction</a>.</p>
+<h3 id="defaults">Defaults<a href="#defaults" aria-label="Link to heading 'Defaults'" data-heading-content="Defaults" class="anchor"></a></h3>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th>Trigger type</th>
+<th>Effective access</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cache-mode</code> omitted</td>
+<td>Trusted</td>
+<td><code>write</code></td>
+</tr>
+<tr>
+<td><code>cache-mode</code> omitted</td>
+<td>Low-trust</td>
+<td><code>read</code></td>
+</tr>
+<tr>
+<td><code>cache-mode: write</code></td>
+<td>Trusted or low-trust</td>
+<td><code>write</code></td>
+</tr>
+<tr>
+<td><code>cache-mode: write-only</code></td>
+<td>Trusted or low-trust</td>
+<td><code>write-only</code></td>
+</tr>
+<tr>
+<td><code>cache-mode: read</code></td>
+<td>Trusted or low-trust</td>
+<td><code>read</code></td>
+</tr>
+<tr>
+<td><code>cache-mode: none</code></td>
+<td>Trusted or low-trust</td>
+<td><code>none</code></td>
+</tr>
+</tbody>
+</table>
+<p>For the trusted-versus-low-trust trigger breakdown, see <a href="#cache-access-for-low-trust-workflow-triggers">Cache access for low-trust workflow triggers</a>.</p>
+<p>The runner exposes the effective mode in the <code>ACTIONS_CACHE_MODE</code> environment variable, and the <code>actions/cache</code> action and the <code>@actions/cache</code> toolkit honor it. Restore is skipped when the mode does not allow reads (<code>none</code> or <code>write-only</code>), and save is skipped when the mode does not allow writes (<code>none</code> or <code>read</code>). When a cache operation is skipped because of the mode, the action logs an informational message and the step and run continue without failing. A skipped restore is treated as a cache miss; a skipped save is simply not performed.</p>
+<h3 id="cache-access-in-reusable-workflows">Cache access in reusable workflows<a href="#cache-access-in-reusable-workflows" aria-label="Link to heading 'Cache access in reusable workflows'" data-heading-content="Cache access in reusable workflows" class="anchor"></a></h3>
+<p><code>cache-mode</code> propagates from a caller workflow to the reusable workflows it calls. An explicit <code>cache-mode</code> on the calling job, or inherited from the caller workflow, limits the cache access the called workflow can request.</p>
+<p>If the calling job neither sets nor inherits an explicit <code>cache-mode</code>, the called workflow can explicitly request <code>write</code> even when the caller's low-trust trigger defaults to <code>read</code>. To cap a called workflow at read-only access, set <code>cache-mode: read</code> on the job that calls it.</p>
+<p>If a called workflow declares a <code>cache-mode</code> that requests access beyond this explicit limit, the run does not start and GitHub reports a validation error. For example, a caller that allows at most <code>read</code> cannot call a workflow that declares <code>write</code>. Because <code>read</code> and <code>write-only</code> grant different, non-overlapping capabilities, a mismatch between them is also an over-request. For example, a <code>write-only</code> caller cannot call a workflow that declares <code>read</code>. For more information about calling reusable workflows, see <a href="../../how-tos/reuse-automations/reuse-workflows.html#controlling-cache-access-in-reusable-workflows">Reuse workflows</a>.</p>
+<h3 id="bypassing-the-default-untrusted-trigger-cache-restriction">Bypassing the default untrusted-trigger cache restriction<a href="#bypassing-the-default-untrusted-trigger-cache-restriction" aria-label="Link to heading 'Bypassing the default untrusted-trigger cache restriction'" data-heading-content="Bypassing the default untrusted-trigger cache restriction" class="anchor"></a></h3>
+<p>A job or workflow that explicitly declares <code>cache-mode: write</code> or <code>cache-mode: write-only</code> overrides the secure read-only default that would otherwise apply to a run triggered by a low-trust event. See <a href="#cache-access-for-low-trust-workflow-triggers">Cache access for low-trust workflow triggers</a>.</p>
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>Explicitly declaring <code>cache-mode: write</code> or <code>cache-mode: write-only</code> reintroduces the risk of cache-poisoning that the default untrusted-trigger read-only permissions are designed to prevent. If a workflow that runs on an untrusted trigger, such as <code>pull_request_target</code>, <code>issue_comment</code>, or <code>workflow_run</code>, declares a write-capable <code>cache-mode</code>, vulnerabilities or untrusted code execution in the workflow could then be used to save a cache. A more privileged workflow that later restores that cache could then execute attacker-controlled content.</p>
+</div>
+<p>Before declaring a write-capable <code>cache-mode</code> on a workflow with a low-trust trigger, consider whether a narrower mitigation meets your needs instead:</p>
+<ul>
+<li>Keep the secure cache access restriction in effect by explicitly declaring <code>cache-mode: read</code> on the job, and have a trusted, <code>push</code>-triggered workflow maintain the cache instead. See <a href="#cache-access-for-low-trust-workflow-triggers">Cache access for low-trust workflow triggers</a>.</li>
+<li>Only declare a write-capable <code>cache-mode</code> on low-trust triggers for jobs that don't process untrusted input before writing to the cache. This includes code checked out from untrusted sources such as forks and pull requests.</li>
+<li>If you do override the secure default, treat the resulting cache as untrusted in every workflow that restores it, and avoid restoring it into a run that has write access to secrets or elevated permissions.</li>
+<li>Follow the guidance on <a href="#best-practices-for-using-caches-securely">best practices for using caches securely</a>.</li>
 </ul>
 <h2 id="best-practices-for-using-caches-securely" title="Best practices for using caches securely" data-entry-type="Section">Best practices for using caches securely<a href="#best-practices-for-using-caches-securely" aria-label="Link to heading 'Best practices for using caches securely'" data-heading-content="Best practices for using caches securely" class="anchor"></a></h2>
 <p>Cache contents are not signed or verified, and any workflow run that can read a cache may extract its contents. Extracted caches may modify files that are subsequently executed in a workflow run, leading to malicious code execution. Follow these practices to reduce the security risk of using caches.</p>

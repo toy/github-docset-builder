@@ -38,7 +38,7 @@
 <p>For additional Helm configuration options, see <a href="https://github.com/actions/actions-runner-controller/blob/master/charts/gha-runner-scale-set-controller/values.yaml" class="external"><code>values.yaml</code></a> in the ARC documentation.</p>
 </li>
 <li>
-<p>To enable ARC to authenticate to GitHub, generate a personal access token (classic). For more information, see <a href="../../how-tos/manage-runners/use-actions-runner-controller/authenticate-to-the-api.html#authenticating-arc-with-a-personal-access-token-classic">Authenticating ARC to the GitHub API</a>.</p>
+<p>To enable ARC to authenticate to GitHub, choose an authentication method for your runner scale set. If you are registering runners at the repository or organization level, we recommend authenticating with a GitHub App. Runner scale sets registered at the enterprise level require personal access token (classic) authentication. For more information, see <a href="../../how-tos/manage-runners/use-actions-runner-controller/authenticate-to-the-api.html">Authenticating ARC to the GitHub API</a>.</p>
 </li>
 </ol>
 <h2 id="configuring-a-runner-scale-set" title="Configuring a runner scale set" data-entry-type="Section">Configuring a runner scale set<a href="#configuring-a-runner-scale-set" aria-label="Link to heading 'Configuring a runner scale set'" data-heading-content="Configuring a runner scale set" class="anchor"></a></h2>
@@ -57,7 +57,10 @@
 <p>Set <code>GITHUB_CONFIG_URL</code> to the URL of your repository, organization, or enterprise. This is the entity that the runners will belong to.</p>
 </li>
 <li>
-<p>Set <code>GITHUB_PAT</code> to a GitHub personal access token with the <code>repo</code> and <code>admin:org</code> scopes for repository and organization runners.</p>
+<p>This example uses a personal access token (classic) to keep the initial setup short. For repository or organization runner scale sets, use a GitHub App in production environments when possible.</p>
+</li>
+<li>
+<p>Set <code>GITHUB_PAT</code> to a GitHub personal access token (classic) with the <code>repo</code> and <code>admin:org</code> scopes for repository and organization runners.</p>
 </li>
 <li>
 <p>This example command installs the latest version of the Helm chart. To install a specific version, you can pass the <code>--version</code> argument with the version of the chart you wish to install. You can find the list of releases in the <a href="https://github.com/actions/actions-runner-controller/pkgs/container/actions-runner-controller-charts%2Fgha-runner-scale-set" class="external">GitHub Container Registry</a>.</p>

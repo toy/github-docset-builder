@@ -2142,14 +2142,6 @@ Visible to enterprise owners or enterprise owners' personal access tokens<br>
 <li><code>userResourcePath</code> (URI): The HTTP path for the user. <strong>Deprecated:</strong> The GraphQL audit-log is deprecated. Please use the REST API instead. Removal on 2026-04-01 UTC.</li>
 <li><code>userUrl</code> (URI): The HTTP URL for the user. <strong>Deprecated:</strong> The GraphQL audit-log is deprecated. Please use the REST API instead. Removal on 2026-04-01 UTC.</li>
 </ul>
-<h2 id="proofofpresencerequirement---enum" title="ProofOfPresenceRequirement - enum" data-entry-type="Section">ProofOfPresenceRequirement - enum<a href="#proofofpresencerequirement---enum" aria-label="Link to heading 'ProofOfPresenceRequirement - enum'" data-heading-content="ProofOfPresenceRequirement - enum" class="anchor"></a></h2>
-<p>The proof of presence (PoP) re-authentication requirement for sudo actions in an enterprise.</p>
-<h3 id="values-for-proofofpresencerequirement">Values for <code>ProofOfPresenceRequirement</code><a href="#values-for-proofofpresencerequirement" aria-label="Link to heading 'Values for ProofOfPresenceRequirement'" data-heading-content="Values for ProofOfPresenceRequirement" class="anchor"></a></h3>
-<ul>
-<li><code>MFA</code>: Members must satisfy an MFA re-authentication.</li>
-<li><code>NO_POLICY</code>: Proof of presence is not required.</li>
-<li><code>REAUTH</code>: Members must complete a fresh re-authentication against the enterprise identity provider.</li>
-</ul>
 <h2 id="regenerateenterpriseidentityproviderrecoverycodes---mutation" title="regenerateEnterpriseIdentityProviderRecoveryCodes - mutation" data-entry-type="Section">regenerateEnterpriseIdentityProviderRecoveryCodes - mutation<a href="#regenerateenterpriseidentityproviderrecoverycodes---mutation" aria-label="Link to heading 'regenerateEnterpriseIdentityProviderRecoveryCodes - mutation'" data-heading-content="regenerateEnterpriseIdentityProviderRecoveryCodes - mutation" class="anchor"></a></h2>
 <p>Regenerates the identity provider recovery codes for an enterprise.</p>
 <h3 id="input-fields-for-regenerateenterpriseidentityproviderrecoverycodes">Input fields for <code>regenerateEnterpriseIdentityProviderRecoveryCodes</code><a href="#input-fields-for-regenerateenterpriseidentityproviderrecoverycodes" aria-label="Link to heading 'Input fields for regenerateEnterpriseIdentityProviderRecoveryCodes'" data-heading-content="Input fields for regenerateEnterpriseIdentityProviderRecoveryCodes" class="anchor"></a></h3>
@@ -3011,26 +3003,6 @@ or the granular public/private/internal allowed fields (but not both) must be pr
 <li><code>name</code> (String): The name of the enterprise.</li>
 <li><code>securityContactEmail</code> (String): The security contact email address of the enterprise.</li>
 <li><code>websiteUrl</code> (String): The URL of the enterprise's website.</li>
-</ul>
-<h2 id="updateenterpriseproofofpresencerequiredsetting---mutation" title="updateEnterpriseProofOfPresenceRequiredSetting - mutation" data-entry-type="Section">updateEnterpriseProofOfPresenceRequiredSetting - mutation<a href="#updateenterpriseproofofpresencerequiredsetting---mutation" aria-label="Link to heading 'updateEnterpriseProofOfPresenceRequiredSetting - mutation'" data-heading-content="updateEnterpriseProofOfPresenceRequiredSetting - mutation" class="anchor"></a></h2>
-<p>Sets the proof of presence (PoP) re-authentication requirement for sudo actions in an enterprise.</p>
-<h3 id="input-fields-for-updateenterpriseproofofpresencerequiredsetting">Input fields for <code>updateEnterpriseProofOfPresenceRequiredSetting</code><a href="#input-fields-for-updateenterpriseproofofpresencerequiredsetting" aria-label="Link to heading 'Input fields for updateEnterpriseProofOfPresenceRequiredSetting'" data-heading-content="Input fields for updateEnterpriseProofOfPresenceRequiredSetting" class="anchor"></a></h3>
-<ul>
-<li><code>input</code> (UpdateEnterpriseProofOfPresenceRequiredSettingInput!):</li>
-</ul>
-<h3 id="return-fields-for-updateenterpriseproofofpresencerequiredsetting">Return fields for <code>updateEnterpriseProofOfPresenceRequiredSetting</code><a href="#return-fields-for-updateenterpriseproofofpresencerequiredsetting" aria-label="Link to heading 'Return fields for updateEnterpriseProofOfPresenceRequiredSetting'" data-heading-content="Return fields for updateEnterpriseProofOfPresenceRequiredSetting" class="anchor"></a></h3>
-<ul>
-<li><code>clientMutationId</code> (String): A unique identifier for the client performing the mutation.</li>
-<li><code>enterprise</code> (Enterprise): The enterprise with the updated proof of presence required setting.</li>
-<li><code>message</code> (String): A message confirming the result of updating the proof of presence required setting.</li>
-</ul>
-<h2 id="updateenterpriseproofofpresencerequiredsettinginput---input-object" title="UpdateEnterpriseProofOfPresenceRequiredSettingInput - input object" data-entry-type="Section">UpdateEnterpriseProofOfPresenceRequiredSettingInput - input object<a href="#updateenterpriseproofofpresencerequiredsettinginput---input-object" aria-label="Link to heading 'UpdateEnterpriseProofOfPresenceRequiredSettingInput - input object'" data-heading-content="UpdateEnterpriseProofOfPresenceRequiredSettingInput - input object" class="anchor"></a></h2>
-<p>Autogenerated input type of UpdateEnterpriseProofOfPresenceRequiredSetting.</p>
-<h3 id="input-fields-for-updateenterpriseproofofpresencerequiredsettinginput">Input fields for <code>UpdateEnterpriseProofOfPresenceRequiredSettingInput</code><a href="#input-fields-for-updateenterpriseproofofpresencerequiredsettinginput" aria-label="Link to heading 'Input fields for UpdateEnterpriseProofOfPresenceRequiredSettingInput'" data-heading-content="Input fields for UpdateEnterpriseProofOfPresenceRequiredSettingInput" class="anchor"></a></h3>
-<ul>
-<li><code>clientMutationId</code> (String): A unique identifier for the client performing the mutation.</li>
-<li><code>enterpriseId</code> (ID!): The ID of the enterprise on which to set the proof of presence required setting.</li>
-<li><code>settingValue</code> (ProofOfPresenceRequirement!): The proof of presence requirement to set on the enterprise.</li>
 </ul>
 <h2 id="updateenterpriserepositoryprojectssetting---mutation" title="updateEnterpriseRepositoryProjectsSetting - mutation" data-entry-type="Section">updateEnterpriseRepositoryProjectsSetting - mutation<a href="#updateenterpriserepositoryprojectssetting---mutation" aria-label="Link to heading 'updateEnterpriseRepositoryProjectsSetting - mutation'" data-heading-content="updateEnterpriseRepositoryProjectsSetting - mutation" class="anchor"></a></h2>
 <p>Sets whether repository projects are enabled for a enterprise.</p>

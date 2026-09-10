@@ -62,18 +62,27 @@
 </thead>
 <tbody>
 <tr>
-<td>The finding is legitimate.</td>
-<td>Click <strong>Generate fix</strong> and open a pull request</td>
-<td>Clicking <strong>Generate fix</strong> consumes AI credits. You can add multiple autofixes to the same branch to group remediation work in one pull request.</td>
+<td>One finding is legitimate.</td>
+<td>Click <strong>Assign to Copilot</strong>.</td>
+<td>Copilot opens a pull request containing fixes for the selected findings. Assigning to Copilot consumes AI credits.</td>
 </tr>
 <tr>
-<td>The finding doesn't apply. For example, it's in legacy code, an intentional pattern, or a false positive</td>
+<td>Multiple findings for the same rule are legitimate.</td>
+<td>Select up to 25 findings on a page, then click <strong>Assign to Copilot</strong>.</td>
+<td>Copilot opens a pull request containing fixes for the selected findings. Assigning to Copilot consumes AI credits</td>
+</tr>
+<tr>
+<td>A finding doesn't apply. For example, it's in legacy code, an intentional pattern, or a false positive.</td>
 <td>Click <strong>Dismiss</strong>.</td>
 <td>The finding is considered resolved and removed from the list of open findings.</td>
 </tr>
 </tbody>
 </table>
-<p>In our example, we generate autofixes for the 40 "Overwritten property" findings and open a pull request. Because they share a single pattern, the fixes are nearly identical. We merge the pull request once CI checks pass.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Agentic Autofix for GitHub Code Quality backlog findings is currently in public preview and subject to change.</p>
+</div>
+<p>In our example, we assign the 40 "Overwritten property" findings to Copilot in batches of up to 25. We review the resulting pull requests and merge them once the CI checks pass.</p>
 <h2 id="step-4-communicate-impact" title="Step 4: Communicate impact" data-entry-type="Section">Step 4: Communicate impact<a href="#step-4-communicate-impact" aria-label="Link to heading 'Step 4: Communicate impact'" data-heading-content="Step 4: Communicate impact" class="anchor"></a></h2>
 <p>After you've merged your remediation, return to the "Standard findings" view and capture:</p>
 <ul>

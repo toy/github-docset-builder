@@ -853,6 +853,59 @@ When more than one default setting is defined with the same name, GitHub uses th
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">cancel-in-progress</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ !contains(github.ref, 'release/')}}
 </span></code></pre>
 <p>In this example, multiple pushes to a <code>release/1.2.3</code> branch would not cancel in-progress runs. Pushes to another branch, such as <code>main</code>, would cancel in-progress runs.</p>
+<h2 id="cache-mode" title="cache-mode" data-entry-type="Section"><code>cache-mode</code><a href="#cache-mode" aria-label="Link to heading 'cache-mode'" data-heading-content="cache-mode" class="anchor"></a></h2>
+<p>Use <code>cache-mode</code> to control the level of GitHub Actions cache access that jobs in the workflow are granted. Setting <code>cache-mode</code> at the top level applies to every job in the workflow, unless a job overrides it with <a href="#jobsjob_idcache-mode"><code>jobs.&lt;job_id&gt;.cache-mode</code></a>.</p>
+<p>Access is enforced with scoped cache tokens, so a job cannot restore or save caches beyond the mode it is granted. <code>cache-mode</code> accepts the following values.</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Restore caches</th>
+<th>Save caches</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>read</code></td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>write</code></td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>write-only</code></td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>none</code></td>
+<td>No</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p>If you omit <code>cache-mode</code>, a <code>read</code> or <code>write</code> default is used based on the trigger type. For trigger-dependent effective defaults, see <a href="dependency-caching.html#defaults">Dependency caching reference</a>.</p>
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>Explicitly declaring <code>cache-mode: write</code> or <code>cache-mode: write-only</code> on low-trust triggers can bypass the secure default read-only cache restriction and reintroduce cache-poisoning risk. For guidance and mitigations, see <a href="dependency-caching.html#bypassing-the-default-untrusted-trigger-cache-restriction">Dependency caching reference</a>.</p>
+</div>
+<p>When a cache operation is not permitted by the effective mode, the cache step logs an informational message and continues. The job and workflow do not fail. A skipped restore is treated as a cache miss; a skipped save is simply not performed. For more information, see <a href="dependency-caching.html#controlling-cache-access-with-cache-mode">Dependency caching reference</a>.</p>
+<h3 id="example-of-cache-mode">Example of <code>cache-mode</code><a href="#example-of-cache-mode" aria-label="Link to heading 'Example of cache-mode'" data-heading-content="Example of cache-mode" class="anchor"></a></h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">cache-mode</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/cache@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">~/.npm
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">key</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">npm-${{ hashFiles('**/package-lock.json') }}
+</span></code></pre>
 <h2 id="jobs" title="jobs" data-entry-type="Section"><code>jobs</code><a href="#jobs" aria-label="Link to heading 'jobs'" data-heading-content="jobs" class="anchor"></a></h2>
 <p>A workflow run is made up of one or more <code>jobs</code>, which run in parallel by default. To run jobs sequentially, you can define dependencies on other jobs using the <code>jobs.&lt;job_id&gt;.needs</code> keyword.</p>
 <p>Each job runs in a runner environment specified by <code>runs-on</code>.</p>
@@ -1548,6 +1601,23 @@ For more information, see <a href="../../how-tos/deploy/configure-and-manage-dep
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">cancel-in-progress</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ !contains(github.ref, 'release/')}}
 </span></code></pre>
 <p>In this example, multiple pushes to a <code>release/1.2.3</code> branch would not cancel in-progress runs. Pushes to another branch, such as <code>main</code>, would cancel in-progress runs.</p>
+<h2 id="jobsjob_idcache-mode" title="jobs.<job_id>.cache-mode" data-entry-type="Section"><code>jobs.&lt;job_id&gt;.cache-mode</code><a href="#jobsjob_idcache-mode" aria-label="Link to heading 'jobs.<job_id>.cache-mode'" data-heading-content="jobs.<job_id>.cache-mode" class="anchor"></a></h2>
+<p>Use <code>jobs.&lt;job_id&gt;.cache-mode</code> to set the level of GitHub Actions cache access for a single job. A value set here overrides any workflow-level <a href="#cache-mode"><code>cache-mode</code></a> for this job only.</p>
+<p>The accepted values are <code>read</code>, <code>write</code>, <code>write-only</code>, and <code>none</code>, with the same meanings as the top-level key. If neither the job nor the workflow sets <code>cache-mode</code>, a trigger-based default applies. For more information about each value, see <a href="#cache-mode"><code>cache-mode</code></a> and <a href="dependency-caching.html#defaults">Dependency caching reference</a>.</p>
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>Explicitly declaring <code>cache-mode: write</code> or <code>cache-mode: write-only</code> on low-trust triggers can bypass the secure default read-only cache restriction and reintroduce cache-poisoning risk. For guidance and mitigations, see <a href="dependency-caching.html#bypassing-the-default-untrusted-trigger-cache-restriction">Dependency caching reference</a>.</p>
+</div>
+<p>You can also set <code>cache-mode</code> on a job that calls a reusable workflow to limit the cache access granted to the called workflow. For more information, see <a href="reusing-workflow-configurations.html#supported-keywords-for-jobs-that-call-a-reusable-workflow">Reusing workflow configurations</a> and <a href="../../how-tos/reuse-automations/reuse-workflows.html#controlling-cache-access-in-reusable-workflows">Reuse workflows</a>.</p>
+<h3 id="example-of-jobsjob_idcache-mode">Example of <code>jobs.&lt;job_id&gt;.cache-mode</code><a href="#example-of-jobsjob_idcache-mode" aria-label="Link to heading 'Example of jobs.<job_id>.cache-mode'" data-heading-content="Example of jobs.<job_id>.cache-mode" class="anchor"></a></h3>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">build</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">cache-mode</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">test</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">cache-mode</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read
+</span></code></pre>
 <h2 id="jobsjob_idoutputs" title="jobs.<job_id>.outputs" data-entry-type="Section"><code>jobs.&lt;job_id&gt;.outputs</code><a href="#jobsjob_idoutputs" aria-label="Link to heading 'jobs.<job_id>.outputs'" data-heading-content="jobs.<job_id>.outputs" class="anchor"></a></h2>
 <p>You can use <code>jobs.&lt;job_id&gt;.outputs</code> to create a <code>map</code> of outputs for a job. Job outputs are available to all downstream jobs that depend on this job. For more information on defining job dependencies, see <a href="#jobsjob_idneeds"><code>jobs.&lt;job_id&gt;.needs</code></a>.</p>
 <p>Outputs can be a maximum of 1 MB per job. The total of all outputs in a workflow run can be a maximum of 50 MB. Size is approximated based on UTF-16 encoding.</p>

@@ -247,13 +247,12 @@ Use <span data-escaped-char="">*</span> to list alerts with at least one assigne
 </li>
 <li><code>assignees</code>: array of <code>Simple User</code> (see above)</li>
 </ul>
-<h2 id="list-code-scanning-alerts-for-a-repository" title="GET /repos/{owner}/{repo}/code-scanning/alerts (List code scanning alerts for a repository)" data-entry-type="Resource">List code scanning alerts for a repository<a href="#list-code-scanning-alerts-for-a-repository" aria-label="Link to heading 'List code scanning alerts for a repository'" data-heading-content="List code scanning alerts for a repository" class="anchor"></a></h2>
-<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /repos/{owner}/{repo}/code-scanning/alerts
+<h2 id="get-ai-scan-enablement-for-a-repository" title="GET /repos/{owner}/{repo}/code-scanning/ai-scan (Get AI Scan enablement for a repository)" data-entry-type="Resource">Get AI Scan enablement for a repository<a href="#get-ai-scan-enablement-for-a-repository" aria-label="Link to heading 'Get AI Scan enablement for a repository'" data-heading-content="Get AI Scan enablement for a repository" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /repos/{owner}/{repo}/code-scanning/ai-scan
 </span></code></pre>
-<p>Lists code scanning alerts.<br>
-The response includes a most<span data-escaped-char="">_</span>recent<span data-escaped-char="">_</span>instance object.<br>
-This provides details of the most recent instance of this alert<br>
-for the default branch (or for the specified Git reference if you used ref in the request).<br>
+<p>Note</p>
+<p>This endpoint is in public preview and is subject to change.</p>
+<p>Gets whether AI Scan is enabled for a repository.<br>
 OAuth app tokens and personal access tokens (classic) need the security<span data-escaped-char="">_</span>events scope to use this endpoint with private or public repositories, or the public<span data-escaped-char="">_</span>repo scope to use this endpoint with only public repositories.</p>
 <h3 id="parameters-1">Parameters<a href="#parameters-1" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-1">Headers<a href="#headers-1" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
@@ -262,6 +261,99 @@ OAuth app tokens and personal access tokens (classic) need the security<span dat
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
 <h4 id="path-and-query-parameters-1">Path and query parameters<a href="#path-and-query-parameters-1" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-1">HTTP response status codes<a href="#http-response-status-codes-1" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - OK</p>
+</li>
+<li>
+<p><strong>403</strong> - Response if GitHub Advanced Security is not enabled for this repository</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+</ul>
+<h3 id="code-examples-1">Code examples<a href="#code-examples-1" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-1">Example<a href="#example-1" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X GET \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/code-scanning/ai-scan
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<ul>
+<li><code>pr_scan</code>: required, string, enum: <code>enabled</code>, <code>disabled</code></li>
+</ul>
+<h2 id="update-ai-scan-enablement-for-a-repository" title="PATCH /repos/{owner}/{repo}/code-scanning/ai-scan (Update AI Scan enablement for a repository)" data-entry-type="Resource">Update AI Scan enablement for a repository<a href="#update-ai-scan-enablement-for-a-repository" aria-label="Link to heading 'Update AI Scan enablement for a repository'" data-heading-content="Update AI Scan enablement for a repository" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PATCH /repos/{owner}/{repo}/code-scanning/ai-scan
+</span></code></pre>
+<p>Note</p>
+<p>This endpoint is in public preview and is subject to change.</p>
+<p>Updates whether AI Scan is enabled for a repository.<br>
+OAuth app tokens and personal access tokens (classic) need the repo scope to use this endpoint with private or public repositories, or the public<span data-escaped-char="">_</span>repo scope to use this endpoint with only public repositories.</p>
+<h3 id="parameters-2">Parameters<a href="#parameters-2" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-2">Headers<a href="#headers-2" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-2">Path and query parameters<a href="#path-and-query-parameters-2" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+</ul>
+<h4 id="body-parameters">Body parameters<a href="#body-parameters" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li><strong><code>pr_scan</code></strong> (string)<br>
+Whether to enable or disable AI Scan for the repository.<br>
+Can be one of: <code>enabled</code>, <code>disabled</code></li>
+</ul>
+<h3 id="http-response-status-codes-2">HTTP response status codes<a href="#http-response-status-codes-2" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - OK</p>
+</li>
+<li>
+<p><strong>403</strong> - Response if the repository is archived or if GitHub Advanced Security is not enabled for this repository</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+</ul>
+<h2 id="list-code-scanning-alerts-for-a-repository" title="GET /repos/{owner}/{repo}/code-scanning/alerts (List code scanning alerts for a repository)" data-entry-type="Resource">List code scanning alerts for a repository<a href="#list-code-scanning-alerts-for-a-repository" aria-label="Link to heading 'List code scanning alerts for a repository'" data-heading-content="List code scanning alerts for a repository" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /repos/{owner}/{repo}/code-scanning/alerts
+</span></code></pre>
+<p>Lists code scanning alerts.<br>
+The response includes a most<span data-escaped-char="">_</span>recent<span data-escaped-char="">_</span>instance object.<br>
+This provides details of the most recent instance of this alert<br>
+for the default branch (or for the specified Git reference if you used ref in the request).<br>
+OAuth app tokens and personal access tokens (classic) need the security<span data-escaped-char="">_</span>events scope to use this endpoint with private or public repositories, or the public<span data-escaped-char="">_</span>repo scope to use this endpoint with only public repositories.</p>
+<h3 id="parameters-3">Parameters<a href="#parameters-3" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-3">Headers<a href="#headers-3" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-3">Path and query parameters<a href="#path-and-query-parameters-3" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -333,7 +425,7 @@ Filter alerts by assignees. Provide a comma-separated list of user handles (e.g.
 Use <span data-escaped-char="">*</span> to list alerts with at least one assignee or none to list alerts with no assignees.</p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-1">HTTP response status codes<a href="#http-response-status-codes-1" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-3">HTTP response status codes<a href="#http-response-status-codes-3" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>200</strong> - OK</p>
@@ -351,8 +443,8 @@ Use <span data-escaped-char="">*</span> to list alerts with at least one assigne
 <p><strong>503</strong> - Service unavailable</p>
 </li>
 </ul>
-<h3 id="code-examples-1">Code examples<a href="#code-examples-1" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-1">Example<a href="#example-1" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-2">Code examples<a href="#code-examples-2" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-2">Example<a href="#example-2" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
@@ -463,13 +555,13 @@ Use <span data-escaped-char="">*</span> to list alerts with at least one assigne
 </span></code></pre>
 <p>Gets a single code scanning alert.<br>
 OAuth app tokens and personal access tokens (classic) need the security<span data-escaped-char="">_</span>events scope to use this endpoint with private or public repositories, or the public<span data-escaped-char="">_</span>repo scope to use this endpoint with only public repositories.</p>
-<h3 id="parameters-2">Parameters<a href="#parameters-2" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-2">Headers<a href="#headers-2" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-4">Parameters<a href="#parameters-4" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-4">Headers<a href="#headers-4" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-2">Path and query parameters<a href="#path-and-query-parameters-2" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-4">Path and query parameters<a href="#path-and-query-parameters-4" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -484,7 +576,7 @@ The name of the repository without the .git extension. The name is not case sens
 The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the number field in the response from the GET /repos/{owner}/{repo}/code-scanning/alerts operation.</p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-2">HTTP response status codes<a href="#http-response-status-codes-2" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-4">HTTP response status codes<a href="#http-response-status-codes-4" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>200</strong> - OK</p>
@@ -502,8 +594,8 @@ The number that identifies an alert. You can find this at the end of the URL for
 <p><strong>503</strong> - Service unavailable</p>
 </li>
 </ul>
-<h3 id="code-examples-2">Code examples<a href="#code-examples-2" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-2">Example<a href="#example-2" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-3">Code examples<a href="#code-examples-3" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-3">Example<a href="#example-3" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
@@ -935,13 +1027,13 @@ The number that identifies an alert. You can find this at the end of the URL for
 </span></code></pre>
 <p>Updates the status of a single code scanning alert.<br>
 OAuth app tokens and personal access tokens (classic) need the security<span data-escaped-char="">_</span>events scope to use this endpoint with private or public repositories, or the public<span data-escaped-char="">_</span>repo scope to use this endpoint with only public repositories.</p>
-<h3 id="parameters-3">Parameters<a href="#parameters-3" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-3">Headers<a href="#headers-3" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-5">Parameters<a href="#parameters-5" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-5">Headers<a href="#headers-5" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-3">Path and query parameters<a href="#path-and-query-parameters-3" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-5">Path and query parameters<a href="#path-and-query-parameters-5" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -956,7 +1048,7 @@ The name of the repository without the .git extension. The name is not case sens
 The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the number field in the response from the GET /repos/{owner}/{repo}/code-scanning/alerts operation.</p>
 </li>
 </ul>
-<h4 id="body-parameters">Body parameters<a href="#body-parameters" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<h4 id="body-parameters-1">Body parameters<a href="#body-parameters-1" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>state</code></strong> (string)<br>
@@ -981,7 +1073,7 @@ If true, attempt to create an alert dismissal request.</p>
 The list of users to assign to the code scanning alert. An empty array unassigns all previous assignees from the alert.</p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-3">HTTP response status codes<a href="#http-response-status-codes-3" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-5">HTTP response status codes<a href="#http-response-status-codes-5" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>200</strong> - OK</p>
@@ -999,8 +1091,8 @@ The list of users to assign to the code scanning alert. An empty array unassigns
 <p><strong>503</strong> - Service unavailable</p>
 </li>
 </ul>
-<h3 id="code-examples-3">Code examples<a href="#code-examples-3" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-3">Example<a href="#example-3" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-4">Code examples<a href="#code-examples-4" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-4">Example<a href="#example-4" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X PATCH \
@@ -1019,13 +1111,13 @@ The list of users to assign to the code scanning alert. An empty array unassigns
 </span></code></pre>
 <p>Gets the status and description of an autofix for a code scanning alert on the repository's default branch.<br>
 OAuth app tokens and personal access tokens (classic) need the security<span data-escaped-char="">_</span>events scope to use this endpoint with private or public repositories, or the public<span data-escaped-char="">_</span>repo scope to use this endpoint with only public repositories.</p>
-<h3 id="parameters-4">Parameters<a href="#parameters-4" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-4">Headers<a href="#headers-4" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-6">Parameters<a href="#parameters-6" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-6">Headers<a href="#headers-6" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-4">Path and query parameters<a href="#path-and-query-parameters-4" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-6">Path and query parameters<a href="#path-and-query-parameters-6" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -1040,7 +1132,7 @@ The name of the repository without the .git extension. The name is not case sens
 The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the number field in the response from the GET /repos/{owner}/{repo}/code-scanning/alerts operation.</p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-4">HTTP response status codes<a href="#http-response-status-codes-4" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-6">HTTP response status codes<a href="#http-response-status-codes-6" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>200</strong> - OK</p>
@@ -1058,8 +1150,8 @@ The number that identifies an alert. You can find this at the end of the URL for
 <p><strong>500</strong> - Internal Error</p>
 </li>
 </ul>
-<h3 id="code-examples-4">Code examples<a href="#code-examples-4" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-4">Example<a href="#example-4" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-5">Code examples<a href="#code-examples-5" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-5">Example<a href="#example-5" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
@@ -1078,13 +1170,13 @@ The number that identifies an alert. You can find this at the end of the URL for
 If a new autofix is to be created as a result of this request or is currently being generated, then this endpoint will return a 202 Accepted response.<br>
 If an autofix already exists for a given alert, then this endpoint will return a 200 OK response.<br>
 OAuth app tokens and personal access tokens (classic) need the security<span data-escaped-char="">_</span>events scope to use this endpoint with private or public repositories, or the public<span data-escaped-char="">_</span>repo scope to use this endpoint with only public repositories.</p>
-<h3 id="parameters-5">Parameters<a href="#parameters-5" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-5">Headers<a href="#headers-5" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-7">Parameters<a href="#parameters-7" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-7">Headers<a href="#headers-7" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-5">Path and query parameters<a href="#path-and-query-parameters-5" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-7">Path and query parameters<a href="#path-and-query-parameters-7" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -1099,7 +1191,7 @@ The name of the repository without the .git extension. The name is not case sens
 The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the number field in the response from the GET /repos/{owner}/{repo}/code-scanning/alerts operation.</p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-5">HTTP response status codes<a href="#http-response-status-codes-5" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-7">HTTP response status codes<a href="#http-response-status-codes-7" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>200</strong> - OK</p>
@@ -1123,7 +1215,7 @@ The number that identifies an alert. You can find this at the end of the URL for
 <p><strong>500</strong> - Internal Error</p>
 </li>
 </ul>
-<h3 id="code-examples-5">Code examples<a href="#code-examples-5" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h3 id="code-examples-6">Code examples<a href="#code-examples-6" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
 <h4 id="example-1-status-code-200">Example 1: Status Code 200<a href="#example-1-status-code-200" aria-label="Link to heading 'Example 1: Status Code 200'" data-heading-content="Example 1: Status Code 200" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
@@ -1146,13 +1238,13 @@ The number that identifies an alert. You can find this at the end of the URL for
 <p>Commits an autofix for a code scanning alert from the repository's default branch.<br>
 If an autofix is committed as a result of this request, then this endpoint will return a 201 Created response.<br>
 OAuth app tokens and personal access tokens (classic) need the repo scope to use this endpoint with private or public repositories, or the public<span data-escaped-char="">_</span>repo scope to use this endpoint with only public repositories.</p>
-<h3 id="parameters-6">Parameters<a href="#parameters-6" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-6">Headers<a href="#headers-6" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-8">Parameters<a href="#parameters-8" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-8">Headers<a href="#headers-8" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-6">Path and query parameters<a href="#path-and-query-parameters-6" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-8">Path and query parameters<a href="#path-and-query-parameters-8" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -1167,7 +1259,7 @@ The name of the repository without the .git extension. The name is not case sens
 The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the number field in the response from the GET /repos/{owner}/{repo}/code-scanning/alerts operation.</p>
 </li>
 </ul>
-<h4 id="body-parameters-1">Body parameters<a href="#body-parameters-1" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<h4 id="body-parameters-2">Body parameters<a href="#body-parameters-2" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>target_ref</code></strong> (string)<br>
@@ -1178,7 +1270,7 @@ The Git reference of target branch for the commit. Branch needs to already exist
 Commit message to be used.</p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-6">HTTP response status codes<a href="#http-response-status-codes-6" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-8">HTTP response status codes<a href="#http-response-status-codes-8" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>201</strong> - Created</p>
@@ -1199,8 +1291,8 @@ Commit message to be used.</p>
 <p><strong>503</strong> - Service unavailable</p>
 </li>
 </ul>
-<h3 id="code-examples-6">Code examples<a href="#code-examples-6" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-5">Example<a href="#example-5" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-7">Code examples<a href="#code-examples-7" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-6">Example<a href="#example-6" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X POST \
@@ -1220,13 +1312,13 @@ Commit message to be used.</p>
 </span></code></pre>
 <p>Lists all instances of the specified code scanning alert.<br>
 OAuth app tokens and personal access tokens (classic) need the security<span data-escaped-char="">_</span>events scope to use this endpoint with private or public repositories, or the public<span data-escaped-char="">_</span>repo scope to use this endpoint with only public repositories.</p>
-<h3 id="parameters-7">Parameters<a href="#parameters-7" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-7">Headers<a href="#headers-7" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-9">Parameters<a href="#parameters-9" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-9">Headers<a href="#headers-9" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-7">Path and query parameters<a href="#path-and-query-parameters-7" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-9">Path and query parameters<a href="#path-and-query-parameters-9" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -1259,7 +1351,7 @@ The Git reference for the results you want to list. The ref for a branch can be 
 The number of the pull request for the results you want to list.</p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-7">HTTP response status codes<a href="#http-response-status-codes-7" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-9">HTTP response status codes<a href="#http-response-status-codes-9" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>200</strong> - OK</p>
@@ -1274,8 +1366,8 @@ The number of the pull request for the results you want to list.</p>
 <p><strong>503</strong> - Service unavailable</p>
 </li>
 </ul>
-<h3 id="code-examples-7">Code examples<a href="#code-examples-7" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-6">Example<a href="#example-6" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-8">Code examples<a href="#code-examples-8" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-7">Example<a href="#example-7" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
@@ -1322,13 +1414,13 @@ and 0 is returned in this field.<br>
 Warning</p>
 <p>Closing down notice: The tool<span data-escaped-char="">_</span>name field is closing down and will, in future, not be included in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the tool field.</p>
 <p>OAuth app tokens and personal access tokens (classic) need the security<span data-escaped-char="">_</span>events scope to use this endpoint with private or public repositories, or the public<span data-escaped-char="">_</span>repo scope to use this endpoint with only public repositories.</p>
-<h3 id="parameters-8">Parameters<a href="#parameters-8" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-8">Headers<a href="#headers-8" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-10">Parameters<a href="#parameters-10" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-10">Headers<a href="#headers-10" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-8">Path and query parameters<a href="#path-and-query-parameters-8" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-10">Path and query parameters<a href="#path-and-query-parameters-10" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -1381,7 +1473,7 @@ Default: <code>created</code><br>
 Can be one of: <code>created</code></p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-8">HTTP response status codes<a href="#http-response-status-codes-8" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-10">HTTP response status codes<a href="#http-response-status-codes-10" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>200</strong> - OK</p>
@@ -1396,8 +1488,8 @@ Can be one of: <code>created</code></p>
 <p><strong>503</strong> - Service unavailable</p>
 </li>
 </ul>
-<h3 id="code-examples-8">Code examples<a href="#code-examples-8" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-7">Example<a href="#example-7" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-9">Code examples<a href="#code-examples-9" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-8">Example<a href="#example-8" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
@@ -1443,13 +1535,13 @@ and 0 is returned in this field.<br>
 This endpoint supports the following custom media types. For more information, see "Media types."</p>
 <p>application/sarif+json: Instead of returning a summary of the analysis, this endpoint returns a subset of the analysis data that was uploaded. The data is formatted as SARIF version 2.1.0. It also returns additional data such as the github/alertNumber and github/alertUrl properties.</p>
 <p>OAuth app tokens and personal access tokens (classic) need the security<span data-escaped-char="">_</span>events scope to use this endpoint with private or public repositories, or the public<span data-escaped-char="">_</span>repo scope to use this endpoint with only public repositories.</p>
-<h3 id="parameters-9">Parameters<a href="#parameters-9" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-9">Headers<a href="#headers-9" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-11">Parameters<a href="#parameters-11" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-11">Headers<a href="#headers-11" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-9">Path and query parameters<a href="#path-and-query-parameters-9" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-11">Path and query parameters<a href="#path-and-query-parameters-11" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -1464,7 +1556,7 @@ The name of the repository without the .git extension. The name is not case sens
 The ID of the analysis, as returned from the GET /repos/{owner}/{repo}/code-scanning/analyses operation.</p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-9">HTTP response status codes<a href="#http-response-status-codes-9" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-11">HTTP response status codes<a href="#http-response-status-codes-11" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>200</strong> - OK</p>
@@ -1482,7 +1574,7 @@ The ID of the analysis, as returned from the GET /repos/{owner}/{repo}/code-scan
 <p><strong>503</strong> - Service unavailable</p>
 </li>
 </ul>
-<h3 id="code-examples-9">Code examples<a href="#code-examples-9" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h3 id="code-examples-10">Code examples<a href="#code-examples-10" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
 <h4 id="example-1-status-code-200-1">Example 1: Status Code 200<a href="#example-1-status-code-200-1" aria-label="Link to heading 'Example 1: Status Code 200'" data-heading-content="Example 1: Status Code 200" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
@@ -1571,13 +1663,13 @@ Inner loop:</p>
 Parse the response for the value of confirm<span data-escaped-char="">_</span>delete<span data-escaped-char="">_</span>url and, if found, use this in the next iteration.</p>
 <p>The above process assumes that you want to remove all trace of the tool's analyses from the GitHub user interface, for the specified repository, and it therefore uses the confirm<span data-escaped-char="">_</span>delete<span data-escaped-char="">_</span>url value. Alternatively, you could use the next<span data-escaped-char="">_</span>analysis<span data-escaped-char="">_</span>url value, which would leave the last analysis in each set undeleted to avoid removing a tool's analysis entirely.<br>
 OAuth app tokens and personal access tokens (classic) need the repo scope to use this endpoint with private or public repositories, or the public<span data-escaped-char="">_</span>repo scope to use this endpoint with only public repositories.</p>
-<h3 id="parameters-10">Parameters<a href="#parameters-10" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-10">Headers<a href="#headers-10" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-12">Parameters<a href="#parameters-12" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-12">Headers<a href="#headers-12" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-10">Path and query parameters<a href="#path-and-query-parameters-10" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-12">Path and query parameters<a href="#path-and-query-parameters-12" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -1596,7 +1688,7 @@ The ID of the analysis, as returned from the GET /repos/{owner}/{repo}/code-scan
 Allow deletion if the specified analysis is the last in a set. If you attempt to delete the final analysis in a set without setting this parameter to true, you'll get a 400 response with the message: Analysis is last of its type and deletion may result in the loss of historical alert data. Please specify confirm<span data-escaped-char="">_</span>delete.</p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-10">HTTP response status codes<a href="#http-response-status-codes-10" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-12">HTTP response status codes<a href="#http-response-status-codes-12" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>200</strong> - OK</p>
@@ -1614,8 +1706,8 @@ Allow deletion if the specified analysis is the last in a set. If you attempt to
 <p><strong>503</strong> - Service unavailable</p>
 </li>
 </ul>
-<h3 id="code-examples-10">Code examples<a href="#code-examples-10" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-8">Example<a href="#example-8" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-11">Code examples<a href="#code-examples-11" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-9">Example<a href="#example-9" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X DELETE \
@@ -1631,13 +1723,13 @@ Allow deletion if the specified analysis is the last in a set. If you attempt to
 </span></code></pre>
 <p>Lists the CodeQL databases that are available in a repository.<br>
 OAuth app tokens and personal access tokens (classic) need the repo scope to use this endpoint with private or public repositories, or the public<span data-escaped-char="">_</span>repo scope to use this endpoint with only public repositories.</p>
-<h3 id="parameters-11">Parameters<a href="#parameters-11" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-11">Headers<a href="#headers-11" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-13">Parameters<a href="#parameters-13" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-13">Headers<a href="#headers-13" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-11">Path and query parameters<a href="#path-and-query-parameters-11" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-13">Path and query parameters<a href="#path-and-query-parameters-13" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -1648,7 +1740,7 @@ The account owner of the repository. The name is not case sensitive.</p>
 The name of the repository without the .git extension. The name is not case sensitive.</p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-11">HTTP response status codes<a href="#http-response-status-codes-11" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-13">HTTP response status codes<a href="#http-response-status-codes-13" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>200</strong> - OK</p>
@@ -1663,8 +1755,8 @@ The name of the repository without the .git extension. The name is not case sens
 <p><strong>503</strong> - Service unavailable</p>
 </li>
 </ul>
-<h3 id="code-examples-11">Code examples<a href="#code-examples-11" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-9">Example<a href="#example-9" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-12">Code examples<a href="#code-examples-12" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-10">Example<a href="#example-10" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
@@ -1719,13 +1811,13 @@ to application/zip, and make sure<br>
 your HTTP client is configured to follow redirects or use the Location header<br>
 to make a second request to get the redirect URL.<br>
 OAuth app tokens and personal access tokens (classic) need the repo scope to use this endpoint with private or public repositories, or the public<span data-escaped-char="">_</span>repo scope to use this endpoint with only public repositories.</p>
-<h3 id="parameters-12">Parameters<a href="#parameters-12" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-12">Headers<a href="#headers-12" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-14">Parameters<a href="#parameters-14" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-14">Headers<a href="#headers-14" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-12">Path and query parameters<a href="#path-and-query-parameters-12" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-14">Path and query parameters<a href="#path-and-query-parameters-14" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -1740,7 +1832,7 @@ The name of the repository without the .git extension. The name is not case sens
 The language of the CodeQL database.</p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-12">HTTP response status codes<a href="#http-response-status-codes-12" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-14">HTTP response status codes<a href="#http-response-status-codes-14" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>200</strong> - OK</p>
@@ -1758,8 +1850,8 @@ The language of the CodeQL database.</p>
 <p><strong>503</strong> - Service unavailable</p>
 </li>
 </ul>
-<h3 id="code-examples-12">Code examples<a href="#code-examples-12" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-10">Example<a href="#example-10" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-13">Code examples<a href="#code-examples-13" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-11">Example<a href="#example-11" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
@@ -1808,13 +1900,13 @@ The language of the CodeQL database.</p>
 </span></code></pre>
 <p>Deletes a CodeQL database for a language in a repository.<br>
 OAuth app tokens and personal access tokens (classic) need the repo scope to use this endpoint with private or public repositories, or the public<span data-escaped-char="">_</span>repo scope to use this endpoint with only public repositories.</p>
-<h3 id="parameters-13">Parameters<a href="#parameters-13" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-13">Headers<a href="#headers-13" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-15">Parameters<a href="#parameters-15" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-15">Headers<a href="#headers-15" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-13">Path and query parameters<a href="#path-and-query-parameters-13" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-15">Path and query parameters<a href="#path-and-query-parameters-15" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -1829,7 +1921,7 @@ The name of the repository without the .git extension. The name is not case sens
 The language of the CodeQL database.</p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-13">HTTP response status codes<a href="#http-response-status-codes-13" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-15">HTTP response status codes<a href="#http-response-status-codes-15" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>204</strong> - No Content</p>
@@ -1844,8 +1936,8 @@ The language of the CodeQL database.</p>
 <p><strong>503</strong> - Service unavailable</p>
 </li>
 </ul>
-<h3 id="code-examples-13">Code examples<a href="#code-examples-13" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-11">Example<a href="#example-11" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-14">Code examples<a href="#code-examples-14" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-12">Example<a href="#example-12" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X DELETE \
@@ -1860,13 +1952,13 @@ Get started by learning more about running CodeQL queries at scale with Multi-Re
 Use the owner and repo parameters in the URL to specify the controller repository that<br>
 will be used for running GitHub Actions workflows and storing the results of the CodeQL variant analysis.<br>
 OAuth app tokens and personal access tokens (classic) need the repo scope to use this endpoint.</p>
-<h3 id="parameters-14">Parameters<a href="#parameters-14" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-14">Headers<a href="#headers-14" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-16">Parameters<a href="#parameters-16" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-16">Headers<a href="#headers-16" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-14">Path and query parameters<a href="#path-and-query-parameters-14" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-16">Path and query parameters<a href="#path-and-query-parameters-16" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -1877,7 +1969,7 @@ The account owner of the repository. The name is not case sensitive.</p>
 The name of the repository without the .git extension. The name is not case sensitive.</p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-14">HTTP response status codes<a href="#http-response-status-codes-14" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-16">HTTP response status codes<a href="#http-response-status-codes-16" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>201</strong> - Variant analysis submitted for processing</p>
@@ -1892,7 +1984,7 @@ The name of the repository without the .git extension. The name is not case sens
 <p><strong>503</strong> - Service unavailable</p>
 </li>
 </ul>
-<h3 id="code-examples-14">Code examples<a href="#code-examples-14" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h3 id="code-examples-15">Code examples<a href="#code-examples-15" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
 <h4 id="using-the-repositories-field-query_pack-is-abridged-for-brevity">Using the "repositories" field. "query<span data-escaped-char="">_</span>pack" is abridged for brevity.<a href="#using-the-repositories-field-query_pack-is-abridged-for-brevity" aria-label="Link to heading 'Using the &quot;repositories&quot; field. &quot;query_pack&quot; is abridged for brevity.'" data-heading-content="Using the &quot;repositories&quot; field. &quot;query_pack&quot; is abridged for brevity." class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
@@ -2340,13 +2432,13 @@ The name of the repository without the .git extension. The name is not case sens
 </span></code></pre>
 <p>Gets the summary of a CodeQL variant analysis.<br>
 OAuth app tokens and personal access tokens (classic) need the security<span data-escaped-char="">_</span>events scope to use this endpoint with private or public repositories, or the public<span data-escaped-char="">_</span>repo scope to use this endpoint with only public repositories.</p>
-<h3 id="parameters-15">Parameters<a href="#parameters-15" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-15">Headers<a href="#headers-15" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-17">Parameters<a href="#parameters-17" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-17">Headers<a href="#headers-17" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-15">Path and query parameters<a href="#path-and-query-parameters-15" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-17">Path and query parameters<a href="#path-and-query-parameters-17" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -2361,7 +2453,7 @@ The name of the repository without the .git extension. The name is not case sens
 The unique identifier of the variant analysis.</p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-15">HTTP response status codes<a href="#http-response-status-codes-15" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-17">HTTP response status codes<a href="#http-response-status-codes-17" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>200</strong> - OK</p>
@@ -2373,8 +2465,8 @@ The unique identifier of the variant analysis.</p>
 <p><strong>503</strong> - Service unavailable</p>
 </li>
 </ul>
-<h3 id="code-examples-15">Code examples<a href="#code-examples-15" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-12">Example<a href="#example-12" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-16">Code examples<a href="#code-examples-16" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-13">Example<a href="#example-13" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
@@ -2387,13 +2479,13 @@ The unique identifier of the variant analysis.</p>
 </span></code></pre>
 <p>Gets the analysis status of a repository in a CodeQL variant analysis.<br>
 OAuth app tokens and personal access tokens (classic) need the security<span data-escaped-char="">_</span>events scope to use this endpoint with private or public repositories, or the public<span data-escaped-char="">_</span>repo scope to use this endpoint with only public repositories.</p>
-<h3 id="parameters-16">Parameters<a href="#parameters-16" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-16">Headers<a href="#headers-16" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-18">Parameters<a href="#parameters-18" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-18">Headers<a href="#headers-18" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-16">Path and query parameters<a href="#path-and-query-parameters-16" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-18">Path and query parameters<a href="#path-and-query-parameters-18" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -2416,7 +2508,7 @@ The account owner of the variant analysis repository. The name is not case sensi
 The name of the variant analysis repository.</p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-16">HTTP response status codes<a href="#http-response-status-codes-16" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-18">HTTP response status codes<a href="#http-response-status-codes-18" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>200</strong> - OK</p>
@@ -2428,8 +2520,8 @@ The name of the variant analysis repository.</p>
 <p><strong>503</strong> - Service unavailable</p>
 </li>
 </ul>
-<h3 id="code-examples-16">Code examples<a href="#code-examples-16" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-13">Example<a href="#example-13" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-17">Code examples<a href="#code-examples-17" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-14">Example<a href="#example-14" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
@@ -2525,13 +2617,13 @@ The name of the variant analysis repository.</p>
 </span></code></pre>
 <p>Gets a code scanning default setup configuration.<br>
 OAuth app tokens and personal access tokens (classic) need the repo scope to use this endpoint with private or public repositories, or the public<span data-escaped-char="">_</span>repo scope to use this endpoint with only public repositories.</p>
-<h3 id="parameters-17">Parameters<a href="#parameters-17" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-17">Headers<a href="#headers-17" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-19">Parameters<a href="#parameters-19" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-19">Headers<a href="#headers-19" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-17">Path and query parameters<a href="#path-and-query-parameters-17" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-19">Path and query parameters<a href="#path-and-query-parameters-19" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -2542,7 +2634,7 @@ The account owner of the repository. The name is not case sensitive.</p>
 The name of the repository without the .git extension. The name is not case sensitive.</p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-17">HTTP response status codes<a href="#http-response-status-codes-17" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-19">HTTP response status codes<a href="#http-response-status-codes-19" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>200</strong> - OK</p>
@@ -2557,8 +2649,8 @@ The name of the repository without the .git extension. The name is not case sens
 <p><strong>503</strong> - Service unavailable</p>
 </li>
 </ul>
-<h3 id="code-examples-17">Code examples<a href="#code-examples-17" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-14">Example<a href="#example-14" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-18">Code examples<a href="#code-examples-18" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-15">Example<a href="#example-15" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
@@ -2580,13 +2672,13 @@ The name of the repository without the .git extension. The name is not case sens
 </span></code></pre>
 <p>Updates a code scanning default setup configuration.<br>
 OAuth app tokens and personal access tokens (classic) need the repo scope to use this endpoint with private or public repositories, or the public<span data-escaped-char="">_</span>repo scope to use this endpoint with only public repositories.</p>
-<h3 id="parameters-18">Parameters<a href="#parameters-18" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-18">Headers<a href="#headers-18" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-20">Parameters<a href="#parameters-20" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-20">Headers<a href="#headers-20" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-18">Path and query parameters<a href="#path-and-query-parameters-18" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-20">Path and query parameters<a href="#path-and-query-parameters-20" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -2597,7 +2689,7 @@ The account owner of the repository. The name is not case sensitive.</p>
 The name of the repository without the .git extension. The name is not case sensitive.</p>
 </li>
 </ul>
-<h4 id="body-parameters-2">Body parameters<a href="#body-parameters-2" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<h4 id="body-parameters-3">Body parameters<a href="#body-parameters-3" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>state</code></strong> (string)<br>
@@ -2629,7 +2721,7 @@ CodeQL languages to be analyzed.<br>
 Supported values are: actions, c-cpp, csharp, go, java-kotlin, javascript-typescript, python, ruby, swift</p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-18">HTTP response status codes<a href="#http-response-status-codes-18" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-20">HTTP response status codes<a href="#http-response-status-codes-20" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>200</strong> - OK</p>
@@ -2653,8 +2745,8 @@ Supported values are: actions, c-cpp, csharp, go, java-kotlin, javascript-typesc
 <p><strong>503</strong> - Service unavailable</p>
 </li>
 </ul>
-<h3 id="code-examples-18">Code examples<a href="#code-examples-18" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-15">Example<a href="#example-15" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-19">Code examples<a href="#code-examples-19" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-16">Example<a href="#example-16" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X PATCH \
@@ -2686,13 +2778,13 @@ You can use this ID to check the status of the upload by using it in the /sarifs
 For more information, see "Get information about a SARIF upload."<br>
 OAuth app tokens and personal access tokens (classic) need the security<span data-escaped-char="">_</span>events scope to use this endpoint with private or public repositories, or the public<span data-escaped-char="">_</span>repo scope to use this endpoint with only public repositories.<br>
 This endpoint is limited to 1,000 requests per hour for each user or app installation calling it.</p>
-<h3 id="parameters-19">Parameters<a href="#parameters-19" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-19">Headers<a href="#headers-19" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-21">Parameters<a href="#parameters-21" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-21">Headers<a href="#headers-21" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-19">Path and query parameters<a href="#path-and-query-parameters-19" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-21">Path and query parameters<a href="#path-and-query-parameters-21" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -2703,7 +2795,7 @@ The account owner of the repository. The name is not case sensitive.</p>
 The name of the repository without the .git extension. The name is not case sensitive.</p>
 </li>
 </ul>
-<h4 id="body-parameters-3">Body parameters<a href="#body-parameters-3" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<h4 id="body-parameters-4">Body parameters<a href="#body-parameters-4" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>commit_sha</code></strong> (string) (required)<br>
@@ -2737,7 +2829,7 @@ Whether the SARIF file will be validated according to the code scanning specific
 This parameter is intended to help integrators ensure that the uploaded SARIF files are correctly rendered by code scanning.</p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-19">HTTP response status codes<a href="#http-response-status-codes-19" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-21">HTTP response status codes<a href="#http-response-status-codes-21" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>202</strong> - Accepted</p>
@@ -2758,8 +2850,8 @@ This parameter is intended to help integrators ensure that the uploaded SARIF fi
 <p><strong>503</strong> - Service unavailable</p>
 </li>
 </ul>
-<h3 id="code-examples-19">Code examples<a href="#code-examples-19" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-16">Example<a href="#example-16" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-20">Code examples<a href="#code-examples-20" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-17">Example<a href="#example-17" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X POST \
@@ -2780,13 +2872,13 @@ This parameter is intended to help integrators ensure that the uploaded SARIF fi
 </span></code></pre>
 <p>Gets information about a SARIF upload, including the status and the URL of the analysis that was uploaded so that you can retrieve details of the analysis. For more information, see "Get a code scanning analysis for a repository."<br>
 OAuth app tokens and personal access tokens (classic) need the security<span data-escaped-char="">_</span>events scope to use this endpoint with private or public repositories, or the public<span data-escaped-char="">_</span>repo scope to use this endpoint with only public repositories.</p>
-<h3 id="parameters-20">Parameters<a href="#parameters-20" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-20">Headers<a href="#headers-20" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-22">Parameters<a href="#parameters-22" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-22">Headers<a href="#headers-22" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-20">Path and query parameters<a href="#path-and-query-parameters-20" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-22">Path and query parameters<a href="#path-and-query-parameters-22" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -2801,7 +2893,7 @@ The name of the repository without the .git extension. The name is not case sens
 The SARIF ID obtained after uploading.</p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-20">HTTP response status codes<a href="#http-response-status-codes-20" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-22">HTTP response status codes<a href="#http-response-status-codes-22" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>200</strong> - OK</p>
@@ -2816,8 +2908,8 @@ The SARIF ID obtained after uploading.</p>
 <p><strong>503</strong> - Service unavailable</p>
 </li>
 </ul>
-<h3 id="code-examples-20">Code examples<a href="#code-examples-20" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-17">Example<a href="#example-17" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-21">Code examples<a href="#code-examples-21" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-18">Example<a href="#example-18" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
