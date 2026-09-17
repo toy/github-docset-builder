@@ -585,6 +585,35 @@ The name of a code scanning tool</li>
 </li>
 </ul>
 </li>
+<li><strong><code>code_quality</code></strong> (object)<br>
+Choose which severity levels of code quality results should block pull request merges. When configured, a code quality analysis must be done on the pull request before the changes can be merged.
+<ul>
+<li><strong><code>type</code></strong> (string) (required)<br>
+Can be one of: <code>code_quality</code></li>
+<li><strong><code>parameters</code></strong> (object)
+<ul>
+<li><strong><code>severity</code></strong> (string) (required)<br>
+The lowest severity level at which code quality reviews need to be resolved before commits can be merged.<br>
+Can be one of: <code>errors</code>, <code>warnings</code>, <code>notes</code>, <code>all</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong><code>code_coverage</code></strong> (object)<br>
+Enforce minimum line coverage thresholds on pull requests. When configured, uploaded coverage data must meet the specified criteria before changes can be merged.
+<ul>
+<li><strong><code>type</code></strong> (string) (required)<br>
+Can be one of: <code>code_coverage</code></li>
+<li><strong><code>parameters</code></strong> (object)
+<ul>
+<li><strong><code>max_coverage_drop</code></strong> (number)<br>
+The maximum percentage points that line coverage may drop relative to the default branch. Pull requests that reduce line coverage by more than this amount will be blocked.</li>
+<li><strong><code>minimum_coverage</code></strong> (number)<br>
+The absolute minimum line coverage percentage required. Pull requests with line coverage below this threshold will be blocked.</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><strong><code>copilot_code_review</code></strong> (object)<br>
 Request Copilot code review for new pull requests automatically if the author has access to Copilot code review and their premium requests quota has not reached the limit.
 <ul>
@@ -1209,6 +1238,35 @@ Can be one of: <code>none</code>, <code>critical</code>, <code>high_or_higher</c
 The name of a code scanning tool</li>
 </ul>
 </li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong><code>code_quality</code></strong> (object)<br>
+Choose which severity levels of code quality results should block pull request merges. When configured, a code quality analysis must be done on the pull request before the changes can be merged.
+<ul>
+<li><strong><code>type</code></strong> (string) (required)<br>
+Can be one of: <code>code_quality</code></li>
+<li><strong><code>parameters</code></strong> (object)
+<ul>
+<li><strong><code>severity</code></strong> (string) (required)<br>
+The lowest severity level at which code quality reviews need to be resolved before commits can be merged.<br>
+Can be one of: <code>errors</code>, <code>warnings</code>, <code>notes</code>, <code>all</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong><code>code_coverage</code></strong> (object)<br>
+Enforce minimum line coverage thresholds on pull requests. When configured, uploaded coverage data must meet the specified criteria before changes can be merged.
+<ul>
+<li><strong><code>type</code></strong> (string) (required)<br>
+Can be one of: <code>code_coverage</code></li>
+<li><strong><code>parameters</code></strong> (object)
+<ul>
+<li><strong><code>max_coverage_drop</code></strong> (number)<br>
+The maximum percentage points that line coverage may drop relative to the default branch. Pull requests that reduce line coverage by more than this amount will be blocked.</li>
+<li><strong><code>minimum_coverage</code></strong> (number)<br>
+The absolute minimum line coverage percentage required. Pull requests with line coverage below this threshold will be blocked.</li>
 </ul>
 </li>
 </ul>

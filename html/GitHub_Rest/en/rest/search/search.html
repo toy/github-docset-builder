@@ -935,6 +935,12 @@ Can be one of: <code>semantic</code>, <code>hybrid</code></p>
 <li><code>color</code>: string</li>
 <li><code>default</code>: boolean</li>
 <li><code>description</code>: string or null</li>
+<li><code>archived_at</code>: string or null, format: date-time</li>
+<li><code>archived_by</code>: all of:
+<ul>
+<li><strong>Simple User</strong> (see above)</li>
+</ul>
+</li>
 </ul>
 </li>
 <li><code>sub_issues_summary</code>: <code>Sub-issues Summary</code>:
@@ -1377,6 +1383,12 @@ Can be one of: <code>semantic</code>, <code>hybrid</code></p>
 <li><code>color</code>: string</li>
 <li><code>default</code>: boolean</li>
 <li><code>description</code>: string or null</li>
+<li><code>archived_at</code>: string or null, format: date-time</li>
+<li><code>archived_by</code>: all of:
+<ul>
+<li><strong>Simple User</strong> (see above)</li>
+</ul>
+</li>
 </ul>
 </li>
 <li><code>sub_issues_summary</code>: <code>Sub-issues Summary</code>:
@@ -1838,6 +1850,37 @@ Default: <code>1</code></p>
 <li><code>color</code>: required, string</li>
 <li><code>default</code>: required, boolean</li>
 <li><code>description</code>: required, string or null</li>
+<li><code>archived_at</code>: required, string or null, format: date-time</li>
+<li><code>archived_by</code>: required, all of:
+<ul>
+<li><strong>Simple User</strong>
+<ul>
+<li><code>name</code>: string or null</li>
+<li><code>email</code>: string or null</li>
+<li><code>login</code>: required, string</li>
+<li><code>id</code>: required, integer, format: int64</li>
+<li><code>node_id</code>: required, string</li>
+<li><code>avatar_url</code>: required, string, format: uri</li>
+<li><code>gravatar_id</code>: required, string or null</li>
+<li><code>url</code>: required, string, format: uri</li>
+<li><code>html_url</code>: required, string, format: uri</li>
+<li><code>followers_url</code>: required, string, format: uri</li>
+<li><code>following_url</code>: required, string</li>
+<li><code>gists_url</code>: required, string</li>
+<li><code>starred_url</code>: required, string</li>
+<li><code>subscriptions_url</code>: required, string, format: uri</li>
+<li><code>organizations_url</code>: required, string, format: uri</li>
+<li><code>repos_url</code>: required, string, format: uri</li>
+<li><code>events_url</code>: required, string</li>
+<li><code>received_events_url</code>: required, string, format: uri</li>
+<li><code>type</code>: required, string</li>
+<li><code>site_admin</code>: required, boolean</li>
+<li><code>starred_at</code>: string</li>
+<li><code>user_view_type</code>: string</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><code>score</code>: required, number</li>
 <li><code>text_matches</code>: array of objects:
 <ul>

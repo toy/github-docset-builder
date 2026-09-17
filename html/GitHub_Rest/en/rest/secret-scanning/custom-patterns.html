@@ -107,7 +107,7 @@ The organization name. The name is not case sensitive.</li>
 <h4 id="body-parameters">Body parameters<a href="#body-parameters" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
 <ul>
 <li><strong><code>patterns</code></strong> (array of objects) (required)<br>
-The list of custom patterns to create.
+The list of custom patterns to create (maximum 100).
 <ul>
 <li><strong><code>name</code></strong> (string) (required)<br>
 The name of the custom pattern.</li>
@@ -374,7 +374,8 @@ The version of the entity. This is used to confirm you're updating the current v
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /repos/{owner}/{repo}/secret-scanning/custom-patterns
 </span></code></pre>
 <p>Lists secret scanning custom patterns for a repository.<br>
-OAuth app tokens and personal access tokens (classic) need the repo or security_events scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the public_repo scope instead.</p>
+OAuth app tokens and personal access tokens (classic) need the repo scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the public_repo scope instead.<br>
+Fine-grained access tokens require the administration:write repository permission.</p>
 <h3 id="parameters-4">Parameters<a href="#parameters-4" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-4">Headers<a href="#headers-4" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
@@ -447,7 +448,8 @@ A cursor, as given in the Link header. If specified, the query only searches for
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">POST /repos/{owner}/{repo}/secret-scanning/custom-patterns
 </span></code></pre>
 <p>Bulk creates secret scanning custom patterns for a repository.<br>
-OAuth app tokens and personal access tokens (classic) need the repo or security_events scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the public_repo scope instead.</p>
+OAuth app tokens and personal access tokens (classic) need the repo scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the public_repo scope instead.<br>
+Fine-grained access tokens require the administration:write repository permission.</p>
 <h3 id="parameters-5">Parameters<a href="#parameters-5" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-5">Headers<a href="#headers-5" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
@@ -468,7 +470,7 @@ The name of the repository without the .git extension. The name is not case sens
 <h4 id="body-parameters-3">Body parameters<a href="#body-parameters-3" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
 <ul>
 <li><strong><code>patterns</code></strong> (array of objects) (required)<br>
-The list of custom patterns to create.
+The list of custom patterns to create (maximum 100).
 <ul>
 <li><strong><code>name</code></strong> (string) (required)<br>
 The name of the custom pattern.</li>
@@ -540,7 +542,8 @@ List of regexes that the secret must not match.</li>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">DELETE /repos/{owner}/{repo}/secret-scanning/custom-patterns
 </span></code></pre>
 <p>Bulk deletes secret scanning custom patterns for a repository.<br>
-OAuth app tokens and personal access tokens (classic) need the repo or security_events scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the public_repo scope instead.</p>
+OAuth app tokens and personal access tokens (classic) need the repo scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the public_repo scope instead.<br>
+Fine-grained access tokens require the administration:write repository permission.</p>
 <h3 id="parameters-6">Parameters<a href="#parameters-6" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-6">Headers<a href="#headers-6" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
@@ -618,7 +621,8 @@ Can be one of: <code>delete_alerts</code>, <code>resolve_alerts</code></p>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PATCH /repos/{owner}/{repo}/secret-scanning/custom-patterns/{pattern_id}
 </span></code></pre>
 <p>Updates a secret scanning custom pattern for a repository.<br>
-OAuth app tokens and personal access tokens (classic) need the repo or security_events scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the public_repo scope instead.</p>
+OAuth app tokens and personal access tokens (classic) need the repo scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the public_repo scope instead.<br>
+Fine-grained access tokens require the administration:write repository permission.</p>
 <h3 id="parameters-7">Parameters<a href="#parameters-7" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-7">Headers<a href="#headers-7" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>

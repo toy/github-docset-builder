@@ -5,7 +5,43 @@
 <p>In most ecosystems, private dependencies are usually published to private package registries. These private registries are similar to their public equivalents, but they require authentication.</p>
 <p>For specific ecosystems, you can configure Dependabot to access <em>only</em> private registries by removing calls to public registries. For more information, see <a href="remove-access-to-public-registries.html">Removing Dependabot access to public registries</a>.</p>
 <p>To allow Dependabot access to registries hosted privately or restricted to internal networks, configure Dependabot to run on GitHub Actions self-hosted runners. For more information, see <a href="configure-on-self-hosted-runners.html">Configuring Dependabot on self-hosted runners</a>.</p>
-<h2 id="configuring-private-registries" title="Configuring private registries" data-entry-type="Section">Configuring private registries<a href="#configuring-private-registries" aria-label="Link to heading 'Configuring private registries'" data-heading-content="Configuring private registries" class="anchor"></a></h2>
+<h2 id="configuring-private-github-hosted-registries" title="Configuring private GitHub-hosted registries" data-entry-type="Section">Configuring private GitHub-hosted registries<a href="#configuring-private-github-hosted-registries" aria-label="Link to heading 'Configuring private GitHub-hosted registries'" data-heading-content="Configuring private GitHub-hosted registries" class="anchor"></a></h2>
+<p>For packages stored in GitHub Packages or Container registry, Dependabot can authenticate automatically using its <code>GITHUB_TOKEN</code>. This uses the same "Manage Actions access" grants that GitHub Actions workflows use. No personal access tokens or <code>dependabot.yml</code> registry entries are required.</p>
+<p>The <code>dependabot.yml</code> registry configuration using Personal Access Token-based registry entries and described in <a href="#configuring-private-third-party-registries">Configuring private third-party registries</a> is still required for third-party private registries (such as Artifactory, Azure Artifacts, or Nexus).</p>
+<p>To grant Dependabot access to a private package:</p>
+<ol>
+<li>
+<p>On GitHub, navigate to the main page of your organization.</p>
+</li>
+<li>
+<p>Under your organization name, click the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-package" aria-label="package" role="img"><path d="m8.878.392 5.25 3.045c.54.314.872.89.872 1.514v6.098a1.75 1.75 0 0 1-.872 1.514l-5.25 3.045a1.75 1.75 0 0 1-1.756 0l-5.25-3.045A1.75 1.75 0 0 1 1 11.049V4.951c0-.624.332-1.201.872-1.514L7.122.392a1.75 1.75 0 0 1 1.756 0ZM7.875 1.69l-4.63 2.685L8 7.133l4.755-2.758-4.63-2.685a.248.248 0 0 0-.25 0ZM2.5 5.677v5.372c0 .09.047.171.125.216l4.625 2.683V8.432Zm6.25 8.271 4.625-2.683a.25.25 0 0 0 .125-.216V5.677L8.75 8.432Z"></path></svg> Packages</strong> tab.</p>
+<p><img src="../../../../..//assets/images/help/package-registry/org-tab-for-packages-with-overview-tab.png" alt="Screenshot of @octo-org's profile page. The &quot;Packages&quot; tab is highlighted with an orange outline."></p>
+</li>
+<li>
+<p>Search for and then click the name of the package that you want to manage.</p>
+</li>
+<li>
+<p>On your package's landing page, on the right-hand side, click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-gear" aria-label="gear" role="img"><path d="M8 0a8.2 8.2 0 0 1 .701.031C9.444.095 9.99.645 10.16 1.29l.288 1.107c.018.066.079.158.212.224.231.114.454.243.668.386.123.082.233.09.299.071l1.103-.303c.644-.176 1.392.021 1.82.63.27.385.506.792.704 1.218.315.675.111 1.422-.364 1.891l-.814.806c-.049.048-.098.147-.088.294.016.257.016.515 0 .772-.01.147.038.246.088.294l.814.806c.475.469.679 1.216.364 1.891a7.977 7.977 0 0 1-.704 1.217c-.428.61-1.176.807-1.82.63l-1.102-.302c-.067-.019-.177-.011-.3.071a5.909 5.909 0 0 1-.668.386c-.133.066-.194.158-.211.224l-.29 1.106c-.168.646-.715 1.196-1.458 1.26a8.006 8.006 0 0 1-1.402 0c-.743-.064-1.289-.614-1.458-1.26l-.289-1.106c-.018-.066-.079-.158-.212-.224a5.738 5.738 0 0 1-.668-.386c-.123-.082-.233-.09-.299-.071l-1.103.303c-.644.176-1.392-.021-1.82-.63a8.12 8.12 0 0 1-.704-1.218c-.315-.675-.111-1.422.363-1.891l.815-.806c.05-.048.098-.147.088-.294a6.214 6.214 0 0 1 0-.772c.01-.147-.038-.246-.088-.294l-.815-.806C.635 6.045.431 5.298.746 4.623a7.92 7.92 0 0 1 .704-1.217c.428-.61 1.176-.807 1.82-.63l1.102.302c.067.019.177.011.3-.071.214-.143.437-.272.668-.386.133-.066.194-.158.211-.224l.29-1.106C6.009.645 6.556.095 7.299.03 7.53.01 7.764 0 8 0Zm-.571 1.525c-.036.003-.108.036-.137.146l-.289 1.105c-.147.561-.549.967-.998 1.189-.173.086-.34.183-.5.29-.417.278-.97.423-1.529.27l-1.103-.303c-.109-.03-.175.016-.195.045-.22.312-.412.644-.573.99-.014.031-.021.11.059.19l.815.806c.411.406.562.957.53 1.456a4.709 4.709 0 0 0 0 .582c.032.499-.119 1.05-.53 1.456l-.815.806c-.081.08-.073.159-.059.19.162.346.353.677.573.989.02.03.085.076.195.046l1.102-.303c.56-.153 1.113-.008 1.53.27.161.107.328.204.501.29.447.222.85.629.997 1.189l.289 1.105c.029.109.101.143.137.146a6.6 6.6 0 0 0 1.142 0c.036-.003.108-.036.137-.146l.289-1.105c.147-.561.549-.967.998-1.189.173-.086.34-.183.5-.29.417-.278.97-.423 1.529-.27l1.103.303c.109.029.175-.016.195-.045.22-.313.411-.644.573-.99.014-.031.021-.11-.059-.19l-.815-.806c-.411-.406-.562-.957-.53-1.456a4.709 4.709 0 0 0 0-.582c-.032-.499.119-1.05.53-1.456l.815-.806c.081-.08.073-.159.059-.19a6.464 6.464 0 0 0-.573-.989c-.02-.03-.085-.076-.195-.046l-1.102.303c-.56.153-1.113.008-1.53-.27a4.44 4.44 0 0 0-.501-.29c-.447-.222-.85-.629-.997-1.189l-.289-1.105c-.029-.11-.101-.143-.137-.146a6.6 6.6 0 0 0-1.142 0ZM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM9.5 8a1.5 1.5 0 1 0-3.001.001A1.5 1.5 0 0 0 9.5 8Z"></path></svg> Package settings</strong>.</p>
+<p><img src="../../../../..//assets/images/help/package-registry/package-settings.png" alt="Screenshot of a package's landing page. In the lower right corner, &quot;Package settings&quot; is highlighted with an orange outline."></p>
+</li>
+<li>
+<p>Under "Manage Actions access", click <strong>Add repository</strong> and search for the repository you want to add.<br>
+<img src="../../../../..//assets/images/help/package-registry/add-repository-button.png" alt="Screenshot of the &quot;Manage Actions access&quot; section of the package settings page. The &quot;Add repository&quot; button is highlighted with an orange outline."><br>
+Search for the repository where Dependabot runs, and select it.</p>
+</li>
+<li>
+<p>Use the <strong>Role</strong> drop-down menu to select the default access level that you'd like the repository to have to your package.<br>
+Select <strong>Read</strong> as the access level. Dependabot only needs read access to pull packages.</p>
+</li>
+</ol>
+<p>You need to repeat these steps for each private package that you want Dependabot to access.</p>
+<p>Once access is granted, Dependabot can pull from those packages automatically. You can remove any personal access token-based registry entries in <code>dependabot.yml</code> that you previously configured for these packages.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This method works for every GitHub Packages ecosystem that Dependabot supports, including container images in Container registry.</p>
+</div>
+<p>For more information about how automatic access works, see <a href="/en/code-security/concepts/supply-chain-security/automatic-dependabot-access-to-github-registries">Automatic Dependabot access to GitHub-hosted registries</a>. For more information about package access settings, see <a href="https://docs.github.com/en/packages/learn-github-packages/configuring-a-packages-access-control-and-visibility#ensuring-workflow-access-to-your-package" class="external">Configuring a package's access control and visibility</a>.</p>
+<h2 id="configuring-private-third-party-registries" title="Configuring private third-party registries" data-entry-type="Section">Configuring private third-party registries<a href="#configuring-private-third-party-registries" aria-label="Link to heading 'Configuring private third-party registries'" data-heading-content="Configuring private third-party registries" class="anchor"></a></h2>
 <p>You can configure Dependabot's access to private registries at the org-level.</p>
 <p>Organization-level registries support <strong>Token</strong>, <strong>Username and password</strong>, and <strong>OIDC</strong> authentication.</p>
 <p>For more information about configuration, see <a href="../../secure-at-scale/configure-organization-security/manage-usage-and-access/giving-org-access-private-registries.html">Giving security features access to private registries</a>.</p>

@@ -54,6 +54,12 @@ useful for testing extractors.</p>
 <h4 id="--no-check-databases"><code>--[no-]check-databases</code><a href="#--no-check-databases" aria-label="Link to heading '--[no-]check-databases'" data-heading-content="--[no-]check-databases" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Run<br>
 <a href="dataset-check.html">codeql dataset check</a> over each test database created and report a failure if it detects inconsistencies. This is useful when testing extractors. If the check is (temporarily!) expected to fail for a particular database, place a <code>DB-CHECK.expected</code> file in the test directory.</p>
+<h4 id="--no-reuse-dataset"><code>--[no-]reuse-dataset</code><a href="#--no-reuse-dataset" aria-label="Link to heading '--[no-]reuse-dataset'" data-heading-content="--[no-]reuse-dataset" class="anchor"></a></h4>
+<p><span data-escaped-char="">[</span>Advanced] Attempt to reuse an existing test database from a previous<br>
+run. When this option is given, if a <code>.testproj</code> directory exists for a<br>
+test directory, its dataset will be used instead of extracting a new<br>
+database. If no existing database is found, extraction proceeds as<br>
+normal. This option implies <code>--keep-databases</code>.</p>
 <h4 id="--no-show-extractor-output"><code>--[no-]show-extractor-output</code><a href="#--no-show-extractor-output" aria-label="Link to heading '--[no-]show-extractor-output'" data-heading-content="--[no-]show-extractor-output" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Show the output from extractor scripts that create test<br>
 databases. This can be useful while developing or editing test cases.<br>

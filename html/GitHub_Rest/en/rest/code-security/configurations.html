@@ -107,7 +107,7 @@ A cursor, as given in the Link header. If specified, the query only searches for
 <li><code>secret_scanning_delegated_alert_dismissal</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_extended_metadata</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>private_vulnerability_reporting</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
-<li><code>enforcement</code>: string, enum: <code>enforced</code>, <code>unenforced</code></li>
+<li><code>enforcement</code>: string, enum: <code>enforced</code>, <code>unenforced</code>, <code>enterprise_enforced</code></li>
 <li><code>url</code>: string, format: uri</li>
 <li><code>html_url</code>: string, format: uri</li>
 <li><code>created_at</code>: string, format: date-time</li>
@@ -276,7 +276,7 @@ Can be one of: <code>enabled</code>, <code>disabled</code>, <code>not_set</code>
 <p><strong><code>enforcement</code></strong> (string)<br>
 The enforcement status for a security configuration<br>
 Default: <code>enforced</code><br>
-Can be one of: <code>enforced</code>, <code>unenforced</code></p>
+Can be one of: <code>enforced</code>, <code>unenforced</code>, <code>enterprise_enforced</code></p>
 </li>
 </ul>
 <h3 id="http-response-status-codes-1">HTTP response status codes<a href="#http-response-status-codes-1" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
@@ -360,7 +360,7 @@ Can be one of: <code>enforced</code>, <code>unenforced</code></p>
 <li><code>secret_scanning_delegated_alert_dismissal</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_extended_metadata</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>private_vulnerability_reporting</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
-<li><code>enforcement</code>: string, enum: <code>enforced</code>, <code>unenforced</code></li>
+<li><code>enforcement</code>: string, enum: <code>enforced</code>, <code>unenforced</code>, <code>enterprise_enforced</code></li>
 <li><code>url</code>: string, format: uri</li>
 <li><code>html_url</code>: string, format: uri</li>
 <li><code>created_at</code>: string, format: date-time</li>
@@ -449,7 +449,7 @@ The slug version of the enterprise name.</li>
 <li><code>secret_scanning_delegated_alert_dismissal</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_extended_metadata</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>private_vulnerability_reporting</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
-<li><code>enforcement</code>: string, enum: <code>enforced</code>, <code>unenforced</code></li>
+<li><code>enforcement</code>: string, enum: <code>enforced</code>, <code>unenforced</code>, <code>enterprise_enforced</code></li>
 <li><code>url</code>: string, format: uri</li>
 <li><code>html_url</code>: string, format: uri</li>
 <li><code>created_at</code>: string, format: date-time</li>
@@ -660,7 +660,7 @@ Can be one of: <code>enabled</code>, <code>disabled</code>, <code>not_set</code>
 <li>
 <p><strong><code>enforcement</code></strong> (string)<br>
 The enforcement status for a security configuration<br>
-Can be one of: <code>enforced</code>, <code>unenforced</code></p>
+Can be one of: <code>enforced</code>, <code>unenforced</code>, <code>enterprise_enforced</code></p>
 </li>
 </ul>
 <h3 id="http-response-status-codes-4">HTTP response status codes<a href="#http-response-status-codes-4" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
@@ -909,7 +909,7 @@ Can be one of: <code>all</code>, <code>none</code>, <code>private_and_internal</
 <li><code>secret_scanning_delegated_alert_dismissal</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_extended_metadata</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>private_vulnerability_reporting</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
-<li><code>enforcement</code>: string, enum: <code>enforced</code>, <code>unenforced</code></li>
+<li><code>enforcement</code>: string, enum: <code>enforced</code>, <code>unenforced</code>, <code>enterprise_enforced</code></li>
 <li><code>url</code>: string, format: uri</li>
 <li><code>html_url</code>: string, format: uri</li>
 <li><code>created_at</code>: string, format: date-time</li>
@@ -955,7 +955,7 @@ A cursor, as given in the Link header. If specified, the query only searches for
 <li>
 <p><strong><code>status</code></strong> (string)<br>
 A comma-separated list of statuses. If specified, only repositories with these attachment statuses will be returned.<br>
-Can be: all, attached, attaching, removed, enforced, failed, updating, removed_by_enterprise<br>
+Can be: all, attached, attaching, removed, enforced, failed, updating, removed_by_enterprise, enterprise_enforced<br>
 Default: <code>all</code></p>
 </li>
 </ul>
@@ -981,7 +981,7 @@ Default: <code>all</code></p>
 <p><strong>Response schema (Status: 200):</strong></p>
 <p>Array of objects:</p>
 <ul>
-<li><code>status</code>: string, enum: <code>attached</code>, <code>attaching</code>, <code>detached</code>, <code>removed</code>, <code>enforced</code>, <code>failed</code>, <code>updating</code>, <code>removed_by_enterprise</code></li>
+<li><code>status</code>: string, enum: <code>attached</code>, <code>attaching</code>, <code>detached</code>, <code>removed</code>, <code>enforced</code>, <code>failed</code>, <code>updating</code>, <code>removed_by_enterprise</code>, <code>enterprise_enforced</code></li>
 <li><code>repository</code>: <code>Simple Repository</code>:
 <ul>
 <li><code>id</code>: required, integer, format: int64</li>
@@ -1381,7 +1381,8 @@ The organization name. The name is not case sensitive.</li>
 <p>Detach code security configuration(s) from a set of repositories.<br>
 Repositories will retain their settings but will no longer be associated with the configuration.<br>
 The authenticated user must be an administrator or security manager for the organization to use this endpoint.<br>
-OAuth app tokens and personal access tokens (classic) need the write:org scope to use this endpoint.</p>
+Repositories with active enterprise-enforced attachments are skipped unless the authenticated user can manage the enterprise's code security settings; the rest are detached. Inactive enterprise-enforced attachments, such as failed attachments, are detached. The request still returns 204 if every repository is skipped.<br>
+OAuth app tokens and classic PATs require the write:org scope. Managing enterprise-enforced configurations also requires admin:enterprise and is not supported by fine-grained PATs or GitHub App access tokens.</p>
 <h3 id="parameters-12">Parameters<a href="#parameters-12" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-12">Headers<a href="#headers-12" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
@@ -1743,7 +1744,9 @@ The unique identifier of the code security configuration.</p>
 <p>Attach a code security configuration to a set of repositories. If the repositories specified are already attached to a configuration, they will be re-attached to the provided configuration.<br>
 If insufficient GHAS licenses are available to attach the configuration to a repository, only free features will be enabled.<br>
 The authenticated user must be an administrator or security manager for the organization to use this endpoint.<br>
-OAuth app tokens and personal access tokens (classic) need the write:org scope to use this endpoint.</p>
+Directly applying an enterprise-enforced configuration also requires permission to manage the enterprise's code security settings. Without it, the request returns 403 and no repositories change.<br>
+When applying a different configuration, repositories with active enterprise-enforced attachments are skipped unless the authenticated user can manage the enterprise's code security settings; the remaining repositories are updated. The request still returns 202 if every repository is skipped.<br>
+OAuth app tokens and classic PATs require the write:org scope. Directly applying an enterprise-enforced configuration also requires admin:enterprise and is not supported by fine-grained PATs or GitHub App access tokens.</p>
 <h3 id="parameters-16">Parameters<a href="#parameters-16" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-16">Headers<a href="#headers-16" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
@@ -1775,7 +1778,12 @@ An array of repository IDs to attach the configuration to. You can only provide 
 </ul>
 <h3 id="http-response-status-codes-16">HTTP response status codes<a href="#http-response-status-codes-16" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
-<li><strong>202</strong> - Accepted</li>
+<li>
+<p><strong>202</strong> - Accepted</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
 </ul>
 <h3 id="code-examples-16">Code examples<a href="#code-examples-16" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
 <h4 id="example-for-attaching-a-configuration-to-some-repositories-1">Example for attaching a configuration to some repositories<a href="#example-for-attaching-a-configuration-to-some-repositories-1" aria-label="Link to heading 'Example for attaching a configuration to some repositories'" data-heading-content="Example for attaching a configuration to some repositories" class="anchor"></a></h4>
@@ -1798,8 +1806,9 @@ An array of repository IDs to attach the configuration to. You can only provide 
 </span></code></pre>
 <p>Sets a code security configuration as a default to be applied to new repositories in your organization.<br>
 This configuration will be applied to the matching repository type (all, none, public, private and internal) by default when they are created.<br>
-The authenticated user must be an administrator or security manager for the organization to use this endpoint.<br>
-OAuth app tokens and personal access tokens (classic) need the write:org scope to use this endpoint.</p>
+The authenticated user must be an administrator or security manager for the organization to use this endpoint. Setting an enterprise-enforced configuration as the default also requires permission to manage the enterprise's code security settings.<br>
+A default set with this endpoint is an organization default, even if the configuration is owned or enforced by the enterprise. An enterprise-enforced configuration set as an enterprise-level default for the same repository visibility takes precedence.<br>
+OAuth app tokens and classic PATs require the write:org scope; setting an enterprise-enforced configuration as the default also requires admin:enterprise. Fine-grained PATs and GitHub App access tokens cannot perform that action.</p>
 <h3 id="parameters-17">Parameters<a href="#parameters-17" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-17">Headers<a href="#headers-17" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
@@ -1885,7 +1894,7 @@ A cursor, as given in the Link header. If specified, the query only searches for
 <li>
 <p><strong><code>status</code></strong> (string)<br>
 A comma-separated list of statuses. If specified, only repositories with these attachment statuses will be returned.<br>
-Can be: all, attached, attaching, detached, removed, enforced, failed, updating, removed_by_enterprise<br>
+Can be: all, attached, attaching, detached, removed, enforced, failed, updating, removed_by_enterprise, enterprise_enforced<br>
 Default: <code>all</code></p>
 </li>
 </ul>
@@ -1960,7 +1969,7 @@ The name of the repository without the .git extension. The name is not case sens
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <ul>
-<li><code>status</code>: string, enum: <code>attached</code>, <code>attaching</code>, <code>detached</code>, <code>removed</code>, <code>enforced</code>, <code>failed</code>, <code>updating</code>, <code>removed_by_enterprise</code></li>
+<li><code>status</code>: string, enum: <code>attached</code>, <code>attaching</code>, <code>detached</code>, <code>removed</code>, <code>enforced</code>, <code>failed</code>, <code>updating</code>, <code>removed_by_enterprise</code>, <code>enterprise_enforced</code></li>
 <li><code>configuration</code>: object:
 <ul>
 <li><code>id</code>: integer</li>
@@ -2012,7 +2021,7 @@ The name of the repository without the .git extension. The name is not case sens
 <li><code>secret_scanning_delegated_alert_dismissal</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_extended_metadata</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>private_vulnerability_reporting</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
-<li><code>enforcement</code>: string, enum: <code>enforced</code>, <code>unenforced</code></li>
+<li><code>enforcement</code>: string, enum: <code>enforced</code>, <code>unenforced</code>, <code>enterprise_enforced</code></li>
 <li><code>url</code>: string, format: uri</li>
 <li><code>html_url</code>: string, format: uri</li>
 <li><code>created_at</code>: string, format: date-time</li>

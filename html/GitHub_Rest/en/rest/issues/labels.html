@@ -73,6 +73,37 @@ Default: <code>1</code></p>
 <li><code>description</code>: required, string or null</li>
 <li><code>color</code>: required, string</li>
 <li><code>default</code>: required, boolean</li>
+<li><code>archived_at</code>: required, string or null, format: date-time</li>
+<li><code>archived_by</code>: required, all of:
+<ul>
+<li><strong>Simple User</strong>
+<ul>
+<li><code>name</code>: string or null</li>
+<li><code>email</code>: string or null</li>
+<li><code>login</code>: required, string</li>
+<li><code>id</code>: required, integer, format: int64</li>
+<li><code>node_id</code>: required, string</li>
+<li><code>avatar_url</code>: required, string, format: uri</li>
+<li><code>gravatar_id</code>: required, string or null</li>
+<li><code>url</code>: required, string, format: uri</li>
+<li><code>html_url</code>: required, string, format: uri</li>
+<li><code>followers_url</code>: required, string, format: uri</li>
+<li><code>following_url</code>: required, string</li>
+<li><code>gists_url</code>: required, string</li>
+<li><code>starred_url</code>: required, string</li>
+<li><code>subscriptions_url</code>: required, string, format: uri</li>
+<li><code>organizations_url</code>: required, string, format: uri</li>
+<li><code>repos_url</code>: required, string, format: uri</li>
+<li><code>events_url</code>: required, string</li>
+<li><code>received_events_url</code>: required, string, format: uri</li>
+<li><code>type</code>: required, string</li>
+<li><code>site_admin</code>: required, boolean</li>
+<li><code>starred_at</code>: string</li>
+<li><code>user_view_type</code>: string</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 <h2 id="add-labels-to-an-issue" title="POST /repos/{owner}/{repo}/issues/{issue_number}/labels (Add labels to an issue)" data-entry-type="Resource">Add labels to an issue<a href="#add-labels-to-an-issue" aria-label="Link to heading 'Add labels to an issue'" data-heading-content="Add labels to an issue" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">POST /repos/{owner}/{repo}/issues/{issue_number}/labels
@@ -418,6 +449,37 @@ A short description of the label. Must be 100 characters or fewer.</p>
 <li><code>description</code>: required, string or null</li>
 <li><code>color</code>: required, string</li>
 <li><code>default</code>: required, boolean</li>
+<li><code>archived_at</code>: required, string or null, format: date-time</li>
+<li><code>archived_by</code>: required, all of:
+<ul>
+<li><strong>Simple User</strong>
+<ul>
+<li><code>name</code>: string or null</li>
+<li><code>email</code>: string or null</li>
+<li><code>login</code>: required, string</li>
+<li><code>id</code>: required, integer, format: int64</li>
+<li><code>node_id</code>: required, string</li>
+<li><code>avatar_url</code>: required, string, format: uri</li>
+<li><code>gravatar_id</code>: required, string or null</li>
+<li><code>url</code>: required, string, format: uri</li>
+<li><code>html_url</code>: required, string, format: uri</li>
+<li><code>followers_url</code>: required, string, format: uri</li>
+<li><code>following_url</code>: required, string</li>
+<li><code>gists_url</code>: required, string</li>
+<li><code>starred_url</code>: required, string</li>
+<li><code>subscriptions_url</code>: required, string, format: uri</li>
+<li><code>organizations_url</code>: required, string, format: uri</li>
+<li><code>repos_url</code>: required, string, format: uri</li>
+<li><code>events_url</code>: required, string</li>
+<li><code>received_events_url</code>: required, string, format: uri</li>
+<li><code>type</code>: required, string</li>
+<li><code>site_admin</code>: required, boolean</li>
+<li><code>starred_at</code>: string</li>
+<li><code>user_view_type</code>: string</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 <h2 id="get-a-label" title="GET /repos/{owner}/{repo}/labels/{name} (Get a label)" data-entry-type="Resource">Get a label<a href="#get-a-label" aria-label="Link to heading 'Get a label'" data-heading-content="Get a label" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /repos/{owner}/{repo}/labels/{name}
