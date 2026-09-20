@@ -4,7 +4,7 @@
 <p>Query suites allow you to pass multiple queries to CodeQL without having to specify the path to each query file individually. They provide a way of selecting queries based on their filename, metadata properties, or location on disk or in a CodeQL pack.</p>
 <p>You should use query suites for the queries that you want to frequently use in your CodeQL analyses. You can use a built-in query suite available through GitHub, or you can create your own.</p>
 <h2 id="built-in-codeql-query-suites" title="Built-in CodeQL query suites" data-entry-type="Section">Built-in CodeQL query suites<a href="#built-in-codeql-query-suites" aria-label="Link to heading 'Built-in CodeQL query suites'" data-heading-content="Built-in CodeQL query suites" class="anchor"></a></h2>
-<p>The built-in CodeQL query suites, <code>default</code> and <code>security-extended</code>, are created and maintained by GitHub. Both of these query suites are available with default setup for every CodeQL-supported language.</p>
+<p>The built-in CodeQL query suites, <code>default</code>, <code>security-extended</code>, and <code>security-and-quality</code>, are created and maintained by GitHub. The <code>default</code> and <code>security-extended</code> query suites are available with default setup for every CodeQL-supported language.</p>
 <p>Organization owners and security managers can recommend a query suite for use with default setup throughout their organization. For more information, see <a href="../../../how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/code-scanning-at-scale.html">Configuring default setup for code scanning at scale</a>.</p>
 <p>For a complete list of queries included in each query suite for every language, see <a href="../../../reference/code-scanning/codeql/codeql-queries/index.html">Queries for CodeQL analysis</a>.</p>
 <h3 id="default-query-suite"><code>default</code> query suite<a href="#default-query-suite" aria-label="Link to heading 'default query suite'" data-heading-content="default query suite" class="anchor"></a></h3>
@@ -18,6 +18,11 @@
 <li>The <code>security-extended</code> query suite consists of all the queries in the <code>default</code> query suite, plus additional queries with slightly lower precision and severity.</li>
 <li>Relative to the <code>default</code> query suite, the <code>security-extended</code> suite may return a greater number of false positive code scanning results.</li>
 <li>This query suite is available for use with default setup for code scanning, and is referred to as the "Extended" query suite on GitHub.</li>
+</ul>
+<h3 id="security-and-quality-query-suite"><code>security-and-quality</code> query suite<a href="#security-and-quality-query-suite" aria-label="Link to heading 'security-and-quality query suite'" data-heading-content="security-and-quality query suite" class="anchor"></a></h3>
+<ul>
+<li>The <code>security-and-quality</code> query suite consists of all the queries in the <code>security-extended</code> query suite, plus additional queries that identify maintainability and reliability issues.</li>
+<li>This query suite is available for use with advanced setup for code scanning. For more information, see <a href="../../../how-tos/find-and-fix-code-vulnerabilities/configure-code-scanning/configuring-advanced-setup-for-code-scanning.html">Configuring advanced setup for code scanning</a>.</li>
 </ul>
 <h2 id="custom-query-suites" title="Custom query suites" data-entry-type="Section">Custom query suites<a href="#custom-query-suites" aria-label="Link to heading 'Custom query suites'" data-heading-content="Custom query suites" class="anchor"></a></h2>
 <p>To use a custom query suite, you must configure advanced setup for CodeQL code scanning. For more information, see <a href="../../../how-tos/find-and-fix-code-vulnerabilities/configure-code-scanning/configuring-advanced-setup-for-code-scanning.html">Configuring advanced setup for code scanning</a>.</p>

@@ -94,12 +94,12 @@
 <p>Delete <code>replaces-base: true</code> from the configuration file.</p>
 </div>
 <p>To ensure the private registry is listed as the dependency source in the project's <code>yarn.lock</code> file, run <code>yarn install</code> on a machine with private registry access. Yarn should update the <code>resolved</code> field to include the private registry URL.</p>
-<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">encoding@^0.1.11</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">  </span><span style="color:#a3be8c;">version "0.1.13"
-</span><span style="color:#c0c5ce;">  </span><span style="color:#a3be8c;">resolved "https://private_registry_url/encoding/-/encoding-0.1.13.tgz#56574afdd791f54a8e9b2785c0582a2d26210fa9"
-</span><span style="color:#c0c5ce;">  </span><span style="color:#a3be8c;">integrity sha512-ETBauow1T35Y/WZMkio9jiM0Z5xjHHmJ4XmjZOq1l/dXz3lr2sRn87nJy20RupqSh1F2m3HHPSp8ShIPQJrJ3A==
-</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">dependencies</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">    </span><span style="color:#a3be8c;">iconv-lite "^0.6.2"
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">encoding@^0.1.11:
+</span><span style="color:#c0c5ce;">  version "0.1.13"
+</span><span style="color:#c0c5ce;">  resolved "https://private_registry_url/encoding/-/encoding-0.1.13.tgz#56574afdd791f54a8e9b2785c0582a2d26210fa9"
+</span><span style="color:#c0c5ce;">  integrity sha512-ETBauow1T35Y/WZMkio9jiM0Z5xjHHmJ4XmjZOq1l/dXz3lr2sRn87nJy20RupqSh1F2m3HHPSp8ShIPQJrJ3A==
+</span><span style="color:#c0c5ce;">  dependencies:
+</span><span style="color:#c0c5ce;">    iconv-lite "^0.6.2"
 </span></code></pre>
 <p><strong>Option 2</strong></p>
 <p>If the <code>yarn.lock</code> file doesn't list the private registry as the dependency source, you can set up Yarn Classic according to the normal package manager instructions:</p>
@@ -128,12 +128,12 @@
 <p>Delete <code>replaces-base: true</code> from the configuration file.</p>
 </div>
 <p>To ensure the private registry is listed as the dependency source in the project's <code>yarn.lock</code> file, run <code>yarn install</code> on a machine with private registry access. Yarn should update the <code>resolved</code> field to include the private registry URL.</p>
-<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">encoding@^0.1.11</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">  </span><span style="color:#a3be8c;">version "0.1.13"
-</span><span style="color:#c0c5ce;">  </span><span style="color:#a3be8c;">resolved "https://private_registry_url/encoding/-/encoding-0.1.13.tgz#56574afdd791f54a8e9b2785c0582a2d26210fa9"
-</span><span style="color:#c0c5ce;">  </span><span style="color:#a3be8c;">integrity sha512-ETBauow1T35Y/WZMkio9jiM0Z5xjHHmJ4XmjZOq1l/dXz3lr2sRn87nJy20RupqSh1F2m3HHPSp8ShIPQJrJ3A==
-</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">dependencies</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">    </span><span style="color:#a3be8c;">iconv-lite "^0.6.2"
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">encoding@^0.1.11:
+</span><span style="color:#c0c5ce;">  version "0.1.13"
+</span><span style="color:#c0c5ce;">  resolved "https://private_registry_url/encoding/-/encoding-0.1.13.tgz#56574afdd791f54a8e9b2785c0582a2d26210fa9"
+</span><span style="color:#c0c5ce;">  integrity sha512-ETBauow1T35Y/WZMkio9jiM0Z5xjHHmJ4XmjZOq1l/dXz3lr2sRn87nJy20RupqSh1F2m3HHPSp8ShIPQJrJ3A==
+</span><span style="color:#c0c5ce;">  dependencies:
+</span><span style="color:#c0c5ce;">    iconv-lite "^0.6.2"
 </span></code></pre>
 <p><strong>Option 2</strong></p>
 <p>If the <code>yarn.lock</code> file doesn't list the private registry as the dependency source, you can set up Yarn Berry according to the normal package manager instructions:</p>
@@ -148,12 +148,12 @@
 </div>
 <h2 id="nuget" title="NuGet" data-entry-type="Section">NuGet<a href="#nuget" aria-label="Link to heading 'NuGet'" data-heading-content="NuGet" class="anchor"></a></h2>
 <p>To allow the NuGet ecosystem to only access private registries, you can configure the <code>dependabot.yml</code> file. For more information, see <a href="configure-access-to-private-registries.html#nuget-feed">Configuring access to private registries for Dependabot</a>.</p>
-<p>The NuGet ecosystem additionally requires a <code>nuget.config</code> file to be checked into the repository, with either a <code>&lt; clear /&gt;</code> tag in <code>&lt;packageSources&gt;</code> section or a key <code>nuget.org</code> as true in the <code>disabledPackageSources</code> section of the <code>nuget.config</code> file.</p>
-<p>This is an example of a <code>&lt; clear /&gt;</code> tag in the <code>packageSources</code> section of the <code>nuget.config</code>.</p>
+<p>The NuGet ecosystem additionally requires a <code>nuget.config</code> file to be checked into the repository, with either a <code>&lt;clear /&gt;</code> tag in <code>&lt;packageSources&gt;</code> section or a key <code>nuget.org</code> as true in the <code>disabledPackageSources</code> section of the <code>nuget.config</code> file.</p>
+<p>This is an example of a <code>&lt;clear /&gt;</code> tag in the <code>packageSources</code> section of the <code>nuget.config</code>.</p>
 <pre lang="xml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">&lt;?</span><span style="color:#bf616a;">xml </span><span style="color:#d08770;">version</span><span style="color:#c0c5ce;">="</span><span style="color:#a3be8c;">1.0</span><span style="color:#c0c5ce;">" </span><span style="color:#d08770;">encoding</span><span style="color:#c0c5ce;">="</span><span style="color:#a3be8c;">utf-8</span><span style="color:#c0c5ce;">"?&gt;
 </span><span style="color:#c0c5ce;">&lt;</span><span style="color:#bf616a;">configuration</span><span style="color:#c0c5ce;">&gt;
 </span><span style="color:#c0c5ce;"> &lt;</span><span style="color:#bf616a;">packageSources</span><span style="color:#c0c5ce;">&gt;
-</span><span style="color:#c0c5ce;">   </span><span style="background-color:#bf616a;color:#2b303b;">&lt;</span><span style="color:#c0c5ce;"> clear /&gt;
+</span><span style="color:#c0c5ce;">   &lt;</span><span style="color:#bf616a;">clear </span><span style="color:#c0c5ce;">/&gt;
 </span><span style="color:#c0c5ce;">   &lt;</span><span style="color:#bf616a;">add </span><span style="color:#d08770;">key</span><span style="color:#c0c5ce;">="</span><span style="color:#a3be8c;">example-nuget</span><span style="color:#c0c5ce;">" </span><span style="color:#d08770;">value</span><span style="color:#c0c5ce;">="</span><span style="color:#a3be8c;">https://private_registry_url/nuget/example-nuget/index.json</span><span style="color:#c0c5ce;">" /&gt;
 </span><span style="color:#c0c5ce;"> &lt;/</span><span style="color:#bf616a;">packageSources</span><span style="color:#c0c5ce;">&gt;
 </span><span style="color:#c0c5ce;">&lt;/</span><span style="color:#bf616a;">configuration</span><span style="color:#c0c5ce;">&gt;
@@ -198,9 +198,9 @@
 <p>Delete <code>replaces-base: true</code> from the configuration file.</p>
 </div>
 <p>Add the private registry URL to the <code>[global]</code> section of the <code>pip.conf</code> file and check the file into the repository.</p>
-<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">[</span><span style="color:#a3be8c;">global</span><span style="color:#c0c5ce;">]
-</span><span style="color:#a3be8c;">timeout = 60
-</span><span style="color:#a3be8c;">index-url = https://private_registry_url
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">[global]
+</span><span style="color:#c0c5ce;">timeout = 60
+</span><span style="color:#c0c5ce;">index-url = https://private_registry_url
 </span></code></pre>
 <p><strong>Option 2</strong></p>
 <p>Set <code>replaces-base: true</code> in the <code>dependabot.yml</code> file. For more information, see <a href="configure-access-to-private-registries.html#python-index">Configuring access to private registries for Dependabot</a>.</p>
@@ -224,17 +224,17 @@
 <p>Delete <code>replaces-base: true</code> from the configuration file.</p>
 </div>
 <p>Add the private registry URL to the <code>[[source]]</code> section of the <code>Pipfile</code> file and check the file into the repository.</p>
-<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">[[</span><span style="color:#a3be8c;">source</span><span style="color:#c0c5ce;">]]
-</span><span style="color:#a3be8c;">url = "https://private_registry_url"
-</span><span style="color:#a3be8c;">verify_ssl = true
-</span><span style="color:#a3be8c;">name = "pypi"
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">[[source]]
+</span><span style="color:#c0c5ce;">url = "https://private_registry_url"
+</span><span style="color:#c0c5ce;">verify_ssl = true
+</span><span style="color:#c0c5ce;">name = "pypi"
 </span></code></pre>
 <h3 id="poetry">Poetry<a href="#poetry" aria-label="Link to heading 'Poetry'" data-heading-content="Poetry" class="anchor"></a></h3>
 <p>To configure Poetry to only access private registries, set <code>replaces-base: true</code> in the <code>dependabot.yml</code> file. For more information, see <a href="configure-access-to-private-registries.html#python-index">Configuring access to private registries for Dependabot</a>.</p>
 <p>Add the private registry url to the <code>[[tool.poetry.source]]</code> section of the <code>pyproject.toml</code> file and checked it in the repository.</p>
-<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">[[</span><span style="color:#a3be8c;">tool.poetry.source</span><span style="color:#c0c5ce;">]]
-</span><span style="color:#a3be8c;">name = "private"
-</span><span style="color:#a3be8c;">url = "https://private_registry_url"
-</span><span style="color:#a3be8c;">default = true
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">[[tool.poetry.source]]
+</span><span style="color:#c0c5ce;">name = "private"
+</span><span style="color:#c0c5ce;">url = "https://private_registry_url"
+</span><span style="color:#c0c5ce;">default = true
 </span></code></pre>
 <footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>
