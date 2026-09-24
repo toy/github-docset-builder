@@ -76,6 +76,17 @@ to copying only the default branch of the template.</li>
 <li><code>repositoryId</code> (ID!): The Node ID of the template repository.</li>
 <li><code>visibility</code> (RepositoryVisibility!): Indicates the repository's visibility level.</li>
 </ul>
+<h2 id="codecoverageparametersinput---input-object" title="CodeCoverageParametersInput - input object" data-entry-type="Section">CodeCoverageParametersInput - input object<a href="#codecoverageparametersinput---input-object" aria-label="Link to heading 'CodeCoverageParametersInput - input object'" data-heading-content="CodeCoverageParametersInput - input object" class="anchor"></a></h2>
+<p>Enforce minimum line coverage thresholds on pull requests. When configured,<br>
+uploaded coverage data must meet the specified criteria before changes can be merged.</p>
+<h3 id="input-fields-for-codecoverageparametersinput">Input fields for <code>CodeCoverageParametersInput</code><a href="#input-fields-for-codecoverageparametersinput" aria-label="Link to heading 'Input fields for CodeCoverageParametersInput'" data-heading-content="Input fields for CodeCoverageParametersInput" class="anchor"></a></h3>
+<ul>
+<li><code>maxCoverageDrop</code> (Float): The maximum percentage points that line coverage may drop relative to the<br>
+default branch. Pull requests that reduce line coverage by more than this<br>
+amount will be blocked.</li>
+<li><code>minimumCoverage</code> (Float): The absolute minimum line coverage percentage required. Pull requests with<br>
+line coverage below this threshold will be blocked.</li>
+</ul>
 <h2 id="codescanningparameters---object" title="CodeScanningParameters - object" data-entry-type="Section">CodeScanningParameters - object<a href="#codescanningparameters---object" aria-label="Link to heading 'CodeScanningParameters - object'" data-heading-content="CodeScanningParameters - object" class="anchor"></a></h2>
 <p>Choose which tools must provide code scanning results before the reference is<br>
 updated. When configured, code scanning must be enabled and have results for<br>
@@ -2060,6 +2071,7 @@ requests, and repository settings, including adding collaborators.</li>
 <li><code>MAINTAIN</code>: Can read, clone, and push to this repository. They can also manage issues, pull requests, and some repository settings.</li>
 <li><code>READ</code>: Can read and clone this repository. Can also open and comment on issues and pull requests.</li>
 <li><code>TRIAGE</code>: Can read and clone this repository. Can also manage issues and pull requests.</li>
+<li><code>TRIAGE_PLUS</code>: Can read and clone this repository. Can also manage issues and pull requests, plus additional triage abilities.</li>
 <li><code>WRITE</code>: Can read, clone, and push to this repository. Can also manage issues and pull requests.</li>
 </ul>
 <h2 id="repositoryplanfeatures---object" title="RepositoryPlanFeatures - object" data-entry-type="Section">RepositoryPlanFeatures - object<a href="#repositoryplanfeatures---object" aria-label="Link to heading 'RepositoryPlanFeatures - object'" data-heading-content="RepositoryPlanFeatures - object" class="anchor"></a></h2>
@@ -2295,6 +2307,11 @@ enterprise_owner, enterprise_role_database_id, or deploy_key should be specified
 <ul>
 <li><code>AUTHORIZATION</code>: Authorization.</li>
 <li><code>BRANCH_NAME_PATTERN</code>: Branch name pattern.</li>
+<li><code>CODE_COVERAGE</code>: Enforce minimum line coverage thresholds on pull requests. When configured,<br>
+uploaded coverage data must meet the specified criteria before changes can be merged.</li>
+<li><code>CODE_QUALITY</code>: Choose which severity levels of code quality results should block pull request<br>
+merges. When configured, a code quality analysis must be done on the pull<br>
+request before the changes can be merged.</li>
 <li><code>CODE_SCANNING</code>: Choose which tools must provide code scanning results before the reference is<br>
 updated. When configured, code scanning must be enabled and have results for<br>
 both the commit and the reference being updated.</li>
@@ -2389,6 +2406,8 @@ the Rule Insights page (evaluate is only available with GitHub Enterprise).</li>
 <h3 id="possible-types-for-ruleparameters">Possible types for <code>RuleParameters</code><a href="#possible-types-for-ruleparameters" aria-label="Link to heading 'Possible types for RuleParameters'" data-heading-content="Possible types for RuleParameters" class="anchor"></a></h3>
 <ul>
 <li>BranchNamePatternParameters</li>
+<li>CodeCoverageParameters</li>
+<li>CodeQualityParameters</li>
 <li>CodeScanningParameters</li>
 <li>CommitAuthorEmailPatternParameters</li>
 <li>CommitMessagePatternParameters</li>
@@ -2411,6 +2430,8 @@ the Rule Insights page (evaluate is only available with GitHub Enterprise).</li>
 <h3 id="input-fields-for-ruleparametersinput">Input fields for <code>RuleParametersInput</code><a href="#input-fields-for-ruleparametersinput" aria-label="Link to heading 'Input fields for RuleParametersInput'" data-heading-content="Input fields for RuleParametersInput" class="anchor"></a></h3>
 <ul>
 <li><code>branchNamePattern</code> (BranchNamePatternParametersInput): Parameters used for the branch_name_pattern rule type.</li>
+<li><code>codeCoverage</code> (CodeCoverageParametersInput): Parameters used for the code_coverage rule type.</li>
+<li><code>codeQuality</code> (CodeQualityParametersInput): Parameters used for the code_quality rule type.</li>
 <li><code>codeScanning</code> (CodeScanningParametersInput): Parameters used for the code_scanning rule type.</li>
 <li><code>commitAuthorEmailPattern</code> (CommitAuthorEmailPatternParametersInput): Parameters used for the commit_author_email_pattern rule type.</li>
 <li><code>commitMessagePattern</code> (CommitMessagePatternParametersInput): Parameters used for the commit_message_pattern rule type.</li>

@@ -2,6 +2,10 @@
 <p>Use the REST API to check your current rate limit status.</p>
 <h2 id="about-rate-limits" title="About rate limits" data-entry-type="Section">About rate limits<a href="#about-rate-limits" aria-label="Link to heading 'About rate limits'" data-heading-content="About rate limits" class="anchor"></a></h2>
 <p>You can check your current rate limit status at any time. For more information about rate limit rules, see <a href="../using-the-rest-api/rate-limits-for-the-rest-api.html">Rate limits for the REST API</a>.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>For real-time rate limit tracking, use the <code>x-ratelimit-*</code> response headers returned on each REST API request. These headers reflect the counters that govern enforcement for the request you just made and are the authoritative source for the remaining allowance in the current window. Use <code>GET /rate_limit</code> for a periodic overview of all resource families for the authenticated user, and treat the response headers as authoritative if the two disagree. For more information, see <a href="../using-the-rest-api/rate-limits-for-the-rest-api.html#checking-the-status-of-your-rate-limit">Rate limits for the REST API</a>.</p>
+</div>
 <p>The REST API for searching items has a custom rate limit that is separate from the rate limit governing the other REST API endpoints. For more information, see <a href="../search/search.html">REST API endpoints for search</a>. The GraphQL API also has a custom rate limit that is separate from and calculated differently than rate limits in the REST API. For more information, see <a href="https://docs.github.com/en/graphql/overview/rate-limits-and-query-limits-for-the-graphql-api#primary-rate-limit" class="external">Rate limits and query limits for the GraphQL API</a>. For these reasons, the API response categorizes your rate limit. Under <code>resources</code>, you'll see objects relating to different categories:</p>
 <ul>
 <li>

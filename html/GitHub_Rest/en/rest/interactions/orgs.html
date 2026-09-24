@@ -178,6 +178,7 @@ The organization name. The name is not case sensitive.</li>
 <ul>
 <li><code>enabled</code>: required, boolean</li>
 <li><code>max_open_pull_requests</code>: required, integer, minimum: 1, maximum: 1000</li>
+<li><code>include_drafts</code>: boolean</li>
 </ul>
 <h2 id="update-pull-request-creation-cap-for-an-org" title="PATCH /orgs/{org}/interaction-limits/pulls/creation-cap (Update pull request creation cap for an org)" data-entry-type="Resource">Update pull request creation cap for an org<a href="#update-pull-request-creation-cap-for-an-org" aria-label="Link to heading 'Update pull request creation cap for an org'" data-heading-content="Update pull request creation cap for an org" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PATCH /orgs/{org}/interaction-limits/pulls/creation-cap
@@ -207,6 +208,10 @@ Whether the pull request creation cap is enabled</p>
 <p><strong><code>max_open_pull_requests</code></strong> (integer)<br>
 The maximum number of open pull requests a user can have at one time</p>
 </li>
+<li>
+<p><strong><code>include_drafts</code></strong> (boolean)<br>
+Whether draft pull requests count toward the pull request creation cap</p>
+</li>
 </ul>
 <h3 id="http-response-status-codes-4">HTTP response status codes<a href="#http-response-status-codes-4" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
@@ -234,7 +239,8 @@ The maximum number of open pull requests a user can have at one time</p>
 </span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/interaction-limits/pulls/creation-cap \
 </span><span style="color:#c0c5ce;">  -d '{
 </span><span style="color:#c0c5ce;">  "enabled": true,
-</span><span style="color:#c0c5ce;">  "max_open_pull_requests": 1
+</span><span style="color:#c0c5ce;">  "max_open_pull_requests": 1,
+</span><span style="color:#c0c5ce;">  "include_drafts": true
 </span><span style="color:#c0c5ce;">}'
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>

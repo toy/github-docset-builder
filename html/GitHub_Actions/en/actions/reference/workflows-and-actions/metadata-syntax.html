@@ -241,7 +241,7 @@
 <h3 id="runsusing-for-docker-container-actions"><code>runs.using</code> for Docker container actions<a href="#runsusing-for-docker-container-actions" aria-label="Link to heading 'runs.using for Docker container actions'" data-heading-content="runs.using for Docker container actions" class="anchor"></a></h3>
 <p><strong>Required</strong> You must set this value to <code>'docker'</code>.</p>
 <h3 id="runspre-entrypoint"><code>runs.pre-entrypoint</code><a href="#runspre-entrypoint" aria-label="Link to heading 'runs.pre-entrypoint'" data-heading-content="runs.pre-entrypoint" class="anchor"></a></h3>
-<p><strong>Optional</strong> Allows you to run a script before the <code>entrypoint</code> action begins. For example, you can use <code>pre-entrypoint:</code> to run a prerequisite setup script. GitHub Actions uses <code>docker run</code> to launch this action, and runs the script inside a new container that uses the same base image. This means that the runtime state is different from the main <code>entrypoint</code> container, and any states you require must be accessed in either the workspace, <code>HOME</code>, or as a <code>STATE_</code> variable. The <code>pre-entrypoint:</code> action always runs by default but you can override this using <a href="#runspre-if"><code>runs.pre-if</code></a>.</p>
+<p><strong>Optional</strong> Allows you to run a script before the <code>entrypoint</code> action begins. For example, you can use <code>pre-entrypoint:</code> to run a prerequisite setup script. GitHub Actions uses <code>docker run</code> to launch this action, and runs the script inside a new container that uses the same base image. This means that the runtime state is different from the main <code>entrypoint</code> container, and any states you require must be accessed in either the workspace, <code>HOME</code>, or as a <code>STATE_</code> variable. The <code>pre-entrypoint:</code> action always runs by default but you can override this using <a href="#runspre-if-for-docker-container-actions"><code>runs.pre-if</code></a>.</p>
 <p>The runtime specified with the <a href="#runsusing-for-docker-container-actions"><code>using</code></a> syntax will execute this file.</p>
 <p>In this example, the <code>pre-entrypoint:</code> action runs a script called <code>setup.sh</code>:</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">runs</span><span style="color:#c0c5ce;">:
@@ -250,6 +250,16 @@
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">args</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">    - '</span><span style="color:#a3be8c;">bzz</span><span style="color:#c0c5ce;">'
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">pre-entrypoint</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">setup.sh</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">entrypoint</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">main.sh</span><span style="color:#c0c5ce;">'
+</span></code></pre>
+<h3 id="runspre-if-for-docker-container-actions"><code>runs.pre-if</code> for Docker container actions<a href="#runspre-if-for-docker-container-actions" aria-label="Link to heading 'runs.pre-if for Docker container actions'" data-heading-content="runs.pre-if for Docker container actions" class="anchor"></a></h3>
+<p><strong>Optional</strong> Allows you to define conditions for the <code>pre-entrypoint:</code> action execution. The <code>pre-entrypoint:</code> action will only run if the conditions in <code>pre-if</code> are met. If not set, then <code>pre-if</code> defaults to <code>always()</code>.</p>
+<p>In this example, the <code>pre-entrypoint:</code> action runs only on Linux-based runners:</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">runs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">using</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">docker</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">image</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">Dockerfile</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">pre-entrypoint</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">setup.sh</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">pre-if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">runner.os == 'linux'
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">entrypoint</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">main.sh</span><span style="color:#c0c5ce;">'
 </span></code></pre>
 <h3 id="runsimage"><code>runs.image</code><a href="#runsimage" aria-label="Link to heading 'runs.image'" data-heading-content="runs.image" class="anchor"></a></h3>

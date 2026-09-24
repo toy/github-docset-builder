@@ -868,10 +868,6 @@ stores the addition as a pending suggestion. Mutually exclusive with labelIds.</
 <p><code>editor</code> (Actor): The actor who edited the comment.</p>
 </li>
 <li>
-<p><code>eventRationales</code> ([IssueEventRationale!]!): A list of rationales associated with this issue's timeline events. Always<br>
-returns an empty list; use the intent field on individual timeline events instead. <strong>Deprecated:</strong> Use the intent field on individual timeline events instead. This field is being removed and now always returns an empty list.</p>
-</li>
-<li>
 <p><code>fullDatabaseId</code> (BigInt): Identifies the primary key from the database as a BigInt.</p>
 </li>
 <li>
@@ -1388,33 +1384,6 @@ pull request.</p>
 <li><code>LOW</code>: Low confidence.</li>
 <li><code>MEDIUM</code>: Medium confidence.</li>
 </ul>
-<h2 id="issueeventrationale---object" title="IssueEventRationale - object" data-entry-type="Section">IssueEventRationale - object<a href="#issueeventrationale---object" aria-label="Link to heading 'IssueEventRationale - object'" data-heading-content="IssueEventRationale - object" class="anchor"></a></h2>
-<p>Rationale text associated with an issue timeline event. Deprecated: the fields<br>
-that return this type are being removed and now return null/empty. Use the<br>
-intent field on individual timeline events instead.</p>
-<h3 id="fields-for-issueeventrationale">Fields for <code>IssueEventRationale</code><a href="#fields-for-issueeventrationale" aria-label="Link to heading 'Fields for IssueEventRationale'" data-heading-content="Fields for IssueEventRationale" class="anchor"></a></h3>
-<ul>
-<li><code>actor</code> (Actor): The agent or user who produced the rationale.</li>
-<li><code>createdAt</code> (DateTime!): Identifies the date and time when the rationale was created.</li>
-<li><code>issueEvent</code> (IssueEventWithRationale): The issue timeline event this rationale is associated with.</li>
-<li><code>rationale</code> (String!): The reasoning or explanation text for the event.</li>
-</ul>
-<h2 id="issueeventwithrationale---union" title="IssueEventWithRationale - union" data-entry-type="Section">IssueEventWithRationale - union<a href="#issueeventwithrationale---union" aria-label="Link to heading 'IssueEventWithRationale - union'" data-heading-content="IssueEventWithRationale - union" class="anchor"></a></h2>
-<p>An issue timeline event that may have an associated rationale. Deprecated: this<br>
-union is only reachable via the deprecated IssueEventRationale type, which is<br>
-being removed. Use the intent field on individual timeline events instead.</p>
-<h3 id="possible-types-for-issueeventwithrationale">Possible types for <code>IssueEventWithRationale</code><a href="#possible-types-for-issueeventwithrationale" aria-label="Link to heading 'Possible types for IssueEventWithRationale'" data-heading-content="Possible types for IssueEventWithRationale" class="anchor"></a></h3>
-<ul>
-<li>ClosedEvent</li>
-<li>IssueFieldAddedEvent</li>
-<li>IssueFieldChangedEvent</li>
-<li>IssueFieldRemovedEvent</li>
-<li>IssueTypeAddedEvent</li>
-<li>IssueTypeChangedEvent</li>
-<li>IssueTypeRemovedEvent</li>
-<li>LabeledEvent</li>
-<li>UnlabeledEvent</li>
-</ul>
 <h2 id="issuefieldaddedevent---object" title="IssueFieldAddedEvent - object" data-entry-type="Section">IssueFieldAddedEvent - object<a href="#issuefieldaddedevent---object" aria-label="Link to heading 'IssueFieldAddedEvent - object'" data-heading-content="IssueFieldAddedEvent - object" class="anchor"></a></h2>
 <p>Represents aissue_field_addedevent on a given issue.</p>
 <p><strong>Implements:</strong> Node</p>
@@ -1427,7 +1396,6 @@ being removed. Use the intent field on individual timeline events instead.</p>
 <li><code>intent</code> (IssueUpdateIntent): The intent behind the agent's action, including rationale and confidence.</li>
 <li><code>issueField</code> (IssueFields): The issue field added.</li>
 <li><code>options</code> ([IssueFieldTimelineOption!]): The selected options for option-backed fields; single-select returns one option and multi-select returns many.</li>
-<li><code>rationale</code> (IssueEventRationale): The rationale associated with this event. Always returns null; use intent instead. <strong>Deprecated:</strong> Use intent instead. This field is being removed and now always returns null.</li>
 <li><code>value</code> (String): The value of the added field.</li>
 </ul>
 <h2 id="issuefieldchangedevent---object" title="IssueFieldChangedEvent - object" data-entry-type="Section">IssueFieldChangedEvent - object<a href="#issuefieldchangedevent---object" aria-label="Link to heading 'IssueFieldChangedEvent - object'" data-heading-content="IssueFieldChangedEvent - object" class="anchor"></a></h2>
@@ -1446,7 +1414,6 @@ being removed. Use the intent field on individual timeline events instead.</p>
 <li><code>previousColor</code> (String): The previous color if it was a single-select field.</li>
 <li><code>previousOptions</code> ([IssueFieldTimelineOption!]): The previous options for option-backed fields; single-select returns one option and multi-select returns many.</li>
 <li><code>previousValue</code> (String): The previous value of the field.</li>
-<li><code>rationale</code> (IssueEventRationale): The rationale associated with this event. Always returns null; use intent instead. <strong>Deprecated:</strong> Use intent instead. This field is being removed and now always returns null.</li>
 </ul>
 <h2 id="issuefieldcommon---interface" title="IssueFieldCommon - interface" data-entry-type="Section">IssueFieldCommon - interface<a href="#issuefieldcommon---interface" aria-label="Link to heading 'IssueFieldCommon - interface'" data-heading-content="IssueFieldCommon - interface" class="anchor"></a></h2>
 <p>Common fields across different issue field types.</p>
@@ -1585,7 +1552,6 @@ being removed. Use the intent field on individual timeline events instead.</p>
 <li><code>intent</code> (IssueUpdateIntent): The intent behind the agent's action, including rationale and confidence.</li>
 <li><code>issueField</code> (IssueFields): The issue field removed.</li>
 <li><code>options</code> ([IssueFieldTimelineOption!]): The removed options for option-backed fields; single-select returns one option and multi-select returns many.</li>
-<li><code>rationale</code> (IssueEventRationale): The rationale associated with this event. Always returns null; use intent instead. <strong>Deprecated:</strong> Use intent instead. This field is being removed and now always returns null.</li>
 </ul>
 <h2 id="issuefields---union" title="IssueFields - union" data-entry-type="Section">IssueFields - union<a href="#issuefields---union" aria-label="Link to heading 'IssueFields - union'" data-heading-content="IssueFields - union" class="anchor"></a></h2>
 <p>Possible issue fields.</p>
@@ -2124,7 +2090,6 @@ silently ignored otherwise.</li>
 <li><code>id</code> (ID!): The Node ID of the IssueTypeAddedEvent object.</li>
 <li><code>intent</code> (IssueUpdateIntent): The intent behind the agent's action, including rationale and confidence.</li>
 <li><code>issueType</code> (IssueType): The issue type added.</li>
-<li><code>rationale</code> (IssueEventRationale): The rationale associated with this event. Always returns null; use intent instead. <strong>Deprecated:</strong> Use intent instead. This field is being removed and now always returns null.</li>
 </ul>
 <h2 id="issuetypechangedevent---object" title="IssueTypeChangedEvent - object" data-entry-type="Section">IssueTypeChangedEvent - object<a href="#issuetypechangedevent---object" aria-label="Link to heading 'IssueTypeChangedEvent - object'" data-heading-content="IssueTypeChangedEvent - object" class="anchor"></a></h2>
 <p>Represents aissue_type_changedevent on a given issue.</p>
@@ -2137,7 +2102,6 @@ silently ignored otherwise.</li>
 <li><code>intent</code> (IssueUpdateIntent): The intent behind the agent's action, including rationale and confidence.</li>
 <li><code>issueType</code> (IssueType): The issue type added.</li>
 <li><code>prevIssueType</code> (IssueType): The issue type removed.</li>
-<li><code>rationale</code> (IssueEventRationale): The rationale associated with this event. Always returns null; use intent instead. <strong>Deprecated:</strong> Use intent instead. This field is being removed and now always returns null.</li>
 </ul>
 <h2 id="issuetypecolor---enum" title="IssueTypeColor - enum" data-entry-type="Section">IssueTypeColor - enum<a href="#issuetypecolor---enum" aria-label="Link to heading 'IssueTypeColor - enum'" data-heading-content="IssueTypeColor - enum" class="anchor"></a></h2>
 <p>The possible color for an issue type.</p>
@@ -2192,7 +2156,6 @@ silently ignored otherwise.</li>
 <li><code>id</code> (ID!): The Node ID of the IssueTypeRemovedEvent object.</li>
 <li><code>intent</code> (IssueUpdateIntent): The intent behind the agent's action, including rationale and confidence.</li>
 <li><code>issueType</code> (IssueType): The issue type removed.</li>
-<li><code>rationale</code> (IssueEventRationale): The rationale associated with this event. Always returns null; use intent instead. <strong>Deprecated:</strong> Use intent instead. This field is being removed and now always returns null.</li>
 </ul>
 <h2 id="issuetypeupdateinput---input-object" title="IssueTypeUpdateInput - input object" data-entry-type="Section">IssueTypeUpdateInput - input object<a href="#issuetypeupdateinput---input-object" aria-label="Link to heading 'IssueTypeUpdateInput - input object'" data-heading-content="IssueTypeUpdateInput - input object" class="anchor"></a></h2>
 <p>Specifies an Issue Type to set on an issue, with optional metadata such as a rationale.</p>
@@ -2319,7 +2282,6 @@ silently ignored otherwise.</li>
 <li><code>intent</code> (IssueUpdateIntent): The intent behind the agent's action, including rationale and confidence.</li>
 <li><code>label</code> (Label!): Identifies the label associated with thelabeledevent.</li>
 <li><code>labelable</code> (Labelable!): Identifies the Labelable associated with the event.</li>
-<li><code>rationale</code> (IssueEventRationale): The rationale associated with this event. Always returns null; use intent instead. <strong>Deprecated:</strong> Use intent instead. This field is being removed and now always returns null.</li>
 </ul>
 <h2 id="labeledge---object" title="LabelEdge - object" data-entry-type="Section">LabelEdge - object<a href="#labeledge---object" aria-label="Link to heading 'LabelEdge - object'" data-heading-content="LabelEdge - object" class="anchor"></a></h2>
 <p>An edge in a connection.</p>
@@ -2663,32 +2625,38 @@ MinimizeComment mutation.</li>
 </ul>
 <h2 id="pendingassigneesuggestion---object" title="PendingAssigneeSuggestion - object" data-entry-type="Section">PendingAssigneeSuggestion - object<a href="#pendingassigneesuggestion---object" aria-label="Link to heading 'PendingAssigneeSuggestion - object'" data-heading-content="PendingAssigneeSuggestion - object" class="anchor"></a></h2>
 <p>A pending suggestion to assign a user to an issue.</p>
+<p><strong>Implements:</strong> Node</p>
 <h3 id="fields-for-pendingassigneesuggestion">Fields for <code>PendingAssigneeSuggestion</code><a href="#fields-for-pendingassigneesuggestion" aria-label="Link to heading 'Fields for PendingAssigneeSuggestion'" data-heading-content="Fields for PendingAssigneeSuggestion" class="anchor"></a></h3>
 <ul>
 <li><code>actor</code> (Actor): The actor who suggested the assignee.</li>
 <li><code>assignee</code> (Assignee): The suggested assignee.</li>
 <li><code>createdAt</code> (DateTime!): When the suggestion was created.</li>
+<li><code>id</code> (ID!): The Node ID of the PendingAssigneeSuggestion object.</li>
 <li><code>rationale</code> (String): The rationale provided for suggesting this assignee.</li>
 <li><code>updatedAt</code> (DateTime): When the suggestion was last updated.</li>
 </ul>
 <h2 id="pendingclosesuggestion---object" title="PendingCloseSuggestion - object" data-entry-type="Section">PendingCloseSuggestion - object<a href="#pendingclosesuggestion---object" aria-label="Link to heading 'PendingCloseSuggestion - object'" data-heading-content="PendingCloseSuggestion - object" class="anchor"></a></h2>
 <p>A pending suggestion to close an issue.</p>
+<p><strong>Implements:</strong> Node</p>
 <h3 id="fields-for-pendingclosesuggestion">Fields for <code>PendingCloseSuggestion</code><a href="#fields-for-pendingclosesuggestion" aria-label="Link to heading 'Fields for PendingCloseSuggestion'" data-heading-content="Fields for PendingCloseSuggestion" class="anchor"></a></h3>
 <ul>
 <li><code>actor</code> (Actor): The actor who suggested closing the issue.</li>
 <li><code>createdAt</code> (DateTime!): When the suggestion was created.</li>
 <li><code>duplicateOf</code> (IssueOrPullRequest): The issue or pull request the suggestion proposes marking this issue as a<br>
 duplicate of. Only set when stateReason is DUPLICATE.</li>
+<li><code>id</code> (ID!): The Node ID of the PendingCloseSuggestion object.</li>
 <li><code>rationale</code> (String): The rationale provided for suggesting this close.</li>
 <li><code>stateReason</code> (IssueStateReason): The state reason the suggestion would apply when closing the issue.</li>
 <li><code>updatedAt</code> (DateTime): When the suggestion was last updated.</li>
 </ul>
 <h2 id="pendingfieldsuggestion---object" title="PendingFieldSuggestion - object" data-entry-type="Section">PendingFieldSuggestion - object<a href="#pendingfieldsuggestion---object" aria-label="Link to heading 'PendingFieldSuggestion - object'" data-heading-content="PendingFieldSuggestion - object" class="anchor"></a></h2>
 <p>A pending suggestion to set an issue field's value.</p>
+<p><strong>Implements:</strong> Node</p>
 <h3 id="fields-for-pendingfieldsuggestion">Fields for <code>PendingFieldSuggestion</code><a href="#fields-for-pendingfieldsuggestion" aria-label="Link to heading 'Fields for PendingFieldSuggestion'" data-heading-content="Fields for PendingFieldSuggestion" class="anchor"></a></h3>
 <ul>
 <li><code>actor</code> (Actor): The actor who suggested the field value.</li>
 <li><code>createdAt</code> (DateTime!): When the suggestion was created.</li>
+<li><code>id</code> (ID!): The Node ID of the PendingFieldSuggestion object.</li>
 <li><code>issueField</code> (IssueFields): The issue field the suggestion targets.</li>
 <li><code>rationale</code> (String): The rationale provided for suggesting this field value.</li>
 <li><code>suggestedValue</code> (String): The suggested value for the field, as a string representation of the value originally provided.</li>
@@ -2726,20 +2694,24 @@ duplicate of. Only set when stateReason is DUPLICATE.</li>
 </ul>
 <h2 id="pendinglabelsuggestion---object" title="PendingLabelSuggestion - object" data-entry-type="Section">PendingLabelSuggestion - object<a href="#pendinglabelsuggestion---object" aria-label="Link to heading 'PendingLabelSuggestion - object'" data-heading-content="PendingLabelSuggestion - object" class="anchor"></a></h2>
 <p>A pending suggestion to add a label to an issue.</p>
+<p><strong>Implements:</strong> Node</p>
 <h3 id="fields-for-pendinglabelsuggestion">Fields for <code>PendingLabelSuggestion</code><a href="#fields-for-pendinglabelsuggestion" aria-label="Link to heading 'Fields for PendingLabelSuggestion'" data-heading-content="Fields for PendingLabelSuggestion" class="anchor"></a></h3>
 <ul>
 <li><code>actor</code> (Actor): The actor who suggested the label.</li>
 <li><code>createdAt</code> (DateTime!): When the suggestion was created.</li>
+<li><code>id</code> (ID!): The Node ID of the PendingLabelSuggestion object.</li>
 <li><code>label</code> (Label): The suggested label.</li>
 <li><code>rationale</code> (String): The rationale provided for suggesting this label.</li>
 <li><code>updatedAt</code> (DateTime): When the suggestion was last updated.</li>
 </ul>
 <h2 id="pendingtypesuggestion---object" title="PendingTypeSuggestion - object" data-entry-type="Section">PendingTypeSuggestion - object<a href="#pendingtypesuggestion---object" aria-label="Link to heading 'PendingTypeSuggestion - object'" data-heading-content="PendingTypeSuggestion - object" class="anchor"></a></h2>
 <p>A pending suggestion to change an issue's type.</p>
+<p><strong>Implements:</strong> Node</p>
 <h3 id="fields-for-pendingtypesuggestion">Fields for <code>PendingTypeSuggestion</code><a href="#fields-for-pendingtypesuggestion" aria-label="Link to heading 'Fields for PendingTypeSuggestion'" data-heading-content="Fields for PendingTypeSuggestion" class="anchor"></a></h3>
 <ul>
 <li><code>actor</code> (Actor): The actor who suggested the type change.</li>
 <li><code>createdAt</code> (DateTime!): When the suggestion was created.</li>
+<li><code>id</code> (ID!): The Node ID of the PendingTypeSuggestion object.</li>
 <li><code>issueType</code> (IssueType): The suggested issue type.</li>
 <li><code>rationale</code> (String): The rationale provided for suggesting this type change.</li>
 <li><code>updatedAt</code> (DateTime): When the suggestion was last updated.</li>
@@ -3185,7 +3157,6 @@ suggest flag. Mutually exclusive with actorIds and actorLogins.</li>
 <li><code>intent</code> (IssueUpdateIntent): The intent behind the agent's action, including rationale and confidence.</li>
 <li><code>label</code> (Label!): Identifies the label associated with theunlabeledevent.</li>
 <li><code>labelable</code> (Labelable!): Identifies the Labelable associated with the event.</li>
-<li><code>rationale</code> (IssueEventRationale): The rationale associated with this event. Always returns null; use intent instead. <strong>Deprecated:</strong> Use intent instead. This field is being removed and now always returns null.</li>
 </ul>
 <h2 id="unlockedevent---object" title="UnlockedEvent - object" data-entry-type="Section">UnlockedEvent - object<a href="#unlockedevent---object" aria-label="Link to heading 'UnlockedEvent - object'" data-heading-content="UnlockedEvent - object" class="anchor"></a></h2>
 <p>Represents anunlockedevent on a given issue or pull request.</p>

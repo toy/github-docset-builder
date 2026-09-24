@@ -38,7 +38,7 @@ Can be one of: <code>outside</code>, <code>direct</code>, <code>all</code></p>
 <li>
 <p><strong><code>permission</code></strong> (string)<br>
 Filter collaborators by the permissions they have on the repository. If not specified, all collaborators will be returned.<br>
-Can be one of: <code>pull</code>, <code>triage</code>, <code>push</code>, <code>maintain</code>, <code>admin</code></p>
+Can be one of: <code>pull</code>, <code>triage</code>, <code>triage_plus</code>, <code>push</code>, <code>maintain</code>, <code>admin</code></p>
 </li>
 <li>
 <p><strong><code>per_page</code></strong> (integer)<br>
@@ -186,7 +186,7 @@ The handle for the GitHub user account.</p>
 <h4 id="body-parameters">Body parameters<a href="#body-parameters" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
 <ul>
 <li><strong><code>permission</code></strong> (string)<br>
-The permission to grant the collaborator. Only valid on organization-owned repositories. We accept the following permissions to be set: pull, triage, push, maintain, admin and you can also specify a custom repository role name, if the owning organization has defined any.<br>
+The permission to grant the collaborator. Only valid on organization-owned repositories. We accept the following permissions to be set: pull, triage, triage_plus, push, maintain, admin and you can also specify a custom repository role name, if the owning organization has defined any.<br>
 Default: <code>push</code></li>
 </ul>
 <h3 id="http-response-status-codes-2">HTTP response status codes<a href="#http-response-status-codes-2" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
@@ -437,7 +437,7 @@ an Enterprise Managed User (EMU) account was invited to a repository in an enter
 <li><strong>Simple User</strong> (see above)</li>
 </ul>
 </li>
-<li><code>permissions</code>: required, string, enum: <code>read</code>, <code>write</code>, <code>admin</code>, <code>triage</code>, <code>maintain</code></li>
+<li><code>permissions</code>: required, string, enum: <code>read</code>, <code>write</code>, <code>admin</code>, <code>triage</code>, <code>triage_plus</code>, <code>maintain</code></li>
 <li><code>created_at</code>: required, string, format: date-time</li>
 <li><code>expired</code>: boolean</li>
 <li><code>url</code>: required, string</li>

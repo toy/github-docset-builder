@@ -7,6 +7,17 @@
 exceed the size of a 32-bit integer, it's encoded as a string.</p>
 <h2 id="boolean---scalar" title="Boolean - scalar" data-entry-type="Section">Boolean - scalar<a href="#boolean---scalar" aria-label="Link to heading 'Boolean - scalar'" data-heading-content="Boolean - scalar" class="anchor"></a></h2>
 <p>Represents true or false values.</p>
+<h2 id="codecoverageparameters---object" title="CodeCoverageParameters - object" data-entry-type="Section">CodeCoverageParameters - object<a href="#codecoverageparameters---object" aria-label="Link to heading 'CodeCoverageParameters - object'" data-heading-content="CodeCoverageParameters - object" class="anchor"></a></h2>
+<p>Enforce minimum line coverage thresholds on pull requests. When configured,<br>
+uploaded coverage data must meet the specified criteria before changes can be merged.</p>
+<h3 id="fields-for-codecoverageparameters">Fields for <code>CodeCoverageParameters</code><a href="#fields-for-codecoverageparameters" aria-label="Link to heading 'Fields for CodeCoverageParameters'" data-heading-content="Fields for CodeCoverageParameters" class="anchor"></a></h3>
+<ul>
+<li><code>maxCoverageDrop</code> (Float): The maximum percentage points that line coverage may drop relative to the<br>
+default branch. Pull requests that reduce line coverage by more than this<br>
+amount will be blocked.</li>
+<li><code>minimumCoverage</code> (Float): The absolute minimum line coverage percentage required. Pull requests with<br>
+line coverage below this threshold will be blocked.</li>
+</ul>
 <h2 id="custompropertyvalue---scalar" title="CustomPropertyValue - scalar" data-entry-type="Section">CustomPropertyValue - scalar<a href="#custompropertyvalue---scalar" aria-label="Link to heading 'CustomPropertyValue - scalar'" data-heading-content="CustomPropertyValue - scalar" class="anchor"></a></h2>
 <p>A custom property value can be either a string or an array of strings. All<br>
 property types support only a single string value, except for the multi-select<br>

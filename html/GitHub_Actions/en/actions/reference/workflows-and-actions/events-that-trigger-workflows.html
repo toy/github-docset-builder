@@ -526,12 +526,14 @@
 </ul>
 </div>
 <p>Runs your workflow when a pull request is added to a merge queue, which adds the pull request to a merge group. For more information see <a href="https://docs.github.com/en/pull-requests/how-tos/merge-and-close-pull-requests/merging-a-pull-request-with-a-merge-queue" class="external">Merging a pull request with a merge queue</a>.</p>
-<p>For example, you can run a workflow when the <code>checks_requested</code> activity has occurred.</p>
+<p>You can use the <code>branches</code> or <code>branches-ignore</code> filter to configure your workflow to run only for merge groups that target specific branches. For more information, see <a href="workflow-syntax.html#onmerge_groupbranchesbranches-ignore">Workflow syntax for GitHub Actions</a>.</p>
+<p>For example, the following workflow runs when the <code>checks_requested</code> activity occurs for a merge group that targets <code>main</code>.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">pull_request</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">: [ "</span><span style="color:#a3be8c;">main</span><span style="color:#c0c5ce;">" ]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">main</span><span style="color:#c0c5ce;">]
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">merge_group</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">checks_requested</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">branches</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">main</span><span style="color:#c0c5ce;">]
 </span></code></pre>
 <h2 id="milestone" title="milestone" data-entry-type="Section"><code>milestone</code><a href="#milestone" aria-label="Link to heading 'milestone'" data-heading-content="milestone" class="anchor"></a></h2>
 <table>

@@ -103,7 +103,8 @@
 </tr>
 </tbody>
 </table>
-<p>You can also call the <code>GET /rate_limit</code> endpoint to check your rate limit. Calling this endpoint does not count against your primary rate limit, but it can count against your secondary rate limit. See <a href="../rate-limit/rate-limit.html">REST API endpoints for rate limits</a>. When possible, you should use the rate limit response headers instead of calling the API to check your rate limit.</p>
+<p>You can also call the <code>GET /rate_limit</code> endpoint to check your rate limit. Calling this endpoint does not count against your primary rate limit, but it can count against your secondary rate limit. See <a href="../rate-limit/rate-limit.html">REST API endpoints for rate limits</a>.</p>
+<p>The <code>x-ratelimit-*</code> response headers are the authoritative source for your current rate limit status. Use them to pace and back off your requests. Use <code>GET /rate_limit</code> for a periodic overview of all resource families for the authenticated user, and treat the response headers as authoritative if the two disagree.</p>
 <p>There is not a way to check the status of your secondary rate limit.</p>
 <h2 id="exceeding-the-rate-limit" title="Exceeding the rate limit" data-entry-type="Section">Exceeding the rate limit<a href="#exceeding-the-rate-limit" aria-label="Link to heading 'Exceeding the rate limit'" data-heading-content="Exceeding the rate limit" class="anchor"></a></h2>
 <p>If you exceed your primary rate limit, you will receive a <code>403</code> or <code>429</code> response, and the <code>x-ratelimit-remaining</code> header will be <code>0</code>. You should not retry your request until after the time specified by the <code>x-ratelimit-reset</code> header.</p>
