@@ -1,18 +1,18 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><title>Setting code coverage thresholds for pull requests</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">How-tos</a> / <a href="index.html">Maintain quality code</a> / </nav><h1 id="setting-code-coverage-thresholds-for-pull-requests">Setting code coverage thresholds for pull requests<a href="#setting-code-coverage-thresholds-for-pull-requests" aria-label="Link to heading 'Setting code coverage thresholds for pull requests'" data-heading-content="Setting code coverage thresholds for pull requests" class="anchor"></a></h1>
-<p>Protect your code coverage by automatically blocking pull requests that fall below the coverage levels your team requires.</p>
+<p>Prevent pull requests from being merged when uploaded code coverage falls below the levels your team requires.</p>
 <div class="markdown-alert markdown-alert-note">
 <p class="markdown-alert-title">Note</p>
 <p>This feature is in public preview and subject to change.</p>
 </div>
+<h2 id="how-the-code-coverage-rule-works" title="How the code coverage rule works" data-entry-type="Section">How the code coverage rule works<a href="#how-the-code-coverage-rule-works" aria-label="Link to heading 'How the code coverage rule works'" data-heading-content="How the code coverage rule works" class="anchor"></a></h2>
+<p>The <strong>Restrict code coverage</strong> rule evaluates uploaded line coverage data against the configured thresholds. It does not wait for coverage uploads to complete.</p>
+<p>To prevent a pull request from being merged before all expected coverage results are available, make each status check associated with an expected coverage upload a required status check. This includes coverage uploaded from separate jobs or workflows.</p>
+<p>For more information about line coverage, see <a href="../../reference/code-quality/code-coverage.html">Code coverage reference</a>.</p>
 <h2 id="prerequisites" title="Prerequisites" data-entry-type="Section">Prerequisites<a href="#prerequisites" aria-label="Link to heading 'Prerequisites'" data-heading-content="Prerequisites" class="anchor"></a></h2>
 <ul>
 <li>GitHub Code Quality is enabled on the repository.</li>
 <li>Code coverage data is uploaded to GitHub for the pull request branch. See <a href="set-up-code-coverage.html">Setting up code coverage for your repository</a>.</li>
 </ul>
-<div class="markdown-alert markdown-alert-note">
-<p class="markdown-alert-title">Note</p>
-<p>Coverage thresholds are evaluated against <strong>line coverage</strong>. See <a href="../../reference/code-quality/code-coverage.html">Code coverage reference</a>.</p>
-</div>
 <h2 id="creating-a-coverage-threshold-rule" title="Creating a coverage threshold rule" data-entry-type="Section">Creating a coverage threshold rule<a href="#creating-a-coverage-threshold-rule" aria-label="Link to heading 'Creating a coverage threshold rule'" data-heading-content="Creating a coverage threshold rule" class="anchor"></a></h2>
 <ol>
 <li>
@@ -23,7 +23,7 @@
 <p><img src="../../../..//assets/images/help/repository/repo-actions-settings.png" alt="Screenshot of a repository header showing the tabs. The &quot;Settings&quot; tab is highlighted by a dark orange outline."></p>
 </li>
 <li>
-<p>In the left sidebar, under "Code and automation," click <strong>Rulesets</strong>, then click <strong>Rulesets</strong>.</p>
+<p>In the left sidebar, under "Code, planning, and automation", click <strong>Rulesets</strong>, then click <strong>Rulesets</strong>.</p>
 </li>
 <li>
 <p>Create a new branch ruleset or click an existing one to edit it.</p>

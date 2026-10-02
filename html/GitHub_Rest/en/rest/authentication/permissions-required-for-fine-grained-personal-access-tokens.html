@@ -1217,6 +1217,31 @@
 </tr>
 </tbody>
 </table>
+<h2 id="organization-permissions-for-external-custom-properties-for-repositories" title="Organization permissions for &quot;External custom properties for repositories&quot;" data-entry-type="Section">Organization permissions for "External custom properties for repositories"<a href="#organization-permissions-for-external-custom-properties-for-repositories" aria-label="Link to heading 'Organization permissions for &quot;External custom properties for repositories&quot;'" data-heading-content="Organization permissions for &quot;External custom properties for repositories&quot;" class="anchor"></a></h2>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Access</th>
+<th>Tokens</th>
+<th>Additional Permissions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET /orgs/{org}/properties/installations</code></td>
+<td>admin</td>
+<td>PAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>POST /orgs/{org}/properties/installations</code></td>
+<td>admin</td>
+<td>PAT</td>
+<td>✗</td>
+</tr>
+</tbody>
+</table>
 <h2 id="organization-permissions-for-github-copilot-business" title="Organization permissions for &quot;GitHub Copilot Business&quot;" data-entry-type="Section">Organization permissions for "GitHub Copilot Business"<a href="#organization-permissions-for-github-copilot-business" aria-label="Link to heading 'Organization permissions for &quot;GitHub Copilot Business&quot;'" data-heading-content="Organization permissions for &quot;GitHub Copilot Business&quot;" class="anchor"></a></h2>
 <table>
 <thead>
@@ -2776,6 +2801,12 @@
 <td>✗</td>
 </tr>
 <tr>
+<td><code>GET /repos/{owner}/{repo}/actions/jobs/{job_id}/steps/{step_number}/logs</code></td>
+<td>read</td>
+<td>PAT</td>
+<td>✗</td>
+</tr>
+<tr>
 <td><code>GET /repos/{owner}/{repo}/actions/oidc/customization/sub</code></td>
 <td>read</td>
 <td>PAT</td>
@@ -2930,7 +2961,7 @@
 <td><code>POST /orgs/{org}/repos</code></td>
 <td>write</td>
 <td>PAT</td>
-<td>✗</td>
+<td>✓</td>
 </tr>
 <tr>
 <td><code>PUT /orgs/{org}/teams/{team_slug}/repos/{owner}/{repo}</code></td>
@@ -3548,7 +3579,7 @@
 <td><code>POST /user/repos</code></td>
 <td>write</td>
 <td>PAT</td>
-<td>✗</td>
+<td>✓</td>
 </tr>
 <tr>
 <td><code>DELETE /user/repository_invitations/{invitation_id}</code></td>
@@ -4924,6 +4955,12 @@
 <td>PAT</td>
 <td>✓</td>
 </tr>
+<tr>
+<td><code>POST /repos/{template_owner}/{template_repo}/generate</code></td>
+<td>read</td>
+<td>PAT</td>
+<td>✓</td>
+</tr>
 </tbody>
 </table>
 <h2 id="repository-permissions-for-copilot-agent-settings" title="Repository permissions for &quot;Copilot agent settings&quot;" data-entry-type="Section">Repository permissions for "Copilot agent settings"<a href="#repository-permissions-for-copilot-agent-settings" aria-label="Link to heading 'Repository permissions for &quot;Copilot agent settings&quot;'" data-heading-content="Repository permissions for &quot;Copilot agent settings&quot;" class="anchor"></a></h2>
@@ -5178,6 +5215,31 @@
 </tr>
 </tbody>
 </table>
+<h2 id="repository-permissions-for-github-app-installation-repository-access" title="Repository permissions for &quot;GitHub App installation repository access&quot;" data-entry-type="Section">Repository permissions for "GitHub App installation repository access"<a href="#repository-permissions-for-github-app-installation-repository-access" aria-label="Link to heading 'Repository permissions for &quot;GitHub App installation repository access&quot;'" data-heading-content="Repository permissions for &quot;GitHub App installation repository access&quot;" class="anchor"></a></h2>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Access</th>
+<th>Tokens</th>
+<th>Additional Permissions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PUT /user/installations/{installation_id}/repositories/{repository_id}</code></td>
+<td>write</td>
+<td>PAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>DELETE /user/installations/{installation_id}/repositories/{repository_id}</code></td>
+<td>write</td>
+<td>PAT</td>
+<td>✗</td>
+</tr>
+</tbody>
+</table>
 <h2 id="repository-permissions-for-issues" title="Repository permissions for &quot;Issues&quot;" data-entry-type="Section">Repository permissions for "Issues"<a href="#repository-permissions-for-issues" aria-label="Link to heading 'Repository permissions for &quot;Issues&quot;'" data-heading-content="Repository permissions for &quot;Issues&quot;" class="anchor"></a></h2>
 <table>
 <thead>
@@ -5329,6 +5391,18 @@
 </tr>
 <tr>
 <td><code>DELETE /repos/{owner}/{repo}/issues/{issue_number}/reactions/{reaction_id}</code></td>
+<td>write</td>
+<td>PAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>POST /repos/{owner}/{repo}/issues/{issue_number}/relates_to</code></td>
+<td>write</td>
+<td>PAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>DELETE /repos/{owner}/{repo}/issues/{issue_number}/relates_to/{issue_id}</code></td>
 <td>write</td>
 <td>PAT</td>
 <td>✗</td>
@@ -5503,6 +5577,12 @@
 </tr>
 <tr>
 <td><code>GET /repos/{owner}/{repo}/issues/{issue_number}/reactions</code></td>
+<td>read</td>
+<td>PAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>GET /repos/{owner}/{repo}/issues/{issue_number}/relates_to</code></td>
 <td>read</td>
 <td>PAT</td>
 <td>✗</td>
@@ -6313,6 +6393,37 @@
 <td>read</td>
 <td>PAT</td>
 <td>✗</td>
+</tr>
+</tbody>
+</table>
+<h2 id="repository-permissions-for-repository-creation" title="Repository permissions for &quot;Repository creation&quot;" data-entry-type="Section">Repository permissions for "Repository creation"<a href="#repository-permissions-for-repository-creation" aria-label="Link to heading 'Repository permissions for &quot;Repository creation&quot;'" data-heading-content="Repository permissions for &quot;Repository creation&quot;" class="anchor"></a></h2>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Access</th>
+<th>Tokens</th>
+<th>Additional Permissions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST /orgs/{org}/repos</code></td>
+<td>write</td>
+<td>PAT</td>
+<td>✓</td>
+</tr>
+<tr>
+<td><code>POST /repos/{template_owner}/{template_repo}/generate</code></td>
+<td>write</td>
+<td>PAT</td>
+<td>✓</td>
+</tr>
+<tr>
+<td><code>POST /user/repos</code></td>
+<td>write</td>
+<td>PAT</td>
+<td>✓</td>
 </tr>
 </tbody>
 </table>

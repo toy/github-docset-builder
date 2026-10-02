@@ -103,8 +103,12 @@
 </tr>
 </tbody>
 </table>
-<p>You can also call the <code>GET /rate_limit</code> endpoint to check your rate limit. Calling this endpoint does not count against your primary rate limit, but it can count against your secondary rate limit. See <a href="../rate-limit/rate-limit.html">REST API endpoints for rate limits</a>.</p>
-<p>The <code>x-ratelimit-*</code> response headers are the authoritative source for your current rate limit status. Use them to pace and back off your requests. Use <code>GET /rate_limit</code> for a periodic overview of all resource families for the authenticated user, and treat the response headers as authoritative if the two disagree.</p>
+<p>You can call the <code>GET /rate_limit</code> endpoint for a periodic overview of all resource families for the authenticated user. Calling this endpoint does not count against your primary rate limit, but it can count against your secondary rate limit. See <a href="../rate-limit/rate-limit.html">REST API endpoints for rate limits</a>.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Because GitHub processes API requests in multiple regions, rate limit values can vary from one response to the next based on the location handling the request. For example, <code>x-ratelimit-remaining</code> may be higher on a later response than on an earlier one within the same rate limit window. The <code>x-ratelimit-*</code> headers are the authoritative source for your current rate limit status and may differ from values reported by the <code>GET /rate_limit</code> endpoint. If the two disagree, rely on the response headers.</p>
+</div>
+<p>Use the <code>x-ratelimit-*</code> response headers to pace and back off your requests, but avoid logic that depends on an exact remaining count. Ensure your integration handles <code>403</code> and <code>429</code> responses as described in <a href="#exceeding-the-rate-limit">Exceeding the rate limit</a> later in this article.</p>
 <p>There is not a way to check the status of your secondary rate limit.</p>
 <h2 id="exceeding-the-rate-limit" title="Exceeding the rate limit" data-entry-type="Section">Exceeding the rate limit<a href="#exceeding-the-rate-limit" aria-label="Link to heading 'Exceeding the rate limit'" data-heading-content="Exceeding the rate limit" class="anchor"></a></h2>
 <p>If you exceed your primary rate limit, you will receive a <code>403</code> or <code>429</code> response, and the <code>x-ratelimit-remaining</code> header will be <code>0</code>. You should not retry your request until after the time specified by the <code>x-ratelimit-reset</code> header.</p>

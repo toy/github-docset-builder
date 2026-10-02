@@ -8,7 +8,7 @@
 <p>Security campaigns are created and managed from the <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong> tab for your organization.</p>
 <p>You choose the alerts that you want to include in the campaign by using either:</p>
 <ul>
-<li><strong>Campaign templates</strong>: Campaign templates contain filters for the most common alert selections. For code campaigns, they also all include the requirement that GitHub Copilot Autofix is supported for all the alert types included (that is, <code>autofix:supported</code>).</li>
+<li><strong>Campaign templates</strong>: Campaign templates contain filters for the most common alert selections. When agentic autofix is disabled, they also use <code>autofix:supported</code> to include only alerts for rules supported by GitHub Copilot Autofix.</li>
 <li><strong>Custom filters</strong>: Creating a campaign using custom filters lets you define your own criteria for selecting alerts for the campaign, and lets you tailor your campaign to your organization's specific needs.</li>
 </ul>
 <p>In addition, you can use the REST API to create and interact with campaigns more efficiently and at scale. For more information, see <a href="https://docs.github.com/en/rest/campaigns/campaigns" class="external">REST API endpoints for security campaigns</a>.</p>
@@ -61,15 +61,18 @@
 <p>Additional default filters for code scanning alerts:</p>
 <ul>
 <li><code>autofilter:true</code> includes only alerts that appear to be in application code.</li>
-<li><code>autofix:supported</code> includes only alerts that are for rules that are supported for GitHub Copilot Autofix.</li>
 </ul>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>When agentic autofix is enabled for your organization or enterprise, the <code>autofix</code> filter is unavailable, and adding <code>autofix:supported</code> does not change the results. For alerts in repositories where Copilot cloud agent and Copilot Autofix are available, you can use <strong>Assign to Copilot</strong> for any code scanning alert in a campaign.</p>
+</div>
 <p>For more information about filtering alerts, see <a href="../../../tutorials/secure-your-organization/best-practice-fix-alerts-at-scale.html#2-select-alerts-for-your-campaign">Running a security campaign to fix alerts at scale</a> and <a href="filtering-alerts-in-security-overview.html">Filtering alerts in security overview</a>.</p>
 <h4 id="code-scanning-alert-filters">Code scanning alert filters<a href="#code-scanning-alert-filters" aria-label="Link to heading 'Code scanning alert filters'" data-heading-content="Code scanning alert filters" class="anchor"></a></h4>
-<p>In addition to the core filters, you will usually want to add a filter to limit results to a specific rule name, severity, or tag.</p>
+<p>Use <code>autofilter:true</code> with <code>rule:</code>, <code>tag:</code>, or <code>severity:</code> to scope your campaign.</p>
 <ul>
-<li><code>is:open autofilter:true autofix:supported rule:java/log-injection</code> to show only alerts for log injection in Java code. See <a href="../../../reference/code-scanning/codeql/codeql-queries/index.html">Queries for CodeQL analysis</a>.</li>
-<li><code>is:open autofilter:true autofix:supported tag:external/cwe/cwe-117</code> to show only alerts for "CWE 117: Improper Output Neutralization for Logs". This includes log injection in Java and other languages.</li>
-<li><code>is:open autofilter:true autofix:supported severity:critical</code> to show only alerts with a security severity of critical.</li>
+<li><code>is:open autofilter:true rule:java/log-injection</code> to show only alerts for log injection in Java code. See <a href="../../../reference/code-scanning/codeql/codeql-queries/index.html">Queries for CodeQL analysis</a>.</li>
+<li><code>is:open autofilter:true tag:external/cwe/cwe-117</code> to show only alerts for "CWE 117: Improper Output Neutralization for Logs". This includes log injection in Java and other languages.</li>
+<li><code>is:open autofilter:true severity:critical</code> to show only alerts with a security severity of critical.</li>
 </ul>
 <h4 id="secret-scanning-alert-filters">Secret scanning alert filters<a href="#secret-scanning-alert-filters" aria-label="Link to heading 'Secret scanning alert filters'" data-heading-content="Secret scanning alert filters" class="anchor"></a></h4>
 <p>In addition to the core filters, you will usually want to add a filter to limit results to a specific provider, secret type, or secrets that bypassed push protection (enterprise accounts only).</p>

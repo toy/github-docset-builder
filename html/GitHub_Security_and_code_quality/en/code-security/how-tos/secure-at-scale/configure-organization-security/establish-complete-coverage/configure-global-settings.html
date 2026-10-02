@@ -36,7 +36,7 @@
 <p>Otherwise, to allow Dependabot to use GitHub Actions runners to perform dependency updates for all existing repositories in the organization, select "Dependabot on Actions runners".</p>
 <p>For more information, see <a href="../../../../concepts/supply-chain-security/dependabot-on-actions.html">Dependabot on GitHub Actions runners</a>.</p>
 <h3 id="configuring-the-runner-type-for-dependabot">Configuring the runner type for Dependabot<a href="#configuring-the-runner-type-for-dependabot" aria-label="Link to heading 'Configuring the runner type for Dependabot'" data-heading-content="Configuring the runner type for Dependabot" class="anchor"></a></h3>
-<p>You can configure which type of runner Dependabot uses to scan for version and security updates. By default, Dependabot uses standard <strong>GitHub-hosted runners</strong>. You can configure Dependabot to use <strong>self-hosted runners</strong> with custom labels, which allows you to integrate with existing runner infrastructure such as Actions Runner Controller (ARC).</p>
+<p>You can configure which type of runner Dependabot uses to scan for version and security updates. By default, Dependabot uses standard <strong>GitHub-hosted runners</strong>. You can configure Dependabot to use <strong>labeled runners</strong>, which allows you to integrate with existing runner infrastructure such as Actions Runner Controller (ARC).</p>
 <div class="markdown-alert markdown-alert-note">
 <p class="markdown-alert-title">Note</p>
 <ul>
@@ -50,12 +50,12 @@
 <li>In the "Edit runner type for Dependabot" dialog, select the runner type you want Dependabot to use:
 <ul>
 <li><strong>Standard GitHub runner</strong>.</li>
-<li><strong>Labeled runner</strong>: If you select this option, Dependabot will use self-hosted runners that match the label you specify.</li>
+<li><strong>Labeled runner</strong>: If you select this option, Dependabot will use self-hosted or larger runners that match the label you specify.</li>
 </ul>
 </li>
 <li>If you selected <strong>Labeled runner</strong>:
 <ul>
-<li>In "Runner label", enter the label assigned to your self-hosted runners. Dependabot will use runners with this label. By default, the <code>dependabot</code> label is used, but you can specify a custom label to match your existing runner infrastructure.</li>
+<li>In "Runner label", enter the label assigned to your runners. Dependabot will use runners with this label. By default, the <code>dependabot</code> label is used, but you can specify a custom label to match your existing runner infrastructure.</li>
 <li>Optionally, in "Runner group name", enter the name of a runner group if you want to target a specific group of runners.</li>
 </ul>
 </li>
@@ -83,7 +83,9 @@
 <h3 id="expanding-codeql-analysis">Expanding CodeQL analysis<a href="#expanding-codeql-analysis" aria-label="Link to heading 'Expanding CodeQL analysis'" data-heading-content="Expanding CodeQL analysis" class="anchor"></a></h3>
 <p>You can expand CodeQL analysis coverage for all repositories in your organization that use default setup by configuring CodeQL model packs. Model packs extend the CodeQL analysis to recognize additional frameworks and libraries that are not included in the standard CodeQL libraries. This global configuration applies to repositories using default setup and allows you to specify model packs published via the container registry. For more information, see <a href="../../../find-and-fix-code-vulnerabilities/manage-your-configuration/edit-default-setup.html#extending-coverage-for-all-repositories-in-an-organization">Editing your configuration of default setup</a>.</p>
 <h3 id="continuing-scans-on-inactive-repositories">Continuing scans on inactive repositories<a href="#continuing-scans-on-inactive-repositories" aria-label="Link to heading 'Continuing scans on inactive repositories'" data-heading-content="Continuing scans on inactive repositories" class="anchor"></a></h3>
-<p>By default, code scanning default setup pauses weekly scheduled scans on repositories that have had no commits pushed or pull requests opened for 180 days. You can select <strong>Keep scheduled scans running every 30 days for inactive repositories</strong> to override this behavior in an organization. The scan period is not configurable.</p>
+<p>By default, code scanning default setup runs weekly scheduled scans only on active repositories. A repository is active if a push or pull request has triggered a default setup scan in the last 180 days. Initial scans, scans triggered by configuration or language changes, and scheduled scans do not count as activity.</p>
+<p>When you enable default setup, an initial scan runs, but weekly scheduled scans do not start until a push or pull request triggers a scan. Pushes and pull requests from before default setup was enabled do not count as activity.</p>
+<p>You can select <strong>Keep scheduled scans running every 30 days for inactive repositories</strong> to override this behavior in an organization. The scan period is not configurable.</p>
 <h2 id="configuring-global-secret-scanning-settings" title="Configuring global secret scanning settings" data-entry-type="Section">Configuring global secret scanning settings<a href="#configuring-global-secret-scanning-settings" aria-label="Link to heading 'Configuring global secret scanning settings'" data-heading-content="Configuring global secret scanning settings" class="anchor"></a></h2>
 <p>Secret scanning is a security tool that scans the entire Git history of repositories, as well as issues, pull requests, discussions, and wikis in those repositories, for leaked secrets that have been accidentally committed, such as tokens or private keys.</p>
 <p>You can customize several global settings for secret scanning:</p>

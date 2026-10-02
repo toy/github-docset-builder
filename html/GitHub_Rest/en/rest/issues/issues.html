@@ -821,7 +821,7 @@ The id of the parent issue to add this issue to as a sub-issue. NOTE: Only users
 </span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/issues \
 </span><span style="color:#c0c5ce;">  -d '{
 </span><span style="color:#c0c5ce;">  "title": "Found a bug",
-</span><span style="color:#c0c5ce;">  "body": "I'm having a problem with this.",
+</span><span style="color:#c0c5ce;">  "body": "I'\''m having a problem with this.",
 </span><span style="color:#c0c5ce;">  "assignees": [
 </span><span style="color:#c0c5ce;">    "octocat"
 </span><span style="color:#c0c5ce;">  ],
@@ -1433,7 +1433,7 @@ The issue type to associate with this issue. Only users with push access can set
 </span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/issues/ISSUE_NUMBER \
 </span><span style="color:#c0c5ce;">  -d '{
 </span><span style="color:#c0c5ce;">  "title": "Found a bug",
-</span><span style="color:#c0c5ce;">  "body": "I'm having a problem with this.",
+</span><span style="color:#c0c5ce;">  "body": "I'\''m having a problem with this.",
 </span><span style="color:#c0c5ce;">  "assignees": [
 </span><span style="color:#c0c5ce;">    "octocat"
 </span><span style="color:#c0c5ce;">  ],
@@ -2039,13 +2039,15 @@ The number that identifies the issue.</p>
 </span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/issues/ISSUE_NUMBER/lock
 </span></code></pre>
 <p><strong>Response schema (Status: 204):</strong></p>
-<h2 id="list-issue-suggestions" title="GET /repos/{owner}/{repo}/issues/{issue_number}/suggestions (List issue suggestions)" data-entry-type="Resource">List issue suggestions<a href="#list-issue-suggestions" aria-label="Link to heading 'List issue suggestions'" data-heading-content="List issue suggestions" class="anchor"></a></h2>
-<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /repos/{owner}/{repo}/issues/{issue_number}/suggestions
+<h2 id="list-issues-related-to-an-issue" title="GET /repos/{owner}/{repo}/issues/{issue_number}/relates_to (List issues related to an issue)" data-entry-type="Resource">List issues related to an issue<a href="#list-issues-related-to-an-issue" aria-label="Link to heading 'List issues related to an issue'" data-heading-content="List issues related to an issue" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /repos/{owner}/{repo}/issues/{issue_number}/relates_to
 </span></code></pre>
-<p>Lists the suggestions on an issue. A suggestion is an agent-proposed change to an issue's type, labels, fields, assignees, or closed state that a maintainer can approve or dismiss.<br>
-By default only pending suggestions are returned. Use state=all to return suggestions in every state, or state=<state> to filter to a single state. Use action=<action> to return only suggestions for a specific change.<br>
-This endpoint is only available while the issue suggestions feature is enabled for the repository, and only supports issues, not pull requests.<br>
-Requires triage access to the repository.</action></state></p>
+<p>You can use the REST API to list the issues that are related to an issue.<br>
+This endpoint supports the following custom media types. For more information, see Media types.</p>
+<p>application/vnd.github.raw+json: Returns the raw Markdown body. Response will include body. This is the default if you do not pass any specific media type.<br>
+application/vnd.github.text+json: Returns a text only representation of the Markdown body. Response will include body_text.<br>
+application/vnd.github.html+json: Returns HTML rendered from the body's Markdown. Response will include body_html.<br>
+application/vnd.github.full+json: Returns raw, text, and HTML representations. Response will include body, body_text, and body_html.</p>
 <h3 id="parameters-8">Parameters<a href="#parameters-8" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-8">Headers<a href="#headers-8" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
@@ -2053,6 +2055,206 @@ Requires triage access to the repository.</action></state></p>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
 <h4 id="path-and-query-parameters-8">Path and query parameters<a href="#path-and-query-parameters-8" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>issue_number</code></strong> (integer) (required)<br>
+The number that identifies the issue.</p>
+</li>
+<li>
+<p><strong><code>per_page</code></strong> (integer)<br>
+The number of results per page (max 100). For more information, see "Using pagination in the REST API."<br>
+Default: <code>30</code></p>
+</li>
+<li>
+<p><strong><code>page</code></strong> (integer)<br>
+The page number of the results to fetch. For more information, see "Using pagination in the REST API."<br>
+Default: <code>1</code></p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-8">HTTP response status codes<a href="#http-response-status-codes-8" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - OK</p>
+</li>
+<li>
+<p><strong>301</strong> - Moved permanently</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>410</strong> - Gone</p>
+</li>
+</ul>
+<h3 id="code-examples-8">Code examples<a href="#code-examples-8" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-6">Example<a href="#example-6" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X GET \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/issues/ISSUE_NUMBER/relates_to
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<p>Same response schema as <a href="#list-issues-assigned-to-the-authenticated-user">List issues assigned to the authenticated user</a>.</p>
+<h2 id="add-a-related-issue" title="POST /repos/{owner}/{repo}/issues/{issue_number}/relates_to (Add a related issue)" data-entry-type="Resource">Add a related issue<a href="#add-a-related-issue" aria-label="Link to heading 'Add a related issue'" data-heading-content="Add a related issue" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">POST /repos/{owner}/{repo}/issues/{issue_number}/relates_to
+</span></code></pre>
+<p>You can use the REST API to mark an issue as related to another issue.<br>
+Creating content too quickly using this endpoint may result in secondary rate limiting.<br>
+For more information, see Rate limits for the API<br>
+and Best practices for using the REST API.<br>
+This endpoint supports the following custom media types. For more information, see Media types.</p>
+<p>application/vnd.github.raw+json: Returns the raw Markdown body. Response will include body. This is the default if you do not pass any specific media type.<br>
+application/vnd.github.text+json: Returns a text only representation of the Markdown body. Response will include body_text.<br>
+application/vnd.github.html+json: Returns HTML rendered from the body's Markdown. Response will include body_html.<br>
+application/vnd.github.full+json: Returns raw, text, and HTML representations. Response will include body, body_text, and body_html.</p>
+<h3 id="parameters-9">Parameters<a href="#parameters-9" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-9">Headers<a href="#headers-9" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-9">Path and query parameters<a href="#path-and-query-parameters-9" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>issue_number</code></strong> (integer) (required)<br>
+The number that identifies the issue.</p>
+</li>
+</ul>
+<h4 id="body-parameters-3">Body parameters<a href="#body-parameters-3" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li><strong><code>issue_id</code></strong> (integer) (required)<br>
+The id of the issue to mark as related to the current issue</li>
+</ul>
+<h3 id="http-response-status-codes-9">HTTP response status codes<a href="#http-response-status-codes-9" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>201</strong> - Created</p>
+</li>
+<li>
+<p><strong>301</strong> - Moved permanently</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>410</strong> - Gone</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+</ul>
+<h3 id="code-examples-9">Code examples<a href="#code-examples-9" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-7">Example<a href="#example-7" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X POST \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/issues/ISSUE_NUMBER/relates_to \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "issue_id": 1
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 201):</strong></p>
+<p>Same response schema as <a href="#create-an-issue">Create an issue</a>.</p>
+<h2 id="remove-a-related-issue" title="DELETE /repos/{owner}/{repo}/issues/{issue_number}/relates_to/{issue_id} (Remove a related issue)" data-entry-type="Resource">Remove a related issue<a href="#remove-a-related-issue" aria-label="Link to heading 'Remove a related issue'" data-heading-content="Remove a related issue" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">DELETE /repos/{owner}/{repo}/issues/{issue_number}/relates_to/{issue_id}
+</span></code></pre>
+<p>You can use the REST API to remove a 'relates to' relationship between two issues.<br>
+Removing content too quickly using this endpoint may result in secondary rate limiting.<br>
+For more information, see Rate limits for the API<br>
+and Best practices for using the REST API.<br>
+This endpoint supports the following custom media types. For more information, see Media types.</p>
+<p>application/vnd.github.raw+json: Returns the raw Markdown body. Response will include body. This is the default if you do not pass any specific media type.<br>
+application/vnd.github.text+json: Returns a text only representation of the Markdown body. Response will include body_text.<br>
+application/vnd.github.html+json: Returns HTML rendered from the body's Markdown. Response will include body_html.<br>
+application/vnd.github.full+json: Returns raw, text, and HTML representations. Response will include body, body_text, and body_html.</p>
+<h3 id="parameters-10">Parameters<a href="#parameters-10" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-10">Headers<a href="#headers-10" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-10">Path and query parameters<a href="#path-and-query-parameters-10" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>issue_number</code></strong> (integer) (required)<br>
+The number that identifies the issue.</p>
+</li>
+<li>
+<p><strong><code>issue_id</code></strong> (integer) (required)<br>
+The id of the related issue to remove</p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-10">HTTP response status codes<a href="#http-response-status-codes-10" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - OK</p>
+</li>
+<li>
+<p><strong>301</strong> - Moved permanently</p>
+</li>
+<li>
+<p><strong>400</strong> - Bad Request</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>410</strong> - Gone</p>
+</li>
+</ul>
+<h3 id="code-examples-10">Code examples<a href="#code-examples-10" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-8">Example<a href="#example-8" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X DELETE \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/issues/ISSUE_NUMBER/relates_to/ISSUE_ID
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<p>Same response schema as <a href="#create-an-issue">Create an issue</a>.</p>
+<h2 id="list-issue-suggestions" title="GET /repos/{owner}/{repo}/issues/{issue_number}/suggestions (List issue suggestions)" data-entry-type="Resource">List issue suggestions<a href="#list-issue-suggestions" aria-label="Link to heading 'List issue suggestions'" data-heading-content="List issue suggestions" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /repos/{owner}/{repo}/issues/{issue_number}/suggestions
+</span></code></pre>
+<p>Lists the suggestions on an issue. A suggestion is an agent-proposed change to an issue's type, labels, fields, assignees, or closed state that a maintainer can approve or dismiss.<br>
+By default only pending suggestions are returned. Use state=all to return suggestions in every state, or state=<state> to filter to a single state. Use action=<action> to return only suggestions for a specific change.<br>
+This endpoint is only available while the issue suggestions feature is enabled for the repository, and only supports issues, not pull requests.<br>
+Requires triage access to the repository.</action></state></p>
+<h3 id="parameters-11">Parameters<a href="#parameters-11" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-11">Headers<a href="#headers-11" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-11">Path and query parameters<a href="#path-and-query-parameters-11" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -2088,7 +2290,7 @@ The page number of the results to fetch. For more information, see "Using pagina
 Default: <code>1</code></p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-8">HTTP response status codes<a href="#http-response-status-codes-8" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-11">HTTP response status codes<a href="#http-response-status-codes-11" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>200</strong> - OK</p>
@@ -2100,8 +2302,8 @@ Default: <code>1</code></p>
 <p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
 </li>
 </ul>
-<h3 id="code-examples-8">Code examples<a href="#code-examples-8" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-6">Example<a href="#example-6" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-11">Code examples<a href="#code-examples-11" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-9">Example<a href="#example-9" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
@@ -2136,13 +2338,13 @@ Default: <code>1</code></p>
 </span></code></pre>
 <p>Approves a pending suggestion on an issue. Applies the proposed change (creating the corresponding timeline event), transitions the suggestion to approved, and dismisses any competing pending suggestions for the same change.<br>
 Requires triage access to the repository. Approving a suggestion also requires permission to perform the change it applies (for example, setting the issue type, adding a label or assignee, or closing the issue); this only affects fine-grained access tokens and GitHub Apps whose permissions are narrower than the triage role. This endpoint only supports issues, not pull requests.</p>
-<h3 id="parameters-9">Parameters<a href="#parameters-9" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-9">Headers<a href="#headers-9" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-12">Parameters<a href="#parameters-12" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-12">Headers<a href="#headers-12" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-9">Path and query parameters<a href="#path-and-query-parameters-9" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-12">Path and query parameters<a href="#path-and-query-parameters-12" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -2161,7 +2363,7 @@ The number that identifies the issue.</p>
 The unique identifier of the suggestion.</p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-9">HTTP response status codes<a href="#http-response-status-codes-9" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-12">HTTP response status codes<a href="#http-response-status-codes-12" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>200</strong> - OK</p>
@@ -2176,8 +2378,8 @@ The unique identifier of the suggestion.</p>
 <p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
 </li>
 </ul>
-<h3 id="code-examples-9">Code examples<a href="#code-examples-9" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-7">Example<a href="#example-7" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-12">Code examples<a href="#code-examples-12" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-10">Example<a href="#example-10" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X POST \
@@ -2211,13 +2413,13 @@ The unique identifier of the suggestion.</p>
 </span></code></pre>
 <p>Dismisses a pending suggestion on an issue. Transitions the suggestion to dismissed without applying any change or creating a timeline event.<br>
 Requires triage access to the repository. This endpoint only supports issues, not pull requests.</p>
-<h3 id="parameters-10">Parameters<a href="#parameters-10" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-10">Headers<a href="#headers-10" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-13">Parameters<a href="#parameters-13" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-13">Headers<a href="#headers-13" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-10">Path and query parameters<a href="#path-and-query-parameters-10" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-13">Path and query parameters<a href="#path-and-query-parameters-13" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -2236,7 +2438,7 @@ The number that identifies the issue.</p>
 The unique identifier of the suggestion.</p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-10">HTTP response status codes<a href="#http-response-status-codes-10" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-13">HTTP response status codes<a href="#http-response-status-codes-13" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>200</strong> - OK</p>
@@ -2251,8 +2453,8 @@ The unique identifier of the suggestion.</p>
 <p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
 </li>
 </ul>
-<h3 id="code-examples-10">Code examples<a href="#code-examples-10" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-8">Example<a href="#example-8" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-13">Code examples<a href="#code-examples-13" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-11">Example<a href="#example-11" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X POST \
@@ -2271,13 +2473,13 @@ Note</p>
 application/vnd.github.text+json: Returns a text only representation of the markdown body. Response will include body_text.<br>
 application/vnd.github.html+json: Returns HTML rendered from the body's markdown. Response will include body_html.<br>
 application/vnd.github.full+json: Returns raw, text, and HTML representations. Response will include body, body_text, and body_html.</p>
-<h3 id="parameters-11">Parameters<a href="#parameters-11" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-11">Headers<a href="#headers-11" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-14">Parameters<a href="#parameters-14" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-14">Headers<a href="#headers-14" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-11">Path and query parameters<a href="#path-and-query-parameters-11" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-14">Path and query parameters<a href="#path-and-query-parameters-14" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>filter</code></strong> (string)<br>
@@ -2322,7 +2524,7 @@ The page number of the results to fetch. For more information, see "Using pagina
 Default: <code>1</code></p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-11">HTTP response status codes<a href="#http-response-status-codes-11" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-14">HTTP response status codes<a href="#http-response-status-codes-14" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>200</strong> - OK</p>
@@ -2334,8 +2536,8 @@ Default: <code>1</code></p>
 <p><strong>404</strong> - Resource not found</p>
 </li>
 </ul>
-<h3 id="code-examples-11">Code examples<a href="#code-examples-11" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-9">Example<a href="#example-9" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-14">Code examples<a href="#code-examples-14" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-12">Example<a href="#example-12" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \

@@ -372,6 +372,9 @@
 <p><a href="../actions/workflow-runs.html#re-run-a-job-from-a-workflow-run"><code>POST /repos/{owner}/{repo}/actions/jobs/{job_id}/rerun</code></a></p>
 </li>
 <li>
+<p><a href="../actions/workflow-jobs.html#download-step-logs-for-a-workflow-run-job"><code>GET /repos/{owner}/{repo}/actions/jobs/{job_id}/steps/{step_number}/logs</code></a></p>
+</li>
+<li>
 <p><a href="../actions/oidc.html#get-the-customization-template-for-an-oidc-subject-claim-for-a-repository"><code>GET /repos/{owner}/{repo}/actions/oidc/customization/sub</code></a></p>
 </li>
 <li>
@@ -775,6 +778,12 @@
 </li>
 <li>
 <p><a href="../apps/installations.html#revoke-an-installation-access-token"><code>DELETE /installation/token</code></a></p>
+</li>
+<li>
+<p><a href="../apps/installations.html#add-a-repository-to-an-app-installation"><code>PUT /user/installations/{installation_id}/repositories/{repository_id}</code></a></p>
+</li>
+<li>
+<p><a href="../apps/installations.html#remove-a-repository-from-an-app-installation"><code>DELETE /user/installations/{installation_id}/repositories/{repository_id}</code></a></p>
 </li>
 </ul>
 <h2 id="billing" title="billing" data-entry-type="Section">billing<a href="#billing" aria-label="Link to heading 'billing'" data-heading-content="billing" class="anchor"></a></h2>
@@ -1573,63 +1582,6 @@
 <ul>
 <li><a href="../emojis/emojis.html#get-emojis"><code>GET /emojis</code></a></li>
 </ul>
-<h2 id="enterprise-teams" title="enterprise-teams" data-entry-type="Section">enterprise-teams<a href="#enterprise-teams" aria-label="Link to heading 'enterprise-teams'" data-heading-content="enterprise-teams" class="anchor"></a></h2>
-<ul>
-<li>
-<p><a href="../enterprise-teams/enterprise-team-members.html#list-enterprise-teams-for-a-user"><code>GET /enterprises/{enterprise}/members/{username}/teams</code></a></p>
-</li>
-<li>
-<p><a href="../enterprise-teams/enterprise-teams.html#list-enterprise-teams"><code>GET /enterprises/{enterprise}/teams</code></a></p>
-</li>
-<li>
-<p><a href="../enterprise-teams/enterprise-teams.html#create-an-enterprise-team"><code>POST /enterprises/{enterprise}/teams</code></a></p>
-</li>
-<li>
-<p><a href="../enterprise-teams/enterprise-team-members.html#list-members-in-an-enterprise-team"><code>GET /enterprises/{enterprise}/teams/{enterprise-team}/memberships</code></a></p>
-</li>
-<li>
-<p><a href="../enterprise-teams/enterprise-team-members.html#bulk-add-team-members"><code>POST /enterprises/{enterprise}/teams/{enterprise-team}/memberships/add</code></a></p>
-</li>
-<li>
-<p><a href="../enterprise-teams/enterprise-team-members.html#bulk-remove-team-members"><code>POST /enterprises/{enterprise}/teams/{enterprise-team}/memberships/remove</code></a></p>
-</li>
-<li>
-<p><a href="../enterprise-teams/enterprise-team-members.html#get-enterprise-team-membership"><code>GET /enterprises/{enterprise}/teams/{enterprise-team}/memberships/{username}</code></a></p>
-</li>
-<li>
-<p><a href="../enterprise-teams/enterprise-team-members.html#add-team-member"><code>PUT /enterprises/{enterprise}/teams/{enterprise-team}/memberships/{username}</code></a></p>
-</li>
-<li>
-<p><a href="../enterprise-teams/enterprise-team-members.html#remove-team-membership"><code>DELETE /enterprises/{enterprise}/teams/{enterprise-team}/memberships/{username}</code></a></p>
-</li>
-<li>
-<p><a href="../enterprise-teams/enterprise-team-organizations.html#get-organization-assignments"><code>GET /enterprises/{enterprise}/teams/{enterprise-team}/organizations</code></a></p>
-</li>
-<li>
-<p><a href="../enterprise-teams/enterprise-team-organizations.html#add-organization-assignments"><code>POST /enterprises/{enterprise}/teams/{enterprise-team}/organizations/add</code></a></p>
-</li>
-<li>
-<p><a href="../enterprise-teams/enterprise-team-organizations.html#remove-organization-assignments"><code>POST /enterprises/{enterprise}/teams/{enterprise-team}/organizations/remove</code></a></p>
-</li>
-<li>
-<p><a href="../enterprise-teams/enterprise-team-organizations.html#get-organization-assignment"><code>GET /enterprises/{enterprise}/teams/{enterprise-team}/organizations/{org}</code></a></p>
-</li>
-<li>
-<p><a href="../enterprise-teams/enterprise-team-organizations.html#add-an-organization-assignment"><code>PUT /enterprises/{enterprise}/teams/{enterprise-team}/organizations/{org}</code></a></p>
-</li>
-<li>
-<p><a href="../enterprise-teams/enterprise-team-organizations.html#delete-an-organization-assignment"><code>DELETE /enterprises/{enterprise}/teams/{enterprise-team}/organizations/{org}</code></a></p>
-</li>
-<li>
-<p><a href="../enterprise-teams/enterprise-teams.html#get-an-enterprise-team"><code>GET /enterprises/{enterprise}/teams/{team_slug}</code></a></p>
-</li>
-<li>
-<p><a href="../enterprise-teams/enterprise-teams.html#update-an-enterprise-team"><code>PATCH /enterprises/{enterprise}/teams/{team_slug}</code></a></p>
-</li>
-<li>
-<p><a href="../enterprise-teams/enterprise-teams.html#delete-an-enterprise-team"><code>DELETE /enterprises/{enterprise}/teams/{team_slug}</code></a></p>
-</li>
-</ul>
 <h2 id="git" title="git" data-entry-type="Section">git<a href="#git" aria-label="Link to heading 'git'" data-heading-content="git" class="anchor"></a></h2>
 <ul>
 <li>
@@ -1832,6 +1784,15 @@
 </li>
 <li>
 <p><a href="../issues/sub-issues.html#get-parent-issue"><code>GET /repos/{owner}/{repo}/issues/{issue_number}/parent</code></a></p>
+</li>
+<li>
+<p><a href="../issues/issues.html#list-issues-related-to-an-issue"><code>GET /repos/{owner}/{repo}/issues/{issue_number}/relates_to</code></a></p>
+</li>
+<li>
+<p><a href="../issues/issues.html#add-a-related-issue"><code>POST /repos/{owner}/{repo}/issues/{issue_number}/relates_to</code></a></p>
+</li>
+<li>
+<p><a href="../issues/issues.html#remove-a-related-issue"><code>DELETE /repos/{owner}/{repo}/issues/{issue_number}/relates_to/{issue_id}</code></a></p>
 </li>
 <li>
 <p><a href="../issues/sub-issues.html#remove-sub-issue"><code>DELETE /repos/{owner}/{repo}/issues/{issue_number}/sub_issue</code></a></p>
@@ -2210,6 +2171,24 @@
 </li>
 <li>
 <p><a href="../orgs/personal-access-tokens.html#list-repositories-a-fine-grained-personal-access-token-has-access-to"><code>GET /orgs/{org}/personal-access-tokens/{pat_id}/repositories</code></a></p>
+</li>
+<li>
+<p><a href="../orgs/custom-properties.html#get-registered-app-installations-for-external-custom-properties"><code>GET /orgs/{org}/properties/installations</code></a></p>
+</li>
+<li>
+<p><a href="../orgs/custom-properties.html#register-an-app-installation-for-external-custom-properties"><code>POST /orgs/{org}/properties/installations</code></a></p>
+</li>
+<li>
+<p><a href="../orgs/custom-properties.html#get-all-external-custom-properties-for-a-github-app-installation-in-an-organization"><code>GET /orgs/{org}/properties/installations/schema</code></a></p>
+</li>
+<li>
+<p><a href="../orgs/custom-properties.html#create-or-update-external-custom-property-values-for-organization-repositories"><code>PATCH /orgs/{org}/properties/installations/values</code></a></p>
+</li>
+<li>
+<p><a href="../orgs/custom-properties.html#create-or-update-external-custom-property-values-for-a-property-across-organization-repositories"><code>PATCH /orgs/{org}/properties/installations/values/{property_name}</code></a></p>
+</li>
+<li>
+<p><a href="../orgs/custom-properties.html#remove-all-external-custom-property-values-for-a-property-across-all-organization-repositories"><code>DELETE /orgs/{org}/properties/installations/values/{property_name}</code></a></p>
 </li>
 <li>
 <p><a href="../orgs/custom-properties.html#get-all-custom-properties-for-an-organization"><code>GET /orgs/{org}/properties/schema</code></a></p>
@@ -2904,6 +2883,9 @@
 </li>
 <li>
 <p><a href="../repos/repos.html#list-public-repositories"><code>GET /repositories</code></a></p>
+</li>
+<li>
+<p><a href="../repos/repos.html#create-a-repository-for-the-authenticated-user"><code>POST /user/repos</code></a></p>
 </li>
 <li>
 <p><a href="../repos/repos.html#list-repositories-for-a-user"><code>GET /users/{username}/repos</code></a></p>

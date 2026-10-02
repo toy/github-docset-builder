@@ -5,7 +5,7 @@
 <p class="markdown-alert-title">Note</p>
 <ul>
 <li>If you have admin or security permissions for a public repository, you don’t need to submit a vulnerability report. Instead, create a draft security advisory directly. See <a href="fix-reported-vulnerabilities/create-repository-advisory.html">Creating a repository security advisory</a>.</li>
-<li>Private vulnerability reporting is separate from a repository’s <code>SECURITY.md</code> file. You can only report vulnerabilities privately for repositories where this feature is enabled, and you don’t need to follow the instructions in <code>SECURITY.md</code>.</li>
+<li>Private vulnerability reporting is separate from a repository’s <code>SECURITY.md</code> file. You can only report vulnerabilities privately for repositories where this feature is enabled. If the repository has a security policy, the policy is displayed above the reporting form so you can review the maintainer's guidance before submitting.</li>
 </ul>
 </div>
 <p>If a public repository has private vulnerability reporting enabled, anyone can submit a private vulnerability report to the repository maintainers.</p>
@@ -21,12 +21,17 @@
 <p>Click <strong>Report a vulnerability</strong> to open the advisory form.</p>
 </li>
 <li>
-<p>Fill in the advisory details form.</p>
+<p>If the repository has a security policy, review the policy displayed above the form.</p>
+</li>
+<li>
+<p>Fill in the vulnerability reporting form.</p>
 <div class="markdown-alert markdown-alert-tip">
 <p class="markdown-alert-title">Tip</p>
-<p>In this form, only the title and description are mandatory. (In the general draft security advisory form, which the repository maintainer initiates, specifying the ecosystem is also required.) However, we recommend security researchers provide as much information as possible on the form so that the maintainers can make an informed decision about the submitted report. You can adopt the template used by our security researchers from the GitHub Security Lab, which is available on the <a href="https://github.com/github/securitylab/blob/main/docs/report-template.md" class="external"><code>github/securitylab</code> repository</a>.</p>
+<p>By default, you must provide a summary, details, proof of concept, and impact statement. Maintainers can customize the form and require other information. Provide enough detail for the maintainers to reproduce and assess the vulnerability.</p>
 </div>
-<p>For more information about the fields available and guidance on filling in the form, see <a href="fix-reported-vulnerabilities/create-repository-advisory.html">Creating a repository security advisory</a> and <a href="../../tutorials/fix-reported-vulnerabilities/write-security-advisories.html">Best practices for writing repository security advisories</a>.</p>
+</li>
+<li>
+<p>Optionally, select <strong>I used AI assistance to find or write up this report</strong>.</p>
 </li>
 <li>
 <p>At the bottom of the form, click <strong>Submit report</strong>. GitHub will display a message letting you know that maintainers have been notified and that you have a pending credit for this security advisory.</p>

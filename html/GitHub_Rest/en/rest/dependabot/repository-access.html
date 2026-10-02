@@ -215,7 +215,8 @@ Default: <code>30</code></p>
 Note</p>
 <p>This operation supports both server-to-server and user-to-server access.<br>
 Unauthorized users will not see the existence of this endpoint.</p>
-<p>Example request body:<br>
+<p>OAuth app tokens and personal access tokens (classic) need the write:org scope to use this endpoint.<br>
+Example request body:<br>
 {<br>
 "repository_ids_to_add": [123, 456],<br>
 "repository_ids_to_remove": [789]<br>
@@ -269,7 +270,8 @@ List of repository IDs to remove.</p>
 <p>'public' - Dependabot will only have access to public repositories, unless access is explicitly granted to non-public repositories.<br>
 'internal' - Dependabot will only have access to public and internal repositories, unless access is explicitly granted to private repositories.</p>
 <p>Unauthorized users will not see the existence of this endpoint.<br>
-This operation supports both server-to-server and user-to-server access.</p>
+This operation supports both server-to-server and user-to-server access.<br>
+OAuth app tokens and personal access tokens (classic) need the write:org scope to use this endpoint.</p>
 <h3 id="parameters-5">Parameters<a href="#parameters-5" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-5">Headers<a href="#headers-5" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>

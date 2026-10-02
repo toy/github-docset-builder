@@ -218,6 +218,7 @@ Default: <code>1</code></p>
 <li><code>organization_custom_properties</code>: string, enum: <code>read</code>, <code>write</code>, <code>admin</code></li>
 <li><code>organization_copilot_seat_management</code>: string, enum: <code>read</code>, <code>write</code></li>
 <li><code>organization_copilot_agent_settings</code>: string, enum: <code>read</code>, <code>write</code></li>
+<li><code>organization_external_properties_for_repos</code>: string, enum: <code>read</code>, <code>write</code>, <code>admin</code></li>
 <li><code>organization_announcement_banners</code>: string, enum: <code>read</code>, <code>write</code></li>
 <li><code>organization_events</code>: string, enum: <code>read</code></li>
 <li><code>organization_hooks</code>: string, enum: <code>read</code>, <code>write</code></li>
@@ -317,8 +318,7 @@ Default: <code>1</code></p>
 <h2 id="add-a-repository-to-an-app-installation" title="PUT /user/installations/{installation_id}/repositories/{repository_id} (Add a repository to an app installation)" data-entry-type="Resource">Add a repository to an app installation<a href="#add-a-repository-to-an-app-installation" aria-label="Link to heading 'Add a repository to an app installation'" data-heading-content="Add a repository to an app installation" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PUT /user/installations/{installation_id}/repositories/{repository_id}
 </span></code></pre>
-<p>Add a single repository to an installation. The authenticated user must have admin access to the repository.<br>
-This endpoint only works for PATs (classic) with the repo scope.</p>
+<p>Add a single repository to an installation. The authenticated user must have admin access to the repository.</p>
 <h3 id="parameters-3">Parameters<a href="#parameters-3" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-3">Headers<a href="#headers-3" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
@@ -363,7 +363,7 @@ The unique identifier of the repository.</p>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">DELETE /user/installations/{installation_id}/repositories/{repository_id}
 </span></code></pre>
 <p>Remove a single repository from an installation. The authenticated user must have admin access to the repository. The installation must have the repository<span data-escaped-char="">_</span>selection of selected.<br>
-This endpoint only works for PATs (classic) with the repo scope.</p>
+To use a PAT (classic) with this endpoint, the repo scope is required</p>
 <h3 id="parameters-4">Parameters<a href="#parameters-4" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-4">Headers<a href="#headers-4" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>

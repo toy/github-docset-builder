@@ -7,7 +7,11 @@
 <p>The following investigative tooling is not available by default when you set up your GitHub enterprise. We strongly recommend enabling these features before any incident occurs.</p>
 <p>These controls are critical for incident response, compliance, and operational transparency. Without them, your team can have major visibility gaps during an investigation, especially for API activity, Git activity, and long-running incidents where you need historical data.</p>
 <h3 id="audit-log-streaming">Audit log streaming<a href="#audit-log-streaming" aria-label="Link to heading 'Audit log streaming'" data-heading-content="Audit log streaming" class="anchor"></a></h3>
-<p>You should stream the enterprise audit logs to a Security Information and Event Management (SIEM) system. This keeps a copy of your audit log data (including both audit events and Git events) in a system where you can run complex queries across large volumes of data and retain data beyond default retention periods.</p>
+<p>You should stream the enterprise audit logs, including API request events, to a Security Information and Event Management (SIEM) system. This keeps a copy of your audit log data (including web, Git and API events) in a system where you can run complex queries across large volumes of data and retain data beyond default retention periods.</p>
+<div class="markdown-alert markdown-alert-important">
+<p class="markdown-alert-title">Important</p>
+<p>Audit log streaming only includes activity from the time you enable it. Enabling it during an incident will not recover earlier activity.</p>
+</div>
 <p>This is critical in an incident because some high-value events are not visible in the GitHub audit log web UI, and logs are only available for a limited time unless you export and retain them externally.</p>
 <p>With streamed logs, enterprise and organization owners can independently investigate activity from users, apps, tokens, and SSH keys, instead of depending on ad hoc data collection during an active response.</p>
 <p>To set up audit log streaming, see <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/streaming-the-audit-log-for-your-enterprise" class="external">Streaming the audit log for your enterprise</a>.</p>
@@ -18,8 +22,8 @@
 <p>By default, GitHub doesn't show source IP addresses in the enterprise audit log. During an investigation, source IPs help you verify whether activity from an actor (a user or app) came from a trusted or unfamiliar address.</p>
 <p>Enterprises on GitHub Enterprise Cloud can enable IP address disclosure, see <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/displaying-ip-addresses-in-the-audit-log-for-your-enterprise" class="external">Displaying IP addresses in the audit log for your enterprise</a>.</p>
 <h3 id="retain-identity-provider-logs">Retain identity provider logs<a href="#retain-identity-provider-logs" aria-label="Link to heading 'Retain identity provider logs'" data-heading-content="Retain identity provider logs" class="anchor"></a></h3>
-<p>If your enterprise uses SAML or OIDC authentication, adopt a similar retention strategy for your IdP logs.</p>
-<p>Retained IdP logs help you investigate authentication activity and review provisioning and deprovisioning events over longer time windows, including incidents that unfold over months.</p>
+<p>If your enterprise or organizations use SAML or OIDC authentication, adopt a similar retention strategy for your identity provider (IdP) logs.</p>
+<p>Retained IdP logs help you investigate authentication activity and review provisioning, deprovisioning, and group membership changes over longer time windows. This is especially important if you use SCIM provisioning or need to investigate activity from several months ago.</p>
 <h2 id="familiarize-yourself-with-tooling-limitations-and-common-investigation-areas" title="Familiarize yourself with tooling, limitations and common investigation areas" data-entry-type="Section">Familiarize yourself with tooling, limitations and common investigation areas<a href="#familiarize-yourself-with-tooling-limitations-and-common-investigation-areas" aria-label="Link to heading 'Familiarize yourself with tooling, limitations and common investigation areas'" data-heading-content="Familiarize yourself with tooling, limitations and common investigation areas" class="anchor"></a></h2>
 <p>Before an incident occurs, review the GitHub tools and surfaces you can use during an investigation, and understand each tool's capabilities and limitations.</p>
 <p>Familiarize yourself with:</p>

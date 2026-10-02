@@ -973,19 +973,9 @@
 <td align="center">&gt;=.NET Core 3.1</td>
 </tr>
 <tr>
-<td></td>
-<td></td>
-<td align="center"></td>
-</tr>
-<tr>
 <td>Helm Charts</td>
 <td><code>helm</code></td>
 <td align="center">v3</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td align="center"></td>
 </tr>
 <tr>
 <td>Hex</td>
@@ -1384,6 +1374,7 @@
 <li>At the top level, where you define the private registries you want to use and their access information, see <a href="../../how-tos/secure-your-supply-chain/manage-your-dependency-security/configure-access-to-private-registries.html">Configuring access to private registries for Dependabot</a>.</li>
 <li>Within the <code>updates</code> blocks, where you can specify which private registries each package manager should use.</li>
 </ol>
+<p>Each <code>updates</code> block can reference up to 100 registries from the top-level <code>registries</code> section.</p>
 <p>Dependabot default behavior is to raise pull requests only to update dependencies stored in publicly accessible registries.</p>
 <p>When the Dependabot configuration file has a top-level <code>registries</code> section, defining access to one or more private registries, you can configure each <code>package-ecosystem</code> to use one or more of these private registries.</p>
 <p>When <code>registries</code> is defined for a package manager:</p>
@@ -1415,16 +1406,8 @@
 <td>Specify the time to run.</td>
 </tr>
 <tr>
-<td></td>
-<td></td>
-</tr>
-<tr>
 <td><a href="#cronjob"><code>cronjob</code></a></td>
 <td>Defines the cron expression if the interval type is <code>cron</code>.</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
 </tr>
 <tr>
 <td><a href="#timezone"><code>timezone</code></a></td>
@@ -1448,7 +1431,7 @@
 <p class="markdown-alert-title">Note</p>
 <p>The supported values <code>quarterly</code>, <code>semiannually</code>, and <code>yearly</code> are only available on GitHub Enterprise Server from version 3.19.</p>
 </div>
-<p>By default, Dependabot randomly assigns a time to apply all the updates in the configuration file. You can use the <code>time</code> and <code>timezone</code> parameters to set a specific runtime for all intervals.  If you use a <code>cron</code> interval, you can define the update time with a <code>cronjob</code> expression.</p>
+<p>By default, Dependabot randomly assigns a time to apply all the updates in the configuration file. You can use the <code>time</code> and <code>timezone</code> parameters to set a specific runtime for all intervals. If you use a <code>cron</code> interval, you can define the update time with a <code>cronjob</code> expression.</p>
 <h3 id="day"><code>day</code><a href="#day" aria-label="Link to heading 'day'" data-heading-content="day" class="anchor"></a></h3>
 <p>Supported values: <code>monday</code>, <code>tuesday</code>, <code>wednesday</code>, <code>thursday</code>, <code>friday</code>, <code>saturday</code>, or <code>sunday</code></p>
 <p>Optionally, run <strong>weekly</strong> updates for a package manager on a specific day of the week.</p>
@@ -1853,22 +1836,10 @@
 <td><code>my-org/my-action@v1.0.0-beta.1</code>, <code>my-org/deploy@v2.0.0-rc1</code>, <code>my-org/lint@v3.0.0-alpha</code></td>
 </tr>
 <tr>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
 <td>Helm Charts</td>
 <td><code>helm</code></td>
 <td>Any SemVer prerelease identifier (commonly <code>alpha</code>, <code>beta</code>, <code>rc</code>)</td>
 <td><code>ingress-nginx@4.11.0-beta.0</code>, <code>cert-manager@1.15.0-alpha.1</code>, <code>prometheus@25.0.0-rc1</code></td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 </tr>
 <tr>
 <td>Hex</td>
@@ -2116,7 +2087,8 @@
 <!-- markdownlint-enable outdated-release-phase-terminology -->
 <h2 id="top-level-registries-key" title="Top-level registries key" data-entry-type="Section">Top-level <code>registries</code> key<a href="#top-level-registries-key" aria-label="Link to heading 'Top-level registries key'" data-heading-content="Top-level registries key" class="anchor"></a></h2>
 <p>Specify authentication details that Dependabot can use to access private package registries, including registries hosted by GitLab or Bitbucket.</p>
-<p>The value of the <code>registries</code> key is an associative array, each element of which consists of a key that identifies a particular registry and a value which is an associative array that specifies the settings required to access that registry. The following <code>dependabot.yml</code> file configures a registry identified as <code>dockerhub</code> in the <code>registries</code> section of the file and then references this in the <code>updates</code> section of the file.</p>
+<p>The value of the <code>registries</code> key is an associative array, each element of which consists of a key that identifies a particular registry and a value which is an associative array that specifies the settings required to access that registry. You can define up to 100 registries in the top-level <code>registries</code> section.</p>
+<p>The following <code>dependabot.yml</code> file configures a registry identified as <code>dockerhub</code> in the <code>registries</code> section of the file and then references this in the <code>updates</code> section of the file.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># Minimal settings to update dependencies stored in one private registry
 </span><span style="color:#c0c5ce;">
 </span><span style="color:#bf616a;">version</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">2

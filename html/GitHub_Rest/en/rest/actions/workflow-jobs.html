@@ -119,13 +119,15 @@ The unique identifier of the job.</p>
 </span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/actions/jobs/JOB_ID/logs
 </span></code></pre>
 <p><strong>Response schema (Status: 302):</strong></p>
-<h2 id="list-jobs-for-a-workflow-run-attempt" title="GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/jobs (List jobs for a workflow run attempt)" data-entry-type="Resource">List jobs for a workflow run attempt<a href="#list-jobs-for-a-workflow-run-attempt" aria-label="Link to heading 'List jobs for a workflow run attempt'" data-heading-content="List jobs for a workflow run attempt" class="anchor"></a></h2>
-<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/jobs
+<h2 id="download-step-logs-for-a-workflow-run-job" title="GET /repos/{owner}/{repo}/actions/jobs/{job_id}/steps/{step_number}/logs (Download step logs for a workflow run job)" data-entry-type="Resource">Download step logs for a workflow run job<a href="#download-step-logs-for-a-workflow-run-job" aria-label="Link to heading 'Download step logs for a workflow run job'" data-heading-content="Download step logs for a workflow run job" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /repos/{owner}/{repo}/actions/jobs/{job_id}/steps/{step_number}/logs
 </span></code></pre>
-<p>Lists jobs for a specific workflow run attempt. You can use parameters to narrow the list of results. For more information<br>
-about using parameters, see Parameters.<br>
+<p>Gets a redirect URL to download a plain text file of logs for a specific step of a workflow job. This link expires after<br>
+1 minute. Look for Location: in the response header to find the URL for the download.<br>
+This endpoint is intended for selective retrieval of one step. To download complete job logs, use the<br>
+job logs endpoint.<br>
 Anyone with read access to the repository can use this endpoint.<br>
-OAuth app tokens and personal access tokens (classic) need the repo scope to use this endpoint  with a private repository.</p>
+If the repository is private, OAuth tokens and personal access tokens (classic) need the repo scope to use this endpoint.</p>
 <h3 id="parameters-2">Parameters<a href="#parameters-2" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-2">Headers<a href="#headers-2" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
@@ -133,6 +135,50 @@ OAuth app tokens and personal access tokens (classic) need the repo scope to use
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
 <h4 id="path-and-query-parameters-2">Path and query parameters<a href="#path-and-query-parameters-2" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>job_id</code></strong> (integer) (required)<br>
+The unique identifier of the job.</p>
+</li>
+<li>
+<p><strong><code>step_number</code></strong> (integer) (required)<br>
+The zero-based position number of the step in the job.</p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-2">HTTP response status codes<a href="#http-response-status-codes-2" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li><strong>302</strong> - Found</li>
+</ul>
+<h3 id="code-examples-2">Code examples<a href="#code-examples-2" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-2">Example<a href="#example-2" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X GET \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/actions/jobs/JOB_ID/steps/STEP_NUMBER/logs
+</span></code></pre>
+<p><strong>Response schema (Status: 302):</strong></p>
+<h2 id="list-jobs-for-a-workflow-run-attempt" title="GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/jobs (List jobs for a workflow run attempt)" data-entry-type="Resource">List jobs for a workflow run attempt<a href="#list-jobs-for-a-workflow-run-attempt" aria-label="Link to heading 'List jobs for a workflow run attempt'" data-heading-content="List jobs for a workflow run attempt" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/jobs
+</span></code></pre>
+<p>Lists jobs for a specific workflow run attempt. You can use parameters to narrow the list of results. For more information<br>
+about using parameters, see Parameters.<br>
+Anyone with read access to the repository can use this endpoint.<br>
+OAuth app tokens and personal access tokens (classic) need the repo scope to use this endpoint  with a private repository.</p>
+<h3 id="parameters-3">Parameters<a href="#parameters-3" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-3">Headers<a href="#headers-3" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-3">Path and query parameters<a href="#path-and-query-parameters-3" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -161,7 +207,7 @@ The page number of the results to fetch. For more information, see "Using pagina
 Default: <code>1</code></p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-2">HTTP response status codes<a href="#http-response-status-codes-2" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-3">HTTP response status codes<a href="#http-response-status-codes-3" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>200</strong> - OK</p>
@@ -170,8 +216,8 @@ Default: <code>1</code></p>
 <p><strong>404</strong> - Resource not found</p>
 </li>
 </ul>
-<h3 id="code-examples-2">Code examples<a href="#code-examples-2" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-2">Example<a href="#example-2" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-3">Code examples<a href="#code-examples-3" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-3">Example<a href="#example-3" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
@@ -224,13 +270,13 @@ Default: <code>1</code></p>
 about using parameters, see Parameters.<br>
 Anyone with read access to the repository can use this endpoint.<br>
 OAuth app tokens and personal access tokens (classic) need the repo scope to use this endpoint with a private repository.</p>
-<h3 id="parameters-3">Parameters<a href="#parameters-3" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-3">Headers<a href="#headers-3" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-4">Parameters<a href="#parameters-4" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-4">Headers<a href="#headers-4" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-3">Path and query parameters<a href="#path-and-query-parameters-3" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-4">Path and query parameters<a href="#path-and-query-parameters-4" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -261,12 +307,12 @@ The page number of the results to fetch. For more information, see "Using pagina
 Default: <code>1</code></p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-3">HTTP response status codes<a href="#http-response-status-codes-3" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-4">HTTP response status codes<a href="#http-response-status-codes-4" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li><strong>200</strong> - OK</li>
 </ul>
-<h3 id="code-examples-3">Code examples<a href="#code-examples-3" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-3">Example<a href="#example-3" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-4">Code examples<a href="#code-examples-4" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-4">Example<a href="#example-4" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \

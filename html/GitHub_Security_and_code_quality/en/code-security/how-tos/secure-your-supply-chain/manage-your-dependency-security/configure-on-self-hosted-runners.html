@@ -9,18 +9,18 @@
 <ol>
 <li>Provision self-hosted runners, at the repository or organization level. For more information, see <a href="https://docs.github.com/en/actions/concepts/runners/self-hosted-runners" class="external">Self-hosted runners</a> and <a href="https://docs.github.com/en/actions/how-tos/manage-runners/self-hosted-runners/add-runners" class="external">Adding self-hosted runners</a>.</li>
 <li>Configure your environment and runners to meet the requirements for Dependabot. See <a href="../../../reference/supply-chain-security/dependabot-on-actions.html#requirements-for-using-dependabot-with-self-hosted-runners">Requirements for using Dependabot with self-hosted runners</a>.</li>
-<li>If you are configuring self-hosted runners for your organization, you can create and assign a custom label for your runners. Otherwise, if you are configuring self-hosted runners for a standalone repository, you need to apply the <code>dependabot</code> label. See <a href="https://docs.github.com/en/actions/how-tos/manage-runners/self-hosted-runners/apply-labels" class="external">Using labels with self-hosted runners</a>.</li>
+<li>Assign the default <code>dependabot</code> label or a custom label to each runner you want Dependabot to use. See <a href="https://docs.github.com/en/actions/how-tos/manage-runners/self-hosted-runners/apply-labels" class="external">Using labels with self-hosted runners</a>.</li>
 <li>Optionally, enable workflows triggered by Dependabot to use more than read-only permissions and to have access to any secrets that are normally available. For more information, see <a href="../../../reference/supply-chain-security/troubleshoot-dependabot/dependabot-on-actions.html">Troubleshooting Dependabot on GitHub Actions</a>.</li>
 </ol>
-<h2 id="enabling-self-hosted-runners-for-dependabot-updates" title="Enabling self-hosted runners for Dependabot updates" data-entry-type="Section">Enabling self-hosted runners for Dependabot updates<a href="#enabling-self-hosted-runners-for-dependabot-updates" aria-label="Link to heading 'Enabling self-hosted runners for Dependabot updates'" data-heading-content="Enabling self-hosted runners for Dependabot updates" class="anchor"></a></h2>
+<h2 id="configuring-self-hosted-runners-for-dependabot-updates" title="Configuring self-hosted runners for Dependabot updates" data-entry-type="Section">Configuring self-hosted runners for Dependabot updates<a href="#configuring-self-hosted-runners-for-dependabot-updates" aria-label="Link to heading 'Configuring self-hosted runners for Dependabot updates'" data-heading-content="Configuring self-hosted runners for Dependabot updates" class="anchor"></a></h2>
 <div class="markdown-alert markdown-alert-warning">
 <p class="markdown-alert-title">Warning</p>
-<p>Before enabling "Dependabot on self-hosted runners", ensure that your self-hosted runners or larger runners are configured with the runner label used by Dependabot (by default, <code>dependabot</code>). When this setting is enabled, Dependabot jobs will only run on runners with this label. If no runners with this label are available, jobs will remain queued indefinitely. See <a href="../../../concepts/supply-chain-security/dependabot-on-actions.html#how-runner-settings-interact">Dependabot on GitHub Actions runners</a>.</p>
+<p>Before selecting <strong>Labeled runner</strong>, make sure a runner has the label you plan to use. If you specify a runner group, make sure the group exists and the repository can access it. See <a href="../../../concepts/supply-chain-security/dependabot-on-actions.html#how-runner-settings-interact">Dependabot on GitHub Actions runners</a>.</p>
 </div>
-<p>Once you have configured self-hosted runners for Dependabot updates, you can enable or disable Dependabot updates on self-hosted runners at the organization or repository level.</p>
+<p>Once you have configured self-hosted runners for Dependabot updates, you can select them at the organization or repository level.</p>
 <div class="markdown-alert markdown-alert-note">
 <p class="markdown-alert-title">Note</p>
-<p>Disabling and re-enabling the "Dependabot on self-hosted runners" setting does not trigger a new Dependabot run.</p>
+<p>Changing the runner setting does not trigger a new Dependabot run.</p>
 </div>
 <h3 id="for-your-private-repository">For your private repository<a href="#for-your-private-repository" aria-label="Link to heading 'For your private repository'" data-heading-content="For your private repository" class="anchor"></a></h3>
 <ol>
@@ -35,10 +35,19 @@
 <p>In the "Security and quality" section of the sidebar, click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-codescan" aria-label="codescan" role="img"><path d="M8.47 4.97a.75.75 0 0 0 0 1.06L9.94 7.5 8.47 8.97a.75.75 0 1 0 1.06 1.06l2-2a.75.75 0 0 0 0-1.06l-2-2a.75.75 0 0 0-1.06 0ZM6.53 6.03a.75.75 0 0 0-1.06-1.06l-2 2a.75.75 0 0 0 0 1.06l2 2a.75.75 0 1 0 1.06-1.06L5.06 7.5l1.47-1.47Z"></path><path d="M12.246 13.307a7.501 7.501 0 1 1 1.06-1.06l2.474 2.473a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM1.5 7.5a6.002 6.002 0 0 0 3.608 5.504 6.002 6.002 0 0 0 6.486-1.117.748.748 0 0 1 .292-.293A6 6 0 1 0 1.5 7.5Z"></path></svg> Advanced Security</strong>.</p>
 </li>
 <li>
-<p>Under "Dependabot", to the right of "Dependabot on self-hosted runners", click <strong>Enable</strong> to enable the feature or <strong>Disable</strong> to disable it.</p>
+<p>Under "Dependency scanning", in the "Dependabot version updates" section, next to "Runner type", click <svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-pencil" aria-label="Edit runner type" role="img"><path d="M11.013 1.427a1.75 1.75 0 0 1 2.474 0l1.086 1.086a1.75 1.75 0 0 1 0 2.474l-8.61 8.61c-.21.21-.47.364-.756.445l-3.251.93a.75.75 0 0 1-.927-.928l.929-3.25c.081-.286.235-.547.445-.758l8.61-8.61Zm.176 4.823L9.75 4.81l-6.286 6.287a.253.253 0 0 0-.064.108l-.558 1.953 1.953-.558a.253.253 0 0 0 .108-.064Zm1.238-3.763a.25.25 0 0 0-.354 0L10.811 3.75l1.439 1.44 1.263-1.263a.25.25 0 0 0 0-.354Z"></path></svg>.</p>
+</li>
+<li>
+<p>From the "Runner type" dropdown menu, select <strong>Labeled runner</strong>.</p>
+</li>
+<li>
+<p>Optionally, enter a runner group name and a custom runner label. If you do not enter a label, Dependabot uses the <code>dependabot</code> label.</p>
+</li>
+<li>
+<p>Click <strong>Save runner selection</strong>.</p>
 <div class="markdown-alert markdown-alert-note">
 <p class="markdown-alert-title">Note</p>
-<p>If you do not see the option to enable Dependabot on self-hosted runners, your organization may have configured a policy to restrict actions and self-hosted runners from running in specific repositories. Contact your organization owner for more information.</p>
+<p>If you cannot change the runner setting, your organization may restrict actions and self-hosted runners for the repository. Contact your organization owner for more information.</p>
 </div>
 </li>
 </ol>

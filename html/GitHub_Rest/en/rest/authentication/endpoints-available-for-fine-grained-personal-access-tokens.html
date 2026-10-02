@@ -1,5 +1,5 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><title>Endpoints available for fine-grained personal access tokens</title><link rel="stylesheet" href="../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../index.html">REST API</a> / <a href="index.html">Authentication</a> / </nav><h1 id="endpoints-available-for-fine-grained-personal-access-tokens">Endpoints available for fine-grained personal access tokens<a href="#endpoints-available-for-fine-grained-personal-access-tokens" aria-label="Link to heading 'Endpoints available for fine-grained personal access tokens'" data-heading-content="Endpoints available for fine-grained personal access tokens" class="anchor"></a></h1>
-<p>Your {% data variables.product.pat<span data-escaped-char="">_</span>v2 %} can make requests to the following REST endpoints.</p>
+<p>Your fine-grained personal access token can make requests to the following REST endpoints.</p>
 <h2 id="actions" title="actions" data-entry-type="Section">actions<a href="#actions" aria-label="Link to heading 'actions'" data-heading-content="actions" class="anchor"></a></h2>
 <ul>
 <li>
@@ -349,6 +349,9 @@
 </li>
 <li>
 <p><a href="../actions/workflow-runs.html#re-run-a-job-from-a-workflow-run"><code>POST /repos/{owner}/{repo}/actions/jobs/{job_id}/rerun</code></a></p>
+</li>
+<li>
+<p><a href="../actions/workflow-jobs.html#download-step-logs-for-a-workflow-run-job"><code>GET /repos/{owner}/{repo}/actions/jobs/{job_id}/steps/{step_number}/logs</code></a></p>
 </li>
 <li>
 <p><a href="../actions/oidc.html#get-the-customization-template-for-an-oidc-subject-claim-for-a-repository"><code>GET /repos/{owner}/{repo}/actions/oidc/customization/sub</code></a></p>
@@ -733,6 +736,15 @@
 </li>
 <li>
 <p><a href="../agents/variables.html#delete-a-repository-variable"><code>DELETE /repos/{owner}/{repo}/agents/variables/{name}</code></a></p>
+</li>
+</ul>
+<h2 id="apps" title="apps" data-entry-type="Section">apps<a href="#apps" aria-label="Link to heading 'apps'" data-heading-content="apps" class="anchor"></a></h2>
+<ul>
+<li>
+<p><a href="../apps/installations.html#add-a-repository-to-an-app-installation"><code>PUT /user/installations/{installation_id}/repositories/{repository_id}</code></a></p>
+</li>
+<li>
+<p><a href="../apps/installations.html#remove-a-repository-from-an-app-installation"><code>DELETE /user/installations/{installation_id}/repositories/{repository_id}</code></a></p>
 </li>
 </ul>
 <h2 id="billing" title="billing" data-entry-type="Section">billing<a href="#billing" aria-label="Link to heading 'billing'" data-heading-content="billing" class="anchor"></a></h2>
@@ -1788,6 +1800,15 @@
 <p><a href="../issues/sub-issues.html#get-parent-issue"><code>GET /repos/{owner}/{repo}/issues/{issue_number}/parent</code></a></p>
 </li>
 <li>
+<p><a href="../issues/issues.html#list-issues-related-to-an-issue"><code>GET /repos/{owner}/{repo}/issues/{issue_number}/relates_to</code></a></p>
+</li>
+<li>
+<p><a href="../issues/issues.html#add-a-related-issue"><code>POST /repos/{owner}/{repo}/issues/{issue_number}/relates_to</code></a></p>
+</li>
+<li>
+<p><a href="../issues/issues.html#remove-a-related-issue"><code>DELETE /repos/{owner}/{repo}/issues/{issue_number}/relates_to/{issue_id}</code></a></p>
+</li>
+<li>
 <p><a href="../issues/sub-issues.html#remove-sub-issue"><code>DELETE /repos/{owner}/{repo}/issues/{issue_number}/sub_issue</code></a></p>
 </li>
 <li>
@@ -2124,6 +2145,12 @@
 </li>
 <li>
 <p><a href="../orgs/outside-collaborators.html#remove-outside-collaborator-from-an-organization"><code>DELETE /orgs/{org}/outside_collaborators/{username}</code></a></p>
+</li>
+<li>
+<p><a href="../orgs/custom-properties.html#get-registered-app-installations-for-external-custom-properties"><code>GET /orgs/{org}/properties/installations</code></a></p>
+</li>
+<li>
+<p><a href="../orgs/custom-properties.html#register-an-app-installation-for-external-custom-properties"><code>POST /orgs/{org}/properties/installations</code></a></p>
 </li>
 <li>
 <p><a href="../orgs/custom-properties.html#get-all-custom-properties-for-an-organization"><code>GET /orgs/{org}/properties/schema</code></a></p>

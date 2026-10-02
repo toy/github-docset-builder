@@ -64,4 +64,7 @@
 </ol>
 <p>Your changes are saved automatically and begin to propagate immediately. In large organizations, it can take several minutes for the changes to apply across all repositories.</p>
 <p>If you're rolling out the feature across many teams, we recommend you pilot on a small group and tune your quality thresholds before you enable everywhere. See <a href="roll-out-at-scale.html">Rolling out GitHub Code Quality at scale</a>.</p>
+<h2 id="scan-frequency-after-enablement" title="Scan frequency after enablement" data-entry-type="Section">Scan frequency after enablement<a href="#scan-frequency-after-enablement" aria-label="Link to heading 'Scan frequency after enablement'" data-heading-content="Scan frequency after enablement" class="anchor"></a></h2>
+<p>When you enable Code Quality, an initial CodeQL scan runs on the default branch. Weekly scheduled CodeQL scans start only after a push or pull request triggers a scan. Pushes and pull requests from before enablement do not count as activity.</p>
+<p>Weekly scheduled scans pause if no push or pull request has triggered a scan in the last 180 days. Initial scans, scans triggered by configuration or language changes, and scheduled scans do not count as activity. A new push- or pull-request-triggered scan resumes the weekly schedule.</p>
 <footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>
