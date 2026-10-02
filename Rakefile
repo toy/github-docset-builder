@@ -384,9 +384,7 @@ private
         end
       end
 
-      if path =~ path_r
-        abort "unknown path #{path}" unless link_path = known_paths[path]
-
+      if path =~ path_r && (link_path = known_paths[path])
         a['href'] = "#{relative_path(link_path, relative_file_path)}#{anchor}"
       else
         a['href'] = "https://docs.github.com#{href}"
@@ -418,10 +416,14 @@ private
       json.breadcrumbs[...-1].each do |breadcrumb|
         path = breadcrumb['href']
         title = breadcrumb['title']
-        abort "unknown path #{path}" unless link_path = known_paths[path]
 
         a = Nokogiri::XML::Node.new('a', fragment)
-        a['href'] = relative_path(link_path, relative_file_path)
+        if (link_path = known_paths[path])
+          a['href'] = relative_path(link_path, relative_file_path)
+        else
+          a['href'] = "https://docs.github.com#{path}"
+          a['class'] = 'external'
+        end
         a.content = title
 
         nav.add_child(a)
