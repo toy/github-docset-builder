@@ -79,6 +79,8 @@ Default: <code>1</code></p>
 <li><strong>object</strong></li>
 <li><strong>object</strong></li>
 <li><strong>object</strong></li>
+<li><strong>object</strong></li>
+<li><strong>object</strong></li>
 </ul>
 <h2 id="get-all-repository-rulesets" title="GET /repos/{owner}/{repo}/rulesets (Get all repository rulesets)" data-entry-type="Resource">Get all repository rulesets<a href="#get-all-repository-rulesets" aria-label="Link to heading 'Get all repository rulesets'" data-heading-content="Get all repository rulesets" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /repos/{owner}/{repo}/rulesets
@@ -600,7 +602,7 @@ Can be one of: <code>errors</code>, <code>warnings</code>, <code>notes</code>, <
 </ul>
 </li>
 <li><strong><code>code_coverage</code></strong> (object)<br>
-Enforce minimum line coverage thresholds on pull requests. When configured, uploaded coverage data must meet the specified criteria before changes can be merged.
+Enforce minimum line coverage thresholds on pull requests. This rule evaluates uploaded coverage data but does not wait for coverage uploads. To ensure coverage is evaluated before merging, make each status check associated with a coverage upload a required status check.
 <ul>
 <li><strong><code>type</code></strong> (string) (required)<br>
 Can be one of: <code>code_coverage</code></li>
@@ -1257,7 +1259,7 @@ Can be one of: <code>errors</code>, <code>warnings</code>, <code>notes</code>, <
 </ul>
 </li>
 <li><strong><code>code_coverage</code></strong> (object)<br>
-Enforce minimum line coverage thresholds on pull requests. When configured, uploaded coverage data must meet the specified criteria before changes can be merged.
+Enforce minimum line coverage thresholds on pull requests. This rule evaluates uploaded coverage data but does not wait for coverage uploads. To ensure coverage is evaluated before merging, make each status check associated with a coverage upload a required status check.
 <ul>
 <li><strong><code>type</code></strong> (string) (required)<br>
 Can be one of: <code>code_coverage</code></li>

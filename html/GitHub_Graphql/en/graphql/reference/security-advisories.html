@@ -59,9 +59,11 @@
 <li><code>epssPercentile</code> (Float): The EPSS percentile to filter advisories by.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>identifier</code> (SecurityAdvisoryIdentifierFilter): Filter advisories by identifier, e.g. GHSA or CVE.</li>
+<li><code>isWithdrawn</code> (Boolean): Filter advisories by withdrawn status. True returns only withdrawn advisories. False excludes withdrawn advisories.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
 <li><code>orderBy</code> (SecurityAdvisoryOrder): Ordering options for the returned topics.</li>
 <li><code>publishedSince</code> (DateTime): Filter advisories to those published since a time in the past.</li>
+<li><code>severities</code> ([SecurityAdvisorySeverity!]): A list of advisory severities to filter advisories by.</li>
 <li><code>updatedSince</code> (DateTime): Filter advisories to those updated since a time in the past.</li>
 </ul>
 <h2 id="securityadvisory---object" title="SecurityAdvisory - object" data-entry-type="Section">SecurityAdvisory - object<a href="#securityadvisory---object" aria-label="Link to heading 'SecurityAdvisory - object'" data-heading-content="SecurityAdvisory - object" class="anchor"></a></h2>
@@ -71,6 +73,9 @@
 <ul>
 <li>
 <p><code>classification</code> (SecurityAdvisoryClassification!): The classification of the advisory.</p>
+</li>
+<li>
+<p><code>cveId</code> (String): The Common Vulnerabilities and Exposures ID.</p>
 </li>
 <li>
 <p><code>cvss</code> (CVSS!): The CVSS associated with this advisory. <strong>Deprecated:</strong> cvss will be removed. New cvss_severities field will now contain both cvss_v3 and cvss_v4 properties. Removal on 2025-10-01 UTC.</p>
@@ -94,6 +99,9 @@
 <p><code>ghsaId</code> (String!): The GitHub Security Advisory ID.</p>
 </li>
 <li>
+<p><code>githubReviewedAt</code> (DateTime): When the GitHub Security team reviewed this advisory, which may differ from when GitHub published it.</p>
+</li>
+<li>
 <p><code>id</code> (ID!): The Node ID of the SecurityAdvisory object.</p>
 </li>
 <li>
@@ -101,6 +109,9 @@
 </li>
 <li>
 <p><code>notificationsPermalink</code> (URI): The permalink for the advisory's dependabot alerts page.</p>
+</li>
+<li>
+<p><code>nvdPublishedAt</code> (DateTime): When NVD published its advisory record, independent of GitHub's publishing timeline.</p>
 </li>
 <li>
 <p><code>origin</code> (String!): The organization that originated the advisory.</p>
@@ -115,7 +126,13 @@
 <p><code>references</code> ([SecurityAdvisoryReference!]!): A list of references for this advisory.</p>
 </li>
 <li>
+<p><code>repositoryAdvisoryUrl</code> (URI): The URL for the associated repository security advisory, if this global advisory is linked to a repository-level advisory.</p>
+</li>
+<li>
 <p><code>severity</code> (SecurityAdvisorySeverity!): The severity of the advisory.</p>
+</li>
+<li>
+<p><code>sourceCodeLocation</code> (URI): URL to the upstream source code relevant to the advisory.</p>
 </li>
 <li>
 <p><code>summary</code> (String!): A short plaintext summary of the advisory.</p>

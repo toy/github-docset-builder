@@ -94,7 +94,8 @@ Whether actions must be pinned to a full-length commit SHA.</p>
 <h2 id="get-artifact-and-log-retention-settings-for-an-organization" title="GET /orgs/{org}/actions/permissions/artifact-and-log-retention (Get artifact and log retention settings for an organization)" data-entry-type="Resource">Get artifact and log retention settings for an organization<a href="#get-artifact-and-log-retention-settings-for-an-organization" aria-label="Link to heading 'Get artifact and log retention settings for an organization'" data-heading-content="Get artifact and log retention settings for an organization" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /orgs/{org}/actions/permissions/artifact-and-log-retention
 </span></code></pre>
-<p>Gets artifact and log retention settings for an organization.<br>
+<p>Gets retention settings for checks, workflow runs, commit statuses, artifacts, and logs for an organization.<br>
+Checks include check suites, check runs, and check annotations. These settings also apply to checks and commit statuses created by third-party integrations, and are not limited to data created by GitHub Actions.<br>
 OAuth app tokens and personal access tokens (classic) need the admin:org scope or the "Actions policies" fine-grained permission to use this endpoint.</p>
 <h3 id="parameters-2">Parameters<a href="#parameters-2" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-2">Headers<a href="#headers-2" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
@@ -134,7 +135,8 @@ The organization name. The name is not case sensitive.</li>
 <h2 id="set-artifact-and-log-retention-settings-for-an-organization" title="PUT /orgs/{org}/actions/permissions/artifact-and-log-retention (Set artifact and log retention settings for an organization)" data-entry-type="Resource">Set artifact and log retention settings for an organization<a href="#set-artifact-and-log-retention-settings-for-an-organization" aria-label="Link to heading 'Set artifact and log retention settings for an organization'" data-heading-content="Set artifact and log retention settings for an organization" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PUT /orgs/{org}/actions/permissions/artifact-and-log-retention
 </span></code></pre>
-<p>Sets artifact and log retention settings for an organization.<br>
+<p>Sets retention settings for checks, workflow runs, commit statuses, artifacts, and logs for an organization.<br>
+Checks include check suites, check runs, and check annotations. These settings also apply to checks and commit statuses created by third-party integrations, and are not limited to data created by GitHub Actions.<br>
 OAuth app tokens and personal access tokens (classic) need the admin:org scope or the "Actions policies" fine-grained permission to use this endpoint.</p>
 <h3 id="parameters-3">Parameters<a href="#parameters-3" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-3">Headers<a href="#headers-3" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
@@ -150,7 +152,7 @@ The organization name. The name is not case sensitive.</li>
 <h4 id="body-parameters-1">Body parameters<a href="#body-parameters-1" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
 <ul>
 <li><strong><code>days</code></strong> (integer) (required)<br>
-The number of days to retain artifacts and logs</li>
+The number of days to retain checks, workflow runs, commit statuses, artifacts, and logs</li>
 </ul>
 <h3 id="http-response-status-codes-3">HTTP response status codes<a href="#http-response-status-codes-3" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
@@ -1457,7 +1459,8 @@ Can be one of: <code>none</code>, <code>user</code>, <code>organization</code></
 <h2 id="get-artifact-and-log-retention-settings-for-a-repository" title="GET /repos/{owner}/{repo}/actions/permissions/artifact-and-log-retention (Get artifact and log retention settings for a repository)" data-entry-type="Resource">Get artifact and log retention settings for a repository<a href="#get-artifact-and-log-retention-settings-for-a-repository" aria-label="Link to heading 'Get artifact and log retention settings for a repository'" data-heading-content="Get artifact and log retention settings for a repository" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /repos/{owner}/{repo}/actions/permissions/artifact-and-log-retention
 </span></code></pre>
-<p>Gets artifact and log retention settings for a repository.<br>
+<p>Gets retention settings for checks, workflow runs, commit statuses, artifacts, and logs for a repository.<br>
+Checks include check suites, check runs, and check annotations. These settings also apply to checks and commit statuses created by third-party integrations, and are not limited to data created by GitHub Actions.<br>
 OAuth app tokens and personal access tokens (classic) need the repo scope to use this endpoint.</p>
 <h3 id="parameters-26">Parameters<a href="#parameters-26" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-26">Headers<a href="#headers-26" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
@@ -1497,7 +1500,8 @@ The name of the repository without the .git extension. The name is not case sens
 <h2 id="set-artifact-and-log-retention-settings-for-a-repository" title="PUT /repos/{owner}/{repo}/actions/permissions/artifact-and-log-retention (Set artifact and log retention settings for a repository)" data-entry-type="Resource">Set artifact and log retention settings for a repository<a href="#set-artifact-and-log-retention-settings-for-a-repository" aria-label="Link to heading 'Set artifact and log retention settings for a repository'" data-heading-content="Set artifact and log retention settings for a repository" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PUT /repos/{owner}/{repo}/actions/permissions/artifact-and-log-retention
 </span></code></pre>
-<p>Sets artifact and log retention settings for a repository.<br>
+<p>Sets retention settings for checks, workflow runs, commit statuses, artifacts, and logs for a repository.<br>
+Checks include check suites, check runs, and check annotations. These settings also apply to checks and commit statuses created by third-party integrations, and are not limited to data created by GitHub Actions.<br>
 OAuth app tokens and personal access tokens (classic) need the repo scope to use this endpoint.</p>
 <h3 id="parameters-27">Parameters<a href="#parameters-27" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-27">Headers<a href="#headers-27" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
@@ -1519,7 +1523,7 @@ The name of the repository without the .git extension. The name is not case sens
 <h4 id="body-parameters-11">Body parameters<a href="#body-parameters-11" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
 <ul>
 <li><strong><code>days</code></strong> (integer) (required)<br>
-The number of days to retain artifacts and logs</li>
+The number of days to retain checks, workflow runs, commit statuses, artifacts, and logs</li>
 </ul>
 <h3 id="http-response-status-codes-27">HTTP response status codes<a href="#http-response-status-codes-27" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>

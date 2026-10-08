@@ -12,6 +12,18 @@
 <li><code>mergeQueue</code> (MergeQueue): The merge queue where this pull request was added to.</li>
 <li><code>pullRequest</code> (PullRequest): PullRequest referenced by event.</li>
 </ul>
+<h2 id="addedtostackevent---object" title="AddedToStackEvent - object" data-entry-type="Section">AddedToStackEvent - object<a href="#addedtostackevent---object" aria-label="Link to heading 'AddedToStackEvent - object'" data-heading-content="AddedToStackEvent - object" class="anchor"></a></h2>
+<p>Represents anadded_to_stackevent on a given pull request.</p>
+<p><strong>Implements:</strong> Node</p>
+<h3 id="fields-for-addedtostackevent">Fields for <code>AddedToStackEvent</code><a href="#fields-for-addedtostackevent" aria-label="Link to heading 'Fields for AddedToStackEvent'" data-heading-content="Fields for AddedToStackEvent" class="anchor"></a></h3>
+<ul>
+<li><code>actor</code> (Actor): Identifies the actor who performed the event.</li>
+<li><code>createdAt</code> (DateTime!): Identifies the date and time when the object was created.</li>
+<li><code>id</code> (ID!): The Node ID of the AddedToStackEvent object.</li>
+<li><code>pullRequest</code> (PullRequest): Pull request added to the stack.</li>
+<li><code>stackId</code> (BigInt): Database ID of the stack.</li>
+<li><code>stackNumber</code> (Int): Number of the stack in its repository.</li>
+</ul>
 <h2 id="addpullrequestcreationcapbypassusers---mutation" title="addPullRequestCreationCapBypassUsers - mutation" data-entry-type="Section">addPullRequestCreationCapBypassUsers - mutation<a href="#addpullrequestcreationcapbypassusers---mutation" aria-label="Link to heading 'addPullRequestCreationCapBypassUsers - mutation'" data-heading-content="addPullRequestCreationCapBypassUsers - mutation" class="anchor"></a></h2>
 <p>Add users to the pull request creation cap bypass list. Bypassed users can<br>
 create pull requests regardless of the configured cap. Only users with<br>
@@ -157,8 +169,7 @@ threads. The end of the line range for multi-line comments.</li>
 <li><code>pullRequestReviewThreadId</code> (ID!): The Node ID of the thread to which this reply is being written.</li>
 </ul>
 <h2 id="archivepullrequest---mutation" title="archivePullRequest - mutation" data-entry-type="Section">archivePullRequest - mutation<a href="#archivepullrequest---mutation" aria-label="Link to heading 'archivePullRequest - mutation'" data-heading-content="archivePullRequest - mutation" class="anchor"></a></h2>
-<p>Archive a pull request. Closes, locks, and marks the pull request as archived.<br>
-Only repository admins can archive pull requests.</p>
+<p>Archive a pull request. Closes and marks the pull request as archived. Only repository admins can archive pull requests.</p>
 <h3 id="input-fields-for-archivepullrequest">Input fields for <code>archivePullRequest</code><a href="#input-fields-for-archivepullrequest" aria-label="Link to heading 'Input fields for archivePullRequest'" data-heading-content="Input fields for archivePullRequest" class="anchor"></a></h3>
 <ul>
 <li><code>input</code> (ArchivePullRequestInput!):</li>
@@ -2171,6 +2182,7 @@ MinimizeComment mutation.</p>
 <li>AddedToMergeQueueEvent</li>
 <li>AddedToProjectEvent</li>
 <li>AddedToProjectV2Event</li>
+<li>AddedToStackEvent</li>
 <li>AssignedEvent</li>
 <li>AutoMergeDisabledEvent</li>
 <li>AutoMergeEnabledEvent</li>
@@ -2230,6 +2242,7 @@ MinimizeComment mutation.</p>
 <li>RemovedFromMergeQueueEvent</li>
 <li>RemovedFromProjectEvent</li>
 <li>RemovedFromProjectV2Event</li>
+<li>RemovedFromStackEvent</li>
 <li>RenamedTitleEvent</li>
 <li>ReopenedEvent</li>
 <li>ReviewDismissedEvent</li>
@@ -2386,6 +2399,18 @@ MinimizeComment mutation.</p>
 <li><code>pullRequest</code> (PullRequest): PullRequest referenced by event.</li>
 <li><code>reason</code> (String): The reason this pull request was removed from the queue.</li>
 </ul>
+<h2 id="removedfromstackevent---object" title="RemovedFromStackEvent - object" data-entry-type="Section">RemovedFromStackEvent - object<a href="#removedfromstackevent---object" aria-label="Link to heading 'RemovedFromStackEvent - object'" data-heading-content="RemovedFromStackEvent - object" class="anchor"></a></h2>
+<p>Represents aremoved_from_stackevent on a given pull request.</p>
+<p><strong>Implements:</strong> Node</p>
+<h3 id="fields-for-removedfromstackevent">Fields for <code>RemovedFromStackEvent</code><a href="#fields-for-removedfromstackevent" aria-label="Link to heading 'Fields for RemovedFromStackEvent'" data-heading-content="Fields for RemovedFromStackEvent" class="anchor"></a></h3>
+<ul>
+<li><code>actor</code> (Actor): Identifies the actor who performed the event.</li>
+<li><code>createdAt</code> (DateTime!): Identifies the date and time when the object was created.</li>
+<li><code>id</code> (ID!): The Node ID of the RemovedFromStackEvent object.</li>
+<li><code>pullRequest</code> (PullRequest): Pull request removed from the stack.</li>
+<li><code>stackId</code> (BigInt): Database ID of the stack.</li>
+<li><code>stackNumber</code> (Int): Number of the stack in its repository.</li>
+</ul>
 <h2 id="removepullrequestcreationcapbypassusers---mutation" title="removePullRequestCreationCapBypassUsers - mutation" data-entry-type="Section">removePullRequestCreationCapBypassUsers - mutation<a href="#removepullrequestcreationcapbypassusers---mutation" aria-label="Link to heading 'removePullRequestCreationCapBypassUsers - mutation'" data-heading-content="removePullRequestCreationCapBypassUsers - mutation" class="anchor"></a></h2>
 <p>Remove users from the pull request creation cap bypass list. Only users with<br>
 maintainer permissions can manage the bypass list.</p>
@@ -2533,6 +2558,29 @@ approved by the specified team. File patterns use fnmatch syntax.</li>
 <li><code>minimumApprovals</code> (Int!): Minimum number of approvals required from the specified team. If set to zero,<br>
 the team will be added to the pull request but approval is optional.</li>
 <li><code>reviewerId</code> (ID!): Node ID of the team which must review changes to matching files.</li>
+</ul>
+<h2 id="rerequestreviews---mutation" title="rerequestReviews - mutation" data-entry-type="Section">rerequestReviews - mutation<a href="#rerequestreviews---mutation" aria-label="Link to heading 'rerequestReviews - mutation'" data-heading-content="rerequestReviews - mutation" class="anchor"></a></h2>
+<p>Rerequest reviews on a pull request.</p>
+<h3 id="input-fields-for-rerequestreviews">Input fields for <code>rerequestReviews</code><a href="#input-fields-for-rerequestreviews" aria-label="Link to heading 'Input fields for rerequestReviews'" data-heading-content="Input fields for rerequestReviews" class="anchor"></a></h3>
+<ul>
+<li><code>input</code> (RerequestReviewsInput!):</li>
+</ul>
+<h3 id="return-fields-for-rerequestreviews">Return fields for <code>rerequestReviews</code><a href="#return-fields-for-rerequestreviews" aria-label="Link to heading 'Return fields for rerequestReviews'" data-heading-content="Return fields for rerequestReviews" class="anchor"></a></h3>
+<ul>
+<li><code>actor</code> (Actor): Identifies the actor who performed the event.</li>
+<li><code>clientMutationId</code> (String): A unique identifier for the client performing the mutation.</li>
+<li><code>pullRequest</code> (PullRequest): The pull request that is getting requests.</li>
+<li><code>requestedReviewersEdge</code> (UserEdge): The edge from the pull request to the requested reviewers.</li>
+</ul>
+<h2 id="rerequestreviewsinput---input-object" title="RerequestReviewsInput - input object" data-entry-type="Section">RerequestReviewsInput - input object<a href="#rerequestreviewsinput---input-object" aria-label="Link to heading 'RerequestReviewsInput - input object'" data-heading-content="RerequestReviewsInput - input object" class="anchor"></a></h2>
+<p>Autogenerated input type of RerequestReviews.</p>
+<h3 id="input-fields-for-rerequestreviewsinput">Input fields for <code>RerequestReviewsInput</code><a href="#input-fields-for-rerequestreviewsinput" aria-label="Link to heading 'Input fields for RerequestReviewsInput'" data-heading-content="Input fields for RerequestReviewsInput" class="anchor"></a></h3>
+<ul>
+<li><code>botIds</code> ([ID!]): The Node IDs of the bots to rerequest.</li>
+<li><code>clientMutationId</code> (String): A unique identifier for the client performing the mutation.</li>
+<li><code>pullRequestId</code> (ID!): The Node ID of the pull request to modify.</li>
+<li><code>teamIds</code> ([ID!]): The Node IDs of the teams to rerequest.</li>
+<li><code>userIds</code> ([ID!]): The Node IDs of the users to rerequest.</li>
 </ul>
 <h2 id="resolvereviewthread---mutation" title="resolveReviewThread - mutation" data-entry-type="Section">resolveReviewThread - mutation<a href="#resolvereviewthread---mutation" aria-label="Link to heading 'resolveReviewThread - mutation'" data-heading-content="resolveReviewThread - mutation" class="anchor"></a></h2>
 <p>Marks a review thread as resolved.</p>

@@ -77,8 +77,10 @@ to copying only the default branch of the template.</li>
 <li><code>visibility</code> (RepositoryVisibility!): Indicates the repository's visibility level.</li>
 </ul>
 <h2 id="codecoverageparametersinput---input-object" title="CodeCoverageParametersInput - input object" data-entry-type="Section">CodeCoverageParametersInput - input object<a href="#codecoverageparametersinput---input-object" aria-label="Link to heading 'CodeCoverageParametersInput - input object'" data-heading-content="CodeCoverageParametersInput - input object" class="anchor"></a></h2>
-<p>Enforce minimum line coverage thresholds on pull requests. When configured,<br>
-uploaded coverage data must meet the specified criteria before changes can be merged.</p>
+<p>Enforce minimum line coverage thresholds on pull requests. This rule evaluates<br>
+uploaded coverage data but does not wait for coverage uploads. To ensure<br>
+coverage is evaluated before merging, make each status check associated with a<br>
+coverage upload a required status check.</p>
 <h3 id="input-fields-for-codecoverageparametersinput">Input fields for <code>CodeCoverageParametersInput</code><a href="#input-fields-for-codecoverageparametersinput" aria-label="Link to heading 'Input fields for CodeCoverageParametersInput'" data-heading-content="Input fields for CodeCoverageParametersInput" class="anchor"></a></h3>
 <ul>
 <li><code>maxCoverageDrop</code> (Float): The maximum percentage points that line coverage may drop relative to the<br>
@@ -2307,8 +2309,10 @@ enterprise_owner, enterprise_role_database_id, or deploy_key should be specified
 <ul>
 <li><code>AUTHORIZATION</code>: Authorization.</li>
 <li><code>BRANCH_NAME_PATTERN</code>: Branch name pattern.</li>
-<li><code>CODE_COVERAGE</code>: Enforce minimum line coverage thresholds on pull requests. When configured,<br>
-uploaded coverage data must meet the specified criteria before changes can be merged.</li>
+<li><code>CODE_COVERAGE</code>: Enforce minimum line coverage thresholds on pull requests. This rule evaluates<br>
+uploaded coverage data but does not wait for coverage uploads. To ensure<br>
+coverage is evaluated before merging, make each status check associated with a<br>
+coverage upload a required status check.</li>
 <li><code>CODE_QUALITY</code>: Choose which severity levels of code quality results should block pull request<br>
 merges. When configured, a code quality analysis must be done on the pull<br>
 request before the changes can be merged.</li>

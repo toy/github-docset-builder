@@ -609,4 +609,72 @@ An array of team slugs that will be removed.</p>
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <p>Same response schema as <a href="#request-reviewers-for-a-pull-request">Request reviewers for a pull request</a>.</p>
+<h2 id="rerequest-reviewers-for-a-pull-request" title="POST /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers/rerequest (Rerequest reviewers for a pull request)" data-entry-type="Resource">Rerequest reviewers for a pull request<a href="#rerequest-reviewers-for-a-pull-request" aria-label="Link to heading 'Rerequest reviewers for a pull request'" data-heading-content="Rerequest reviewers for a pull request" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">POST /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers/rerequest
+</span></code></pre>
+<p>Rerequests reviews for a pull request from a given set of users and/or teams.<br>
+This endpoint triggers notifications. Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "Rate limits for the API" and "Best practices for using the REST API."</p>
+<h3 id="parameters-3">Parameters<a href="#parameters-3" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-3">Headers<a href="#headers-3" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-3">Path and query parameters<a href="#path-and-query-parameters-3" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>pull_number</code></strong> (integer) (required)<br>
+The number that identifies the pull request.</p>
+</li>
+</ul>
+<h4 id="body-parameters-2">Body parameters<a href="#body-parameters-2" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>reviewers</code></strong> (array of strings)<br>
+An array of user logins whose reviews will be rerequested.</p>
+</li>
+<li>
+<p><strong><code>team_reviewers</code></strong> (array of strings)<br>
+An array of team slugs whose reviews will be rerequested.</p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-3">HTTP response status codes<a href="#http-response-status-codes-3" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>201</strong> - Created</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>422</strong> - Unprocessable Entity if user is not a collaborator</p>
+</li>
+</ul>
+<h3 id="code-examples-3">Code examples<a href="#code-examples-3" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-3">Example<a href="#example-3" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X POST \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/pulls/PULL_NUMBER/requested_reviewers/rerequest \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "reviewers": [
+</span><span style="color:#c0c5ce;">    "octocat",
+</span><span style="color:#c0c5ce;">    "hubot",
+</span><span style="color:#c0c5ce;">    "other_user"
+</span><span style="color:#c0c5ce;">  ],
+</span><span style="color:#c0c5ce;">  "team_reviewers": [
+</span><span style="color:#c0c5ce;">    "justice-league"
+</span><span style="color:#c0c5ce;">  ]
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 201):</strong></p>
+<p>Same response schema as <a href="#request-reviewers-for-a-pull-request">Request reviewers for a pull request</a>.</p>
 <footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

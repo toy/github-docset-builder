@@ -8,8 +8,10 @@ exceed the size of a 32-bit integer, it's encoded as a string.</p>
 <h2 id="boolean---scalar" title="Boolean - scalar" data-entry-type="Section">Boolean - scalar<a href="#boolean---scalar" aria-label="Link to heading 'Boolean - scalar'" data-heading-content="Boolean - scalar" class="anchor"></a></h2>
 <p>Represents true or false values.</p>
 <h2 id="codecoverageparameters---object" title="CodeCoverageParameters - object" data-entry-type="Section">CodeCoverageParameters - object<a href="#codecoverageparameters---object" aria-label="Link to heading 'CodeCoverageParameters - object'" data-heading-content="CodeCoverageParameters - object" class="anchor"></a></h2>
-<p>Enforce minimum line coverage thresholds on pull requests. When configured,<br>
-uploaded coverage data must meet the specified criteria before changes can be merged.</p>
+<p>Enforce minimum line coverage thresholds on pull requests. This rule evaluates<br>
+uploaded coverage data but does not wait for coverage uploads. To ensure<br>
+coverage is evaluated before merging, make each status check associated with a<br>
+coverage upload a required status check.</p>
 <h3 id="fields-for-codecoverageparameters">Fields for <code>CodeCoverageParameters</code><a href="#fields-for-codecoverageparameters" aria-label="Link to heading 'Fields for CodeCoverageParameters'" data-heading-content="Fields for CodeCoverageParameters" class="anchor"></a></h3>
 <ul>
 <li><code>maxCoverageDrop</code> (Float): The maximum percentage points that line coverage may drop relative to the<br>
