@@ -1,8 +1,10 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><title>CodeQL pull request alert metrics</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Code scanning</a> / </nav><h1 id="codeql-pull-request-alert-metrics">CodeQL pull request alert metrics<a href="#codeql-pull-request-alert-metrics" aria-label="Link to heading 'CodeQL pull request alert metrics'" data-heading-content="CodeQL pull request alert metrics" class="anchor"></a></h1>
-<p>Understand CodeQL's performance in pull requests across your organizations.</p>
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Code scanning on pull requests</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Code scanning</a> / </nav><h1 id="code-scanning-on-pull-requests">Code scanning on pull requests<a href="#code-scanning-on-pull-requests" aria-label="Link to heading 'Code scanning on pull requests'" data-heading-content="Code scanning on pull requests" class="anchor"></a></h1>
+<p>Understand how CodeQL and AI Scan find and help prevent vulnerabilities in pull requests across your organizations.</p>
 <h2 id="overview" title="Overview" data-entry-type="Section">Overview<a href="#overview" aria-label="Link to heading 'Overview'" data-heading-content="Overview" class="anchor"></a></h2>
-<p>The metrics overview for CodeQL pull request alerts on security overview helps you understand how well CodeQL is preventing vulnerabilities in pull requests in your organization or across organizations in your enterprise. You can view the entire dataset or filter for specific criteria, making it easy to identify repositories where you may need to take action to find and reduce security risks.</p>
+<p>The "Code scanning on pull requests" report in security overview helps you understand how well code scanning is preventing vulnerabilities in pull requests in your organization or across organizations in your enterprise. You can view the entire dataset or filter for specific criteria, making it easy to identify repositories where you may need to take action to find and reduce security risks.</p>
+<p>The report has separate <strong>CodeQL</strong> and <strong>AI Scan</strong> tabs.</p>
 <h2 id="available-metrics" title="Available metrics" data-entry-type="Section">Available metrics<a href="#available-metrics" aria-label="Link to heading 'Available metrics'" data-heading-content="Available metrics" class="anchor"></a></h2>
+<h3 id="codeql-metrics">CodeQL metrics<a href="#codeql-metrics" aria-label="Link to heading 'CodeQL metrics'" data-heading-content="CodeQL metrics" class="anchor"></a></h3>
 <p>The overview shows you a summary of how many vulnerabilities prevented by CodeQL have been caught in pull requests. The metrics are only tracked for pull requests that have been merged into the default branches of repositories in your organizations.</p>
 <p>You can also find more granular metrics, such as how many alerts were fixed with and without Copilot Autofix suggestions, how many were unresolved and merged, and how many were dismissed as false positive or risk accepted.</p>
 <p>You can also view:</p>
@@ -27,6 +29,16 @@
 <p class="markdown-alert-title">Note</p>
 <p>Metrics for Copilot Autofix will be shown only for repositories where Copilot Autofix is enabled.</p>
 </div>
+<h3 id="ai-scan-metrics">AI Scan metrics<a href="#ai-scan-metrics" aria-label="Link to heading 'AI Scan metrics'" data-heading-content="AI Scan metrics" class="anchor"></a></h3>
+<p>The <strong>AI Scan</strong> tab shows:</p>
+<ul>
+<li><strong>Total findings:</strong> The number of AI Scan findings.</li>
+<li><strong>Findings with Autofix suggestions:</strong> The number and percentage of findings that had a Copilot Autofix suggestion.</li>
+<li><strong>AI Scan findings in pull requests:</strong> A chart that groups findings over time by <strong>Autofix suggested</strong> and <strong>Autofix not suggested</strong>.</li>
+<li><strong>Outcomes of findings with an Autofix suggestion:</strong> The share of findings where a fix was applied or the finding was dismissed.</li>
+<li><strong>Outcomes of findings without an Autofix suggestion:</strong> The share of findings where a fix was applied or the finding was dismissed.</li>
+</ul>
+<p>The date range and filters that you select apply to all AI Scan metrics displayed in the report.</p>
 <h2 id="visibility" title="Visibility" data-entry-type="Section">Visibility<a href="#visibility" aria-label="Link to heading 'Visibility'" data-heading-content="Visibility" class="anchor"></a></h2>
 <p>You can see code scanning metrics for a repository if you have:</p>
 <ul>
@@ -35,5 +47,5 @@
 <li>Access to alerts for the repository</li>
 </ul>
 <h2 id="next-steps" title="Next steps" data-entry-type="Section">Next steps<a href="#next-steps" aria-label="Link to heading 'Next steps'" data-heading-content="Next steps" class="anchor"></a></h2>
-<p>To find your pull request alert metrics, see <a href="../../how-tos/view-and-interpret-data/analyze-organization-data/viewing-metrics-for-pull-request-alerts.html">Viewing metrics for pull request alerts</a>.</p>
+<p>To view the "Code scanning on pull requests" report, see <a href="../../how-tos/view-and-interpret-data/analyze-organization-data/viewing-metrics-for-pull-request-alerts.html">Viewing code scanning metrics for pull requests</a>.</p>
 <footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

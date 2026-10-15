@@ -56,6 +56,9 @@
 <li>
 <p><strong>OIDC (OpenID Connect)</strong>: Use short-lived credentials from a cloud identity provider instead of storing long-lived secrets. When you select this option, choose a provider and fill in the provider-specific fields. For more information, see <a href="#configuring-oidc-authentication-for-a-private-registry">Configuring OIDC authentication for a private registry</a>.</p>
 </li>
+<li>
+<p><strong>Anonymous</strong>: Use this option for a registry that doesn't require authentication. No credentials are stored or sent to the registry. For more information, see <a href="#configuring-an-anonymous-private-registry">Configuring an anonymous private registry</a>.</p>
+</li>
 </ul>
 </li>
 <li>Define which repositories in the organization can access the private registry using these details: all, private and internal, or selected repositories only.</li>
@@ -101,6 +104,11 @@
 </ul>
 <p>The authentication type of a private registry cannot be changed after creation. To switch from OIDC to another authentication method, or vice versa, delete the existing registry and create a new one.</p>
 <p>For more information about how OIDC works, see <a href="https://docs.github.com/en/actions/concepts/security/openid-connect" class="external">OpenID Connect</a>.</p>
+<h3 id="configuring-an-anonymous-private-registry">Configuring an anonymous private registry<a href="#configuring-an-anonymous-private-registry" aria-label="Link to heading 'Configuring an anonymous private registry'" data-heading-content="Configuring an anonymous private registry" class="anchor"></a></h3>
+<p>Some registries, such as internal mirrors, don't require authentication. You can add these registries at the organization level with the <strong>Anonymous</strong> authentication method so that Dependabot can use them without a token, password, or OIDC configuration.</p>
+<p>Dependabot update jobs can only connect to hosts on an egress allowlist. Adding an anonymous registry allows Dependabot to reach the registry's host for jobs in repositories that have access to the registry, without storing a secret or sending credentials. For more information, see <a href="/en/code-security/how-tos/secure-your-supply-chain/manage-your-dependency-security/resolve-a-blocked-host">Resolving a blocked host in a Dependabot update job</a>.</p>
+<p>When you select <strong>Anonymous</strong>, the credential fields are removed from the form. You still define the registry's <strong>URL</strong> and <strong>Type</strong>. You also choose which repositories can access the registry.</p>
+<p>After you create an anonymous registry, you can only update its URL and whether it replaces the default registry for the ecosystem. You can't change the authentication method of an existing registry. To switch to or from <strong>Anonymous</strong>, delete the registry and create a new one.</p>
 <h2 id="code-quality-access-to-private-registries" title="Code Quality access to private registries" data-entry-type="Section">Code Quality access to private registries<a href="#code-quality-access-to-private-registries" aria-label="Link to heading 'Code Quality access to private registries'" data-heading-content="Code Quality access to private registries" class="anchor"></a></h2>
 <p>GitHub Code Quality can use any of the organization-level private registries that are available when it is enabled for a repository.</p>
 <p>If you add new registries to the organization, then you need to disable and re-enable Code Quality to ensure that the analysis detects and uses the new registries.</p>

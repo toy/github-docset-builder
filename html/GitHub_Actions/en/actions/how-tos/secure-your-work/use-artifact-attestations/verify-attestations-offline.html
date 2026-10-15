@@ -33,4 +33,29 @@
 <p>You can then perform offline verification with the following command:</p>
 <pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> attestation verify PATH/TO/YOUR/BUILD/ARTIFACT-BINARY</span><span style="color:#bf616a;"> -R</span><span style="color:#c0c5ce;"> ORGANIZATION_NAME/REPOSITORY_NAME</span><span style="color:#bf616a;"> --bundle</span><span style="color:#c0c5ce;"> sha256:ae57936def59bc4c75edd3a837d89bcefc6d3a5e31d55a6fa7a71624f92c3c3b.jsonl</span><span style="color:#bf616a;"> --custom-trusted-root</span><span style="color:#c0c5ce;"> trusted_root.jsonl
 </span></code></pre>
+<h3 id="confirming-the-repository-in-an-offline-environment">Confirming the repository in an offline environment<a href="#confirming-the-repository-in-an-offline-environment" aria-label="Link to heading 'Confirming the repository in an offline environment'" data-heading-content="Confirming the repository in an offline environment" class="anchor"></a></h3>
+<p>When you verify offline, <code>gh attestation verify</code> compares the <code>-R</code> value only with the repository and owner names recorded in the attestation's signing certificate. These are the names that the repository and owner had when the attestation was created. The command can't detect whether the repository or owner has since been renamed, or whether a different repository or owner now uses that name.</p>
+<p>To make sure an attestation comes from the repository that currently has the name, download its bundle from the attestation API, as described in Step 1. The attestation API returns only attestations from that repository.</p>
+<p>The signing certificate also records the repository's ID. A repository keeps its ID when it's renamed, and a new repository that takes the old name gets a different ID. If you verify a bundle from another source, such as a bundle published alongside the artifact, compare this ID with the ID of the repository you expect.</p>
+<ol>
+<li>
+<p>On a machine that is online, get the ID of the repository that you expect the artifact to come from.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> api repos/ORGANIZATION_NAME/REPOSITORY_NAME</span><span style="color:#bf616a;"> --jq</span><span style="color:#c0c5ce;"> .id
+</span></code></pre>
+</li>
+<li>
+<p>In your offline environment, add the <code>--format json</code> and <code>--jq</code> flags to the verification command to print the repository ID from each verified attestation.</p>
+<p>For <code>-R</code>, replace <code>ORGANIZATION_NAME/REPOSITORY_NAME</code> with the owner and repository names recorded in the signing certificate. If the repository or owner has been renamed, these differ from the current names used for the API lookup.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> attestation verify PATH/TO/YOUR/BUILD/ARTIFACT-BINARY \
+</span><span style="color:#bf616a;">  -R</span><span style="color:#c0c5ce;"> ORGANIZATION_NAME/REPOSITORY_NAME \
+</span><span style="color:#bf616a;">  --bundle</span><span style="color:#c0c5ce;"> PATH/TO/YOUR/BUNDLE.jsonl \
+</span><span style="color:#bf616a;">  --custom-trusted-root</span><span style="color:#c0c5ce;"> trusted_root.jsonl \
+</span><span style="color:#bf616a;">  --format</span><span style="color:#c0c5ce;"> json \
+</span><span style="color:#bf616a;">  --jq </span><span style="color:#c0c5ce;">'</span><span style="color:#a3be8c;">.[].verificationResult.signature.certificate.sourceRepositoryIdentifier</span><span style="color:#c0c5ce;">'
+</span></code></pre>
+</li>
+<li>
+<p>Check that each ID in the output matches the ID from the first step. Don't trust an attestation whose ID doesn't match, because another repository that used the same name created it.</p>
+</li>
+</ol>
 <footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

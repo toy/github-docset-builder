@@ -615,6 +615,18 @@
 <td>Work with the contents of the repository. For example, <code>contents: read</code> permits an action to list the commits, and <code>contents: write</code> allows the action to create a release. For more information, see <a href="https://docs.github.com/en/rest/authentication/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-contents" class="external">Permissions required for GitHub Apps</a>.</td>
 </tr>
 <tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>copilot-requests</code></td>
+<td>Make Copilot requests. For example, <code>copilot-requests: write</code> permits a workflow in an organization-owned repository to use Copilot CLI with <code>GITHUB_TOKEN</code> when the organization's billing policy allows it. Only <code>write</code> and <code>none</code> are supported. See <a href="https://docs.github.com/en/copilot/how-tos/copilot-cli/use-copilot-cli-in-actions" class="external">Using Copilot CLI in GitHub Actions with GITHUB<span data-escaped-char="">_</span>TOKEN</a>.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td><code>deployments</code></td>
 <td>Work with deployments. For example, <code>deployments: write</code> permits an action to create a new deployment. For more information, see <a href="https://docs.github.com/en/rest/authentication/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-deployments" class="external">Permissions required for GitHub Apps</a>.</td>
 </tr>
@@ -681,6 +693,7 @@
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">checks</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">code-quality</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">contents</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">copilot-requests</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write|none
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">deployments</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">id-token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write|none
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">issues</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
@@ -1052,6 +1065,18 @@ When more than one default setting is defined with the same name, GitHub uses th
 <td>Work with the contents of the repository. For example, <code>contents: read</code> permits an action to list the commits, and <code>contents: write</code> allows the action to create a release. For more information, see <a href="https://docs.github.com/en/rest/authentication/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-contents" class="external">Permissions required for GitHub Apps</a>.</td>
 </tr>
 <tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>copilot-requests</code></td>
+<td>Make Copilot requests. For example, <code>copilot-requests: write</code> permits a workflow in an organization-owned repository to use Copilot CLI with <code>GITHUB_TOKEN</code> when the organization's billing policy allows it. Only <code>write</code> and <code>none</code> are supported. See <a href="https://docs.github.com/en/copilot/how-tos/copilot-cli/use-copilot-cli-in-actions" class="external">Using Copilot CLI in GitHub Actions with GITHUB<span data-escaped-char="">_</span>TOKEN</a>.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td><code>deployments</code></td>
 <td>Work with deployments. For example, <code>deployments: write</code> permits an action to create a new deployment. For more information, see <a href="https://docs.github.com/en/rest/authentication/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-deployments" class="external">Permissions required for GitHub Apps</a>.</td>
 </tr>
@@ -1118,6 +1143,7 @@ When more than one default setting is defined with the same name, GitHub uses th
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">checks</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">code-quality</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">contents</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">copilot-requests</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write|none
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">deployments</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">id-token</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">write|none
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">issues</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">read|write|none

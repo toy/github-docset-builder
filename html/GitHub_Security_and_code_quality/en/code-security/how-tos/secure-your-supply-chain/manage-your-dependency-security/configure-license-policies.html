@@ -1,15 +1,11 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><title>Configuring open source license policies</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Secure your supply chain</a> / <a href="index.html">Manage your dependency security</a> / </nav><h1 id="configuring-open-source-license-policies">Configuring open source license policies<a href="#configuring-open-source-license-policies" aria-label="Link to heading 'Configuring open source license policies'" data-heading-content="Configuring open source license policies" class="anchor"></a></h1>
 <p>Create and enforce open source license policies to control which licenses your dependencies are allowed to use.</p>
-<div class="markdown-alert markdown-alert-note">
-<p class="markdown-alert-title">Note</p>
-<p>Open source license compliance is in public preview and subject to change.</p>
-</div>
 <h2 id="prerequisites" title="Prerequisites" data-entry-type="Section">Prerequisites<a href="#prerequisites" aria-label="Link to heading 'Prerequisites'" data-heading-content="Prerequisites" class="anchor"></a></h2>
 <p>Before you configure license policies, ensure that:</p>
 <ul>
-<li>Your organization has GitHub Code Security</li>
-<li>You have access to manage enterprise policy and rulesets</li>
-<li>Dependency graph is enabled for repositories you want to evaluate</li>
+<li>You are using GitHub Enterprise Cloud (including data-resident GHEC), and your organization has GitHub Code Security enabled on the repositories you want to use license compliance.</li>
+<li>You have access to manage enterprise policy and rulesets.</li>
+<li>Dependency graph is enabled for repositories you want to evaluate.</li>
 </ul>
 <h2 id="about-license-compliance" title="About license compliance" data-entry-type="Section">About license compliance<a href="#about-license-compliance" aria-label="Link to heading 'About license compliance'" data-heading-content="About license compliance" class="anchor"></a></h2>
 <p>Open source license compliance lets you define a policy that specifies which licenses your dependencies are allowed to use.</p>
@@ -20,7 +16,8 @@
 <li>Approving an exception for a package</li>
 <li>Updating policy to allow a license where appropriate</li>
 </ul>
-<h2 id="create-a-license-policy" title="Create a license policy" data-entry-type="Section">Create a license policy<a href="#create-a-license-policy" aria-label="Link to heading 'Create a license policy'" data-heading-content="Create a license policy" class="anchor"></a></h2>
+<h2 id="configuring-license-compliance" title="Configuring license compliance" data-entry-type="Section">Configuring license compliance<a href="#configuring-license-compliance" aria-label="Link to heading 'Configuring license compliance'" data-heading-content="Configuring license compliance" class="anchor"></a></h2>
+<h3 id="create-a-license-policy">Create a license policy<a href="#create-a-license-policy" aria-label="Link to heading 'Create a license policy'" data-heading-content="Create a license policy" class="anchor"></a></h3>
 <ol>
 <li>Navigate to your enterprise. For example, from the <a href="https://github.com/settings/enterprises?ref_product=ghec&amp;ref_type=engagement&amp;ref_style=text" class="external">Enterprises</a> page on GitHub.com.</li>
 <li>At the top of the page, click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-law" aria-label="law" role="img"><path d="M8.75.75V2h.985c.304 0 .603.08.867.231l1.29.736c.038.022.08.033.124.033h2.234a.75.75 0 0 1 0 1.5h-.427l2.111 4.692a.75.75 0 0 1-.154.838l-.53-.53.529.531-.001.002-.002.002-.006.006-.006.005-.01.01-.045.04c-.21.176-.441.327-.686.45C14.556 10.78 13.88 11 13 11a4.498 4.498 0 0 1-2.023-.454 3.544 3.544 0 0 1-.686-.45l-.045-.04-.016-.015-.006-.006-.004-.004v-.001a.75.75 0 0 1-.154-.838L12.178 4.5h-.162c-.305 0-.604-.079-.868-.231l-1.29-.736a.245.245 0 0 0-.124-.033H8.75V13h2.5a.75.75 0 0 1 0 1.5h-6.5a.75.75 0 0 1 0-1.5h2.5V3.5h-.984a.245.245 0 0 0-.124.033l-1.289.737c-.265.15-.564.23-.869.23h-.162l2.112 4.692a.75.75 0 0 1-.154.838l-.53-.53.529.531-.001.002-.002.002-.006.006-.016.015-.045.04c-.21.176-.441.327-.686.45C4.556 10.78 3.88 11 3 11a4.498 4.498 0 0 1-2.023-.454 3.544 3.544 0 0 1-.686-.45l-.045-.04-.016-.015-.006-.006-.004-.004v-.001a.75.75 0 0 1-.154-.838L2.178 4.5H1.75a.75.75 0 0 1 0-1.5h2.234a.249.249 0 0 0 .125-.033l1.288-.737c.265-.15.564-.23.869-.23h.984V.75a.75.75 0 0 1 1.5 0Zm2.945 8.477c.285.135.718.273 1.305.273s1.02-.138 1.305-.273L13 6.327Zm-10 0c.285.135.718.273 1.305.273s1.02-.138 1.305-.273L3 6.327Z"></path></svg> Policies</strong>.</li>
@@ -37,19 +34,19 @@
 <li>Save your changes.</li>
 </ol>
 <p>The licenses you add form your baseline policy. You can later add package-level exceptions when handling alerts.</p>
-<h2 id="configure-access-for-enterprise-open-source-license-managers" title="Configure access for Enterprise Open Source License Managers" data-entry-type="Section">Configure access for Enterprise Open Source License Managers<a href="#configure-access-for-enterprise-open-source-license-managers" aria-label="Link to heading 'Configure access for Enterprise Open Source License Managers'" data-heading-content="Configure access for Enterprise Open Source License Managers" class="anchor"></a></h2>
+<h3 id="configure-access-for-enterprise-open-source-license-managers">Configure access for Enterprise Open-Source License Managers<a href="#configure-access-for-enterprise-open-source-license-managers" aria-label="Link to heading 'Configure access for Enterprise Open-Source License Managers'" data-heading-content="Configure access for Enterprise Open-Source License Managers" class="anchor"></a></h3>
 <ol>
 <li>Navigate to your enterprise. For example, from the <a href="https://github.com/settings/enterprises?ref_product=ghec&amp;ref_type=engagement&amp;ref_style=text" class="external">Enterprises</a> page on GitHub.com.</li>
 <li>At the top of the page, click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-person" aria-label="person" role="img"><path d="M10.561 8.073a6.005 6.005 0 0 1 3.432 5.142.75.75 0 1 1-1.498.07 4.5 4.5 0 0 0-8.99 0 .75.75 0 0 1-1.498-.07 6.004 6.004 0 0 1 3.431-5.142 3.999 3.999 0 1 1 5.123 0ZM10.5 5a2.5 2.5 0 1 0-5 0 2.5 2.5 0 0 0 5 0Z"></path></svg> People</strong>.</li>
 <li>In the left sidebar, click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-globe" aria-label="globe" role="img"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM5.78 8.75a9.64 9.64 0 0 0 1.363 4.177c.255.426.542.832.857 1.215.245-.296.551-.705.857-1.215A9.64 9.64 0 0 0 10.22 8.75Zm4.44-1.5a9.64 9.64 0 0 0-1.363-4.177c-.307-.51-.612-.919-.857-1.215a9.927 9.927 0 0 0-.857 1.215A9.64 9.64 0 0 0 5.78 7.25Zm-5.944 1.5H1.543a6.507 6.507 0 0 0 4.666 5.5c-.123-.181-.24-.365-.352-.552-.715-1.192-1.437-2.874-1.581-4.948Zm-2.733-1.5h2.733c.144-2.074.866-3.756 1.58-4.948.12-.197.237-.381.353-.552a6.507 6.507 0 0 0-4.666 5.5Zm10.181 1.5c-.144 2.074-.866 3.756-1.58 4.948-.12.197-.237.381-.353.552a6.507 6.507 0 0 0 4.666-5.5Zm2.733-1.5a6.507 6.507 0 0 0-4.666-5.5c.123.181.24.365.353.552.714 1.192 1.436 2.874 1.58 4.948Z"></path></svg> Enterprise roles</strong>.</li>
 <li>Click <strong>Role assignments</strong>.</li>
 <li>Click <strong>Assign role</strong>.</li>
-<li>Select the <strong>Enterprise Open Source License Manager</strong> role.</li>
+<li>Select the <strong>Enterprise Open-Source License Manager</strong> role.</li>
 <li>Choose a user or team to assign the role to.</li>
 <li>Click <strong>Assign role</strong>.</li>
 </ol>
 <p>Assigning this role also subscribes reviewers to request notifications so they can respond to dismissal requests quickly.</p>
-<h2 id="optionally-use-custom-properties-to-control-rollout-per-repository" title="Optionally use custom properties to control rollout per repository" data-entry-type="Section">Optionally use custom properties to control rollout per repository<a href="#optionally-use-custom-properties-to-control-rollout-per-repository" aria-label="Link to heading 'Optionally use custom properties to control rollout per repository'" data-heading-content="Optionally use custom properties to control rollout per repository" class="anchor"></a></h2>
+<h3 id="optionally-use-custom-properties-to-control-rollout-per-repository">Optionally use custom properties to control rollout per repository<a href="#optionally-use-custom-properties-to-control-rollout-per-repository" aria-label="Link to heading 'Optionally use custom properties to control rollout per repository'" data-heading-content="Optionally use custom properties to control rollout per repository" class="anchor"></a></h3>
 <p>If you want a gradual rollout, use a repository custom property to control whether each repository is in inactive, evaluate, or active enforcement mode.</p>
 <ol>
 <li>
@@ -79,7 +76,7 @@
 <p>Assign property values to repositories based on their rollout stage.</p>
 </li>
 </ol>
-<h2 id="enforce-policy-in-pull-requests-with-rulesets" title="Enforce policy in pull requests with rulesets" data-entry-type="Section">Enforce policy in pull requests with rulesets<a href="#enforce-policy-in-pull-requests-with-rulesets" aria-label="Link to heading 'Enforce policy in pull requests with rulesets'" data-heading-content="Enforce policy in pull requests with rulesets" class="anchor"></a></h2>
+<h3 id="enforce-policy-in-pull-requests-with-rulesets">Enforce policy in pull requests with rulesets<a href="#enforce-policy-in-pull-requests-with-rulesets" aria-label="Link to heading 'Enforce policy in pull requests with rulesets'" data-heading-content="Enforce policy in pull requests with rulesets" class="anchor"></a></h3>
 <p>We suggest making two rulesets, one for <strong>Evaluate</strong> mode and one for <strong>Active</strong> mode. If you created custom properties to control the rollout, you can target those properties here.</p>
 <ol>
 <li>
@@ -121,8 +118,9 @@
 <li>Confirm that pull request annotations show license compliance results.</li>
 <li>If a dependency violates policy, review the generated alert and request dismissal if an exception is needed.</li>
 </ol>
-<p>When violations are unresolved, the pull request remains blocked.</p>
-<h2 id="review-and-handle-exception-requests" title="Review and handle exception requests" data-entry-type="Section">Review and handle exception requests<a href="#review-and-handle-exception-requests" aria-label="Link to heading 'Review and handle exception requests'" data-heading-content="Review and handle exception requests" class="anchor"></a></h2>
+<p>If the ruleset is in <strong>Active</strong> mode, the pull request remains blocked until all license policy violations are resolved.</p>
+<h2 id="managing-license-compliance-requests-and-policy" title="Managing license compliance requests and policy" data-entry-type="Section">Managing license compliance requests and policy<a href="#managing-license-compliance-requests-and-policy" aria-label="Link to heading 'Managing license compliance requests and policy'" data-heading-content="Managing license compliance requests and policy" class="anchor"></a></h2>
+<h3 id="review-and-handle-exception-requests">Review and handle exception requests<a href="#review-and-handle-exception-requests" aria-label="Link to heading 'Review and handle exception requests'" data-heading-content="Review and handle exception requests" class="anchor"></a></h3>
 <ol>
 <li>As an Enterprise Open Source License Manager, open the list of pending license alert requests in your enterprise security views.</li>
 <li>Review each request and decide whether to deny or approve it.</li>
@@ -131,7 +129,7 @@
 <li>Save the exception.</li>
 </ol>
 <p>After a request is approved, the alert is closed and the pull request is unblocked, as long as no other required checks are failing.</p>
-<h2 id="review-effective-policy-for-a-repository" title="Review effective policy for a repository" data-entry-type="Section">Review effective policy for a repository<a href="#review-effective-policy-for-a-repository" aria-label="Link to heading 'Review effective policy for a repository'" data-heading-content="Review effective policy for a repository" class="anchor"></a></h2>
+<h3 id="review-effective-policy-for-a-repository">Review effective policy for a repository<a href="#review-effective-policy-for-a-repository" aria-label="Link to heading 'Review effective policy for a repository'" data-heading-content="Review effective policy for a repository" class="anchor"></a></h3>
 <ol>
 <li>
 <p>On GitHub, navigate to the main page of the repository.</p>
@@ -150,6 +148,12 @@
 <p>Update enterprise-level or repository-level policy as needed.</p>
 </li>
 </ol>
+<p>Package and license entries that are set at the enterprise level will not be editable in the repository policy. Items marked with a <svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-trash" aria-label="The trash can icon" role="img"><path d="M11 1.75V3h2.25a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1 0-1.5H5V1.75C5 .784 5.784 0 6.75 0h2.5C10.216 0 11 .784 11 1.75ZM4.496 6.675l.66 6.6a.25.25 0 0 0 .249.225h5.19a.25.25 0 0 0 .249-.225l.66-6.6a.75.75 0 0 1 1.492.149l-.66 6.6A1.748 1.748 0 0 1 10.595 15h-5.19a1.75 1.75 0 0 1-1.741-1.575l-.66-6.6a.75.75 0 1 1 1.492-.15ZM6.5 1.75V3h3V1.75a.25.25 0 0 0-.25-.25h-2.5a.25.25 0 0 0-.25.25Z"></path></svg> indicate repository-level entries which can be deleted.</p>
+<h3 id="audit-events">Audit events<a href="#audit-events" aria-label="Link to heading 'Audit events'" data-heading-content="Audit events" class="anchor"></a></h3>
+<p>Changes to the license policy emit events to the audit log. These events are useful to review the history of changes or to feed external systems for compliance purposes. The log events are categorized as <strong>Policy Management</strong>, with a prefix of <code>license_compliance_policy</code>. They will have an action type <code>create</code> or <code>modify</code>. For details about the contents of the audit log events, see <a href="https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/audit-log-events-for-your-organization" class="external">Audit log events for your organization</a>.</p>
+<h3 id="license-compliance-api">License compliance API<a href="#license-compliance-api" aria-label="Link to heading 'License compliance API'" data-heading-content="License compliance API" class="anchor"></a></h3>
+<p>There are several REST API endpoints for managing license compliance policy. You can use the API to programatically back up and restore your enterprise policy and to query whether a list of packages would create any policy violations if they were included in a repository's dependencies. In addition, operations on license compliance closure requests can generate webhook events when a request is created, receives a response, or is cancelled.</p>
+<p>For details about the enterprise policy management API, see <a href="https://docs.github.com/en/rest/dependency-graph" class="external">REST API endpoints for the dependency graph</a>. For more about the package check API, see <a href="https://docs.github.com/en/rest/repos#package-checks" class="external">REST API endpoints for repositories</a>. For more about webhooks, see <a href="https://docs.github.com/en/webhooks/webhook-events-and-payloads" class="external">Webhook events and payloads</a>.</p>
 <h2 id="further-reading" title="Further reading" data-entry-type="Section">Further reading<a href="#further-reading" aria-label="Link to heading 'Further reading'" data-heading-content="Further reading" class="anchor"></a></h2>
 <ul>
 <li><a href="../../../concepts/supply-chain-security/open-source-license-compliance.html">About open source license compliance</a></li>

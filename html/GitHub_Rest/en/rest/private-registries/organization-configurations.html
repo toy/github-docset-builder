@@ -59,7 +59,7 @@ Default: <code>1</code></p>
 <ul>
 <li><code>name</code>: required, string</li>
 <li><code>registry_type</code>: required, string, enum: <code>maven_repository</code>, <code>nuget_feed</code>, <code>goproxy_server</code>, <code>npm_registry</code>, <code>rubygems_server</code>, <code>cargo_registry</code>, <code>composer_repository</code>, <code>docker_registry</code>, <code>git_source</code>, <code>helm_registry</code>, <code>hex_organization</code>, <code>hex_repository</code>, <code>pub_repository</code>, <code>python_index</code>, <code>terraform_registry</code></li>
-<li><code>auth_type</code>: string, enum: <code>token</code>, <code>username_password</code>, <code>oidc_azure</code>, <code>oidc_aws</code>, <code>oidc_jfrog</code>, <code>oidc_cloudsmith</code>, <code>oidc_gcp</code></li>
+<li><code>auth_type</code>: string, enum: <code>token</code>, <code>username_password</code>, <code>oidc_azure</code>, <code>oidc_aws</code>, <code>oidc_jfrog</code>, <code>oidc_cloudsmith</code>, <code>oidc_gcp</code>, <code>anonymous</code></li>
 <li><code>url</code>: string, format: uri</li>
 <li><code>username</code>: string or null</li>
 <li><code>replaces_base</code>: boolean, default: <code>false</code></li>
@@ -89,6 +89,7 @@ Default: <code>1</code></p>
 </span></code></pre>
 <p>Creates a private registry configuration with an encrypted value for an organization. Encrypt your secret using LibSodium. For more information, see "Encrypting secrets for the REST API."<br>
 For OIDC-based registries (oidc_azure, oidc_aws, oidc_jfrog, oidc_cloudsmith, or oidc_gcp), the encrypted_value and key_id fields should be omitted.<br>
+For anonymous registries (anonymous), the username, encrypted_value, and key_id fields must be omitted.<br>
 OAuth app tokens and personal access tokens (classic) need the admin:org scope to use this endpoint.</p>
 <h3 id="parameters-1">Parameters<a href="#parameters-1" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-1">Headers<a href="#headers-1" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
@@ -140,8 +141,8 @@ An array of repository IDs that can access the organization private registry. Yo
 </li>
 <li>
 <p><strong><code>auth_type</code></strong> (string)<br>
-The authentication type for the private registry. Defaults to token if not specified. Use oidc_azure, oidc_aws, oidc_jfrog, oidc_cloudsmith, or oidc_gcp for OIDC authentication.<br>
-Can be one of: <code>token</code>, <code>username_password</code>, <code>oidc_azure</code>, <code>oidc_aws</code>, <code>oidc_jfrog</code>, <code>oidc_cloudsmith</code>, <code>oidc_gcp</code></p>
+The authentication type for the private registry. Defaults to token if not specified. Use oidc_azure, oidc_aws, oidc_jfrog, oidc_cloudsmith, or oidc_gcp for OIDC authentication. Use anonymous for registries that do not require authentication; username, encrypted_value, and key_id must be omitted.<br>
+Can be one of: <code>token</code>, <code>username_password</code>, <code>oidc_azure</code>, <code>oidc_aws</code>, <code>oidc_jfrog</code>, <code>oidc_cloudsmith</code>, <code>oidc_gcp</code>, <code>anonymous</code></p>
 </li>
 <li>
 <p><strong><code>tenant_id</code></strong> (string)<br>
@@ -236,7 +237,7 @@ The GCP service account email to impersonate. Optional for oidc_gcp auth type. I
 <ul>
 <li><code>name</code>: required, string</li>
 <li><code>registry_type</code>: required, string, enum: <code>maven_repository</code>, <code>nuget_feed</code>, <code>goproxy_server</code>, <code>npm_registry</code>, <code>rubygems_server</code>, <code>cargo_registry</code>, <code>composer_repository</code>, <code>docker_registry</code>, <code>git_source</code>, <code>helm_registry</code>, <code>hex_organization</code>, <code>hex_repository</code>, <code>pub_repository</code>, <code>python_index</code>, <code>terraform_registry</code></li>
-<li><code>auth_type</code>: string, enum: <code>token</code>, <code>username_password</code>, <code>oidc_azure</code>, <code>oidc_aws</code>, <code>oidc_jfrog</code>, <code>oidc_cloudsmith</code>, <code>oidc_gcp</code></li>
+<li><code>auth_type</code>: string, enum: <code>token</code>, <code>username_password</code>, <code>oidc_azure</code>, <code>oidc_aws</code>, <code>oidc_jfrog</code>, <code>oidc_cloudsmith</code>, <code>oidc_gcp</code>, <code>anonymous</code></li>
 <li><code>url</code>: string, format: uri</li>
 <li><code>username</code>: string</li>
 <li><code>replaces_base</code>: boolean, default: <code>false</code></li>
@@ -282,7 +283,7 @@ The GCP service account email to impersonate. Optional for oidc_gcp auth type. I
 <ul>
 <li><code>name</code>: required, string</li>
 <li><code>registry_type</code>: required, string, enum: <code>maven_repository</code>, <code>nuget_feed</code>, <code>goproxy_server</code>, <code>npm_registry</code>, <code>rubygems_server</code>, <code>cargo_registry</code>, <code>composer_repository</code>, <code>docker_registry</code>, <code>git_source</code>, <code>helm_registry</code>, <code>hex_organization</code>, <code>hex_repository</code>, <code>pub_repository</code>, <code>python_index</code>, <code>terraform_registry</code></li>
-<li><code>auth_type</code>: string, enum: <code>token</code>, <code>username_password</code>, <code>oidc_azure</code>, <code>oidc_aws</code>, <code>oidc_jfrog</code>, <code>oidc_cloudsmith</code>, <code>oidc_gcp</code></li>
+<li><code>auth_type</code>: string, enum: <code>token</code>, <code>username_password</code>, <code>oidc_azure</code>, <code>oidc_aws</code>, <code>oidc_jfrog</code>, <code>oidc_cloudsmith</code>, <code>oidc_gcp</code>, <code>anonymous</code></li>
 <li><code>url</code>: string, format: uri</li>
 <li><code>username</code>: string</li>
 <li><code>replaces_base</code>: boolean, default: <code>false</code></li>
@@ -385,7 +386,7 @@ The name of the secret.</p>
 <ul>
 <li><code>name</code>: required, string</li>
 <li><code>registry_type</code>: required, string, enum: <code>maven_repository</code>, <code>nuget_feed</code>, <code>goproxy_server</code>, <code>npm_registry</code>, <code>rubygems_server</code>, <code>cargo_registry</code>, <code>composer_repository</code>, <code>docker_registry</code>, <code>git_source</code>, <code>helm_registry</code>, <code>hex_organization</code>, <code>hex_repository</code>, <code>pub_repository</code>, <code>python_index</code>, <code>terraform_registry</code></li>
-<li><code>auth_type</code>: string, enum: <code>token</code>, <code>username_password</code>, <code>oidc_azure</code>, <code>oidc_aws</code>, <code>oidc_jfrog</code>, <code>oidc_cloudsmith</code>, <code>oidc_gcp</code></li>
+<li><code>auth_type</code>: string, enum: <code>token</code>, <code>username_password</code>, <code>oidc_azure</code>, <code>oidc_aws</code>, <code>oidc_jfrog</code>, <code>oidc_cloudsmith</code>, <code>oidc_gcp</code>, <code>anonymous</code></li>
 <li><code>url</code>: string, format: uri</li>
 <li><code>username</code>: string or null</li>
 <li><code>replaces_base</code>: boolean, default: <code>false</code></li>
@@ -413,6 +414,7 @@ The name of the secret.</p>
 </span></code></pre>
 <p>Updates a private registry configuration with an encrypted value for an organization. Encrypt your secret using LibSodium. For more information, see "Encrypting secrets for the REST API."<br>
 For OIDC-based registries (oidc_azure, oidc_aws, oidc_jfrog, oidc_cloudsmith, or oidc_gcp), the encrypted_value and key_id fields should be omitted.<br>
+For anonymous registries (anonymous), the username, encrypted_value, and key_id fields must be omitted, and auth_type cannot be changed to or from anonymous.<br>
 OAuth app tokens and personal access tokens (classic) need the admin:org scope to use this endpoint.</p>
 <h3 id="parameters-4">Parameters<a href="#parameters-4" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-4">Headers<a href="#headers-4" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
@@ -471,7 +473,7 @@ An array of repository IDs that can access the organization private registry. Yo
 <li>
 <p><strong><code>auth_type</code></strong> (string)<br>
 The authentication type for the private registry. This field cannot be changed after creation. If provided, it must match the existing auth_type of the configuration. To change the authentication type, delete and recreate the configuration.<br>
-Can be one of: <code>token</code>, <code>username_password</code>, <code>oidc_azure</code>, <code>oidc_aws</code>, <code>oidc_jfrog</code>, <code>oidc_cloudsmith</code>, <code>oidc_gcp</code></p>
+Can be one of: <code>token</code>, <code>username_password</code>, <code>oidc_azure</code>, <code>oidc_aws</code>, <code>oidc_jfrog</code>, <code>oidc_cloudsmith</code>, <code>oidc_gcp</code>, <code>anonymous</code></p>
 </li>
 <li>
 <p><strong><code>tenant_id</code></strong> (string)<br>

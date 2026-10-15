@@ -169,7 +169,8 @@ threads. The end of the line range for multi-line comments.</li>
 <li><code>pullRequestReviewThreadId</code> (ID!): The Node ID of the thread to which this reply is being written.</li>
 </ul>
 <h2 id="archivepullrequest---mutation" title="archivePullRequest - mutation" data-entry-type="Section">archivePullRequest - mutation<a href="#archivepullrequest---mutation" aria-label="Link to heading 'archivePullRequest - mutation'" data-heading-content="archivePullRequest - mutation" class="anchor"></a></h2>
-<p>Archive a pull request. Closes and marks the pull request as archived. Only repository admins can archive pull requests.</p>
+<p>Archive a pull request. Closes and marks the pull request as archived. Users<br>
+with the triage role or higher can archive pull requests.</p>
 <h3 id="input-fields-for-archivepullrequest">Input fields for <code>archivePullRequest</code><a href="#input-fields-for-archivepullrequest" aria-label="Link to heading 'Input fields for archivePullRequest'" data-heading-content="Input fields for archivePullRequest" class="anchor"></a></h3>
 <ul>
 <li><code>input</code> (ArchivePullRequestInput!):</li>
@@ -369,8 +370,7 @@ the base branch, this value will be set by the merge queue when merging.</li>
 </ul>
 <h2 id="copilotcodereviewparameters---object" title="CopilotCodeReviewParameters - object" data-entry-type="Section">CopilotCodeReviewParameters - object<a href="#copilotcodereviewparameters---object" aria-label="Link to heading 'CopilotCodeReviewParameters - object'" data-heading-content="CopilotCodeReviewParameters - object" class="anchor"></a></h2>
 <p>Request Copilot code review for new pull requests automatically if the author<br>
-has access to Copilot code review and their premium requests quota has not<br>
-reached the limit.</p>
+has access to Copilot code review and AI credits.</p>
 <h3 id="fields-for-copilotcodereviewparameters">Fields for <code>CopilotCodeReviewParameters</code><a href="#fields-for-copilotcodereviewparameters" aria-label="Link to heading 'Fields for CopilotCodeReviewParameters'" data-heading-content="Fields for CopilotCodeReviewParameters" class="anchor"></a></h3>
 <ul>
 <li><code>reviewDraftPullRequests</code> (Boolean!): Copilot automatically reviews draft pull requests before they are marked as ready for review.</li>
@@ -378,8 +378,7 @@ reached the limit.</p>
 </ul>
 <h2 id="copilotcodereviewparametersinput---input-object" title="CopilotCodeReviewParametersInput - input object" data-entry-type="Section">CopilotCodeReviewParametersInput - input object<a href="#copilotcodereviewparametersinput---input-object" aria-label="Link to heading 'CopilotCodeReviewParametersInput - input object'" data-heading-content="CopilotCodeReviewParametersInput - input object" class="anchor"></a></h2>
 <p>Request Copilot code review for new pull requests automatically if the author<br>
-has access to Copilot code review and their premium requests quota has not<br>
-reached the limit.</p>
+has access to Copilot code review and AI credits.</p>
 <h3 id="input-fields-for-copilotcodereviewparametersinput">Input fields for <code>CopilotCodeReviewParametersInput</code><a href="#input-fields-for-copilotcodereviewparametersinput" aria-label="Link to heading 'Input fields for CopilotCodeReviewParametersInput'" data-heading-content="Input fields for CopilotCodeReviewParametersInput" class="anchor"></a></h3>
 <ul>
 <li><code>reviewDraftPullRequests</code> (Boolean): Copilot automatically reviews draft pull requests before they are marked as ready for review.</li>
@@ -2755,8 +2754,8 @@ request.</p>
 </ul>
 <h2 id="unarchivepullrequest---mutation" title="unarchivePullRequest - mutation" data-entry-type="Section">unarchivePullRequest - mutation<a href="#unarchivepullrequest---mutation" aria-label="Link to heading 'unarchivePullRequest - mutation'" data-heading-content="unarchivePullRequest - mutation" class="anchor"></a></h2>
 <p>Unarchive a pull request. Removes the archived flag from the pull request.<br>
-Does not automatically reopen or unlock the pull request. Only repository<br>
-admins can unarchive pull requests.</p>
+Does not automatically reopen or unlock the pull request. Users with the<br>
+triage role or higher can unarchive pull requests.</p>
 <h3 id="input-fields-for-unarchivepullrequest">Input fields for <code>unarchivePullRequest</code><a href="#input-fields-for-unarchivepullrequest" aria-label="Link to heading 'Input fields for unarchivePullRequest'" data-heading-content="Input fields for unarchivePullRequest" class="anchor"></a></h3>
 <ul>
 <li><code>input</code> (UnarchivePullRequestInput!):</li>

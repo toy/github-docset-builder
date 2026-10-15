@@ -192,7 +192,7 @@
 <p>Update jobs can only reach hosts on Dependabot's network egress allowlist. When a request is blocked, the proxy returns <code>403 Forbidden</code> and the job log contains a line naming the host, for example <code>* egress not allowlisted packages.example.com</code>.</p>
 <p><strong>Resolution:</strong> Choose the option that matches the blocked host:</p>
 <ul>
-<li>For a private or organization-specific registry, define it under the top-level <code>registries</code> key in your <code>dependabot.yml</code> file. Reference it from the relevant <code>updates</code> entry to allow it for that job. Do this even if the registry allows anonymous access, and note that defining it only in a file such as <code>.npmrc</code> or <code>nuget.config</code> does not allow its host.</li>
+<li>For a private or organization-specific registry, define it under the top-level <code>registries</code> key in your <code>dependabot.yml</code> file. Reference it from the relevant <code>updates</code> entry to allow it for that job. Do this even if the registry allows anonymous access, and note that defining it only in a file such as <code>.npmrc</code> or <code>nuget.config</code> does not allow its host. Alternatively, an organization owner can add the registry at the organization level, using the <strong>Anonymous</strong> authentication method if the registry doesn't require authentication.</li>
 <li>For a public registry or download host, propose adding it to the default allowlist.</li>
 </ul>
 <p>For more information, see <a href="/en/code-security/how-tos/secure-your-supply-chain/manage-your-dependency-security/resolve-a-blocked-host">Resolving a blocked host in a Dependabot update job</a>.</p>

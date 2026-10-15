@@ -800,7 +800,7 @@
 <p>Dependabot default behavior:</p>
 <ul>
 <li>All pull requests have a <code>dependencies</code> label.</li>
-<li>If you define more than one package manager, an additional label for the ecosystem or language is added to each pull request. For example: <code>java</code> for Gradle updates and <code>submodules</code> for git submodule updates.</li>
+<li>An additional label for the ecosystem or language is added to each pull request, including when you define only one package manager. For example: <code>java</code> for Gradle updates and <code>submodules</code> for git submodule updates.</li>
 <li>If semantic version (SemVer) labels are present in the repository, they will be applied automatically to indicate the type of version update (<code>major</code>, <code>minor</code>, or <code>patch</code>).</li>
 <li>Dependabot creates these default labels automatically, as necessary in your repository.</li>
 </ul>
@@ -871,13 +871,14 @@
 </ul>
 <div class="markdown-alert markdown-alert-note">
 <p class="markdown-alert-title">Note</p>
-<p><em>Security update</em> pull requests are not subject to this limit and do not count toward it. There is no limit on the number of open pull requests for security updates.</p>
+<p><em>Security update</em> pull requests are subject to a separate, fixed limit of 10 open pull requests, which cannot be configured using <code>open-pull-requests-limit</code>.</p>
 </div>
 <p>When <code>open-pull-requests-limit</code> is defined:</p>
 <ul>
 <li>Dependabot opens pull requests up to the defined integer value. A large value can be set to effectively remove the open pull request limit.</li>
 <li>You can temporarily disable version updates for a package manager by setting this option to zero, see <a href="../../how-tos/secure-your-supply-chain/secure-your-dependencies/configure-version-updates.html#disabling-dependabot-version-updates">Disabling Dependabot version updates</a>.</li>
 </ul>
+<p>When either limit is reached, Dependabot reports an error and stops opening additional pull requests until some of the open pull requests are merged or closed. For more information, see <a href="troubleshoot-dependabot/dependabot-errors.html#pull-request-limit-reached">Dependabot errors</a>.</p>
 <h2 id="package-ecosystem-" title="package-ecosystem" data-entry-type="Section"><code>package-ecosystem</code> <svg version="1.1" width="24" height="24" viewBox="0 0 24 24" class="octicon octicon-versions" aria-label="Version updates only" role="img"><path d="M10 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2Zm-.5-2a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5V4a.5.5 0 0 0-.5-.5H10a.5.5 0 0 0-.5.5ZM6.17 4.165a.75.75 0 0 1-.335 1.006c-.228.114-.295.177-.315.201a.035.035 0 0 0-.008.016.423.423 0 0 0-.012.112v13c0 .07.008.102.012.112a.03.03 0 0 0 .008.016c.02.024.087.087.315.201a.749.749 0 1 1-.67 1.342c-.272-.136-.58-.315-.81-.598C4.1 19.259 4 18.893 4 18.5v-13c0-.393.1-.759.355-1.073.23-.283.538-.462.81-.598a.75.75 0 0 1 1.006.336ZM2.15 5.624a.75.75 0 0 1-.274 1.025c-.15.087-.257.17-.32.245C1.5 6.96 1.5 6.99 1.5 7v10c0 .01 0 .04.056.106.063.074.17.158.32.245a.75.75 0 0 1-.752 1.298C.73 18.421 0 17.907 0 17V7c0-.907.73-1.42 1.124-1.65a.75.75 0 0 1 1.025.274Z"></path></svg><a href="#package-ecosystem-" aria-label="Link to heading 'package-ecosystem '" data-heading-content="package-ecosystem " class="anchor"></a></h2>
 <!--Note: When making updates to this section, please make sure any changes are also reflected in `data/reusables/dependabot/supported-package-managers.md`.-->
 <p><strong>Required option.</strong> Define one <code>package-ecosystem</code> element for each package manager that you want Dependabot to monitor for new versions. The repository must also contain a dependency manifest or lock file for each package manager, see <a href="../../how-tos/secure-your-supply-chain/secure-your-dependencies/configure-version-updates.html#example-dependabotyml-file">Example <code>dependabot.yml</code> file</a>.</p>

@@ -19,7 +19,11 @@
 </li>
 </ol>
 <h2 id="exporting-a-software-bill-of-materials-for-your-repository-using-the-rest-api" title="Exporting a software bill of materials for your repository using the REST API" data-entry-type="Section">Exporting a software bill of materials for your repository using the REST API<a href="#exporting-a-software-bill-of-materials-for-your-repository-using-the-rest-api" aria-label="Link to heading 'Exporting a software bill of materials for your repository using the REST API'" data-heading-content="Exporting a software bill of materials for your repository using the REST API" class="anchor"></a></h2>
-<p>If you want to use the REST API to export an SBOM for your repository, see <a href="https://docs.github.com/en/rest/dependency-graph/sboms#export-a-software-bill-of-materials-sbom-for-a-repository" class="external">REST API endpoints for software bill of materials (SBOM)</a>.</p>
+<p>To export an SBOM for your repository using the REST API:</p>
+<ol>
+<li>Request generation of the SBOM. See <a href="https://docs.github.com/en/rest/dependency-graph/sboms#request-generation-of-a-software-bill-of-materials-sbom-for-a-repository" class="external">REST API endpoints for software bill of materials (SBOM)</a>.</li>
+<li>Poll the returned <code>sbom_url</code> while the response is <code>202</code>. When the response is <code>302</code>, follow the redirect to download the completed SBOM. See <a href="https://docs.github.com/en/rest/dependency-graph/sboms#fetch-a-software-bill-of-materials-sbom-for-a-repository" class="external">REST API endpoints for software bill of materials (SBOM)</a>.</li>
+</ol>
 <h2 id="generating-a-software-bill-of-materials-from-github-actions" title="Generating a software bill of materials from GitHub Actions" data-entry-type="Section">Generating a software bill of materials from GitHub Actions<a href="#generating-a-software-bill-of-materials-from-github-actions" aria-label="Link to heading 'Generating a software bill of materials from GitHub Actions'" data-heading-content="Generating a software bill of materials from GitHub Actions" class="anchor"></a></h2>
 <p>The following actions will generate an SBOM for your repository and attach it as a workflow artifact which you can download and use in other applications. For more information about downloading workflow artifacts, see <a href="https://docs.github.com/en/actions/how-tos/manage-workflow-runs/download-workflow-artifacts" class="external">Downloading workflow artifacts</a>.</p>
 <table>
