@@ -367,7 +367,7 @@ organizations or enterprises.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (EnterpriseTeamOrder): Ordering options for enterprise teams returned from the connection.</li>
+<li><code>orderBy</code> (EnterpriseTeamOrder): Ordering options for enterprise teams returned from the connection. Default: <code>{field: ID, direction: ASC}</code>.</li>
 <li><code>query</code> (String): The search string to look for.</li>
 <li><code>userLogins</code> ([String!]): User logins to filter by. A maximum of 3 logins can be passed.</li>
 </ul>
@@ -383,7 +383,7 @@ organizations or enterprises.</li>
 <li><code>ecosystem</code> (SecurityAdvisoryEcosystem): An ecosystem to filter vulnerabilities by.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (SecurityVulnerabilityOrder): Ordering options for the returned vulnerabilities.</li>
+<li><code>orderBy</code> (SecurityVulnerabilityOrder): Ordering options for the returned vulnerabilities. Default: <code>{field: UPDATED_AT, direction: DESC}</code>.</li>
 <li><code>package</code> (String): A package name to filter vulnerabilities by.</li>
 <li><code>severities</code> ([SecurityAdvisorySeverity!]): A list of severities to filter vulnerabilities by.</li>
 </ul>
@@ -404,7 +404,7 @@ Upcoming Change on 2025-04-01 UTC<br>
 Description: hasTwoFactorEnabled will be removed. Use two_factor_method_security instead.<br>
 Reason: has_two_factor_enabled will be removed.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (EnterpriseMemberOrder): Ordering options for members returned from the connection.</li>
+<li><code>orderBy</code> (EnterpriseMemberOrder): Ordering options for members returned from the connection. Default: <code>{field: LOGIN, direction: ASC}</code>.</li>
 <li><code>organizationLogins</code> ([String!]): Only return members within the organizations with these logins.</li>
 <li><code>query</code> (String): The search string to look for.</li>
 <li><code>role</code> (EnterpriseUserAccountMembershipRole): The role of the user in the enterprise organization or server.</li>
@@ -422,7 +422,7 @@ not include members who only have an account on a GitHub Enterprise Server insta
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations returned from the connection.</li>
+<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations returned from the connection. Default: <code>{field: LOGIN, direction: ASC}</code>.</li>
 <li><code>query</code> (String): The search string to look for.</li>
 <li><code>viewerOrganizationRole</code> (RoleInOrganization): The viewer's role in an organization.</li>
 </ul>
@@ -477,7 +477,7 @@ personal access tokens (classic) with read:enterprise or admin:enterprise scope.
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (RepositoryOrder): Ordering options for repositories returned from the connection.</li>
+<li><code>orderBy</code> (RepositoryOrder): Ordering options for repositories returned from the connection. Default: <code>{field: NAME, direction: ASC}</code>.</li>
 <li><code>query</code> (String): The search string to look for.</li>
 </ul>
 </li>
@@ -853,7 +853,7 @@ Upcoming Change on 2025-04-01 UTC<br>
 Description: hasTwoFactorEnabled will be removed. Use two_factor_method_security instead.<br>
 Reason: has_two_factor_enabled will be removed.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (EnterpriseMemberOrder): Ordering options for administrators returned from the connection.</li>
+<li><code>orderBy</code> (EnterpriseMemberOrder): Ordering options for administrators returned from the connection. Default: <code>{field: LOGIN, direction: ASC}</code>.</li>
 <li><code>organizationLogins</code> ([String!]): Only return members within the organizations with these logins.</li>
 <li><code>query</code> (String): The search string to look for.</li>
 <li><code>role</code> (EnterpriseAdministratorRole): The role to filter by.</li>
@@ -876,7 +876,7 @@ Reason: has_two_factor_enabled will be removed.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting.</li>
+<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting. Default: <code>{field: LOGIN, direction: ASC}</code>.</li>
 <li><code>value</code> (Boolean!): The setting value to find organizations for.</li>
 </ul>
 </li>
@@ -893,7 +893,7 @@ Reason: has_two_factor_enabled will be removed.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting.</li>
+<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting. Default: <code>{field: LOGIN, direction: ASC}</code>.</li>
 <li><code>value</code> (DefaultRepositoryPermissionField!): The permission to find organizations for.</li>
 </ul>
 </li>
@@ -907,7 +907,7 @@ enterprise owners' personal access tokens (classic) with admin:enterprise scope.
 <li><code>isApproved</code> (Boolean): Filter whether or not the domain is approved.</li>
 <li><code>isVerified</code> (Boolean): Filter whether or not the domain is verified.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (VerifiableDomainOrder): Ordering options for verifiable domains returned.</li>
+<li><code>orderBy</code> (VerifiableDomainOrder): Ordering options for verifiable domains returned. Default: <code>{field: DOMAIN, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -915,10 +915,10 @@ enterprise owners' personal access tokens (classic) with admin:enterprise scope.
 <ul>
 <li><code>after</code> (String): Returns the elements in the list that come after the specified cursor.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
-<li><code>connectedOnly</code> (Boolean): Whether or not to only return installations discovered via GitHub Connect.</li>
+<li><code>connectedOnly</code> (Boolean): Whether or not to only return installations discovered via GitHub Connect. Default: <code>false</code>.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (EnterpriseServerInstallationOrder): Ordering options for Enterprise Server installations returned.</li>
+<li><code>orderBy</code> (EnterpriseServerInstallationOrder): Ordering options for Enterprise Server installations returned. Default: <code>{field: HOST_NAME, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -943,7 +943,7 @@ Visible to enterprise owners or enterprise owners' personal access tokens<br>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (IpAllowListEntryOrder): Ordering options for IP allow list entries returned.</li>
+<li><code>orderBy</code> (IpAllowListEntryOrder): Ordering options for IP allow list entries returned. Default: <code>{field: ALLOW_LIST_VALUE, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -969,7 +969,7 @@ repository can change repository visibility.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting.</li>
+<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting. Default: <code>{field: LOGIN, direction: ASC}</code>.</li>
 <li><code>value</code> (Boolean!): The setting value to find organizations for.</li>
 </ul>
 </li>
@@ -992,7 +992,7 @@ repository can change repository visibility.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting.</li>
+<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting. Default: <code>{field: LOGIN, direction: ASC}</code>.</li>
 <li><code>value</code> (OrganizationMembersCanCreateRepositoriesSettingValue!): The setting to find organizations for.</li>
 </ul>
 </li>
@@ -1006,7 +1006,7 @@ repository can change repository visibility.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting.</li>
+<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting. Default: <code>{field: LOGIN, direction: ASC}</code>.</li>
 <li><code>value</code> (Boolean!): The setting value to find organizations for.</li>
 </ul>
 </li>
@@ -1020,7 +1020,7 @@ repository can change repository visibility.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting.</li>
+<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting. Default: <code>{field: LOGIN, direction: ASC}</code>.</li>
 <li><code>value</code> (Boolean!): The setting value to find organizations for.</li>
 </ul>
 </li>
@@ -1034,7 +1034,7 @@ repository can change repository visibility.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting.</li>
+<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting. Default: <code>{field: LOGIN, direction: ASC}</code>.</li>
 <li><code>value</code> (Boolean!): The setting value to find organizations for.</li>
 </ul>
 </li>
@@ -1051,7 +1051,7 @@ repository can change repository visibility.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting.</li>
+<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting. Default: <code>{field: LOGIN, direction: ASC}</code>.</li>
 <li><code>value</code> (Boolean!): The setting value to find organizations for.</li>
 </ul>
 </li>
@@ -1065,7 +1065,7 @@ repository can change repository visibility.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting.</li>
+<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting. Default: <code>{field: LOGIN, direction: ASC}</code>.</li>
 <li><code>value</code> (Boolean!): The setting value to find organizations for.</li>
 </ul>
 </li>
@@ -1085,7 +1085,7 @@ repository can change repository visibility.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting.</li>
+<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting. Default: <code>{field: LOGIN, direction: ASC}</code>.</li>
 <li><code>value</code> (Boolean!): The setting value to find organizations for.</li>
 </ul>
 </li>
@@ -1101,7 +1101,7 @@ Description: hasTwoFactorEnabled will be removed. Use two_factor_method_security
 Reason: has_two_factor_enabled will be removed.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
 <li><code>login</code> (String): The login of one specific outside collaborator.</li>
-<li><code>orderBy</code> (EnterpriseMemberOrder): Ordering options for outside collaborators returned from the connection.</li>
+<li><code>orderBy</code> (EnterpriseMemberOrder): Ordering options for outside collaborators returned from the connection. Default: <code>{field: LOGIN, direction: ASC}</code>.</li>
 <li><code>organizationLogins</code> ([String!]): Only return outside collaborators within the organizations with these logins.</li>
 <li><code>query</code> (String): The search string to look for.</li>
 <li><code>twoFactorMethodSecurity</code> (TwoFactorCredentialSecurityType): Only return outside collaborators with this type of two-factor authentication method.</li>
@@ -1115,7 +1115,7 @@ Reason: has_two_factor_enabled will be removed.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (EnterpriseAdministratorInvitationOrder): Ordering options for pending enterprise administrator invitations returned from the connection.</li>
+<li><code>orderBy</code> (EnterpriseAdministratorInvitationOrder): Ordering options for pending enterprise administrator invitations returned from the connection. Default: <code>{field: CREATED_AT, direction: DESC}</code>.</li>
 <li><code>query</code> (String): The search string to look for.</li>
 <li><code>role</code> (EnterpriseAdministratorRole): The role to filter by.</li>
 </ul>
@@ -1127,7 +1127,7 @@ Reason: has_two_factor_enabled will be removed.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (RepositoryInvitationOrder): Ordering options for pending repository collaborator invitations returned from the connection.</li>
+<li><code>orderBy</code> (RepositoryInvitationOrder): Ordering options for pending repository collaborator invitations returned from the connection. Default: <code>{field: CREATED_AT, direction: DESC}</code>.</li>
 <li><code>query</code> (String): The search string to look for.</li>
 </ul>
 </li>
@@ -1150,7 +1150,7 @@ Reason: has_two_factor_enabled will be removed.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (EnterpriseMemberInvitationOrder): Ordering options for pending enterprise member invitations returned from the connection.</li>
+<li><code>orderBy</code> (EnterpriseMemberInvitationOrder): Ordering options for pending enterprise member invitations returned from the connection. Default: <code>{field: CREATED_AT, direction: DESC}</code>.</li>
 <li><code>query</code> (String): The search string to look for.</li>
 </ul>
 </li>
@@ -1164,7 +1164,7 @@ Reason: has_two_factor_enabled will be removed.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting.</li>
+<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting. Default: <code>{field: LOGIN, direction: ASC}</code>.</li>
 <li><code>value</code> (Boolean!): The setting value to find organizations for.</li>
 </ul>
 </li>
@@ -1178,7 +1178,7 @@ Reason: has_two_factor_enabled will be removed.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting.</li>
+<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting. Default: <code>{field: LOGIN, direction: ASC}</code>.</li>
 <li><code>value</code> (Boolean!): The setting value to find organizations for.</li>
 </ul>
 </li>
@@ -1192,7 +1192,7 @@ Reason: has_two_factor_enabled will be removed.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting.</li>
+<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting. Default: <code>{field: LOGIN, direction: ASC}</code>.</li>
 <li><code>value</code> (IdentityProviderConfigurationState!): The setting value to find organizations for.</li>
 </ul>
 </li>
@@ -1203,7 +1203,7 @@ Reason: has_two_factor_enabled will be removed.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (EnterpriseMemberOrder): Ordering options for support entitlement users returned from the connection.</li>
+<li><code>orderBy</code> (EnterpriseMemberOrder): Ordering options for support entitlement users returned from the connection. Default: <code>{field: LOGIN, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -1222,7 +1222,7 @@ Reason: has_two_factor_enabled will be removed.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting.</li>
+<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations with this setting. Default: <code>{field: LOGIN, direction: ASC}</code>.</li>
 <li><code>value</code> (Boolean!): The setting value to find organizations for.</li>
 </ul>
 </li>
@@ -1283,7 +1283,7 @@ Reason: has_two_factor_enabled will be removed.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (EnterpriseServerUserAccountOrder): Ordering options for Enterprise Server user accounts returned from the connection.</li>
+<li><code>orderBy</code> (EnterpriseServerUserAccountOrder): Ordering options for Enterprise Server user accounts returned from the connection. Default: <code>{field: LOGIN, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -1293,7 +1293,7 @@ Reason: has_two_factor_enabled will be removed.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (EnterpriseServerUserAccountsUploadOrder): Ordering options for Enterprise Server user accounts uploads returned from the connection.</li>
+<li><code>orderBy</code> (EnterpriseServerUserAccountsUploadOrder): Ordering options for Enterprise Server user accounts uploads returned from the connection. Default: <code>{field: CREATED_AT, direction: DESC}</code>.</li>
 </ul>
 </li>
 </ul>
@@ -1360,7 +1360,7 @@ Reason: has_two_factor_enabled will be removed.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (EnterpriseServerUserAccountEmailOrder): Ordering options for Enterprise Server user account emails returned from the connection.</li>
+<li><code>orderBy</code> (EnterpriseServerUserAccountEmailOrder): Ordering options for Enterprise Server user account emails returned from the connection. Default: <code>{field: EMAIL, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -1521,7 +1521,7 @@ Reason: has_two_factor_enabled will be removed.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (EnterpriseTeamOrganizationOrder): Ordering options for organizations returned from the connection.</li>
+<li><code>orderBy</code> (EnterpriseTeamOrganizationOrder): Ordering options for organizations returned from the connection. Default: <code>{field: ID, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -1543,7 +1543,7 @@ Reason: has_two_factor_enabled will be removed.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (EnterpriseTeamMemberOrder): Order for the connection.</li>
+<li><code>orderBy</code> (EnterpriseTeamMemberOrder): Order for the connection. Default: <code>{field: ID, direction: ASC}</code>.</li>
 <li><code>query</code> (String): The search string to look for.</li>
 </ul>
 </li>
@@ -1671,7 +1671,7 @@ Reason: has_two_factor_enabled will be removed.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (EnterpriseServerInstallationOrder): Ordering options for installations returned from the connection.</li>
+<li><code>orderBy</code> (EnterpriseServerInstallationOrder): Ordering options for installations returned from the connection. Default: <code>{field: HOST_NAME, direction: ASC}</code>.</li>
 <li><code>query</code> (String): The search string to look for.</li>
 <li><code>role</code> (EnterpriseUserAccountMembershipRole): The role of the user in the installation.</li>
 </ul>
@@ -1692,7 +1692,7 @@ Reason: has_two_factor_enabled will be removed.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations returned from the connection.</li>
+<li><code>orderBy</code> (OrganizationOrder): Ordering options for organizations returned from the connection. Default: <code>{field: LOGIN, direction: ASC}</code>.</li>
 <li><code>query</code> (String): The search string to look for.</li>
 <li><code>role</code> (EnterpriseUserAccountMembershipRole): The role of the user in the enterprise organization.</li>
 </ul>

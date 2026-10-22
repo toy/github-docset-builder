@@ -1,7 +1,7 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><title>Projects (classic)</title><link rel="stylesheet" href="../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../index.html">GraphQL API</a> / <a href="index.html">Reference</a> / </nav><h1 id="projects-classic">Projects (classic)<a href="#projects-classic" aria-label="Link to heading 'Projects (classic)'" data-heading-content="Projects (classic)" class="anchor"></a></h1>
 <p>Reference documentation for GraphQL schema types in the Projects (classic) category.</p>
 <h2 id="addedtoprojectevent---object" title="AddedToProjectEvent - object" data-entry-type="Section">AddedToProjectEvent - object<a href="#addedtoprojectevent---object" aria-label="Link to heading 'AddedToProjectEvent - object'" data-heading-content="AddedToProjectEvent - object" class="anchor"></a></h2>
-<p>Represents aadded_to_projectevent on a given issue or pull request.</p>
+<p>Represents a added_to_project event on a given issue or pull request.</p>
 <p><strong>Implements:</strong> Node</p>
 <h3 id="fields-for-addedtoprojectevent">Fields for <code>AddedToProjectEvent</code><a href="#fields-for-addedtoprojectevent" aria-label="Link to heading 'Fields for AddedToProjectEvent'" data-heading-content="Fields for AddedToProjectEvent" class="anchor"></a></h3>
 <ul>
@@ -234,7 +234,7 @@
 <li><code>repositoryId</code> (ID!): The ID of the Repository to link to a Project.</li>
 </ul>
 <h2 id="movedcolumnsinprojectevent---object" title="MovedColumnsInProjectEvent - object" data-entry-type="Section">MovedColumnsInProjectEvent - object<a href="#movedcolumnsinprojectevent---object" aria-label="Link to heading 'MovedColumnsInProjectEvent - object'" data-heading-content="MovedColumnsInProjectEvent - object" class="anchor"></a></h2>
-<p>Represents amoved_columns_in_projectevent on a given issue or pull request.</p>
+<p>Represents a moved_columns_in_project event on a given issue or pull request.</p>
 <p><strong>Implements:</strong> Node</p>
 <h3 id="fields-for-movedcolumnsinprojectevent">Fields for <code>MovedColumnsInProjectEvent</code><a href="#fields-for-movedcolumnsinprojectevent" aria-label="Link to heading 'Fields for MovedColumnsInProjectEvent'" data-heading-content="Fields for MovedColumnsInProjectEvent" class="anchor"></a></h3>
 <ul>
@@ -339,7 +339,7 @@
 <p><code>pendingCards</code> (ProjectCardConnection!): List of pending cards in this project. <strong>Deprecated:</strong> Projects (classic) is being deprecated in favor of the new Projects experience, see: <a href="https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/" class="external">https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/</a>. Removal on 2025-04-01 UTC.</p>
 <ul>
 <li><code>after</code> (String): Returns the elements in the list that come after the specified cursor.</li>
-<li><code>archivedStates</code> ([ProjectCardArchivedState]): A list of archived states to filter the cards by.</li>
+<li><code>archivedStates</code> ([ProjectCardArchivedState]): A list of archived states to filter the cards by. Default: <code>[ARCHIVED, NOT_ARCHIVED]</code>.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
@@ -396,8 +396,8 @@ associated with a column, they will not become pending in the future. <strong>De
 <p>The possible archived states of a project card.</p>
 <h3 id="values-for-projectcardarchivedstate">Values for <code>ProjectCardArchivedState</code><a href="#values-for-projectcardarchivedstate" aria-label="Link to heading 'Values for ProjectCardArchivedState'" data-heading-content="Values for ProjectCardArchivedState" class="anchor"></a></h3>
 <ul>
-<li><code>ARCHIVED</code>: A project card that is archived.</li>
-<li><code>NOT_ARCHIVED</code>: A project card that is not archived.</li>
+<li><code>ARCHIVED</code>: A project card that is archived. <strong>Deprecated:</strong> Projects (classic) is being deprecated in favor of the new Projects experience, see: <a href="https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/" class="external">https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/</a>. Removal on 2025-04-01 UTC.</li>
+<li><code>NOT_ARCHIVED</code>: A project card that is not archived. <strong>Deprecated:</strong> Projects (classic) is being deprecated in favor of the new Projects experience, see: <a href="https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/" class="external">https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/</a>. Removal on 2025-04-01 UTC.</li>
 </ul>
 <h2 id="projectcardconnection---object" title="ProjectCardConnection - object" data-entry-type="Section">ProjectCardConnection - object<a href="#projectcardconnection---object" aria-label="Link to heading 'ProjectCardConnection - object'" data-heading-content="ProjectCardConnection - object" class="anchor"></a></h2>
 <p>The connection type for ProjectCard.</p>
@@ -446,7 +446,7 @@ associated with a column, they will not become pending in the future. <strong>De
 <p><code>cards</code> (ProjectCardConnection!): List of cards in the column. <strong>Deprecated:</strong> Projects (classic) is being deprecated in favor of the new Projects experience, see: <a href="https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/" class="external">https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/</a>. Removal on 2025-04-01 UTC.</p>
 <ul>
 <li><code>after</code> (String): Returns the elements in the list that come after the specified cursor.</li>
-<li><code>archivedStates</code> ([ProjectCardArchivedState]): A list of archived states to filter the cards by.</li>
+<li><code>archivedStates</code> ([ProjectCardArchivedState]): A list of archived states to filter the cards by. Default: <code>[ARCHIVED, NOT_ARCHIVED]</code>.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
@@ -597,7 +597,7 @@ associated with a column, they will not become pending in the future. <strong>De
 <li><code>todoPercentage</code> (Float!): The percentage of to do cards. <strong>Deprecated:</strong> Projects (classic) is being deprecated in favor of the new Projects experience, see: <a href="https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/" class="external">https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/</a>. Removal on 2025-04-01 UTC.</li>
 </ul>
 <h2 id="projectstate---enum" title="ProjectState - enum" data-entry-type="Section">ProjectState - enum<a href="#projectstate---enum" aria-label="Link to heading 'ProjectState - enum'" data-heading-content="ProjectState - enum" class="anchor"></a></h2>
-<p>State of the project; eitheropenor 'closed'.</p>
+<p>State of the project; either open or 'closed'.</p>
 <h3 id="values-for-projectstate">Values for <code>ProjectState</code><a href="#values-for-projectstate" aria-label="Link to heading 'Values for ProjectState'" data-heading-content="Values for ProjectState" class="anchor"></a></h3>
 <ul>
 <li><code>CLOSED</code>: The project is closed.</li>
@@ -613,7 +613,7 @@ associated with a column, they will not become pending in the future. <strong>De
 <li><code>BUG_TRIAGE</code>: Create a board to triage and prioritize bugs with To do, priority, and Done columns.</li>
 </ul>
 <h2 id="removedfromprojectevent---object" title="RemovedFromProjectEvent - object" data-entry-type="Section">RemovedFromProjectEvent - object<a href="#removedfromprojectevent---object" aria-label="Link to heading 'RemovedFromProjectEvent - object'" data-heading-content="RemovedFromProjectEvent - object" class="anchor"></a></h2>
-<p>Represents aremoved_from_projectevent on a given issue or pull request.</p>
+<p>Represents a removed_from_project event on a given issue or pull request.</p>
 <p><strong>Implements:</strong> Node</p>
 <h3 id="fields-for-removedfromprojectevent">Fields for <code>RemovedFromProjectEvent</code><a href="#fields-for-removedfromprojectevent" aria-label="Link to heading 'Fields for RemovedFromProjectEvent'" data-heading-content="Fields for RemovedFromProjectEvent" class="anchor"></a></h3>
 <ul>

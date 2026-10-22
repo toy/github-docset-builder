@@ -33,8 +33,7 @@
 </ul>
 <p>You can view details about the automatic workflows run by viewing the <strong>Actions</strong> tab of your repository.</p>
 <div class="markdown-alert markdown-alert-note">
-<p class="markdown-alert-title">Note</p>
-<p>After you enable automatic dependency submission, we'll automatically trigger a run of the action. Once enabled, it'll run each time a commit to the default branch updates a manifest.</p>
+<p class="markdown-alert-title">After you enable automatic dependency submission, we'll automatically trigger a run of the action. Once enabled, it'll run each time a commit to the default branch updates a manifest.</p>
 </div>
 <h2 id="accessing-private-registries" title="Accessing private registries" data-entry-type="Section">Accessing private registries<a href="#accessing-private-registries" aria-label="Link to heading 'Accessing private registries'" data-heading-content="Accessing private registries" class="anchor"></a></h2>
 <h3 id="using-dependabot-secrets">Using Dependabot secrets<a href="#using-dependabot-secrets" aria-label="Link to heading 'Using Dependabot secrets'" data-heading-content="Using Dependabot secrets" class="anchor"></a></h3>
@@ -55,8 +54,7 @@
 <li>There aren't any runner groups tagged with a <code>dependency-submission</code> label.</li>
 </ul>
 <div class="markdown-alert markdown-alert-note">
-<p class="markdown-alert-title">Note</p>
-<p>For Maven or Gradle projects that use self-hosted runners with private Maven registries, you need to modify the Maven server settings file to allow the dependency submission workflows to connect to the registries. For more information about the Maven server settings file, see <a href="https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#transitive-dependencies" class="external">Security and Deployment Settings</a> in the Maven documentation.</p>
+<p class="markdown-alert-title">For Maven or Gradle projects that use self-hosted runners with private Maven registries, you need to modify the Maven server settings file to allow the dependency submission workflows to connect to the registries. For more information about the Maven server settings file, see [Security and Deployment Settings](https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#transitive-dependencies) in the Maven documentation.</p>
 </div>
 <p>On a restricted network, automatic dependency submission has several outbound needs. Depending on the ecosystem, a job might download the language toolchain it runs on, the tooling it uses to detect and submit dependencies (such as the Gradle dependency-submission plugin), and your project's own dependencies from your registries.</p>
 <p>Configuring access to your dependency registry covers only the last of these. Make sure the other paths are reachable too, or mirrored internally where the ecosystem supports it.</p>

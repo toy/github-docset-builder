@@ -69,7 +69,7 @@
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (UserStatusOrder): Ordering options for user statuses returned from the connection.</li>
+<li><code>orderBy</code> (UserStatusOrder): Ordering options for user statuses returned from the connection. Default: <code>{field: UPDATED_AT, direction: DESC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -123,11 +123,11 @@
 <ul>
 <li><code>after</code> (String): Returns the elements in the list that come after the specified cursor.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
-<li><code>filterBy</code> (ProjectV2Filters): Filtering options for projects returned from this connection.</li>
+<li><code>filterBy</code> (ProjectV2Filters): Filtering options for projects returned from this connection. Default: <code>{}</code>.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
 <li><code>minPermissionLevel</code> (ProjectV2PermissionLevel): Filter projects based on user role. Default: <code>READ</code>.</li>
-<li><code>orderBy</code> (ProjectV2Order): How to order the returned projects.</li>
+<li><code>orderBy</code> (ProjectV2Order): How to order the returned projects. Default: <code>{field: NUMBER, direction: DESC}</code>.</li>
 <li><code>query</code> (String): The query to search projects by. Default: ``.</li>
 </ul>
 </li>
@@ -336,7 +336,7 @@
 <li><code>LOGIN</code>: Order team members by login.</li>
 </ul>
 <h2 id="teammemberrole---enum" title="TeamMemberRole - enum" data-entry-type="Section">TeamMemberRole - enum<a href="#teammemberrole---enum" aria-label="Link to heading 'TeamMemberRole - enum'" data-heading-content="TeamMemberRole - enum" class="anchor"></a></h2>
-<p>The possible team member roles; eithermaintaineror 'member'.</p>
+<p>The possible team member roles; either maintainer or 'member'.</p>
 <h3 id="values-for-teammemberrole">Values for <code>TeamMemberRole</code><a href="#values-for-teammemberrole" aria-label="Link to heading 'Values for TeamMemberRole'" data-heading-content="Values for TeamMemberRole" class="anchor"></a></h3>
 <ul>
 <li><code>MAINTAINER</code>: A team maintainer has permission to add and remove team members.</li>

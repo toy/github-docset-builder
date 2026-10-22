@@ -3,8 +3,7 @@
 <h2 id="initial-troubleshooting-suggestions" title="Initial troubleshooting suggestions" data-entry-type="Section">Initial troubleshooting suggestions<a href="#initial-troubleshooting-suggestions" aria-label="Link to heading 'Initial troubleshooting suggestions'" data-heading-content="Initial troubleshooting suggestions" class="anchor"></a></h2>
 <p>There are several ways you can troubleshoot failed workflow runs.</p>
 <div class="markdown-alert markdown-alert-note">
-<p class="markdown-alert-title">Note</p>
-<p>If you are on a GitHub Copilot Free subscription, this will count towards your monthly chat message limit.</p>
+<p class="markdown-alert-title">If you are on a GitHub Copilot Free subscription, this will count towards your monthly chat message limit.</p>
 </div>
 <h3 id="using-github-copilot">Using GitHub Copilot<a href="#using-github-copilot" aria-label="Link to heading 'Using GitHub Copilot'" data-heading-content="Using GitHub Copilot" class="anchor"></a></h3>
 <p>To open a chat with GitHub Copilot about a failed workflow run, you can either:</p>
@@ -60,6 +59,8 @@ For example, you can use <code>npm install --verbose</code> for npm or <code>GIT
 <p>In these cases, you can leverage the API to force cancel the run. For more information, see <a href="https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28#force-cancel-a-workflow-run" class="external">REST API endpoints for workflow runs</a>.</p>
 <p>A common cause can be using the <code>always()</code> <a href="../reference/workflows-and-actions/expressions.html#status-check-functions">status check function</a> which returns <code>true</code>, even on cancellation. An alternative is to use the inverse of the <code>cancelled()</code> function, <code>${{ !cancelled() }}</code>.</p>
 <p>For more information, see <a href="write-workflows/choose-when-workflows-run/control-jobs-with-conditions.html">Using conditions to control job execution</a> and <a href="manage-workflow-runs/cancel-a-workflow-run.html">Canceling a workflow run</a>.</p>
+<p>If a run remains queued or in progress after cancellation attempts, it may be stuck in an abnormal state rather than continuing because of <code>always()</code>. Signs include no jobs being created, the UI displaying "Failed to cancel workflow", or the <code>cancel</code> or <code>force-cancel</code> REST API endpoints returning HTTP <code>500</code> or <code>409</code>.</p>
+<p>Self-service cancellation, including force cancellation, may not clear a stuck or out-of-sync workflow run or check suite. If your repository uses concurrency, the stuck run can continue blocking later runs in the same concurrency group. In this situation, contact us through the <a href="https://support.github.com" class="external">GitHub Support portal</a> for help clearing the run.</p>
 <h2 id="troubleshooting-runners" title="Troubleshooting runners" data-entry-type="Section">Troubleshooting runners<a href="#troubleshooting-runners" aria-label="Link to heading 'Troubleshooting runners'" data-heading-content="Troubleshooting runners" class="anchor"></a></h2>
 <h3 id="defining-runner-labels">Defining runner labels<a href="#defining-runner-labels" aria-label="Link to heading 'Defining runner labels'" data-heading-content="Defining runner labels" class="anchor"></a></h3>
 <p>GitHub-hosted runners leverage <a href="../reference/runners/github-hosted-runners.html#standard-github-hosted-runners-for-public-repositories">preset labels</a> maintained through the <a href="https://github.com/actions/runner-images?tab=readme-ov-file#available-images" class="external"><code>actions/runner-images</code></a> repository.</p>

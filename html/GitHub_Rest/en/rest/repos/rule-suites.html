@@ -49,14 +49,12 @@ Can be one of: <code>pass</code>, <code>fail</code>, <code>bypass</code>, <code>
 <li>
 <p><strong><code>evaluate_status</code></strong> (string)<br>
 The evaluate status to filter on. When specified, only rule suites resulting from rulesets with the specified evaluate status will be returned.</p>
-</li>
-</ul>
 <p>all - all rule suites will be returned.<br>
 active - only rule suites resulting from rulesets in active (non-evaluate) mode will be returned.<br>
 evaluate - only rule suites resulting from rulesets in evaluate mode will be returned.<br>
 Default: <code>all</code><br>
 Can be one of: <code>all</code>, <code>active</code>, <code>evaluate</code></p>
-<ul>
+</li>
 <li>
 <p><strong><code>per_page</code></strong> (integer)<br>
 The number of results per page (max 100). For more information, see "Using pagination in the REST API."<br>
@@ -130,6 +128,12 @@ To get this ID, you can use GET /repos/{owner}/{repo}/rulesets/rule-suites<br>
 for repositories and GET /orgs/{org}/rulesets/rule-suites<br>
 for organizations.</p>
 </li>
+<li>
+<p><strong><code>include_metadata</code></strong> (boolean)<br>
+When set to true, the response will include additional metadata for pull request and required status check rule evaluation.<br>
+Results are capped at 50 entries.<br>
+Default: <code>false</code></p>
+</li>
 </ul>
 <h3 id="http-response-status-codes-1">HTTP response status codes<a href="#http-response-status-codes-1" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
@@ -175,6 +179,65 @@ for organizations.</p>
 <li><code>enforcement</code>: string, enum: <code>active</code>, <code>evaluate</code>, <code>deleted ruleset</code></li>
 <li><code>result</code>: string, enum: <code>pass</code>, <code>fail</code></li>
 <li><code>rule_type</code>: string</li>
+<li><code>metadata</code>: one of:
+<ul>
+<li><strong>Pull request rule suite metadata</strong>
+<ul>
+<li><code>pull_request</code>: object:
+<ul>
+<li><code>id</code>: integer</li>
+<li><code>number</code>: integer</li>
+<li><code>user</code>: object:
+<ul>
+<li><code>id</code>: integer</li>
+<li><code>login</code>: string</li>
+<li><code>type</code>: string</li>
+</ul>
+</li>
+<li><code>reviews</code>: array of objects:
+<ul>
+<li><code>id</code>: integer</li>
+<li><code>user</code>: object</li>
+<li><code>state</code>: string</li>
+</ul>
+</li>
+<li><code>proof_of_presence</code>: object or null:
+<ul>
+<li><code>state</code>: string</li>
+<li><code>code</code>: string</li>
+<li><code>base_sha</code>: string</li>
+<li><code>head_sha</code>: string</li>
+<li><code>required_level</code>: string</li>
+<li><code>verified_level</code>: string</li>
+<li><code>verified_at</code>: string</li>
+<li><code>verifier</code>: object or null</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Required status checks rule suite metadata</strong>
+<ul>
+<li><code>checks</code>: array of objects:
+<ul>
+<li><code>id</code>: integer</li>
+<li><code>context</code>: string</li>
+<li><code>state</code>: string</li>
+<li><code>type</code>: string</li>
+<li><code>app</code>: object or null:
+<ul>
+<li><code>id</code>: integer</li>
+<li><code>slug</code>: string</li>
+<li><code>name</code>: string</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><code>details</code>: string or null</li>
 </ul>
 </li>

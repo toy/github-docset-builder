@@ -1,0 +1,27 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Automatic Dependabot access to GitHub-hosted registries</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Supply chain security</a> / </nav><h1 id="automatic-dependabot-access-to-github-hosted-registries">Automatic Dependabot access to GitHub-hosted registries<a href="#automatic-dependabot-access-to-github-hosted-registries" aria-label="Link to heading 'Automatic Dependabot access to GitHub-hosted registries'" data-heading-content="Automatic Dependabot access to GitHub-hosted registries" class="anchor"></a></h1>
+<p>Keep your private dependencies up to date reliably by granting Dependabot automatic access to GitHub Packages and Container registry, so you never need to create or rotate credentials for these registries.</p>
+<h2 id="about-automatic-access-to-github-hosted-registries" title="About automatic access to GitHub-hosted registries" data-entry-type="Section">About automatic access to GitHub-hosted registries<a href="#about-automatic-access-to-github-hosted-registries" aria-label="Link to heading 'About automatic access to GitHub-hosted registries'" data-heading-content="About automatic access to GitHub-hosted registries" class="anchor"></a></h2>
+<p>Dependabot can authenticate to private GitHub Packages and Container registry packages using the same access grants that GitHub Actions workflows use. If a package has granted your repository <strong>Read</strong> access in the package settings on GitHub, Dependabot can access that package automatically.</p>
+<p>This eliminates the need to:</p>
+<ul>
+<li>Create and manage personal access tokens for registry access</li>
+<li>Manually configure access to GitHub-hosted registries in your <code>dependabot.yml</code> file</li>
+<li>Rotate credentials when tokens expire</li>
+</ul>
+<h2 id="how-automatic-access-works" title="How automatic access works" data-entry-type="Section">How automatic access works<a href="#how-automatic-access-works" aria-label="Link to heading 'How automatic access works'" data-heading-content="How automatic access works" class="anchor"></a></h2>
+<p>Dependabot uses its <code>GITHUB_TOKEN</code> to request <code>packages: read</code> permission when pulling from <code>*.pkg.github.com</code> and <code>ghcr.io</code>. Any package that has granted your repository access through "Manage Actions access" accepts this token, the same way it would for a regular GitHub Actions workflow.</p>
+<p>Automatic GitHub Packages credentials are used only as fallback authentication. Explicit registry credentials and normal registry routing take precedence.</p>
+<p>This works for every GitHub Packages ecosystem that Dependabot supports.</p>
+<h2 id="when-to-use-automatic-access" title="When to use automatic access" data-entry-type="Section">When to use automatic access<a href="#when-to-use-automatic-access" aria-label="Link to heading 'When to use automatic access'" data-heading-content="When to use automatic access" class="anchor"></a></h2>
+<p>Use automatic access to GitHub-hosted registries when:</p>
+<ul>
+<li>Your repositories depend on private packages stored in GitHub Packages or Container registry.</li>
+<li>You want to reduce credential management overhead.</li>
+<li>You want to avoid silent update failures caused by expired personal access tokens.</li>
+</ul>
+<p>For third-party registries (such as Artifactory, Azure Artifacts, or Nexus), you can only use the <code>dependabot.yml</code> registry configuration or organization-level private registry settings. See <a href="../../how-tos/secure-your-supply-chain/manage-your-dependency-security/configure-access-to-private-registries.html">Configuring access to private registries for Dependabot</a>.</p>
+<h2 id="how-to-enable-automatic-access" title="How to enable automatic access" data-entry-type="Section">How to enable automatic access<a href="#how-to-enable-automatic-access" aria-label="Link to heading 'How to enable automatic access'" data-heading-content="How to enable automatic access" class="anchor"></a></h2>
+<p>For each package that Dependabot needs to read, you need to go to the package's settings page and add the repository that runs Dependabot with <strong>Read</strong> access. See <a href="../../how-tos/secure-your-supply-chain/manage-your-dependency-security/configure-access-to-private-registries.html#configuring-private-github-hosted-registries">Configuring access to private registries for Dependabot</a>.</p>
+<p>Once the repository has been granted access, Dependabot can pull from that package automatically. You do not need to configure the <code>dependabot.yml</code> file, and you can remove any existing personal access token-based registry entries you previously added for these packages.</p>
+<p>For more information about configuring package access, see <a href="https://docs.github.com/en/packages/learn-github-packages/configuring-a-packages-access-control-and-visibility#ensuring-workflow-access-to-your-package" class="external">Configuring a package's access control and visibility</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

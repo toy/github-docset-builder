@@ -190,7 +190,296 @@ For example, branch,tag,push.</p>
 <li><strong>Organization ruleset conditions</strong></li>
 </ul>
 </li>
-<li><code>rules</code>: array of object</li>
+<li><code>rules</code>: array of <code>Repository Rule</code>:
+<ul>
+<li>one of:
+<ul>
+<li><strong>creation</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>creation</code></li>
+</ul>
+</li>
+<li><strong>update</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>update</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>update_allows_fetch_and_merge</code>: required, boolean</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>deletion</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>deletion</code></li>
+</ul>
+</li>
+<li><strong>required_linear_history</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>required_linear_history</code></li>
+</ul>
+</li>
+<li><strong>merge_queue</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>merge_queue</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>check_response_timeout_minutes</code>: required, integer, minimum: 1, maximum: 360</li>
+<li><code>grouping_strategy</code>: required, string, enum: <code>ALLGREEN</code>, <code>HEADGREEN</code></li>
+<li><code>max_entries_to_build</code>: required, integer, minimum: 0, maximum: 100</li>
+<li><code>max_entries_to_merge</code>: required, integer, minimum: 0, maximum: 100</li>
+<li><code>merge_method</code>: required, string, enum: <code>MERGE</code>, <code>SQUASH</code>, <code>REBASE</code></li>
+<li><code>min_entries_to_merge</code>: required, integer, minimum: 0, maximum: 100</li>
+<li><code>min_entries_to_merge_wait_minutes</code>: required, integer, minimum: 0, maximum: 360</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>required_deployments</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>required_deployments</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>required_deployment_environments</code>: required, array of string</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>required_signatures</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>required_signatures</code></li>
+</ul>
+</li>
+<li><strong>pull_request</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>pull_request</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>allowed_merge_methods</code>: array of string, enum: <code>merge</code>, <code>squash</code>, <code>rebase</code></li>
+<li><code>dismiss_stale_reviews_on_push</code>: required, boolean</li>
+<li><code>dismissal_restriction</code>: <code>DismissalRestriction</code>:
+<ul>
+<li><code>allowed_actors</code>: array of object</li>
+<li><code>enabled</code>: required, boolean</li>
+</ul>
+</li>
+<li><code>require_code_owner_review</code>: required, boolean</li>
+<li><code>require_last_push_approval</code>: required, boolean</li>
+<li><code>required_approving_review_count</code>: required, integer, minimum: 0, maximum: 10</li>
+<li><code>required_review_thread_resolution</code>: required, boolean</li>
+<li><code>required_reviewers</code>: array of <code>RequiredReviewerConfiguration</code>:
+<ul>
+<li><code>file_patterns</code>: required, array of string</li>
+<li><code>minimum_approvals</code>: required, integer</li>
+<li><code>reviewer</code>: required, object</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>required_status_checks</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>required_status_checks</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>do_not_enforce_on_create</code>: boolean</li>
+<li><code>required_status_checks</code>: required, array of <code>StatusCheckConfiguration</code>:
+<ul>
+<li><code>context</code>: required, string</li>
+<li><code>integration_id</code>: integer</li>
+</ul>
+</li>
+<li><code>strict_required_status_checks_policy</code>: required, boolean</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>non_fast_forward</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>non_fast_forward</code></li>
+</ul>
+</li>
+<li><strong>commit_message_pattern</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>commit_message_pattern</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>name</code>: string</li>
+<li><code>negate</code>: boolean</li>
+<li><code>operator</code>: required, string, enum: <code>starts_with</code>, <code>ends_with</code>, <code>contains</code>, <code>regex</code></li>
+<li><code>pattern</code>: required, string</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>commit_author_email_pattern</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>commit_author_email_pattern</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>name</code>: string</li>
+<li><code>negate</code>: boolean</li>
+<li><code>operator</code>: required, string, enum: <code>starts_with</code>, <code>ends_with</code>, <code>contains</code>, <code>regex</code></li>
+<li><code>pattern</code>: required, string</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>committer_email_pattern</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>committer_email_pattern</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>name</code>: string</li>
+<li><code>negate</code>: boolean</li>
+<li><code>operator</code>: required, string, enum: <code>starts_with</code>, <code>ends_with</code>, <code>contains</code>, <code>regex</code></li>
+<li><code>pattern</code>: required, string</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>branch_name_pattern</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>branch_name_pattern</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>name</code>: string</li>
+<li><code>negate</code>: boolean</li>
+<li><code>operator</code>: required, string, enum: <code>starts_with</code>, <code>ends_with</code>, <code>contains</code>, <code>regex</code></li>
+<li><code>pattern</code>: required, string</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>tag_name_pattern</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>tag_name_pattern</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>name</code>: string</li>
+<li><code>negate</code>: boolean</li>
+<li><code>operator</code>: required, string, enum: <code>starts_with</code>, <code>ends_with</code>, <code>contains</code>, <code>regex</code></li>
+<li><code>pattern</code>: required, string</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>workflows</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>workflows</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>do_not_enforce_on_create</code>: boolean</li>
+<li><code>workflows</code>: required, array of <code>WorkflowFileReference</code>:
+<ul>
+<li><code>path</code>: required, string</li>
+<li><code>ref</code>: string</li>
+<li><code>repository_id</code>: required, integer</li>
+<li><code>sha</code>: string</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>code_scanning</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>code_scanning</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>code_scanning_tools</code>: required, array of <code>CodeScanningTool</code>:
+<ul>
+<li><code>alerts_threshold</code>: required, string, enum: <code>none</code>, <code>errors</code>, <code>errors_and_warnings</code>, <code>all</code></li>
+<li><code>security_alerts_threshold</code>: required, string, enum: <code>none</code>, <code>critical</code>, <code>high_or_higher</code>, <code>medium_or_higher</code>, <code>all</code></li>
+<li><code>tool</code>: required, string</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>code_quality</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>code_quality</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>severity</code>: required, string, enum: <code>errors</code>, <code>warnings</code>, <code>notes</code>, <code>all</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>code_coverage</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>code_coverage</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>max_coverage_drop</code>: number, format: float, minimum: 0, maximum: 100</li>
+<li><code>minimum_coverage</code>: number, format: float, minimum: 0, maximum: 100</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>copilot_code_review</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>copilot_code_review</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>review_draft_pull_requests</code>: boolean</li>
+<li><code>review_on_push</code>: boolean</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>license_compliance_scanning</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>license_compliance_scanning</code></li>
+</ul>
+</li>
+<li><strong>file_path_restriction</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>file_path_restriction</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>restricted_file_paths</code>: required, array of string</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>max_file_path_length</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>max_file_path_length</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>max_file_path_length</code>: required, integer, minimum: 1, maximum: 32767</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>file_extension_restriction</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>file_extension_restriction</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>restricted_file_extensions</code>: required, array of string</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>max_file_size</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>max_file_size</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>max_file_size</code>: required, integer, minimum: 1, maximum: 100</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><code>created_at</code>: string, format: date-time</li>
 <li><code>updated_at</code>: string, format: date-time</li>
 </ul>
@@ -384,28 +673,28 @@ The number of approving reviews that are required before a pull request can be m
 <li><strong><code>required_review_thread_resolution</code></strong> (boolean) (required)<br>
 All conversations on code must be resolved before a pull request can be merged.</li>
 <li><strong><code>required_reviewers</code></strong> (array of objects)<br>
-Note</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p>required_reviewers is in beta and subject to change.</p>
-<p>A collection of reviewers and associated file patterns. Each reviewer has a list of file patterns which determine the files that reviewer is required to review.<br>
-- <strong><code>file_patterns</code></strong> (array of strings) (required)<br>
-Array of file patterns. Pull requests which change matching files must be approved by the specified team. File patterns use fnmatch syntax.<br>
-- <strong><code>minimum_approvals</code></strong> (integer) (required)<br>
-Minimum number of approvals required from the specified team. If set to zero, the team will be added to the pull request but approval is optional.<br>
-- <strong><code>reviewer</code></strong> (object) (required)<br>
-A required reviewing team<br>
-- <strong><code>id</code></strong> (integer) (required)<br>
-ID of the reviewer which must review changes to matching files.<br>
-- <strong><code>type</code></strong> (string) (required)<br>
-The type of the reviewer<br>
-Can be one of: <code>Team</code></p>
+A collection of reviewers and associated file patterns. Each reviewer has a list of file patterns which determine the files that reviewer is required to review.
 <ul>
+<li><strong><code>file_patterns</code></strong> (array of strings) (required)<br>
+Array of file patterns. Pull requests which change matching files must be approved by the specified team. File patterns use fnmatch syntax.</li>
+<li><strong><code>minimum_approvals</code></strong> (integer) (required)<br>
+Minimum number of approvals required from the specified team. If set to zero, the team will be added to the pull request but approval is optional.</li>
+<li><strong><code>reviewer</code></strong> (object) (required)<br>
+A required reviewing team
+<ul>
+<li><strong><code>id</code></strong> (integer) (required)<br>
+ID of the reviewer which must review changes to matching files.</li>
+<li><strong><code>type</code></strong> (string) (required)<br>
+The type of the reviewer<br>
+Can be one of: <code>Team</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><strong><code>required_status_checks</code></strong> (object)<br>
 Choose which status checks must pass before the ref is updated. When enabled, commits must first be pushed to another ref where the checks pass.
 <ul>
@@ -691,6 +980,8 @@ The maximum file size allowed in megabytes. This limit does not apply to Git Lar
 </ul>
 </li>
 </ul>
+</li>
+</ul>
 <h3 id="http-response-status-codes-2">HTTP response status codes<a href="#http-response-status-codes-2" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
@@ -791,7 +1082,306 @@ The maximum file size allowed in megabytes. This limit does not apply to Git Lar
 <li><strong>Organization ruleset conditions</strong></li>
 </ul>
 </li>
-<li><code>rules</code>: array of object</li>
+<li><code>rules</code>: array of <code>Repository Rule</code>:
+<ul>
+<li>one of:
+<ul>
+<li><strong>creation</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>creation</code></li>
+</ul>
+</li>
+<li><strong>update</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>update</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>update_allows_fetch_and_merge</code>: required, boolean</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>deletion</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>deletion</code></li>
+</ul>
+</li>
+<li><strong>required_linear_history</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>required_linear_history</code></li>
+</ul>
+</li>
+<li><strong>merge_queue</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>merge_queue</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>check_response_timeout_minutes</code>: required, integer, minimum: 1, maximum: 360</li>
+<li><code>grouping_strategy</code>: required, string, enum: <code>ALLGREEN</code>, <code>HEADGREEN</code></li>
+<li><code>max_entries_to_build</code>: required, integer, minimum: 0, maximum: 100</li>
+<li><code>max_entries_to_merge</code>: required, integer, minimum: 0, maximum: 100</li>
+<li><code>merge_method</code>: required, string, enum: <code>MERGE</code>, <code>SQUASH</code>, <code>REBASE</code></li>
+<li><code>min_entries_to_merge</code>: required, integer, minimum: 0, maximum: 100</li>
+<li><code>min_entries_to_merge_wait_minutes</code>: required, integer, minimum: 0, maximum: 360</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>required_deployments</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>required_deployments</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>required_deployment_environments</code>: required, array of string</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>required_signatures</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>required_signatures</code></li>
+</ul>
+</li>
+<li><strong>pull_request</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>pull_request</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>allowed_merge_methods</code>: array of string, enum: <code>merge</code>, <code>squash</code>, <code>rebase</code></li>
+<li><code>dismiss_stale_reviews_on_push</code>: required, boolean</li>
+<li><code>dismissal_restriction</code>: <code>DismissalRestriction</code>:
+<ul>
+<li><code>allowed_actors</code>: array of <code>Actor</code>:
+<ul>
+<li><code>id</code>: required, integer</li>
+<li><code>type</code>: required, string, enum: <code>User</code>, <code>Team</code>, <code>IntegrationInstallation</code>, <code>RepositoryRole</code></li>
+</ul>
+</li>
+<li><code>enabled</code>: required, boolean</li>
+</ul>
+</li>
+<li><code>require_code_owner_review</code>: required, boolean</li>
+<li><code>require_last_push_approval</code>: required, boolean</li>
+<li><code>required_approving_review_count</code>: required, integer, minimum: 0, maximum: 10</li>
+<li><code>required_review_thread_resolution</code>: required, boolean</li>
+<li><code>required_reviewers</code>: array of <code>RequiredReviewerConfiguration</code>:
+<ul>
+<li><code>file_patterns</code>: required, array of string</li>
+<li><code>minimum_approvals</code>: required, integer</li>
+<li><code>reviewer</code>: required, <code>Reviewer</code>:
+<ul>
+<li><code>id</code>: required, integer</li>
+<li><code>type</code>: required, string, enum: <code>Team</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>required_status_checks</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>required_status_checks</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>do_not_enforce_on_create</code>: boolean</li>
+<li><code>required_status_checks</code>: required, array of <code>StatusCheckConfiguration</code>:
+<ul>
+<li><code>context</code>: required, string</li>
+<li><code>integration_id</code>: integer</li>
+</ul>
+</li>
+<li><code>strict_required_status_checks_policy</code>: required, boolean</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>non_fast_forward</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>non_fast_forward</code></li>
+</ul>
+</li>
+<li><strong>commit_message_pattern</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>commit_message_pattern</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>name</code>: string</li>
+<li><code>negate</code>: boolean</li>
+<li><code>operator</code>: required, string, enum: <code>starts_with</code>, <code>ends_with</code>, <code>contains</code>, <code>regex</code></li>
+<li><code>pattern</code>: required, string</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>commit_author_email_pattern</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>commit_author_email_pattern</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>name</code>: string</li>
+<li><code>negate</code>: boolean</li>
+<li><code>operator</code>: required, string, enum: <code>starts_with</code>, <code>ends_with</code>, <code>contains</code>, <code>regex</code></li>
+<li><code>pattern</code>: required, string</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>committer_email_pattern</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>committer_email_pattern</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>name</code>: string</li>
+<li><code>negate</code>: boolean</li>
+<li><code>operator</code>: required, string, enum: <code>starts_with</code>, <code>ends_with</code>, <code>contains</code>, <code>regex</code></li>
+<li><code>pattern</code>: required, string</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>branch_name_pattern</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>branch_name_pattern</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>name</code>: string</li>
+<li><code>negate</code>: boolean</li>
+<li><code>operator</code>: required, string, enum: <code>starts_with</code>, <code>ends_with</code>, <code>contains</code>, <code>regex</code></li>
+<li><code>pattern</code>: required, string</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>tag_name_pattern</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>tag_name_pattern</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>name</code>: string</li>
+<li><code>negate</code>: boolean</li>
+<li><code>operator</code>: required, string, enum: <code>starts_with</code>, <code>ends_with</code>, <code>contains</code>, <code>regex</code></li>
+<li><code>pattern</code>: required, string</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>workflows</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>workflows</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>do_not_enforce_on_create</code>: boolean</li>
+<li><code>workflows</code>: required, array of <code>WorkflowFileReference</code>:
+<ul>
+<li><code>path</code>: required, string</li>
+<li><code>ref</code>: string</li>
+<li><code>repository_id</code>: required, integer</li>
+<li><code>sha</code>: string</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>code_scanning</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>code_scanning</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>code_scanning_tools</code>: required, array of <code>CodeScanningTool</code>:
+<ul>
+<li><code>alerts_threshold</code>: required, string, enum: <code>none</code>, <code>errors</code>, <code>errors_and_warnings</code>, <code>all</code></li>
+<li><code>security_alerts_threshold</code>: required, string, enum: <code>none</code>, <code>critical</code>, <code>high_or_higher</code>, <code>medium_or_higher</code>, <code>all</code></li>
+<li><code>tool</code>: required, string</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>code_quality</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>code_quality</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>severity</code>: required, string, enum: <code>errors</code>, <code>warnings</code>, <code>notes</code>, <code>all</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>code_coverage</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>code_coverage</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>max_coverage_drop</code>: number, format: float, minimum: 0, maximum: 100</li>
+<li><code>minimum_coverage</code>: number, format: float, minimum: 0, maximum: 100</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>copilot_code_review</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>copilot_code_review</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>review_draft_pull_requests</code>: boolean</li>
+<li><code>review_on_push</code>: boolean</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>license_compliance_scanning</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>license_compliance_scanning</code></li>
+</ul>
+</li>
+<li><strong>file_path_restriction</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>file_path_restriction</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>restricted_file_paths</code>: required, array of string</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>max_file_path_length</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>max_file_path_length</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>max_file_path_length</code>: required, integer, minimum: 1, maximum: 32767</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>file_extension_restriction</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>file_extension_restriction</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>restricted_file_extensions</code>: required, array of string</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>max_file_size</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>max_file_size</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>max_file_size</code>: required, integer, minimum: 1, maximum: 100</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><code>created_at</code>: string, format: date-time</li>
 <li><code>updated_at</code>: string, format: date-time</li>
 </ul>
@@ -1041,28 +1631,28 @@ The number of approving reviews that are required before a pull request can be m
 <li><strong><code>required_review_thread_resolution</code></strong> (boolean) (required)<br>
 All conversations on code must be resolved before a pull request can be merged.</li>
 <li><strong><code>required_reviewers</code></strong> (array of objects)<br>
-Note</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p>required_reviewers is in beta and subject to change.</p>
-<p>A collection of reviewers and associated file patterns. Each reviewer has a list of file patterns which determine the files that reviewer is required to review.<br>
-- <strong><code>file_patterns</code></strong> (array of strings) (required)<br>
-Array of file patterns. Pull requests which change matching files must be approved by the specified team. File patterns use fnmatch syntax.<br>
-- <strong><code>minimum_approvals</code></strong> (integer) (required)<br>
-Minimum number of approvals required from the specified team. If set to zero, the team will be added to the pull request but approval is optional.<br>
-- <strong><code>reviewer</code></strong> (object) (required)<br>
-A required reviewing team<br>
-- <strong><code>id</code></strong> (integer) (required)<br>
-ID of the reviewer which must review changes to matching files.<br>
-- <strong><code>type</code></strong> (string) (required)<br>
-The type of the reviewer<br>
-Can be one of: <code>Team</code></p>
+A collection of reviewers and associated file patterns. Each reviewer has a list of file patterns which determine the files that reviewer is required to review.
 <ul>
+<li><strong><code>file_patterns</code></strong> (array of strings) (required)<br>
+Array of file patterns. Pull requests which change matching files must be approved by the specified team. File patterns use fnmatch syntax.</li>
+<li><strong><code>minimum_approvals</code></strong> (integer) (required)<br>
+Minimum number of approvals required from the specified team. If set to zero, the team will be added to the pull request but approval is optional.</li>
+<li><strong><code>reviewer</code></strong> (object) (required)<br>
+A required reviewing team
+<ul>
+<li><strong><code>id</code></strong> (integer) (required)<br>
+ID of the reviewer which must review changes to matching files.</li>
+<li><strong><code>type</code></strong> (string) (required)<br>
+The type of the reviewer<br>
+Can be one of: <code>Team</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><strong><code>required_status_checks</code></strong> (object)<br>
 Choose which status checks must pass before the ref is updated. When enabled, commits must first be pushed to another ref where the checks pass.
 <ul>
@@ -1343,6 +1933,8 @@ Can be one of: <code>max_file_size</code></li>
 <ul>
 <li><strong><code>max_file_size</code></strong> (integer) (required)<br>
 The maximum file size allowed in megabytes. This limit does not apply to Git Large File Storage (Git LFS).</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

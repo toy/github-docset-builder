@@ -150,7 +150,7 @@
         <code><a href="https://github.com/actions/runner-images/blob/main/images/macos/macos-14-arm64-Readme.md" class="external">macos-14</a></code>,
         <code><a href="https://github.com/actions/runner-images/blob/main/images/macos/macos-15-arm64-Readme.md" class="external">macos-15</a></code>,
         <code><a href="https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md" class="external">macos-26</a></code>,
-        <code><a href="https://github.com/actions/runner-images/blob/main/images/macos/xcode-27-arm64-Readme.md" class="external">xcode-27</a></code> (Public preview)
+        <code><a href="https://github.com/actions/runner-images/blob/main/images/macos/xcode-27-arm64-Readme.md" class="external">xcode-27</a></code>
       </td>
     </tr>
   </tbody>
@@ -249,7 +249,7 @@
         <code><a href="https://github.com/actions/runner-images/blob/main/images/macos/macos-14-arm64-Readme.md" class="external">macos-14</a></code>,
         <code><a href="https://github.com/actions/runner-images/blob/main/images/macos/macos-15-arm64-Readme.md" class="external">macos-15</a></code>,
         <code><a href="https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md" class="external">macos-26</a></code>,
-        <code><a href="https://github.com/actions/runner-images/blob/main/images/macos/xcode-27-arm64-Readme.md" class="external">xcode-27</a></code> (Public preview)
+        <code><a href="https://github.com/actions/runner-images/blob/main/images/macos/xcode-27-arm64-Readme.md" class="external">xcode-27</a></code>
       </td>
     </tr>
   </tbody>
@@ -271,8 +271,7 @@
 <p>To specify a self-hosted runner for your job, configure <code>runs-on</code> in your workflow file with self-hosted runner labels.</p>
 <p>Self-hosted runners may have the <code>self-hosted</code> label. When setting up a self-hosted runner, by default we will include the label <code>self-hosted</code>. You may pass in the <code>--no-default-labels</code> flag to prevent the self-hosted label from being applied. Labels can be used to create targeting options for runners, such as operating system or architecture, we recommend providing an array of labels that begins with <code>self-hosted</code> (this must be listed first) and then includes additional labels as needed. When you specify an array of labels, jobs will be queued on runners that have all the labels that you specify.</p>
 <div class="markdown-alert markdown-alert-note">
-<p class="markdown-alert-title">Note</p>
-<p>Actions Runner Controller does not support the <code>self-hosted</code> label.</p>
+<p class="markdown-alert-title">Actions Runner Controller does not support the `self-hosted` label.</p>
 </div>
 <h4 id="example-using-labels-for-runner-selection">Example: Using labels for runner selection<a href="#example-using-labels-for-runner-selection" aria-label="Link to heading 'Example: Using labels for runner selection'" data-heading-content="Example: Using labels for runner selection" class="anchor"></a></h4>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">self-hosted</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">linux</span><span style="color:#c0c5ce;">]

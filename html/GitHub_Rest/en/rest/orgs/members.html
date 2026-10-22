@@ -178,17 +178,17 @@ Required unless you provide invitee_id. Email address of the person you are invi
 <li>
 <p><strong><code>role</code></strong> (string)<br>
 The role for the new member.</p>
-</li>
-</ul>
 <p>admin - Organization owners with full administrative rights to the organization and complete access to all repositories and teams.<br>
 direct_member - Non-owner organization members with ability to see other members and join teams by invitation.<br>
 billing_manager - Non-owner organization members with ability to manage the billing settings of your organization.<br>
 reinstate - The previous role assigned to the invitee before they were removed from your organization. Can be one of the roles listed above. Only works if the invitee was previously part of your organization.<br>
 Default: <code>direct_member</code><br>
 Can be one of: <code>admin</code>, <code>direct_member</code>, <code>billing_manager</code>, <code>reinstate</code></p>
-<ul>
-<li><strong><code>team_ids</code></strong> (array of integers)<br>
-Specify IDs for the teams you want to invite new members to.</li>
+</li>
+<li>
+<p><strong><code>team_ids</code></strong> (array of integers)<br>
+Specify IDs for the teams you want to invite new members to.</p>
+</li>
 </ul>
 <h3 id="http-response-status-codes-2">HTTP response status codes<a href="#http-response-status-codes-2" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
@@ -693,13 +693,15 @@ The handle for the GitHub user account.</p>
 </ul>
 <h4 id="body-parameters-1">Body parameters<a href="#body-parameters-1" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
 <ul>
-<li><strong><code>role</code></strong> (string)<br>
-The role to give the user in the organization. Can be one of:</li>
-</ul>
+<li>
+<p><strong><code>role</code></strong> (string)<br>
+The role to give the user in the organization. Can be one of:</p>
 <p>admin - The user will become an owner of the organization.<br>
 member - The user will become a non-owner member of the organization.<br>
 Default: <code>member</code><br>
 Can be one of: <code>admin</code>, <code>member</code></p>
+</li>
+</ul>
 <h3 id="http-response-status-codes-9">HTTP response status codes<a href="#http-response-status-codes-9" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>

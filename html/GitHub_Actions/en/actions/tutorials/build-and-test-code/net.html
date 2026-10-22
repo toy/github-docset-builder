@@ -80,7 +80,20 @@
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet add package Newtonsoft.Json --version 12.0.1
 </span></code></pre>
 <h3 id="caching-dependencies">Caching dependencies<a href="#caching-dependencies" aria-label="Link to heading 'Caching dependencies'" data-heading-content="Caching dependencies" class="anchor"></a></h3>
-<p>You can cache NuGet dependencies for future workflows using the optional <code>cache</code> input. For example, the YAML below caches the NuGet <code>global-packages</code> folder, and then installs the <code>Newtonsoft</code> package. A second optional input, <code>cache-dependency-path</code>, can be used to specify the path to a dependency file: <code>packages.lock.json</code>.</p>
+<p>You can cache NuGet dependencies for future workflows using the optional <code>cache</code> input. Caching requires a <code>packages.lock.json</code> file. If the action cannot find a matching lock file, it fails.</p>
+<p>Before enabling caching:</p>
+<ol>
+<li>
+<p>In the directory containing your project or solution, generate the lock files locally.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">dotnet restore --use-lock-file
+</span></code></pre>
+</li>
+<li>
+<p>Commit the generated <code>packages.lock.json</code> files to your repository so they are available when the workflow runs.</p>
+</li>
+</ol>
+<p>For more information, see <a href="https://learn.microsoft.com/nuget/consume-packages/package-references-in-project-files#locking-dependencies" class="external">Locking dependencies</a> in the NuGet documentation.</p>
+<p>By default, <code>setup-dotnet</code> looks for a lock file in the repository root. Use <code>cache-dependency-path</code> to specify lock files in subdirectories or multiple lock files. The following example caches the NuGet <code>global-packages</code> folder using lock files throughout the repository, then restores the dependencies in locked mode.</p>
 <p>For more information, see <a href="../../reference/workflows-and-actions/dependency-caching.html">Dependency caching reference</a>.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
@@ -89,8 +102,9 @@
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">dotnet-version</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">6.x</span><span style="color:#c0c5ce;">'
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">cache</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">true
-</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Install dependencies
-</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet add package Newtonsoft.Json --version 12.0.1
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">cache-dependency-path</span><span style="color:#c0c5ce;">: '</span><span style="color:#a3be8c;">**/packages.lock.json</span><span style="color:#c0c5ce;">'
+</span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Restore dependencies
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet restore --locked-mode
 </span></code></pre>
 <div class="markdown-alert markdown-alert-note">
 <p class="markdown-alert-title">Note</p>
@@ -126,23 +140,23 @@
 </span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">matrix</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">dotnet-version</span><span style="color:#c0c5ce;">: [ '</span><span style="color:#a3be8c;">3.1.x</span><span style="color:#c0c5ce;">', '</span><span style="color:#a3be8c;">6.0.x</span><span style="color:#c0c5ce;">' ]
 </span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">        - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
-</span><span style="color:#c0c5ce;">        - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup dotnet
-</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-dotnet@v4
-</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">            </span><span style="color:#bf616a;">dotnet-version</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ matrix.dotnet-version }}
-</span><span style="color:#c0c5ce;">        - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Install dependencies
-</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet restore
-</span><span style="color:#c0c5ce;">        - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Test with dotnet
-</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet test --no-restore --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
-</span><span style="color:#c0c5ce;">        - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Upload dotnet test results
-</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/upload-artifact@v4
-</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
-</span><span style="color:#c0c5ce;">            </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet-results-${{ matrix.dotnet-version }}
-</span><span style="color:#c0c5ce;">            </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">TestResults-${{ matrix.dotnet-version }}
-</span><span style="color:#c0c5ce;">          </span><span style="color:#65737e;"># Use always() to always run this step to publish test results when there are test failures
-</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ always() }}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/checkout@v6
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Setup dotnet
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/setup-dotnet@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">dotnet-version</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ matrix.dotnet-version }}
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Install dependencies
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet restore
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Test with dotnet
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet test --no-restore --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Upload dotnet test results
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">actions/upload-artifact@v4
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">dotnet-results-${{ matrix.dotnet-version }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">TestResults-${{ matrix.dotnet-version }}
+</span><span style="color:#c0c5ce;">        </span><span style="color:#65737e;"># Use always() to always run this step to publish test results when there are test failures
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ always() }}
 </span></code></pre>
 <h2 id="publishing-to-package-registries" title="Publishing to package registries" data-entry-type="Section">Publishing to package registries<a href="#publishing-to-package-registries" aria-label="Link to heading 'Publishing to package registries'" data-heading-content="Publishing to package registries" class="anchor"></a></h2>
 <p>You can configure your workflow to publish your .NET package to a package registry when your CI tests pass. You can use repository secrets to store any tokens or credentials needed to publish your binary. The following example creates and publishes a package to GitHub Packages using <code>dotnet core cli</code>.</p>

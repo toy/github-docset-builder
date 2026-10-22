@@ -208,7 +208,31 @@ The project's number.</p>
 </li>
 </ul>
 </li>
-<li><code>labels</code>: required, array of object</li>
+<li><code>labels</code>: required, array of items:
+<ul>
+<li>one of:
+<ul>
+<li><strong>string</strong></li>
+<li><strong>object</strong>
+<ul>
+<li><code>id</code>: integer, format: int64</li>
+<li><code>node_id</code>: string</li>
+<li><code>url</code>: string, format: uri</li>
+<li><code>name</code>: string</li>
+<li><code>description</code>: string or null</li>
+<li><code>color</code>: string or null</li>
+<li><code>default</code>: boolean</li>
+<li><code>archived_by</code>: all of:
+<ul>
+<li><strong>Simple User</strong> (see above)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><code>assignees</code>: array of <code>Simple User</code> (see above)</li>
 <li><code>milestone</code>: required, any of:
 <ul>
@@ -839,7 +863,31 @@ The project's number.</p>
 </li>
 </ul>
 </li>
-<li><code>labels</code>: required, array of object</li>
+<li><code>labels</code>: required, array of items:
+<ul>
+<li>one of:
+<ul>
+<li><strong>string</strong></li>
+<li><strong>object</strong>
+<ul>
+<li><code>id</code>: integer, format: int64</li>
+<li><code>node_id</code>: string</li>
+<li><code>url</code>: string, format: uri</li>
+<li><code>name</code>: string</li>
+<li><code>description</code>: string or null</li>
+<li><code>color</code>: string or null</li>
+<li><code>default</code>: boolean</li>
+<li><code>archived_by</code>: all of:
+<ul>
+<li><strong>Simple User</strong> (see above)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><code>assignees</code>: array of <code>Simple User</code> (see above)</li>
 <li><code>milestone</code>: required, any of:
 <ul>
@@ -1472,7 +1520,31 @@ The project's number.</p>
 </li>
 </ul>
 </li>
-<li><code>labels</code>: required, array of object</li>
+<li><code>labels</code>: required, array of items:
+<ul>
+<li>one of:
+<ul>
+<li><strong>string</strong></li>
+<li><strong>object</strong>
+<ul>
+<li><code>id</code>: integer, format: int64</li>
+<li><code>node_id</code>: string</li>
+<li><code>url</code>: string, format: uri</li>
+<li><code>name</code>: string</li>
+<li><code>description</code>: string or null</li>
+<li><code>color</code>: string or null</li>
+<li><code>default</code>: boolean</li>
+<li><code>archived_by</code>: all of:
+<ul>
+<li><strong>Simple User</strong> (see above)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><code>assignees</code>: array of <code>Simple User</code> (see above)</li>
 <li><code>milestone</code>: required, any of:
 <ul>
@@ -2105,7 +2177,31 @@ The project's number.</p>
 </li>
 </ul>
 </li>
-<li><code>labels</code>: required, array of object</li>
+<li><code>labels</code>: required, array of items:
+<ul>
+<li>one of:
+<ul>
+<li><strong>string</strong></li>
+<li><strong>object</strong>
+<ul>
+<li><code>id</code>: integer, format: int64</li>
+<li><code>node_id</code>: string</li>
+<li><code>url</code>: string, format: uri</li>
+<li><code>name</code>: string</li>
+<li><code>description</code>: string or null</li>
+<li><code>color</code>: string or null</li>
+<li><code>default</code>: boolean</li>
+<li><code>archived_by</code>: all of:
+<ul>
+<li><strong>Simple User</strong> (see above)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><code>assignees</code>: array of <code>Simple User</code> (see above)</li>
 <li><code>milestone</code>: required, any of:
 <ul>
@@ -2795,16 +2891,20 @@ The unique identifier of the project item.</p>
 <li><strong><code>fields</code></strong> (array of objects) (required)<br>
 A list of field updates to apply.
 <ul>
-<li><strong><code>id</code></strong> (integer) (required)<br>
-The ID of the project field to update.</li>
-<li><strong><code>value</code></strong> (null or string or number) (required)<br>
-The new value for the field:</li>
-</ul>
+<li>
+<p><strong><code>id</code></strong> (integer) (required)<br>
+The ID of the project field to update.</p>
 </li>
-</ul>
+<li>
+<p><strong><code>value</code></strong> (null or string or number) (required)<br>
+The new value for the field:</p>
 <p>For text, number, and date fields, provide the new value directly.<br>
 For single select and iteration fields, provide the ID of the option or iteration.<br>
 To clear the field, set this to null.</p>
+</li>
+</ul>
+</li>
+</ul>
 <h3 id="http-response-status-codes-3">HTTP response status codes<a href="#http-response-status-codes-3" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
@@ -3260,16 +3360,20 @@ The unique identifier of the project item.</p>
 <li><strong><code>fields</code></strong> (array of objects) (required)<br>
 A list of field updates to apply.
 <ul>
-<li><strong><code>id</code></strong> (integer) (required)<br>
-The ID of the project field to update.</li>
-<li><strong><code>value</code></strong> (null or string or number) (required)<br>
-The new value for the field:</li>
-</ul>
+<li>
+<p><strong><code>id</code></strong> (integer) (required)<br>
+The ID of the project field to update.</p>
 </li>
-</ul>
+<li>
+<p><strong><code>value</code></strong> (null or string or number) (required)<br>
+The new value for the field:</p>
 <p>For text, number, and date fields, provide the new value directly.<br>
 For single select and iteration fields, provide the ID of the option or iteration.<br>
 To clear the field, set this to null.</p>
+</li>
+</ul>
+</li>
+</ul>
 <h3 id="http-response-status-codes-9">HTTP response status codes<a href="#http-response-status-codes-9" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>

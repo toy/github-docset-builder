@@ -231,7 +231,7 @@
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (AuditLogOrder): Ordering options for the returned audit log entries.</li>
+<li><code>orderBy</code> (AuditLogOrder): Ordering options for the returned audit log entries. Default: <code>{field: CREATED_AT, direction: DESC}</code>.</li>
 <li><code>query</code> (String): The query string to filter audit entries.</li>
 </ul>
 </li>
@@ -262,7 +262,7 @@
 <li><code>isApproved</code> (Boolean): Filter by if the domain is approved.</li>
 <li><code>isVerified</code> (Boolean): Filter by if the domain is verified.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (VerifiableDomainOrder): Ordering options for verifiable domains returned.</li>
+<li><code>orderBy</code> (VerifiableDomainOrder): Ordering options for verifiable domains returned. Default: <code>{field: DOMAIN, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -275,7 +275,7 @@
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (OrgEnterpriseOwnerOrder): Ordering options for enterprise owners returned from the connection.</li>
+<li><code>orderBy</code> (OrgEnterpriseOwnerOrder): Ordering options for enterprise owners returned from the connection. Default: <code>{field: LOGIN, direction: ASC}</code>.</li>
 <li><code>organizationRole</code> (RoleInOrganization): The organization role to filter by.</li>
 <li><code>query</code> (String): The search string to look for.</li>
 </ul>
@@ -297,7 +297,7 @@
 <li><code>ecosystem</code> (SecurityAdvisoryEcosystem): An ecosystem to filter vulnerabilities by.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (SecurityVulnerabilityOrder): Ordering options for the returned vulnerabilities.</li>
+<li><code>orderBy</code> (SecurityVulnerabilityOrder): Ordering options for the returned vulnerabilities. Default: <code>{field: UPDATED_AT, direction: DESC}</code>.</li>
 <li><code>package</code> (String): A package name to filter vulnerabilities by.</li>
 <li><code>severities</code> ([SecurityAdvisorySeverity!]): A list of severities to filter vulnerabilities by.</li>
 </ul>
@@ -315,7 +315,7 @@
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (IpAllowListEntryOrder): Ordering options for IP allow list entries returned.</li>
+<li><code>orderBy</code> (IpAllowListEntryOrder): Ordering options for IP allow list entries returned. Default: <code>{field: ALLOW_LIST_VALUE, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -340,7 +340,7 @@
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (IssueFieldOrder): Ordering options for issue fields returned from the connection.</li>
+<li><code>orderBy</code> (IssueFieldOrder): Ordering options for issue fields returned from the connection. Default: <code>{field: CREATED_AT, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -350,7 +350,7 @@
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (IssueTypeOrder): Ordering options for issue types returned from the connection.</li>
+<li><code>orderBy</code> (IssueTypeOrder): Ordering options for issue types returned from the connection. Default: <code>{field: CREATED_AT, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -365,7 +365,7 @@ GitHub Sponsors. Does not include sponsorships paid via Patreon.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (SponsorAndLifetimeValueOrder): Ordering options for results returned from the connection.</li>
+<li><code>orderBy</code> (SponsorAndLifetimeValueOrder): Ordering options for results returned from the connection. Default: <code>{field: SPONSOR_LOGIN, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -382,7 +382,7 @@ GitHub Sponsors. Does not include sponsorships paid via Patreon.</p>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
 <li><code>login</code> (String): Filter mannequins by login.</li>
-<li><code>orderBy</code> (MannequinOrder): Ordering options for mannequins returned from the connection.</li>
+<li><code>orderBy</code> (MannequinOrder): Ordering options for mannequins returned from the connection. Default: <code>{field: CREATED_AT, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -392,7 +392,7 @@ GitHub Sponsors. Does not include sponsorships paid via Patreon.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (UserStatusOrder): Ordering options for user statuses returned from the connection.</li>
+<li><code>orderBy</code> (UserStatusOrder): Ordering options for user statuses returned from the connection. Default: <code>{field: UPDATED_AT, direction: DESC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -427,7 +427,7 @@ GitHub Sponsors. Does not include sponsorships paid via Patreon.</p>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
 <li><code>names</code> ([String]): Find packages by their names.</li>
-<li><code>orderBy</code> (PackageOrder): Ordering of the returned packages.</li>
+<li><code>orderBy</code> (PackageOrder): Ordering of the returned packages. Default: <code>{field: CREATED_AT, direction: DESC}</code>.</li>
 <li><code>packageType</code> (PackageType): Filter registry package by type.</li>
 <li><code>repositoryId</code> (ID): Find packages in a repository by ID.</li>
 </ul>
@@ -499,7 +499,7 @@ GitHub Sponsors. Does not include sponsorships paid via Patreon.</p>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
 <li><code>minPermissionLevel</code> (ProjectV2PermissionLevel): Filter projects based on user role. Default: <code>READ</code>.</li>
-<li><code>orderBy</code> (ProjectV2Order): How to order the returned projects.</li>
+<li><code>orderBy</code> (ProjectV2Order): How to order the returned projects. Default: <code>{field: NUMBER, direction: DESC}</code>.</li>
 <li><code>query</code> (String): A project to search for under the owner.</li>
 </ul>
 </li>
@@ -523,7 +523,7 @@ current viewer owns.</li>
 <li><code>orderBy</code> (RepositoryOrder): Ordering options for repositories returned from the connection.</li>
 <li><code>ownerAffiliations</code> ([RepositoryAffiliation]): Array of owner's affiliation options for repositories returned from the<br>
 connection. For example, OWNER will include only repositories that the<br>
-organization or user being viewed owns.</li>
+organization or user being viewed owns. Default: <code>[OWNER, COLLABORATOR]</code>.</li>
 <li><code>privacy</code> (RepositoryPrivacy): If non-null, filters repositories according to privacy. Internal<br>
 repositories are considered private; consider using the visibility argument<br>
 if only internal repositories are needed. Cannot be combined with the<br>
@@ -554,7 +554,7 @@ visibility argument.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>onlyAnswers</code> (Boolean): Filter discussion comments to only those that were marked as the answer.</li>
+<li><code>onlyAnswers</code> (Boolean): Filter discussion comments to only those that were marked as the answer. Default: <code>false</code>.</li>
 <li><code>repositoryId</code> (ID): Filter discussion comments to only those in a specific repository.</li>
 </ul>
 </li>
@@ -567,9 +567,9 @@ including both answered and unanswered discussions.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (DiscussionOrder): Ordering options for discussions returned from the connection.</li>
+<li><code>orderBy</code> (DiscussionOrder): Ordering options for discussions returned from the connection. Default: <code>{field: CREATED_AT, direction: DESC}</code>.</li>
 <li><code>repositoryId</code> (ID): Filter discussions to only those in a specific repository.</li>
-<li><code>states</code> ([DiscussionState!]): A list of states to filter the discussions by.</li>
+<li><code>states</code> ([DiscussionState!]): A list of states to filter the discussions by. Default: <code>[]</code>.</li>
 </ul>
 </li>
 <li>
@@ -579,7 +579,7 @@ including both answered and unanswered discussions.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (RepositoryMigrationOrder): Ordering options for repository migrations returned.</li>
+<li><code>orderBy</code> (RepositoryMigrationOrder): Ordering options for repository migrations returned. Default: <code>{field: CREATED_AT, direction: ASC}</code>.</li>
 <li><code>repositoryName</code> (String): Filter repository migrations by repository name.</li>
 <li><code>state</code> (MigrationState): Filter repository migrations by state.</li>
 </ul>
@@ -622,7 +622,7 @@ access to members.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (SponsorOrder): Ordering options for the users and organizations returned from the connection.</li>
+<li><code>orderBy</code> (SponsorOrder): Ordering options for the users and organizations returned from the connection. Default: <code>{field: RELEVANCE, direction: DESC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -632,7 +632,7 @@ access to members.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (SponsorOrder): Ordering options for sponsors returned from the connection.</li>
+<li><code>orderBy</code> (SponsorOrder): Ordering options for sponsors returned from the connection. Default: <code>{field: RELEVANCE, direction: DESC}</code>.</li>
 <li><code>tierId</code> (ID): If given, will filter for sponsors at the given tier. Will only return<br>
 sponsors whose tier the viewer is permitted to see.</li>
 </ul>
@@ -640,16 +640,16 @@ sponsors whose tier the viewer is permitted to see.</li>
 <li>
 <p><code>sponsorsActivities</code> (SponsorsActivityConnection!): Events involving this sponsorable, such as new sponsorships.</p>
 <ul>
-<li><code>actions</code> ([SponsorsActivityAction!]): Filter activities to only the specified actions.</li>
+<li><code>actions</code> ([SponsorsActivityAction!]): Filter activities to only the specified actions. Default: <code>[]</code>.</li>
 <li><code>after</code> (String): Returns the elements in the list that come after the specified cursor.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>includeAsSponsor</code> (Boolean): Whether to include those events where this sponsorable acted as the sponsor.<br>
 Defaults to only including events where this sponsorable was the recipient<br>
-of a sponsorship.</li>
+of a sponsorship. Default: <code>false</code>.</li>
 <li><code>includePrivate</code> (Boolean): Whether or not to include private activities in the result set. Defaults to including public and private activities. Default: <code>true</code>.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (SponsorsActivityOrder): Ordering options for activity returned from the connection.</li>
+<li><code>orderBy</code> (SponsorsActivityOrder): Ordering options for activity returned from the connection. Default: <code>{field: TIMESTAMP, direction: DESC}</code>.</li>
 <li><code>period</code> (SponsorsActivityPeriod): Filter activities returned to only those that occurred in the most recent<br>
 specified time period. Set to ALL to avoid filtering by when the activity<br>
 occurred. Will be ignored if since or until is given. Default: <code>MONTH</code>.</li>
@@ -681,7 +681,7 @@ get the sponsorship back even if it has been cancelled. Default: <code>true</cod
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (SponsorshipNewsletterOrder): Ordering options for sponsorship updates returned from the connection.</li>
+<li><code>orderBy</code> (SponsorshipNewsletterOrder): Ordering options for sponsorship updates returned from the connection. Default: <code>{field: CREATED_AT, direction: DESC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -692,7 +692,7 @@ sponsorships this maintainer has ever received. Default: <code>true</code>.</li>
 <li><code>after</code> (String): Returns the elements in the list that come after the specified cursor.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
-<li><code>includePrivate</code> (Boolean): Whether or not to include private sponsorships in the result set.</li>
+<li><code>includePrivate</code> (Boolean): Whether or not to include private sponsorships in the result set. Default: <code>false</code>.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
 <li><code>orderBy</code> (SponsorshipOrder): Ordering options for sponsorships returned from this connection. If left<br>
 blank, the sponsorships will be ordered based on relevancy to the viewer.</li>
@@ -732,7 +732,7 @@ blank, the sponsorships will be ordered based on relevancy to the viewer.</li>
 <li><code>privacy</code> (TeamPrivacy): If non-null, filters teams according to privacy.</li>
 <li><code>query</code> (String): If non-null, filters teams with query on team name and team slug.</li>
 <li><code>role</code> (TeamRole): If non-null, filters teams according to whether the viewer is an admin or member on team.</li>
-<li><code>rootTeamsOnly</code> (Boolean): If true, restrict to only root teams.</li>
+<li><code>rootTeamsOnly</code> (Boolean): If true, restrict to only root teams. Default: <code>false</code>.</li>
 <li><code>userLogins</code> ([String!]): User logins to filter by.</li>
 </ul>
 </li>
@@ -748,7 +748,7 @@ spent on GitHub to fund sponsorships. Only returns a value when viewed by the<br
 user themselves or by a user who can manage sponsorships for the requested organization.</p>
 <ul>
 <li><code>since</code> (DateTime): Filter payments to those that occurred on or after this time.</li>
-<li><code>sponsorableLogins</code> ([String!]): Filter payments to those made to the users or organizations with the specified usernames.</li>
+<li><code>sponsorableLogins</code> ([String!]): Filter payments to those made to the users or organizations with the specified usernames. Default: <code>[]</code>.</li>
 <li><code>until</code> (DateTime): Filter payments to those that occurred before this time.</li>
 </ul>
 </li>

@@ -20,7 +20,7 @@ Requests associated with the commit.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (PullRequestOrder): Ordering options for pull requests.</li>
+<li><code>orderBy</code> (PullRequestOrder): Ordering options for pull requests. Default: <code>{field: CREATED_AT, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -91,7 +91,7 @@ null. We recommend using this field instead of changedFiles.</p>
 <li><code>environments</code> ([String!]): Environments to list deployments for.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (DeploymentOrder): Ordering options for deployments returned from the connection.</li>
+<li><code>orderBy</code> (DeploymentOrder): Ordering options for deployments returned from the connection. Default: <code>{field: CREATED_AT, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -391,7 +391,7 @@ MinimizeComment mutation.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (CommitContributionOrder): Ordering options for commit contributions returned from the connection.</li>
+<li><code>orderBy</code> (CommitContributionOrder): Ordering options for commit contributions returned from the connection. Default: <code>{field: OCCURRED_AT, direction: DESC}</code>.</li>
 </ul>
 </li>
 <li>

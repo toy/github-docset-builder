@@ -204,7 +204,7 @@
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (LabelOrder): Ordering options for labels returned from the connection.</li>
+<li><code>orderBy</code> (LabelOrder): Ordering options for labels returned from the connection. Default: <code>{field: CREATED_AT, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -529,7 +529,7 @@ MinimizeComment mutation.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (DiscussionPollOptionOrder): How to order the options for the discussion poll.</li>
+<li><code>orderBy</code> (DiscussionPollOptionOrder): How to order the options for the discussion poll. Default: <code>{field: AUTHORED_ORDER, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -721,9 +721,9 @@ including both answered and unanswered discussions.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (DiscussionOrder): Ordering options for discussions returned from the connection.</li>
+<li><code>orderBy</code> (DiscussionOrder): Ordering options for discussions returned from the connection. Default: <code>{field: CREATED_AT, direction: DESC}</code>.</li>
 <li><code>repositoryId</code> (ID): Filter discussions to only those in a specific repository.</li>
-<li><code>states</code> ([DiscussionState!]): A list of states to filter the discussions by.</li>
+<li><code>states</code> ([DiscussionState!]): A list of states to filter the discussions by. Default: <code>[]</code>.</li>
 </ul>
 </li>
 </ul>
@@ -742,7 +742,7 @@ including both answered and unanswered discussions.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>onlyAnswers</code> (Boolean): Filter discussion comments to only those that were marked as the answer.</li>
+<li><code>onlyAnswers</code> (Boolean): Filter discussion comments to only those that were marked as the answer. Default: <code>false</code>.</li>
 <li><code>repositoryId</code> (ID): Filter discussion comments to only those in a specific repository.</li>
 </ul>
 </li>

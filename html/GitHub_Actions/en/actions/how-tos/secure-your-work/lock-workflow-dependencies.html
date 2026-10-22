@@ -1,0 +1,62 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Locking action dependencies in a repository's workflows</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">How-tos</a> / <a href="index.html">Secure your work</a> / </nav><h1 id="locking-action-dependencies-in-a-repositorys-workflows">Locking action dependencies in a repository's workflows<a href="#locking-action-dependencies-in-a-repositorys-workflows" aria-label="Link to heading 'Locking action dependencies in a repository's workflows'" data-heading-content="Locking action dependencies in a repository's workflows" class="anchor"></a></h1>
+<p>Generate a lockfile that pins every action your workflows use to a verified commit, and keep it current as your dependencies change.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Workflow dependency lockfiles are in public preview and subject to change.</p>
+</div>
+<p>Locking your workflows' dependencies ensures that the actions you reference contain the same code that was originally reviewed. For more information, see <a href="../../concepts/security/workflow-dependency-lockfiles.html">Workflow dependency lockfiles</a>.</p>
+<h2 id="1-check-your-action-references" title="1. Check your action references" data-entry-type="Section">1. Check your action references<a href="#1-check-your-action-references" aria-label="Link to heading '1. Check your action references'" data-heading-content="1. Check your action references" class="anchor"></a></h2>
+<p>Creating a lockfile pins your dependencies to commits based on the current branch or tag reference. Make sure these are the versions you want to lock in place.</p>
+<p>Check that each <code>uses</code> reference in your workflows points to a supported, current version of the action. For best practices, see <a href="../../reference/security/secure-use.html#using-third-party-actions">Secure use reference</a>.</p>
+<p>If any of your workflows call a reusable workflow in another repository, check those references too. Dependencies of reusable workflows are covered by the lockfile of the repository where the reusable workflow is defined. If your organization maintains shared workflows, we recommend onboarding those repositories first. See <a href="../../concepts/workflows-and-actions/reusing-workflow-configurations.html">Reusing workflow configurations</a>.</p>
+<p>We recommend letting Dependabot manage your GitHub Actions dependencies. If it's not already enabled, enable it before you create the lockfile. See <a href="https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/auto-update-actions" class="external">Keeping your actions up to date with Dependabot</a>.</p>
+<h2 id="2-install-the-actions-lock-extension" title="2. Install the actions-lock extension" data-entry-type="Section">2. Install the <code>actions-lock</code> extension<a href="#2-install-the-actions-lock-extension" aria-label="Link to heading '2. Install the actions-lock extension'" data-heading-content="2. Install the actions-lock extension" class="anchor"></a></h2>
+<ol>
+<li>
+<p>Install the <a href="https://cli.github.com/" class="external">GitHub CLI</a>.</p>
+</li>
+<li>
+<p>Install the extension.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> extension install github/gh-actions-lock
+</span></code></pre>
+</li>
+</ol>
+<div class="markdown-alert markdown-alert-tip">
+<p class="markdown-alert-title">To update the extension later, run `gh extension upgrade gh-actions-lock`.</p>
+</div>
+<h2 id="3-generate-the-lockfile" title="3. Generate the lockfile" data-entry-type="Section">3. Generate the lockfile<a href="#3-generate-the-lockfile" aria-label="Link to heading '3. Generate the lockfile'" data-heading-content="3. Generate the lockfile" class="anchor"></a></h2>
+<p>From the root of your repository, run the extension with no arguments. It will scan every workflow under <code>.github/workflows/</code>, pin each resolvable action to a commit SHA, and write the lockfile.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> actions-lock
+</span></code></pre>
+<p>To onboard a single workflow instead of the whole directory, pass its path.</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">gh</span><span style="color:#c0c5ce;"> actions-lock .github/workflows/ci.yml
+</span></code></pre>
+<p>If the extension reports that it has skipped a workflow because local path actions aren't supported, this means a <code>uses: ./…</code> reference in that workflow didn't resolve to a real action file. Local paths resolve from the repository root, <strong>not</strong> from the directory of the file that contains them, so a path that looks right next to its own file may not resolve. Correct the path and run the command again.</p>
+<p>For the full set of options, run <code>gh actions-lock --help</code>.</p>
+<h2 id="4-review-the-changes-and-commit" title="4. Review the changes and commit" data-entry-type="Section">4. Review the changes and commit<a href="#4-review-the-changes-and-commit" aria-label="Link to heading '4. Review the changes and commit'" data-heading-content="4. Review the changes and commit" class="anchor"></a></h2>
+<p>The extension changes more than the lockfile, so review the full diff before you commit. It also rewrites your workflow <code>uses</code> references to the specific version it resolved, so a reference such as <code>octo-org/deploy-action@v3</code> can become <code>octo-org/deploy-action@v3.1.0</code>. This makes the reference more specific without changing the commit it resolves to.</p>
+<p>If your repository, organization, or enterprise only allows specified actions, check the allowlist before you commit. After a workflow is onboarded, the allowlist is checked against locked commit SHAs, because a tag can be moved to different code but a locked SHA can't. Entries pinned to a tag, such as <code>actions/checkout@v6</code>, no longer match. Use a wildcard or the full commit SHA instead. See <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-select-actions-and-reusable-workflows-to-run" class="external">Managing GitHub Actions settings for a repository</a>.</p>
+<p>References to actions in your own repository are rewritten too, from <code>uses: ./…</code> to the equivalent <code>uses: $/…</code>, in both your workflows and your in-repository <code>action.yml</code> files. A <code>$/…</code> reference always resolves to the running commit, so it's inherently pinned and needs no lockfile entry.</p>
+<h2 id="5-keep-the-lockfile-current" title="5. Keep the lockfile current" data-entry-type="Section">5. Keep the lockfile current<a href="#5-keep-the-lockfile-current" aria-label="Link to heading '5. Keep the lockfile current'" data-heading-content="5. Keep the lockfile current" class="anchor"></a></h2>
+<p>Keep the lockfile up to date with your repository's workflow files and security updates.</p>
+<ol>
+<li>
+<p><strong>Re-run the extension when you change dependencies.</strong> Run <code>gh actions-lock</code> again whenever you add a workflow that has <code>uses</code> dependencies, or add or remove <code>uses</code> dependencies in an existing workflow.</p>
+</li>
+<li>
+<p><strong>Let Dependabot handle version bumps.</strong> When Dependabot opens a version update for an action in a workflow you've onboarded, it will also regenerate the matching lockfile entry in the same pull request, so your workflow file and lockfile can't drift apart.</p>
+<p>Dependabot will <strong>not</strong> onboard a workflow for you. If it bumps a dependency in a workflow with no lockfile entry, it just reports that onboarding is required.</p>
+</li>
+<li>
+<p><strong>Re-resolve references that have moved.</strong> References to branches or partial versions, such as <code>main</code> or <code>v3</code>, are trusted from the lockfile and aren't re-resolved on a normal run. If the extension reports an error because a tag now points to a different upstream commit, check the upstream repository's history first. If the move was legitimate, re-resolve the reference with <code>gh actions-lock --relock</code>. If the commit you originally locked is no longer reachable at all, for example because the upstream repository force-pushed or deleted it, <code>--relock</code> will still report an error. To accept the new commit, run <code>gh actions-lock --relock --accept-moved</code>.</p>
+</li>
+</ol>
+<h3 id="reviewing-lockfile-changes">Reviewing lockfile changes<a href="#reviewing-lockfile-changes" aria-label="Link to heading 'Reviewing lockfile changes'" data-heading-content="Reviewing lockfile changes" class="anchor"></a></h3>
+<p>Review changes to the lockfile like any other dependency change:</p>
+<ul>
+<li><strong>A changed <code>commit</code></strong> is the code your workflows will run. Treat it the way you'd treat any other dependency version bump.</li>
+<li><strong>A changed <code>owner_id</code> or <code>repo_id</code></strong> should be rare. It means the repository behind that name is <strong>not</strong> the one you originally locked, so investigate before you merge.</li>
+</ul>
+<p>If a lockfile looks wrong, fix your workflow files and regenerate it. Never edit the lockfile manually.</p>
+<h2 id="next-steps" title="Next steps" data-entry-type="Section">Next steps<a href="#next-steps" aria-label="Link to heading 'Next steps'" data-heading-content="Next steps" class="anchor"></a></h2>
+<p>Once you have generated a lockfile for a repository, ensure it's enforced and up to date without developers needing to remember to run commands. See <a href="../administer/enforce-workflow-lockfiles.html">Enforcing lockfiles for action dependencies</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

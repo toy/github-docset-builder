@@ -215,7 +215,31 @@ Usernames of people to assign this issue to. NOTE: Only users with push access c
 </li>
 </ul>
 </li>
-<li><code>labels</code>: required, array of object</li>
+<li><code>labels</code>: required, array of items:
+<ul>
+<li>one of:
+<ul>
+<li><strong>string</strong></li>
+<li><strong>object</strong>
+<ul>
+<li><code>id</code>: integer, format: int64</li>
+<li><code>node_id</code>: string</li>
+<li><code>url</code>: string, format: uri</li>
+<li><code>name</code>: string</li>
+<li><code>description</code>: string or null</li>
+<li><code>color</code>: string or null</li>
+<li><code>default</code>: boolean</li>
+<li><code>archived_by</code>: all of:
+<ul>
+<li><strong>Simple User</strong> (see above)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><code>assignees</code>: array of <code>Simple User</code> (see above)</li>
 <li><code>milestone</code>: required, any of:
 <ul>

@@ -17,7 +17,7 @@
 <tr>
 <td>Go</td>
 <td><a href="https://github.com/marketplace/actions/go-dependency-submission" class="external">Go Dependency Submission</a></td>
-<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Maintained by " role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="check icon" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
 </tr>
 <tr>
 <td>Gradle</td>
@@ -107,8 +107,7 @@
 <h2 id="submitting-sboms-as-snapshots" title="Submitting SBOMs as snapshots" data-entry-type="Section">Submitting SBOMs as snapshots<a href="#submitting-sboms-as-snapshots" aria-label="Link to heading 'Submitting SBOMs as snapshots'" data-heading-content="Submitting SBOMs as snapshots" class="anchor"></a></h2>
 <p>If you have external tools which create or manage Software Bills of Materials (SBOMs), you can also submit those SBOMs to the dependency submission API. The snapshot data format is very similar to the standard SPDX and CycloneDX SBOM formats, and there are several tools which can generate or translate formats for use as snapshots.</p>
 <div class="markdown-alert markdown-alert-tip">
-<p class="markdown-alert-title">Tip</p>
-<p>The <a href="https://github.com/marketplace/actions/spdx-dependency-submission-action" class="external">SPDX Dependency Submission Action</a> and the <a href="https://github.com/marketplace/actions/anchore-sbom-action" class="external">Anchore SBOM Action</a> can be used to both generate a SBOM and submit it to the dependency submission API.</p>
+<p class="markdown-alert-title">The [SPDX Dependency Submission Action](https://github.com/marketplace/actions/spdx-dependency-submission-action) and the [Anchore SBOM Action](https://github.com/marketplace/actions/anchore-sbom-action) can be used to both generate a SBOM and submit it to the dependency submission API.</p>
 </div>
 <p>For example, the following <a href="https://github.com/marketplace/actions/spdx-dependency-submission-action" class="external">SPDX Dependency Submission Action</a> workflow calculates the dependencies for a repository, generates an exportable SBOM in SPDX 2.2 format, and submits it to the dependency submission API.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;"># This workflow uses actions that are not certified by GitHub.

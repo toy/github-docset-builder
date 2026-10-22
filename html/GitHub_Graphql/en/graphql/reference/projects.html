@@ -1,7 +1,7 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><title>Projects</title><link rel="stylesheet" href="../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../index.html">GraphQL API</a> / <a href="index.html">Reference</a> / </nav><h1 id="projects">Projects<a href="#projects" aria-label="Link to heading 'Projects'" data-heading-content="Projects" class="anchor"></a></h1>
 <p>Reference documentation for GraphQL schema types in the Projects category.</p>
 <h2 id="addedtoprojectv2event---object" title="AddedToProjectV2Event - object" data-entry-type="Section">AddedToProjectV2Event - object<a href="#addedtoprojectv2event---object" aria-label="Link to heading 'AddedToProjectV2Event - object'" data-heading-content="AddedToProjectV2Event - object" class="anchor"></a></h2>
-<p>Represents aadded_to_project_v2event on a given issue or pull request.</p>
+<p>Represents a added_to_project_v2 event on a given issue or pull request.</p>
 <p><strong>Implements:</strong> Node, ProjectV2Event</p>
 <h3 id="fields-for-addedtoprojectv2event">Fields for <code>AddedToProjectV2Event</code><a href="#fields-for-addedtoprojectv2event" aria-label="Link to heading 'Fields for AddedToProjectV2Event'" data-heading-content="Fields for AddedToProjectV2Event" class="anchor"></a></h3>
 <ul>
@@ -463,7 +463,7 @@ iteration and milestone fields are supported.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (ProjectV2FieldOrder): Ordering options for project v2 fields returned from the connection.</li>
+<li><code>orderBy</code> (ProjectV2FieldOrder): Ordering options for project v2 fields returned from the connection. Default: <code>{field: POSITION, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -476,11 +476,11 @@ iteration and milestone fields are supported.</p>
 <p><code>items</code> (ProjectV2ItemConnection!): List of items in the project.</p>
 <ul>
 <li><code>after</code> (String): Returns the elements in the list that come after the specified cursor.</li>
-<li><code>archivedStates</code> ([ProjectV2ItemArchivedState!]): Filter items by their archived state. Defaults to only returning items that are not archived.</li>
+<li><code>archivedStates</code> ([ProjectV2ItemArchivedState!]): Filter items by their archived state. Defaults to only returning items that are not archived. Default: <code>[NOT_ARCHIVED]</code>.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (ProjectV2ItemOrder): Ordering options for project v2 items returned from the connection.</li>
+<li><code>orderBy</code> (ProjectV2ItemOrder): Ordering options for project v2 items returned from the connection. Default: <code>{field: POSITION, direction: ASC}</code>.</li>
 <li><code>query</code> (String): Search query for filtering items. Default: ``.</li>
 </ul>
 </li>
@@ -503,7 +503,7 @@ iteration and milestone fields are supported.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (RepositoryOrder): Ordering options for repositories returned from the connection.</li>
+<li><code>orderBy</code> (RepositoryOrder): Ordering options for repositories returned from the connection. Default: <code>{field: CREATED_AT, direction: DESC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -519,7 +519,7 @@ iteration and milestone fields are supported.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (ProjectV2StatusOrder): Order for connection.</li>
+<li><code>orderBy</code> (ProjectV2StatusOrder): Order for connection. Default: <code>{field: CREATED_AT, direction: DESC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -529,7 +529,7 @@ iteration and milestone fields are supported.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (TeamOrder): Ordering options for teams returned from this connection.</li>
+<li><code>orderBy</code> (TeamOrder): Ordering options for teams returned from this connection. Default: <code>{field: NAME, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -566,7 +566,7 @@ iteration and milestone fields are supported.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (ProjectV2ViewOrder): Ordering options for project v2 views returned from the connection.</li>
+<li><code>orderBy</code> (ProjectV2ViewOrder): Ordering options for project v2 views returned from the connection. Default: <code>{field: POSITION, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -582,7 +582,7 @@ iteration and milestone fields are supported.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (ProjectV2WorkflowOrder): Ordering options for project v2 workflows returned from the connection.</li>
+<li><code>orderBy</code> (ProjectV2WorkflowOrder): Ordering options for project v2 workflows returned from the connection. Default: <code>{field: NAME, direction: ASC}</code>.</li>
 </ul>
 </li>
 </ul>
@@ -820,7 +820,7 @@ iteration and milestone fields are supported.</p>
 <p><code>databaseId</code> (Int): Identifies the primary key from the database. <strong>Deprecated:</strong> databaseId will be removed because it does not support 64-bit signed integer identifiers. Use fullDatabaseId instead. Removal on 2025-04-01 UTC.</p>
 </li>
 <li>
-<p><code>fieldValueByName</code> (ProjectV2ItemFieldValue): The field value of the first project field which matches thenameargument that is set on the item.</p>
+<p><code>fieldValueByName</code> (ProjectV2ItemFieldValue): The field value of the first project field which matches the name argument that is set on the item.</p>
 <ul>
 <li><code>name</code> (String!): The name of the field to return the field value of.</li>
 </ul>
@@ -832,7 +832,7 @@ iteration and milestone fields are supported.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (ProjectV2ItemFieldValueOrder): Ordering options for project v2 item field values returned from the connection.</li>
+<li><code>orderBy</code> (ProjectV2ItemFieldValueOrder): Ordering options for project v2 item field values returned from the connection. Default: <code>{field: POSITION, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -971,7 +971,7 @@ iteration and milestone fields are supported.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (PullRequestOrder): Ordering options for pull requests.</li>
+<li><code>orderBy</code> (PullRequestOrder): Ordering options for pull requests. Default: <code>{field: CREATED_AT, direction: ASC}</code>.</li>
 </ul>
 </li>
 </ul>
@@ -1118,7 +1118,7 @@ iteration and milestone fields are supported.</p>
 <li><code>POSITION</code>: Order project v2 items by the their position in the project.</li>
 </ul>
 <h2 id="projectv2itemstatuschangedevent---object" title="ProjectV2ItemStatusChangedEvent - object" data-entry-type="Section">ProjectV2ItemStatusChangedEvent - object<a href="#projectv2itemstatuschangedevent---object" aria-label="Link to heading 'ProjectV2ItemStatusChangedEvent - object'" data-heading-content="ProjectV2ItemStatusChangedEvent - object" class="anchor"></a></h2>
-<p>Represents aproject_v2_item_status_changedevent on a given issue or pull request.</p>
+<p>Represents a project_v2_item_status_changed event on a given issue or pull request.</p>
 <p><strong>Implements:</strong> Node, ProjectV2Event</p>
 <h3 id="fields-for-projectv2itemstatuschangedevent">Fields for <code>ProjectV2ItemStatusChangedEvent</code><a href="#fields-for-projectv2itemstatuschangedevent" aria-label="Link to heading 'Fields for ProjectV2ItemStatusChangedEvent'" data-heading-content="Fields for ProjectV2ItemStatusChangedEvent" class="anchor"></a></h3>
 <ul>
@@ -1287,7 +1287,7 @@ option's identity during updates, preventing item field values from being cleare
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
 <li><code>minPermissionLevel</code> (ProjectV2PermissionLevel): Filter projects based on user role. Default: <code>READ</code>.</li>
-<li><code>orderBy</code> (ProjectV2Order): How to order the returned projects.</li>
+<li><code>orderBy</code> (ProjectV2Order): How to order the returned projects. Default: <code>{field: NUMBER, direction: DESC}</code>.</li>
 <li><code>query</code> (String): A project to search for under the owner.</li>
 </ul>
 </li>
@@ -1532,7 +1532,7 @@ option's identity during updates, preventing item field values from being cleare
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (ProjectV2FieldOrder): Ordering options for the project v2 fields returned from the connection.</li>
+<li><code>orderBy</code> (ProjectV2FieldOrder): Ordering options for the project v2 fields returned from the connection. Default: <code>{field: POSITION, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -1548,7 +1548,7 @@ option's identity during updates, preventing item field values from being cleare
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (ProjectV2FieldOrder): Ordering options for the project v2 fields returned from the connection.</li>
+<li><code>orderBy</code> (ProjectV2FieldOrder): Ordering options for the project v2 fields returned from the connection. Default: <code>{field: POSITION, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -1558,7 +1558,7 @@ option's identity during updates, preventing item field values from being cleare
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (ProjectV2FieldOrder): Ordering options for the project v2 fields returned from the connection.</li>
+<li><code>orderBy</code> (ProjectV2FieldOrder): Ordering options for the project v2 fields returned from the connection. Default: <code>{field: POSITION, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -1592,7 +1592,7 @@ option's identity during updates, preventing item field values from being cleare
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (ProjectV2FieldOrder): Ordering options for the project v2 fields returned from the connection.</li>
+<li><code>orderBy</code> (ProjectV2FieldOrder): Ordering options for the project v2 fields returned from the connection. Default: <code>{field: POSITION, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -1602,7 +1602,7 @@ option's identity during updates, preventing item field values from being cleare
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (ProjectV2FieldOrder): Ordering options for the project v2 fields returned from the connection.</li>
+<li><code>orderBy</code> (ProjectV2FieldOrder): Ordering options for the project v2 fields returned from the connection. Default: <code>{field: POSITION, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -1612,7 +1612,7 @@ option's identity during updates, preventing item field values from being cleare
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (ProjectV2FieldOrder): Ordering options for the project v2 fields returned from the connection.</li>
+<li><code>orderBy</code> (ProjectV2FieldOrder): Ordering options for the project v2 fields returned from the connection. Default: <code>{field: POSITION, direction: ASC}</code>.</li>
 </ul>
 </li>
 </ul>
@@ -1715,7 +1715,7 @@ option's identity during updates, preventing item field values from being cleare
 <li><code>UPDATED_AT</code>: The date and time of the workflow update.</li>
 </ul>
 <h2 id="removedfromprojectv2event---object" title="RemovedFromProjectV2Event - object" data-entry-type="Section">RemovedFromProjectV2Event - object<a href="#removedfromprojectv2event---object" aria-label="Link to heading 'RemovedFromProjectV2Event - object'" data-heading-content="RemovedFromProjectV2Event - object" class="anchor"></a></h2>
-<p>Represents aremoved_from_project_v2event on a given issue or pull request.</p>
+<p>Represents a removed_from_project_v2 event on a given issue or pull request.</p>
 <p><strong>Implements:</strong> Node, ProjectV2Event</p>
 <h3 id="fields-for-removedfromprojectv2event">Fields for <code>RemovedFromProjectV2Event</code><a href="#fields-for-removedfromprojectv2event" aria-label="Link to heading 'Fields for RemovedFromProjectV2Event'" data-heading-content="Fields for RemovedFromProjectV2Event" class="anchor"></a></h3>
 <ul>

@@ -257,7 +257,31 @@ Default: <code>1</code></p>
 </li>
 </ul>
 </li>
-<li><code>labels</code>: required, array of object</li>
+<li><code>labels</code>: required, array of items:
+<ul>
+<li>one of:
+<ul>
+<li><strong>string</strong></li>
+<li><strong>object</strong>
+<ul>
+<li><code>id</code>: integer, format: int64</li>
+<li><code>node_id</code>: string</li>
+<li><code>url</code>: string, format: uri</li>
+<li><code>name</code>: string</li>
+<li><code>description</code>: string or null</li>
+<li><code>color</code>: string or null</li>
+<li><code>default</code>: boolean</li>
+<li><code>archived_by</code>: all of:
+<ul>
+<li><strong>Simple User</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><code>assignees</code>: array of <code>Simple User</code> (see above)</li>
 <li><code>milestone</code>: required, any of:
 <ul>
@@ -748,7 +772,32 @@ Default: <code>1</code></p>
 <li><code>original_position</code>: required, integer</li>
 <li><code>subject_type</code>: string or null</li>
 <li><code>commit_id</code>: required, string</li>
-<li><code>user</code>: required, <code>User</code> (see above)</li>
+<li><code>user</code>: required, <code>User</code>:
+<ul>
+<li><code>avatar_url</code>: string, format: uri</li>
+<li><code>deleted</code>: boolean</li>
+<li><code>email</code>: string or null</li>
+<li><code>events_url</code>: string, format: uri-template</li>
+<li><code>followers_url</code>: string, format: uri</li>
+<li><code>following_url</code>: string, format: uri-template</li>
+<li><code>gists_url</code>: string, format: uri-template</li>
+<li><code>gravatar_id</code>: string</li>
+<li><code>html_url</code>: string, format: uri</li>
+<li><code>id</code>: integer, format: int64</li>
+<li><code>login</code>: string</li>
+<li><code>name</code>: string</li>
+<li><code>node_id</code>: string</li>
+<li><code>organizations_url</code>: string, format: uri</li>
+<li><code>received_events_url</code>: string, format: uri</li>
+<li><code>repos_url</code>: string, format: uri</li>
+<li><code>site_admin</code>: boolean</li>
+<li><code>starred_url</code>: string, format: uri-template</li>
+<li><code>subscriptions_url</code>: string, format: uri</li>
+<li><code>type</code>: string, enum: <code>Bot</code>, <code>User</code>, <code>Organization</code></li>
+<li><code>url</code>: string, format: uri</li>
+<li><code>user_view_type</code>: string</li>
+</ul>
+</li>
 <li><code>body</code>: required, string</li>
 <li><code>created_at</code>: required, string, format: date-time</li>
 <li><code>updated_at</code>: required, string, format: date-time</li>
@@ -762,7 +811,20 @@ Default: <code>1</code></p>
 </ul>
 </li>
 <li><code>original_commit_id</code>: required, string</li>
-<li><code>reactions</code>: required, <code>Reactions</code> (see above)</li>
+<li><code>reactions</code>: required, <code>Reactions</code>:
+<ul>
+<li><code>+1</code>: integer</li>
+<li><code>-1</code>: integer</li>
+<li><code>confused</code>: integer</li>
+<li><code>eyes</code>: integer</li>
+<li><code>heart</code>: integer</li>
+<li><code>hooray</code>: integer</li>
+<li><code>laugh</code>: integer</li>
+<li><code>rocket</code>: integer</li>
+<li><code>total_count</code>: integer</li>
+<li><code>url</code>: string, format: uri</li>
+</ul>
+</li>
 <li><code>in_reply_to_id</code>: integer</li>
 </ul>
 </li>

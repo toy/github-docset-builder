@@ -239,18 +239,18 @@ true if the user enabled private contribution counts.</p>
 <ul>
 <li><code>after</code> (String): Returns the elements in the list that come after the specified cursor.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
-<li><code>excludeFirst</code> (Boolean): Should the user's first issue ever be excluded from the result.</li>
-<li><code>excludePopular</code> (Boolean): Should the user's most commented issue be excluded from the result.</li>
+<li><code>excludeFirst</code> (Boolean): Should the user's first issue ever be excluded from the result. Default: <code>false</code>.</li>
+<li><code>excludePopular</code> (Boolean): Should the user's most commented issue be excluded from the result. Default: <code>false</code>.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (ContributionOrder): Ordering options for contributions returned from the connection.</li>
+<li><code>orderBy</code> (ContributionOrder): Ordering options for contributions returned from the connection. Default: <code>{direction: DESC}</code>.</li>
 </ul>
 </li>
 <li>
 <p><code>issueContributionsByRepository</code> ([IssueContributionsByRepository!]!): Issue contributions made by the user, grouped by repository.</p>
 <ul>
-<li><code>excludeFirst</code> (Boolean): Should the user's first issue ever be excluded from the result.</li>
-<li><code>excludePopular</code> (Boolean): Should the user's most commented issue be excluded from the result.</li>
+<li><code>excludeFirst</code> (Boolean): Should the user's first issue ever be excluded from the result. Default: <code>false</code>.</li>
+<li><code>excludePopular</code> (Boolean): Should the user's most commented issue be excluded from the result. Default: <code>false</code>.</li>
 <li><code>maxRepositories</code> (Int): How many repositories should be included. Default: <code>25</code>.</li>
 </ul>
 </li>
@@ -283,18 +283,18 @@ specified time frame.</p>
 <ul>
 <li><code>after</code> (String): Returns the elements in the list that come after the specified cursor.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
-<li><code>excludeFirst</code> (Boolean): Should the user's first pull request ever be excluded from the result.</li>
-<li><code>excludePopular</code> (Boolean): Should the user's most commented pull request be excluded from the result.</li>
+<li><code>excludeFirst</code> (Boolean): Should the user's first pull request ever be excluded from the result. Default: <code>false</code>.</li>
+<li><code>excludePopular</code> (Boolean): Should the user's most commented pull request be excluded from the result. Default: <code>false</code>.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (ContributionOrder): Ordering options for contributions returned from the connection.</li>
+<li><code>orderBy</code> (ContributionOrder): Ordering options for contributions returned from the connection. Default: <code>{direction: DESC}</code>.</li>
 </ul>
 </li>
 <li>
 <p><code>pullRequestContributionsByRepository</code> ([PullRequestContributionsByRepository!]!): Pull request contributions made by the user, grouped by repository.</p>
 <ul>
-<li><code>excludeFirst</code> (Boolean): Should the user's first pull request ever be excluded from the result.</li>
-<li><code>excludePopular</code> (Boolean): Should the user's most commented pull request be excluded from the result.</li>
+<li><code>excludeFirst</code> (Boolean): Should the user's first pull request ever be excluded from the result. Default: <code>false</code>.</li>
+<li><code>excludePopular</code> (Boolean): Should the user's most commented pull request be excluded from the result. Default: <code>false</code>.</li>
 <li><code>maxRepositories</code> (Int): How many repositories should be included. Default: <code>25</code>.</li>
 </ul>
 </li>
@@ -306,7 +306,7 @@ submitted review for each PR reviewed by the user.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (ContributionOrder): Ordering options for contributions returned from the connection.</li>
+<li><code>orderBy</code> (ContributionOrder): Ordering options for contributions returned from the connection. Default: <code>{direction: DESC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -320,10 +320,10 @@ submitted review for each PR reviewed by the user.</p>
 <ul>
 <li><code>after</code> (String): Returns the elements in the list that come after the specified cursor.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
-<li><code>excludeFirst</code> (Boolean): Should the user's first repository ever be excluded from the result.</li>
+<li><code>excludeFirst</code> (Boolean): Should the user's first repository ever be excluded from the result. Default: <code>false</code>.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (ContributionOrder): Ordering options for contributions returned from the connection.</li>
+<li><code>orderBy</code> (ContributionOrder): Ordering options for contributions returned from the connection. Default: <code>{direction: DESC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -339,15 +339,15 @@ non-zero when the user has chosen to share their private contribution counts.</p
 <li>
 <p><code>totalIssueContributions</code> (Int!): How many issues the user opened.</p>
 <ul>
-<li><code>excludeFirst</code> (Boolean): Should the user's first issue ever be excluded from this count.</li>
-<li><code>excludePopular</code> (Boolean): Should the user's most commented issue be excluded from this count.</li>
+<li><code>excludeFirst</code> (Boolean): Should the user's first issue ever be excluded from this count. Default: <code>false</code>.</li>
+<li><code>excludePopular</code> (Boolean): Should the user's most commented issue be excluded from this count. Default: <code>false</code>.</li>
 </ul>
 </li>
 <li>
 <p><code>totalPullRequestContributions</code> (Int!): How many pull requests the user opened.</p>
 <ul>
-<li><code>excludeFirst</code> (Boolean): Should the user's first pull request ever be excluded from this count.</li>
-<li><code>excludePopular</code> (Boolean): Should the user's most commented pull request be excluded from this count.</li>
+<li><code>excludeFirst</code> (Boolean): Should the user's first pull request ever be excluded from this count. Default: <code>false</code>.</li>
+<li><code>excludePopular</code> (Boolean): Should the user's most commented pull request be excluded from this count. Default: <code>false</code>.</li>
 </ul>
 </li>
 <li>
@@ -359,8 +359,8 @@ non-zero when the user has chosen to share their private contribution counts.</p
 <li>
 <p><code>totalRepositoriesWithContributedIssues</code> (Int!): How many different repositories the user opened issues in.</p>
 <ul>
-<li><code>excludeFirst</code> (Boolean): Should the user's first issue ever be excluded from this count.</li>
-<li><code>excludePopular</code> (Boolean): Should the user's most commented issue be excluded from this count.</li>
+<li><code>excludeFirst</code> (Boolean): Should the user's first issue ever be excluded from this count. Default: <code>false</code>.</li>
+<li><code>excludePopular</code> (Boolean): Should the user's most commented issue be excluded from this count. Default: <code>false</code>.</li>
 </ul>
 </li>
 <li>
@@ -369,14 +369,14 @@ non-zero when the user has chosen to share their private contribution counts.</p
 <li>
 <p><code>totalRepositoriesWithContributedPullRequests</code> (Int!): How many different repositories the user opened pull requests in.</p>
 <ul>
-<li><code>excludeFirst</code> (Boolean): Should the user's first pull request ever be excluded from this count.</li>
-<li><code>excludePopular</code> (Boolean): Should the user's most commented pull request be excluded from this count.</li>
+<li><code>excludeFirst</code> (Boolean): Should the user's first pull request ever be excluded from this count. Default: <code>false</code>.</li>
+<li><code>excludePopular</code> (Boolean): Should the user's most commented pull request be excluded from this count. Default: <code>false</code>.</li>
 </ul>
 </li>
 <li>
 <p><code>totalRepositoryContributions</code> (Int!): How many repositories the user created.</p>
 <ul>
-<li><code>excludeFirst</code> (Boolean): Should the user's first repository ever be excluded from this count.</li>
+<li><code>excludeFirst</code> (Boolean): Should the user's first repository ever be excluded from this count. Default: <code>false</code>.</li>
 </ul>
 </li>
 <li>
@@ -634,7 +634,7 @@ longer access.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (RepositoryOrder): Ordering options for repositories.</li>
+<li><code>orderBy</code> (RepositoryOrder): Ordering options for repositories. Default: <code>{field: NAME, direction: ASC}</code>.</li>
 </ul>
 </li>
 </ul>
@@ -742,7 +742,7 @@ longer access.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (UserStatusOrder): Ordering options for user statuses returned from the connection.</li>
+<li><code>orderBy</code> (UserStatusOrder): Ordering options for user statuses returned from the connection. Default: <code>{field: UPDATED_AT, direction: DESC}</code>.</li>
 </ul>
 </li>
 </ul>
@@ -1258,7 +1258,7 @@ provided from argument.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
 <li><code>membershipType</code> (EnterpriseMembershipType): Filter enterprises returned based on the user's membership type. Default: <code>ALL</code>.</li>
-<li><code>orderBy</code> (EnterpriseOrder): Ordering options for the User's enterprises.</li>
+<li><code>orderBy</code> (EnterpriseOrder): Ordering options for the User's enterprises. Default: <code>{field: NAME, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -1376,7 +1376,7 @@ GitHub Sponsors. Does not include sponsorships paid via Patreon.</p>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (SponsorAndLifetimeValueOrder): Ordering options for results returned from the connection.</li>
+<li><code>orderBy</code> (SponsorAndLifetimeValueOrder): Ordering options for results returned from the connection. Default: <code>{field: SPONSOR_LOGIN, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -1424,7 +1424,7 @@ GitHub Sponsors. Does not include sponsorships paid via Patreon.</p>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
 <li><code>names</code> ([String]): Find packages by their names.</li>
-<li><code>orderBy</code> (PackageOrder): Ordering of the returned packages.</li>
+<li><code>orderBy</code> (PackageOrder): Ordering of the returned packages. Default: <code>{field: CREATED_AT, direction: DESC}</code>.</li>
 <li><code>packageType</code> (PackageType): Filter registry package by type.</li>
 <li><code>repositoryId</code> (ID): Find packages in a repository by ID.</li>
 </ul>
@@ -1490,7 +1490,7 @@ GitHub Sponsors. Does not include sponsorships paid via Patreon.</p>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
 <li><code>minPermissionLevel</code> (ProjectV2PermissionLevel): Filter projects based on user role. Default: <code>READ</code>.</li>
-<li><code>orderBy</code> (ProjectV2Order): How to order the returned projects.</li>
+<li><code>orderBy</code> (ProjectV2Order): How to order the returned projects. Default: <code>{field: NUMBER, direction: DESC}</code>.</li>
 <li><code>query</code> (String): A project to search for under the owner.</li>
 </ul>
 </li>
@@ -1534,7 +1534,7 @@ current viewer owns.</li>
 <li><code>orderBy</code> (RepositoryOrder): Ordering options for repositories returned from the connection.</li>
 <li><code>ownerAffiliations</code> ([RepositoryAffiliation]): Array of owner's affiliation options for repositories returned from the<br>
 connection. For example, OWNER will include only repositories that the<br>
-organization or user being viewed owns.</li>
+organization or user being viewed owns. Default: <code>[OWNER, COLLABORATOR]</code>.</li>
 <li><code>privacy</code> (RepositoryPrivacy): If non-null, filters repositories according to privacy. Internal<br>
 repositories are considered private; consider using the visibility argument<br>
 if only internal repositories are needed. Cannot be combined with the<br>
@@ -1572,7 +1572,7 @@ GitHub.com UI uses [COMMIT, ISSUE, PULL_REQUEST, REPOSITORY].</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>onlyAnswers</code> (Boolean): Filter discussion comments to only those that were marked as the answer.</li>
+<li><code>onlyAnswers</code> (Boolean): Filter discussion comments to only those that were marked as the answer. Default: <code>false</code>.</li>
 <li><code>repositoryId</code> (ID): Filter discussion comments to only those in a specific repository.</li>
 </ul>
 </li>
@@ -1585,9 +1585,9 @@ including both answered and unanswered discussions.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (DiscussionOrder): Ordering options for discussions returned from the connection.</li>
+<li><code>orderBy</code> (DiscussionOrder): Ordering options for discussions returned from the connection. Default: <code>{field: CREATED_AT, direction: DESC}</code>.</li>
 <li><code>repositoryId</code> (ID): Filter discussions to only those in a specific repository.</li>
-<li><code>states</code> ([DiscussionState!]): A list of states to filter the discussions by.</li>
+<li><code>states</code> ([DiscussionState!]): A list of states to filter the discussions by. Default: <code>[]</code>.</li>
 </ul>
 </li>
 <li>
@@ -1600,7 +1600,7 @@ including both answered and unanswered discussions.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (SavedReplyOrder): The field to order saved replies by.</li>
+<li><code>orderBy</code> (SavedReplyOrder): The field to order saved replies by. Default: <code>{field: UPDATED_AT, direction: DESC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -1613,7 +1613,7 @@ including both answered and unanswered discussions.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (SponsorOrder): Ordering options for the users and organizations returned from the connection.</li>
+<li><code>orderBy</code> (SponsorOrder): Ordering options for the users and organizations returned from the connection. Default: <code>{field: RELEVANCE, direction: DESC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -1623,7 +1623,7 @@ including both answered and unanswered discussions.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (SponsorOrder): Ordering options for sponsors returned from the connection.</li>
+<li><code>orderBy</code> (SponsorOrder): Ordering options for sponsors returned from the connection. Default: <code>{field: RELEVANCE, direction: DESC}</code>.</li>
 <li><code>tierId</code> (ID): If given, will filter for sponsors at the given tier. Will only return<br>
 sponsors whose tier the viewer is permitted to see.</li>
 </ul>
@@ -1631,16 +1631,16 @@ sponsors whose tier the viewer is permitted to see.</li>
 <li>
 <p><code>sponsorsActivities</code> (SponsorsActivityConnection!): Events involving this sponsorable, such as new sponsorships.</p>
 <ul>
-<li><code>actions</code> ([SponsorsActivityAction!]): Filter activities to only the specified actions.</li>
+<li><code>actions</code> ([SponsorsActivityAction!]): Filter activities to only the specified actions. Default: <code>[]</code>.</li>
 <li><code>after</code> (String): Returns the elements in the list that come after the specified cursor.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>includeAsSponsor</code> (Boolean): Whether to include those events where this sponsorable acted as the sponsor.<br>
 Defaults to only including events where this sponsorable was the recipient<br>
-of a sponsorship.</li>
+of a sponsorship. Default: <code>false</code>.</li>
 <li><code>includePrivate</code> (Boolean): Whether or not to include private activities in the result set. Defaults to including public and private activities. Default: <code>true</code>.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (SponsorsActivityOrder): Ordering options for activity returned from the connection.</li>
+<li><code>orderBy</code> (SponsorsActivityOrder): Ordering options for activity returned from the connection. Default: <code>{field: TIMESTAMP, direction: DESC}</code>.</li>
 <li><code>period</code> (SponsorsActivityPeriod): Filter activities returned to only those that occurred in the most recent<br>
 specified time period. Set to ALL to avoid filtering by when the activity<br>
 occurred. Will be ignored if since or until is given. Default: <code>MONTH</code>.</li>
@@ -1672,7 +1672,7 @@ get the sponsorship back even if it has been cancelled. Default: <code>true</cod
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (SponsorshipNewsletterOrder): Ordering options for sponsorship updates returned from the connection.</li>
+<li><code>orderBy</code> (SponsorshipNewsletterOrder): Ordering options for sponsorship updates returned from the connection. Default: <code>{field: CREATED_AT, direction: DESC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -1683,7 +1683,7 @@ sponsorships this maintainer has ever received. Default: <code>true</code>.</li>
 <li><code>after</code> (String): Returns the elements in the list that come after the specified cursor.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
-<li><code>includePrivate</code> (Boolean): Whether or not to include private sponsorships in the result set.</li>
+<li><code>includePrivate</code> (Boolean): Whether or not to include private sponsorships in the result set. Default: <code>false</code>.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
 <li><code>orderBy</code> (SponsorshipOrder): Ordering options for sponsorships returned from this connection. If left<br>
 blank, the sponsorships will be ordered based on relevancy to the viewer.</li>
@@ -1738,7 +1738,7 @@ spent on GitHub to fund sponsorships. Only returns a value when viewed by the<br
 user themselves or by a user who can manage sponsorships for the requested organization.</p>
 <ul>
 <li><code>since</code> (DateTime): Filter payments to those that occurred on or after this time.</li>
-<li><code>sponsorableLogins</code> ([String!]): Filter payments to those made to the users or organizations with the specified usernames.</li>
+<li><code>sponsorableLogins</code> ([String!]): Filter payments to those made to the users or organizations with the specified usernames. Default: <code>[]</code>.</li>
 <li><code>until</code> (DateTime): Filter payments to those that occurred before this time.</li>
 </ul>
 </li>
@@ -1799,7 +1799,7 @@ viewer is an owner or collaborator, or member.</li>
 <li><code>orderBy</code> (RepositoryOrder): Ordering options for repositories returned from the connection.</li>
 <li><code>ownerAffiliations</code> ([RepositoryAffiliation]): Array of owner's affiliation options for repositories returned from the<br>
 connection. For example, OWNER will include only repositories that the<br>
-organization or user being viewed owns.</li>
+organization or user being viewed owns. Default: <code>[OWNER, COLLABORATOR]</code>.</li>
 <li><code>privacy</code> (RepositoryPrivacy): If non-null, filters repositories according to privacy. Internal<br>
 repositories are considered private; consider using the visibility argument<br>
 if only internal repositories are needed. Cannot be combined with the<br>
@@ -1829,7 +1829,7 @@ visibility argument.</li>
 <li><code>THREE_DAYS</code>: The user was blocked for 3 days.</li>
 </ul>
 <h2 id="userblockedevent---object" title="UserBlockedEvent - object" data-entry-type="Section">UserBlockedEvent - object<a href="#userblockedevent---object" aria-label="Link to heading 'UserBlockedEvent - object'" data-heading-content="UserBlockedEvent - object" class="anchor"></a></h2>
-<p>Represents auser_blockedevent on a given user.</p>
+<p>Represents a user_blocked event on a given user.</p>
 <p><strong>Implements:</strong> Node</p>
 <h3 id="fields-for-userblockedevent">Fields for <code>UserBlockedEvent</code><a href="#fields-for-userblockedevent" aria-label="Link to heading 'Fields for UserBlockedEvent'" data-heading-content="Fields for UserBlockedEvent" class="anchor"></a></h3>
 <ul>

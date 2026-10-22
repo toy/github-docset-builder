@@ -216,7 +216,7 @@ Default: <code>1</code></p>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
-</span><span style="color:#c0c5ce;">  https://api.github.com/search/code
+</span><span style="color:#c0c5ce;">  "https://api.github.com/search/code?q=Q"
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <ul>
@@ -503,7 +503,7 @@ Default: <code>1</code></p>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
-</span><span style="color:#c0c5ce;">  https://api.github.com/search/commits
+</span><span style="color:#c0c5ce;">  "https://api.github.com/search/commits?q=Q"
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <ul>
@@ -841,13 +841,13 @@ Example: <a href="http://api.github.com/search/issues?q=%7Bquery%7D&amp;advanced
 <li>
 <p><strong><code>search_type</code></strong> (string)<br>
 The type of search to perform on issues. When not specified, the default is lexical search.</p>
-</li>
-</ul>
 <p>semantic — performs a pure semantic (vector) search using embedding-based understanding.<br>
 hybrid — combines semantic search with lexical search for best results.</p>
 <p>Semantic and hybrid search require authentication and are rate limited to 10 requests per minute.<br>
 Only applies to issue searches (/search/issues).<br>
 Can be one of: <code>semantic</code>, <code>hybrid</code></p>
+</li>
+</ul>
 <h3 id="http-response-status-codes-2">HTTP response status codes<a href="#http-response-status-codes-2" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
@@ -874,7 +874,7 @@ Can be one of: <code>semantic</code>, <code>hybrid</code></p>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
-</span><span style="color:#c0c5ce;">  https://api.github.com/search/issues
+</span><span style="color:#c0c5ce;">  "https://api.github.com/search/issues?q=Q"
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <ul>
@@ -1322,7 +1322,7 @@ Can be one of: <code>semantic</code>, <code>hybrid</code></p>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
-</span><span style="color:#c0c5ce;">  https://api.github.com/search/issues
+</span><span style="color:#c0c5ce;">  "https://api.github.com/search/issues?q=Q"
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <ul>
@@ -1835,7 +1835,7 @@ Default: <code>1</code></p>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
-</span><span style="color:#c0c5ce;">  https://api.github.com/search/labels
+</span><span style="color:#c0c5ce;">  "https://api.github.com/search/labels?repository_id=REPOSITORY_ID&amp;q=Q"
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <ul>
@@ -1961,7 +1961,7 @@ Default: <code>1</code></p>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
-</span><span style="color:#c0c5ce;">  https://api.github.com/search/repositories
+</span><span style="color:#c0c5ce;">  "https://api.github.com/search/repositories?q=Q"
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <ul>
@@ -2173,7 +2173,7 @@ Default: <code>1</code></p>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
-</span><span style="color:#c0c5ce;">  https://api.github.com/search/topics
+</span><span style="color:#c0c5ce;">  "https://api.github.com/search/topics?q=Q"
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <ul>
@@ -2298,7 +2298,7 @@ Default: <code>1</code></p>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
-</span><span style="color:#c0c5ce;">  https://api.github.com/search/users
+</span><span style="color:#c0c5ce;">  "https://api.github.com/search/users?q=Q"
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <ul>

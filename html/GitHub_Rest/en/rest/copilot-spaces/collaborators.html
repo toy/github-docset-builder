@@ -50,7 +50,35 @@ The unique identifier of the Copilot Space.</p>
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <ul>
-<li><code>collaborators</code>: required, array of object</li>
+<li><code>collaborators</code>: required, array of <code>Copilot Space Collaborator</code>:
+<ul>
+<li>any of:
+<ul>
+<li><strong>object</strong></li>
+<li><strong>object</strong>
+<ul>
+<li><code>actor_type</code>: required, string, enum: <code>Team</code></li>
+<li><code>role</code>: required, string, enum: <code>reader</code>, <code>writer</code>, <code>admin</code></li>
+<li><code>id</code>: required, integer</li>
+<li><code>node_id</code>: required, string</li>
+<li><code>name</code>: required, string</li>
+<li><code>slug</code>: required, string</li>
+<li><code>type</code>: required, string, enum: <code>Team</code></li>
+<li><code>description</code>: string or null</li>
+<li><code>privacy</code>: string</li>
+<li><code>notification_setting</code>: string</li>
+<li><code>url</code>: string, format: uri</li>
+<li><code>html_url</code>: string, format: uri</li>
+<li><code>members_url</code>: string</li>
+<li><code>repositories_url</code>: string, format: uri</li>
+<li><code>organization_id</code>: integer</li>
+<li><code>parent</code>: null</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 <h2 id="add-a-collaborator-to-an-organization-copilot-space" title="POST /orgs/{org}/copilot-spaces/{space_number}/collaborators (Add a collaborator to an organization Copilot Space)" data-entry-type="Resource">Add a collaborator to an organization Copilot Space<a href="#add-a-collaborator-to-an-organization-copilot-space" aria-label="Link to heading 'Add a collaborator to an organization Copilot Space'" data-heading-content="Add a collaborator to an organization Copilot Space" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">POST /orgs/{org}/copilot-spaces/{space_number}/collaborators

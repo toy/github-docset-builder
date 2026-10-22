@@ -56,13 +56,11 @@ A comma-separated list of package names. If specified, only alerts for these pac
 <li>
 <p><strong><code>epss_percentage</code></strong> (string)<br>
 CVE Exploit Prediction Scoring System (EPSS) percentage. Can be specified as:</p>
-</li>
-</ul>
 <p>An exact number (n)<br>
 Comparators such as &gt;n, <span data-escaped-char="">&lt;</span>n, &gt;=n, &lt;=n<br>
 A range like n..n, where n is a number from 0.0 to 1.0</p>
 <p>Filters the list of alerts based on EPSS percentages. If specified, only alerts with the provided EPSS percentages will be returned.</p>
-<ul>
+</li>
 <li>
 <p><strong><code>has</code></strong> (string)<br>
 Filters the list of alerts based on whether the alert has the given value. If specified, only alerts meeting this criterion will be returned.<br>
@@ -83,10 +81,8 @@ Can be one of: <code>development</code>, <code>runtime</code></p>
 <p><strong><code>relationship</code></strong> (string)<br>
 A comma-separated list of relationships of the vulnerable dependency to your project. If specified, only alerts with these relationships will be returned.<br>
 Note</p>
-</li>
-</ul>
 <p>We are rolling out support for dependency relationship across ecosystems. This value will be "unknown" for all dependencies in unsupported ecosystems.</p>
-<ul>
+</li>
 <li>
 <p><strong><code>sort</code></strong> (string)<br>
 The property by which to sort the results.<br>
@@ -155,6 +151,7 @@ Default: <code>30</code></p>
 </ul>
 </li>
 <li><code>manifest_path</code>: string, read-only</li>
+<li><code>version_requirement</code>: string or null, read-only</li>
 <li><code>scope</code>: string or null, enum: <code>development</code>, <code>runtime</code>, <code>null</code>, read-only</li>
 <li><code>relationship</code>: string or null, enum: <code>unknown</code>, <code>direct</code>, <code>transitive</code>, <code>inconclusive</code>, <code>null</code>, read-only</li>
 </ul>
@@ -396,13 +393,11 @@ A comma-separated list of package names. If specified, only alerts for these pac
 <li>
 <p><strong><code>epss_percentage</code></strong> (string)<br>
 CVE Exploit Prediction Scoring System (EPSS) percentage. Can be specified as:</p>
-</li>
-</ul>
 <p>An exact number (n)<br>
 Comparators such as &gt;n, <span data-escaped-char="">&lt;</span>n, &gt;=n, &lt;=n<br>
 A range like n..n, where n is a number from 0.0 to 1.0</p>
 <p>Filters the list of alerts based on EPSS percentages. If specified, only alerts with the provided EPSS percentages will be returned.</p>
-<ul>
+</li>
 <li>
 <p><strong><code>artifact_registry_url</code></strong> (string)<br>
 A comma-separated list of artifact registry URLs. If specified, only alerts for repositories with storage records matching these URLs will be returned.</p>
@@ -437,10 +432,8 @@ Can be one of: <code>development</code>, <code>runtime</code></p>
 <p><strong><code>relationship</code></strong> (string)<br>
 A comma-separated list of relationships of the vulnerable dependency to your project. If specified, only alerts with these relationships will be returned.<br>
 Note</p>
-</li>
-</ul>
 <p>We are rolling out support for dependency relationship across ecosystems. This value will be "unknown" for all dependencies in unsupported ecosystems.</p>
-<ul>
+</li>
 <li>
 <p><strong><code>sort</code></strong> (string)<br>
 The property by which to sort the results.<br>
@@ -551,13 +544,11 @@ A comma-separated list of full manifest paths. If specified, only alerts for the
 <li>
 <p><strong><code>epss_percentage</code></strong> (string)<br>
 CVE Exploit Prediction Scoring System (EPSS) percentage. Can be specified as:</p>
-</li>
-</ul>
 <p>An exact number (n)<br>
 Comparators such as &gt;n, <span data-escaped-char="">&lt;</span>n, &gt;=n, &lt;=n<br>
 A range like n..n, where n is a number from 0.0 to 1.0</p>
 <p>Filters the list of alerts based on EPSS percentages. If specified, only alerts with the provided EPSS percentages will be returned.</p>
-<ul>
+</li>
 <li>
 <p><strong><code>has</code></strong> (string)<br>
 Filters the list of alerts based on whether the alert has the given value. If specified, only alerts meeting this criterion will be returned.<br>
@@ -578,10 +569,8 @@ Can be one of: <code>development</code>, <code>runtime</code></p>
 <p><strong><code>relationship</code></strong> (string)<br>
 A comma-separated list of relationships of the vulnerable dependency to your project. If specified, only alerts with these relationships will be returned.<br>
 Note</p>
-</li>
-</ul>
 <p>We are rolling out support for dependency relationship across ecosystems. This value will be "unknown" for all dependencies in unsupported ecosystems.</p>
-<ul>
+</li>
 <li>
 <p><strong><code>sort</code></strong> (string)<br>
 The property by which to sort the results.<br>
@@ -653,6 +642,7 @@ Default: <code>30</code></p>
 </ul>
 </li>
 <li><code>manifest_path</code>: string, read-only</li>
+<li><code>version_requirement</code>: string or null, read-only</li>
 <li><code>scope</code>: string or null, enum: <code>development</code>, <code>runtime</code>, <code>null</code>, read-only</li>
 <li><code>relationship</code>: string or null, enum: <code>unknown</code>, <code>direct</code>, <code>transitive</code>, <code>inconclusive</code>, <code>null</code>, read-only</li>
 </ul>
@@ -865,6 +855,7 @@ GET /repos/{owner}/{repo}/dependabot/alerts operation.</p>
 </ul>
 </li>
 <li><code>manifest_path</code>: string, read-only</li>
+<li><code>version_requirement</code>: string or null, read-only</li>
 <li><code>scope</code>: string or null, enum: <code>development</code>, <code>runtime</code>, <code>null</code>, read-only</li>
 <li><code>relationship</code>: string or null, enum: <code>unknown</code>, <code>direct</code>, <code>transitive</code>, <code>inconclusive</code>, <code>null</code>, read-only</li>
 </ul>

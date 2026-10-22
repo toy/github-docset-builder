@@ -1,0 +1,55 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Enforcing lockfiles for action dependencies</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">GitHub Actions</a> / <a href="../index.html">How-tos</a> / <a href="index.html">Administer</a> / </nav><h1 id="enforcing-lockfiles-for-action-dependencies">Enforcing lockfiles for action dependencies<a href="#enforcing-lockfiles-for-action-dependencies" aria-label="Link to heading 'Enforcing lockfiles for action dependencies'" data-heading-content="Enforcing lockfiles for action dependencies" class="anchor"></a></h1>
+<p>Require workflow dependency lockfiles across your repositories, and automatically keep the files up to date.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Workflow dependency lockfiles are in public preview and subject to change.</p>
+</div>
+<p>Requiring lockfiles gives you consistent, auditable assurance that every workflow runs vetted code, without asking each team to adopt the practice on its own. For an introduction, see <a href="../../concepts/security/workflow-dependency-lockfiles.html">Workflow dependency lockfiles</a>.</p>
+<p>This guide helps you run a pilot in selected repositories and set up automations to keep the lockfiles up to date. When you're confident the lockfiles are working as intended and not introducing developer friction, you can enforce the <strong>Require lockfile</strong> policy.</p>
+<h2 id="prerequisites" title="Prerequisites" data-entry-type="Section">Prerequisites<a href="#prerequisites" aria-label="Link to heading 'Prerequisites'" data-heading-content="Prerequisites" class="anchor"></a></h2>
+<p>Before you enforce workflow lockfiles and create processes to keep them up to date, the lockfile must exist in your repositories. For instructions, see <a href="../secure-your-work/lock-workflow-dependencies.html">Locking action dependencies in a repository's workflows</a>.</p>
+<h2 id="1-pilot-the-require-lockfile-policy" title="1. Pilot the &quot;require lockfile&quot; policy" data-entry-type="Section">1. Pilot the "require lockfile" policy<a href="#1-pilot-the-require-lockfile-policy" aria-label="Link to heading '1. Pilot the &quot;require lockfile&quot; policy'" data-heading-content="1. Pilot the &quot;require lockfile&quot; policy" class="anchor"></a></h2>
+<div class="markdown-alert markdown-alert-important">
+<p class="markdown-alert-title">**Evaluate** mode for policies is only available on GitHub Enterprise. Do not enable this policy in **Active** mode until you're confident you have systems in place to keep the lockfile up to date for all targeted workflows.</p>
+</div>
+<p>The <strong>Require lockfile</strong> policy blocks runs of targeted workflows that include action dependencies but are <strong>not</strong> onboarded to the repository's lockfile. To configure the policy, see <a href="control-workflow-execution.html">Governing execution of GitHub Actions workflows</a>.</p>
+<p>Run a pilot before enforcing this policy in all repositories. You should:</p>
+<ul>
+<li>Scope the policy to specific repositories that have onboarded to lockfiles.</li>
+<li>Target specific workflows that have been onboarded to the lockfile. Do this until all workflows are onboarded <em>and</em> you have processes in place to ensure new workflows are onboarded automatically.</li>
+<li>Start with the policy in <strong>Evaluate</strong> mode and analyze the results under <strong>Policy insights</strong></li>
+</ul>
+<h2 id="2-keep-lockfiles-current" title="2. Keep lockfiles current" data-entry-type="Section">2. Keep lockfiles current<a href="#2-keep-lockfiles-current" aria-label="Link to heading '2. Keep lockfiles current'" data-heading-content="2. Keep lockfiles current" class="anchor"></a></h2>
+<p>Enforcement only works if lockfiles stay up to date. Add automations so that developers do not need to remember to run the lock command every time they create or edit workflows.</p>
+<p>The following sections give examples for how to prevent stale lockfiles at different points of the development lifecycle.</p>
+<ul>
+<li>Keep the file up to date by enabling Dependabot and creating a workflow to run the lock command.</li>
+<li>Add a skill and pre-commit hook to shorten the feedback loop for developers.</li>
+</ul>
+<p>For ready-to-copy implementations of the workflow and the skill, see the <a href="https://github.com/github/gh-actions-lock" class="external">gh-actions-lock</a> repository.</p>
+<h3 id="dependabot-version-updates">Dependabot version updates<a href="#dependabot-version-updates" aria-label="Link to heading 'Dependabot version updates'" data-heading-content="Dependabot version updates" class="anchor"></a></h3>
+<p>When Dependabot bumps an action version, it regenerates the matching lockfile entry in the same pull request.</p>
+<p>You don't need any configuration beyond having Dependabot manage GitHub Actions dependencies. See <a href="https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/auto-update-actions" class="external">Keeping your actions up to date with Dependabot</a>.</p>
+<p>Dependabot will <strong>not</strong> onboard a workflow that has no lockfile entries yet, so this option maintains coverage rather than extending it.</p>
+<h3 id="a-dedicated-github-actions-workflow">A dedicated GitHub Actions workflow<a href="#a-dedicated-github-actions-workflow" aria-label="Link to heading 'A dedicated GitHub Actions workflow'" data-heading-content="A dedicated GitHub Actions workflow" class="anchor"></a></h3>
+<p>When someone adds or edits a workflow, run another workflow that runs the lock command. Trigger the workflow on changes to <code>.github/workflows/**</code> and to any <code>action.yml</code> or <code>action.yaml</code> file, then give it two jobs:</p>
+<ul>
+<li>An <strong>update</strong> job that regenerates the lockfile on push and commits the result. This job needs <code>contents: write</code> permissions, and your branch protection rules or rulesets must allow GitHub Actions to push to the branches it runs on.</li>
+<li>A <strong>verify</strong> job that runs <code>gh actions-lock --verify</code> on pull requests. This should exit with an error if the lockfile is stale, making it useful for a required check.</li>
+</ul>
+<h3 id="a-copilot-skill">A Copilot skill<a href="#a-copilot-skill" aria-label="Link to heading 'A Copilot skill'" data-heading-content="A Copilot skill" class="anchor"></a></h3>
+<p>When Copilot edits a workflow file, tell it to run the command to update the lockfile in the same changeset.</p>
+<p>The skill should tell Copilot to regenerate the lockfile with the CLI whenever it changes a workflow or a local action, and never to edit the lockfile directly. It only covers edits made with Copilot, so treat it as a convenience rather than a control. See <a href="https://docs.github.com/en/copilot/concepts/agents/about-agent-skills" class="external">Agent skills</a>.</p>
+<h3 id="a-pre-commit-hook">A pre-commit hook<a href="#a-pre-commit-hook" aria-label="Link to heading 'A pre-commit hook'" data-heading-content="A pre-commit hook" class="anchor"></a></h3>
+<p>This catches a stale lockfile before a commit exists, which is the earliest feedback a developer can get.</p>
+<p>Use <code>gh actions-lock --verify-local --no-fix</code> in the hook. It works offline, doesn't need authentication, and is fast enough to run on every commit. This command confirms that every dependency has a lockfile entry, but does not re-verify the pins against GitHub.</p>
+<h2 id="3-set-up-a-review-process-for-lockfile-changes" title="3. Set up a review process for lockfile changes" data-entry-type="Section">3. Set up a review process for lockfile changes<a href="#3-set-up-a-review-process-for-lockfile-changes" aria-label="Link to heading '3. Set up a review process for lockfile changes'" data-heading-content="3. Set up a review process for lockfile changes" class="anchor"></a></h2>
+<p>A lockfile is only a security control if someone reads the diff. A changed commit SHA tells you that the code your workflows run has changed.</p>
+<ol>
+<li>Add <code>.github/workflows/actions.lock</code> to your <code>CODEOWNERS</code> file so that the team responsible for build security is automatically requested for review. See <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" class="external">About code owners</a>.</li>
+<li>Configure a branch protection rule or repository ruleset to require approval from a code owner.</li>
+<li>Tell reviewers what to look for. For guidance, see <a href="../secure-your-work/lock-workflow-dependencies.html#reviewing-lockfile-changes">Locking action dependencies in a repository's workflows</a>.</li>
+</ol>
+<h2 id="4-enforce-the-policy" title="4. Enforce the policy" data-entry-type="Section">4. Enforce the policy<a href="#4-enforce-the-policy" aria-label="Link to heading '4. Enforce the policy'" data-heading-content="4. Enforce the policy" class="anchor"></a></h2>
+<p>When you're confident that lockfiles are in place and will stay up to date, change the enforcement status of the <strong>Require lockfile</strong> policy to <strong>Active</strong>, and ensure all onboarded repositories and workflows are targeted.</p>
+<p>Leave the verification from step 2 in place. The policy will block a workflow run that has no valid lockfile, but a verification check tells an author their lockfile is stale while they're still working on the pull request.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

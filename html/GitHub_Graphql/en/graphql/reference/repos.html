@@ -483,7 +483,7 @@ being pushed to the commit graph. This includes absolute paths that contain file
 <ul>
 <li><code>name</code> (String!): The name of the property.</li>
 <li><code>propertyValues</code> ([String!]!): The values to match for.</li>
-<li><code>source</code> (String): The source of the property. Choosecustomor 'system'. Defaults to 'custom' if not specified.</li>
+<li><code>source</code> (String): The source of the property. Choose custom or 'system'. Defaults to custom if not specified.</li>
 </ul>
 <h2 id="propertytargetdefinitioninput---input-object" title="PropertyTargetDefinitionInput - input object" data-entry-type="Section">PropertyTargetDefinitionInput - input object<a href="#propertytargetdefinitioninput---input-object" aria-label="Link to heading 'PropertyTargetDefinitionInput - input object'" data-heading-content="PropertyTargetDefinitionInput - input object" class="anchor"></a></h2>
 <p>A property that must match.</p>
@@ -491,7 +491,7 @@ being pushed to the commit graph. This includes absolute paths that contain file
 <ul>
 <li><code>name</code> (String!): The name of the property.</li>
 <li><code>propertyValues</code> ([String!]!): The values to match for.</li>
-<li><code>source</code> (String): The source of the property. Choosecustomor 'system'. Defaults to 'custom' if not specified.</li>
+<li><code>source</code> (String): The source of the property. Choose custom or 'system'. Defaults to custom if not specified.</li>
 </ul>
 <h2 id="repoaccessauditentry---object" title="RepoAccessAuditEntry - object" data-entry-type="Section">RepoAccessAuditEntry - object<a href="#repoaccessauditentry---object" aria-label="Link to heading 'RepoAccessAuditEntry - object'" data-heading-content="RepoAccessAuditEntry - object" class="anchor"></a></h2>
 <p>Audit log entry for a repo.access event.</p>
@@ -908,7 +908,7 @@ always be updated even if it is not required to be up to date before merging.</p
 <li><code>environments</code> ([String!]): Environments to list deployments for.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (DeploymentOrder): Ordering options for deployments returned from the connection.</li>
+<li><code>orderBy</code> (DeploymentOrder): Ordering options for deployments returned from the connection. Default: <code>{field: CREATED_AT, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -928,7 +928,7 @@ always be updated even if it is not required to be up to date before merging.</p
 <ul>
 <li><code>after</code> (String): Returns the elements in the list that come after the specified cursor.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
-<li><code>filterByAssignable</code> (Boolean): Filter by categories that are assignable by the viewer.</li>
+<li><code>filterByAssignable</code> (Boolean): Filter by categories that are assignable by the viewer. Default: <code>false</code>.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
 </ul>
@@ -948,8 +948,8 @@ always be updated even if it is not required to be up to date before merging.</p
 <li><code>categoryId</code> (ID): Only include discussions that belong to the category with this ID.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (DiscussionOrder): Ordering options for discussions returned from the connection.</li>
-<li><code>states</code> ([DiscussionState!]): A list of states to filter the discussions by.</li>
+<li><code>orderBy</code> (DiscussionOrder): Ordering options for discussions returned from the connection. Default: <code>{field: UPDATED_AT, direction: DESC}</code>.</li>
+<li><code>states</code> ([DiscussionState!]): A list of states to filter the discussions by. Default: <code>[]</code>.</li>
 </ul>
 </li>
 <li>
@@ -968,8 +968,8 @@ always be updated even if it is not required to be up to date before merging.</p
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>names</code> ([String!]): The names of the environments to be returned.</li>
-<li><code>orderBy</code> (Environments): Ordering options for the environments.</li>
+<li><code>names</code> ([String!]): The names of the environments to be returned. Default: <code>[]</code>.</li>
+<li><code>orderBy</code> (Environments): Ordering options for the environments. Default: <code>{field: NAME, direction: ASC}</code>.</li>
 <li><code>pinnedEnvironmentFilter</code> (EnvironmentPinnedFilterField): Filter to control pinned environments return. Default: <code>ALL</code>.</li>
 </ul>
 </li>
@@ -994,7 +994,7 @@ current viewer owns.</li>
 <li><code>orderBy</code> (RepositoryOrder): Ordering options for repositories returned from the connection.</li>
 <li><code>ownerAffiliations</code> ([RepositoryAffiliation]): Array of owner's affiliation options for repositories returned from the<br>
 connection. For example, OWNER will include only repositories that the<br>
-organization or user being viewed owns.</li>
+organization or user being viewed owns. Default: <code>[OWNER, COLLABORATOR]</code>.</li>
 <li><code>privacy</code> (RepositoryPrivacy): If non-null, filters repositories according to privacy. Internal<br>
 repositories are considered private; consider using the visibility argument<br>
 if only internal repositories are needed. Cannot be combined with the<br>
@@ -1090,7 +1090,7 @@ visibility argument.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (IssueFieldOrder): Ordering options for issue fields returned from the connection.</li>
+<li><code>orderBy</code> (IssueFieldOrder): Ordering options for issue fields returned from the connection. Default: <code>{field: CREATED_AT, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -1115,7 +1115,7 @@ visibility argument.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (IssueTypeOrder): Ordering options for issue types returned from the connection.</li>
+<li><code>orderBy</code> (IssueTypeOrder): Ordering options for issue types returned from the connection. Default: <code>{field: CREATED_AT, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -1144,7 +1144,7 @@ visibility argument.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (LabelOrder): Ordering options for labels returned from the connection.</li>
+<li><code>orderBy</code> (LabelOrder): Ordering options for labels returned from the connection. Default: <code>{field: CREATED_AT, direction: ASC}</code>.</li>
 <li><code>query</code> (String): If provided, searches labels by name and description.</li>
 </ul>
 </li>
@@ -1240,7 +1240,7 @@ visibility argument.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
 <li><code>names</code> ([String]): Find packages by their names.</li>
-<li><code>orderBy</code> (PackageOrder): Ordering of the returned packages.</li>
+<li><code>orderBy</code> (PackageOrder): Ordering of the returned packages. Default: <code>{field: CREATED_AT, direction: DESC}</code>.</li>
 <li><code>packageType</code> (PackageType): Filter registry package by type.</li>
 <li><code>repositoryId</code> (ID): Find packages in a repository by ID.</li>
 </ul>
@@ -1258,7 +1258,7 @@ visibility argument.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (PinnedEnvironmentOrder): Ordering options for the environments.</li>
+<li><code>orderBy</code> (PinnedEnvironmentOrder): Ordering options for the environments. Default: <code>{field: POSITION, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -1308,7 +1308,7 @@ visibility argument.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
 <li><code>minPermissionLevel</code> (ProjectV2PermissionLevel): Filter projects based on user role. Default: <code>READ</code>.</li>
-<li><code>orderBy</code> (ProjectV2Order): How to order the returned projects.</li>
+<li><code>orderBy</code> (ProjectV2Order): How to order the returned projects. Default: <code>{field: NUMBER, direction: DESC}</code>.</li>
 <li><code>query</code> (String): A project to search for linked to the repo.</li>
 </ul>
 </li>
@@ -1560,7 +1560,7 @@ to repository maintainers and administrators.</p>
 <p><strong>Type:</strong> Repository</p>
 <h3 id="arguments-for-repository">Arguments for <code>repository</code><a href="#arguments-for-repository" aria-label="Link to heading 'Arguments for repository'" data-heading-content="Arguments for repository" class="anchor"></a></h3>
 <ul>
-<li><code>followRenames</code> (Boolean): Follow repository renames. If disabled, a repository referenced by its old name will return an error.</li>
+<li><code>followRenames</code> (Boolean): Follow repository renames. If disabled, a repository referenced by its old name will return an error. Default: <code>true</code>.</li>
 <li><code>name</code> (String!): The name of the repository.</li>
 <li><code>owner</code> (String!): The login field of a user or organization.</li>
 </ul>
@@ -2033,7 +2033,7 @@ current viewer owns.</li>
 <li><code>orderBy</code> (RepositoryOrder): Ordering options for repositories returned from the connection.</li>
 <li><code>ownerAffiliations</code> ([RepositoryAffiliation]): Array of owner's affiliation options for repositories returned from the<br>
 connection. For example, OWNER will include only repositories that the<br>
-organization or user being viewed owns.</li>
+organization or user being viewed owns. Default: <code>[OWNER, COLLABORATOR]</code>.</li>
 <li><code>privacy</code> (RepositoryPrivacy): If non-null, filters repositories according to privacy. Internal<br>
 repositories are considered private; consider using the visibility argument<br>
 if only internal repositories are needed. Cannot be combined with the<br>
@@ -2603,12 +2603,12 @@ current viewer owns.</li>
 <li><code>orderBy</code> (RepositoryOrder): Ordering options for repositories returned from the connection.</li>
 <li><code>ownerAffiliations</code> ([RepositoryAffiliation]): Array of owner's affiliation options for repositories returned from the<br>
 connection. For example, OWNER will include only repositories that the<br>
-organization or user being viewed owns.</li>
+organization or user being viewed owns. Default: <code>[OWNER, COLLABORATOR]</code>.</li>
 <li><code>privacy</code> (RepositoryPrivacy): If non-null, filters repositories according to privacy. Internal<br>
 repositories are considered private; consider using the visibility argument<br>
 if only internal repositories are needed. Cannot be combined with the<br>
 visibility argument.</li>
-<li><code>sponsorableOnly</code> (Boolean): If true, only repositories whose owner can be sponsored via GitHub Sponsors will be returned.</li>
+<li><code>sponsorableOnly</code> (Boolean): If true, only repositories whose owner can be sponsored via GitHub Sponsors will be returned. Default: <code>false</code>.</li>
 <li><code>visibility</code> (RepositoryVisibility): If non-null, filters repositories according to visibility. Cannot be combined with the privacy argument.</li>
 </ul>
 </li>
@@ -2640,10 +2640,10 @@ visibility argument.</li>
 <p>Reason that the suggested topic is declined.</p>
 <h3 id="values-for-topicsuggestiondeclinereason">Values for <code>TopicSuggestionDeclineReason</code><a href="#values-for-topicsuggestiondeclinereason" aria-label="Link to heading 'Values for TopicSuggestionDeclineReason'" data-heading-content="Values for TopicSuggestionDeclineReason" class="anchor"></a></h3>
 <ul>
-<li><code>NOT_RELEVANT</code>: The suggested topic is not relevant to the repository.</li>
-<li><code>PERSONAL_PREFERENCE</code>: The viewer does not like the suggested topic.</li>
-<li><code>TOO_GENERAL</code>: The suggested topic is too general for the repository.</li>
-<li><code>TOO_SPECIFIC</code>: The suggested topic is too specific for the repository (e.g. #ruby-on-rails-version-4-2-1).</li>
+<li><code>NOT_RELEVANT</code>: The suggested topic is not relevant to the repository. <strong>Deprecated:</strong> Suggested topics are no longer supported Removal on 2024-04-01 UTC.</li>
+<li><code>PERSONAL_PREFERENCE</code>: The viewer does not like the suggested topic. <strong>Deprecated:</strong> Suggested topics are no longer supported Removal on 2024-04-01 UTC.</li>
+<li><code>TOO_GENERAL</code>: The suggested topic is too general for the repository. <strong>Deprecated:</strong> Suggested topics are no longer supported Removal on 2024-04-01 UTC.</li>
+<li><code>TOO_SPECIFIC</code>: The suggested topic is too specific for the repository (e.g. #ruby-on-rails-version-4-2-1). <strong>Deprecated:</strong> Suggested topics are no longer supported Removal on 2024-04-01 UTC.</li>
 </ul>
 <h2 id="unarchiverepository---mutation" title="unarchiveRepository - mutation" data-entry-type="Section">unarchiveRepository - mutation<a href="#unarchiverepository---mutation" aria-label="Link to heading 'unarchiveRepository - mutation'" data-heading-content="unarchiveRepository - mutation" class="anchor"></a></h2>
 <p>Unarchives a repository.</p>

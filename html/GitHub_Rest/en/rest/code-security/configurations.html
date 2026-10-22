@@ -144,12 +144,10 @@ A description of the code security configuration</p>
 <p><strong><code>advanced_security</code></strong> (string)<br>
 The enablement status of GitHub Advanced Security features. enabled will enable both Code Security and Secret Protection features.<br>
 Warning</p>
-</li>
-</ul>
 <p>code_security and secret_protection are deprecated values for this field. Prefer the individual code_security and secret_protection fields to set the status of these features.<br>
 Default: <code>disabled</code><br>
 Can be one of: <code>enabled</code>, <code>disabled</code>, <code>code_security</code>, <code>secret_protection</code></p>
-<ul>
+</li>
 <li>
 <p><strong><code>code_security</code></strong> (string)<br>
 The enablement status of GitHub Code Security features.<br>
@@ -285,13 +283,16 @@ Can be one of: <code>enforced</code>, <code>unenforced</code>, <code>enterprise_
 <p><strong>201</strong> - Successfully created code security configuration</p>
 </li>
 <li>
-<p><strong>400</strong> - Bad Request</p>
+<p><strong>400</strong> - Bad Request because security product settings conflict, are unsupported by your plan, or required products are not enabled in the configuration.</p>
 </li>
 <li>
 <p><strong>403</strong> - Forbidden</p>
 </li>
 <li>
 <p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed because of unavailable security products, invalid feature dependencies, or an invalid configuration.</p>
 </li>
 </ul>
 <h3 id="code-examples-1">Code examples<a href="#code-examples-1" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
@@ -541,11 +542,9 @@ A description of the code security configuration</p>
 <p><strong><code>advanced_security</code></strong> (string)<br>
 The enablement status of GitHub Advanced Security features. enabled will enable both Code Security and Secret Protection features.<br>
 Warning</p>
-</li>
-</ul>
 <p>code_security and secret_protection are deprecated values for this field. Prefer the individual code_security and secret_protection fields to set the status of these features.<br>
 Can be one of: <code>enabled</code>, <code>disabled</code>, <code>code_security</code>, <code>secret_protection</code></p>
-<ul>
+</li>
 <li>
 <p><strong><code>code_security</code></strong> (string)<br>
 The enablement status of GitHub Code Security features.<br>
@@ -672,13 +671,19 @@ Can be one of: <code>enforced</code>, <code>unenforced</code>, <code>enterprise_
 <p><strong>304</strong> - Not modified</p>
 </li>
 <li>
+<p><strong>400</strong> - Bad Request because of a global configuration, incompatible parameters, or invalid enforcement changes.</p>
+</li>
+<li>
 <p><strong>403</strong> - Forbidden</p>
 </li>
 <li>
 <p><strong>404</strong> - Resource not found</p>
 </li>
 <li>
-<p><strong>409</strong> - Conflict</p>
+<p><strong>409</strong> - Conflict because security configuration work is already in progress.</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed because the configuration is invalid.</p>
 </li>
 </ul>
 <h3 id="code-examples-4">Code examples<a href="#code-examples-4" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
@@ -788,7 +793,10 @@ Can be one of: <code>all</code>, <code>all_without_configurations</code></li>
 <p><strong>404</strong> - Resource not found</p>
 </li>
 <li>
-<p><strong>409</strong> - Conflict</p>
+<p><strong>409</strong> - Conflict because security configuration work is already in progress.</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed because the request does not match the request schema.</p>
 </li>
 </ul>
 <h3 id="code-examples-6">Code examples<a href="#code-examples-6" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
@@ -843,6 +851,9 @@ Can be one of: <code>all</code>, <code>none</code>, <code>private_and_internal</
 </li>
 <li>
 <p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed because a public default is not supported in the current environment.</p>
 </li>
 </ul>
 <h3 id="code-examples-7">Code examples<a href="#code-examples-7" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
@@ -963,6 +974,9 @@ Default: <code>all</code></p>
 <ul>
 <li>
 <p><strong>200</strong> - OK</p>
+</li>
+<li>
+<p><strong>400</strong> - Bad Request because of unsupported attachment statuses.</p>
 </li>
 <li>
 <p><strong>403</strong> - Forbidden</p>
@@ -1148,12 +1162,10 @@ A description of the code security configuration</p>
 <p><strong><code>advanced_security</code></strong> (string)<br>
 The enablement status of GitHub Advanced Security features. enabled will enable both Code Security and Secret Protection features.<br>
 Warning</p>
-</li>
-</ul>
 <p>code_security and secret_protection are deprecated values for this field. Prefer the individual code_security and secret_protection fields to set the status of these features.<br>
 Default: <code>disabled</code><br>
 Can be one of: <code>enabled</code>, <code>disabled</code>, <code>code_security</code>, <code>secret_protection</code></p>
-<ul>
+</li>
 <li>
 <p><strong><code>code_security</code></strong> (string)<br>
 The enablement status of GitHub Code Security features.<br>
@@ -1315,7 +1327,21 @@ Can be one of: <code>enforced</code>, <code>unenforced</code></p>
 </ul>
 <h3 id="http-response-status-codes-10">HTTP response status codes<a href="#http-response-status-codes-10" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
-<li><strong>201</strong> - Successfully created code security configuration</li>
+<li>
+<p><strong>201</strong> - Successfully created code security configuration</p>
+</li>
+<li>
+<p><strong>400</strong> - Bad Request because security product settings conflict, are unsupported by your plan, or required products are not enabled in the configuration.</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed because of unavailable security products, invalid feature dependencies, or an invalid configuration.</p>
+</li>
 </ul>
 <h3 id="code-examples-10">Code examples<a href="#code-examples-10" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
 <h4 id="example-for-a-code-security-configuration-1">Example for a code security configuration<a href="#example-for-a-code-security-configuration-1" aria-label="Link to heading 'Example for a code security configuration'" data-heading-content="Example for a code security configuration" class="anchor"></a></h4>
@@ -1515,11 +1541,9 @@ A description of the code security configuration</p>
 <p><strong><code>advanced_security</code></strong> (string)<br>
 The enablement status of GitHub Advanced Security features. enabled will enable both Code Security and Secret Protection features.<br>
 Warning</p>
-</li>
-</ul>
 <p>code_security and secret_protection are deprecated values for this field. Prefer the individual code_security and secret_protection fields to set the status of these features.<br>
 Can be one of: <code>enabled</code>, <code>disabled</code>, <code>code_security</code>, <code>secret_protection</code></p>
-<ul>
+</li>
 <li>
 <p><strong><code>code_security</code></strong> (string)<br>
 The enablement status of GitHub Code Security features.<br>
@@ -1672,6 +1696,21 @@ Can be one of: <code>enforced</code>, <code>unenforced</code></p>
 <li>
 <p><strong>204</strong> - Response when no new updates are made</p>
 </li>
+<li>
+<p><strong>400</strong> - Bad Request because of a global configuration, incompatible parameters, or an attempt to update attributes of an enterprise-owned configuration.</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>409</strong> - Conflict because security configuration work is already in progress.</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed because of invalid enforcement values, unavailable security products, an attempt to change enterprise-enforced enforcement, or an invalid configuration.</p>
+</li>
 </ul>
 <h3 id="code-examples-14">Code examples<a href="#code-examples-14" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
 <h4 id="example-for-updating-a-code-security-configuration-1">Example for updating a code security configuration<a href="#example-for-updating-a-code-security-configuration-1" aria-label="Link to heading 'Example for updating a code security configuration'" data-heading-content="Example for updating a code security configuration" class="anchor"></a></h4>
@@ -1782,7 +1821,23 @@ An array of repository IDs to attach the configuration to. You can only provide 
 <p><strong>202</strong> - Accepted</p>
 </li>
 <li>
+<p><strong>400</strong> - Bad Request</p>
+</li>
+<li>
 <p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>409</strong> - Conflict because security configuration work is already in progress for the<br>
+organization, security configuration changes are blocked for the organization,<br>
+or another organization in the same enterprise is applying security configurations.</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed because the body does not match the request schema, scope<br>
+is selected but selected_repository_ids is missing or empty, or a non-empty<br>
+selected_repository_ids array is provided for another scope.</p>
 </li>
 </ul>
 <h3 id="code-examples-16">Code examples<a href="#code-examples-16" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
@@ -1842,6 +1897,9 @@ Can be one of: <code>all</code>, <code>none</code>, <code>private_and_internal</
 </li>
 <li>
 <p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed because a public default is not supported in the current environment.</p>
 </li>
 </ul>
 <h3 id="code-examples-17">Code examples<a href="#code-examples-17" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
@@ -1904,10 +1962,16 @@ Default: <code>all</code></p>
 <p><strong>200</strong> - OK</p>
 </li>
 <li>
+<p><strong>400</strong> - Bad Request because of unsupported attachment statuses.</p>
+</li>
+<li>
 <p><strong>403</strong> - Forbidden</p>
 </li>
 <li>
 <p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed because removed and detached are requested together.</p>
 </li>
 </ul>
 <h3 id="code-examples-18">Code examples<a href="#code-examples-18" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>

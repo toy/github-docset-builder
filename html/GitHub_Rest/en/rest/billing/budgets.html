@@ -53,16 +53,16 @@ Default: <code>10</code></p>
 <li>
 <p><strong><code>scope</code></strong> (string)<br>
 Filter budgets by scope type.</p>
-</li>
-</ul>
 <p>organization: Budgets scoped to the organization.<br>
 repository: Budgets scoped to a repository.<br>
 multi_user_customer: Universal budgets that apply to all users in the organization.<br>
 user: Budgets scoped to an individual user.<br>
 Can be one of: <code>enterprise</code>, <code>organization</code>, <code>repository</code>, <code>cost_center</code>, <code>multi_user_customer</code>, <code>user</code></p>
-<ul>
-<li><strong><code>user</code></strong> (string)<br>
-Filter consumed amount details for budgets by the specified user login.</li>
+</li>
+<li>
+<p><strong><code>user</code></strong> (string)<br>
+Filter consumed amount details for budgets by the specified user login.</p>
+</li>
 </ul>
 <h3 id="http-response-status-codes">HTTP response status codes<a href="#http-response-status-codes" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
@@ -206,8 +206,6 @@ Array of user login names who will receive alerts. Rejected for user-scope as al
 <li>
 <p><strong><code>budget_scope</code></strong> (string)<br>
 The scope of the budget for this organization.</p>
-</li>
-</ul>
 <p>organization: Apply the budget to the organization.<br>
 repository: Apply the budget to a specific repository in the organization.<br>
 multi_user_customer: Apply a universal budget to all users in the organization.<br>
@@ -215,7 +213,7 @@ user: Apply the budget to a single user in the organization.</p>
 <p>user and multi_user_customer scopes are only supported when<br>
 budget_product_sku is ai_credits or premium_requests.<br>
 Can be one of: <code>organization</code>, <code>repository</code>, <code>multi_user_customer</code>, <code>user</code></p>
-<ul>
+</li>
 <li>
 <p><strong><code>budget_entity_name</code></strong> (string)<br>
 The name of the entity to apply the budget to<br>
@@ -224,12 +222,10 @@ Default: ``</p>
 <li>
 <p><strong><code>budget_type</code></strong> (string)<br>
 The type of pricing model used by the budget. Determines how budget_product_sku is interpreted.</p>
-</li>
-</ul>
 <p>BundlePricing: Covers all AI credit SKUs. Set budget_product_sku to ai_credits.<br>
 ProductPricing: Covers all SKUs that belong to a product. Set budget_product_sku to a product such as actions or packages.<br>
 SkuPricing: Covers a single, specific SKU. Set budget_product_sku to a SKU such as actions_linux.</p>
-<ul>
+</li>
 <li>
 <p><strong><code>budget_product_sku</code></strong> (string)<br>
 A single product or SKU that will be covered in the budget</p>

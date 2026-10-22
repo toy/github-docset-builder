@@ -27,7 +27,7 @@
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (IpAllowListEntryOrder): Ordering options for IP allow list entries returned.</li>
+<li><code>orderBy</code> (IpAllowListEntryOrder): Ordering options for IP allow list entries returned. Default: <code>{field: ALLOW_LIST_VALUE, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>
@@ -338,12 +338,12 @@ false, only approved listings will be returned.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
 <li><code>organizationId</code> (ID): Select listings for products owned by the specified organization.</li>
-<li><code>primaryCategoryOnly</code> (Boolean): Select only listings where the primary category matches the given category slug.</li>
+<li><code>primaryCategoryOnly</code> (Boolean): Select only listings where the primary category matches the given category slug. Default: <code>false</code>.</li>
 <li><code>slugs</code> ([String]): Select the listings with these slugs, if they are visible to the viewer.</li>
 <li><code>useTopicAliases</code> (Boolean): Also check topic aliases for the category slug.</li>
 <li><code>viewerCanAdmin</code> (Boolean): Select listings to which user has admin access. If omitted, listings visible to the<br>
 viewer are returned.</li>
-<li><code>withFreeTrialsOnly</code> (Boolean): Select only listings that offer a free trial.</li>
+<li><code>withFreeTrialsOnly</code> (Boolean): Select only listings that offer a free trial. Default: <code>false</code>.</li>
 </ul>
 <h2 id="oauthapplicationauditentrydata---interface" title="OauthApplicationAuditEntryData - interface" data-entry-type="Section">OauthApplicationAuditEntryData - interface<a href="#oauthapplicationauditentrydata---interface" aria-label="Link to heading 'OauthApplicationAuditEntryData - interface'" data-heading-content="OauthApplicationAuditEntryData - interface" class="anchor"></a></h2>
 <p>Metadata for an audit entry with action oauth_application.*.</p>

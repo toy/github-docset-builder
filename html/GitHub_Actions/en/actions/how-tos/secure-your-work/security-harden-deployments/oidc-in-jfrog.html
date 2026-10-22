@@ -74,7 +74,7 @@ To reference these outputs, ensure the step has an explicit <code>id</code> defi
 </span><span style="color:#65737e;"># separate terms of service, privacy policy, and support
 </span><span style="color:#65737e;"># documentation.
 </span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Sign in to Artifactory Docker registry
-</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">docker/login-action@v3
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">uses</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 </span><span style="color:#65737e;"># v3.7.0
 </span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">with</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">registry</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ env.JF_URL }}
 </span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">username</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ steps.setup-jfrog-cli.outputs.oidc-user }}

@@ -24,8 +24,7 @@
 <h3 id="using-the-rest-api">Using the REST API<a href="#using-the-rest-api" aria-label="Link to heading 'Using the REST API'" data-heading-content="Using the REST API" class="anchor"></a></h3>
 <p>For artifacts that do not need to be attested and are not stored on JFrog, you can create a custom integration using the <a href="https://docs.github.com/en/rest/orgs/artifact-metadata#create-artifact-metadata-storage-record" class="external">Create artifact metadata storage record</a> API endpoint. You should configure your system to call the endpoint whenever an artifact is published to your chosen package repository.</p>
 <div class="markdown-alert markdown-alert-note">
-<p class="markdown-alert-title">Note</p>
-<p>If the artifact is not associated with a provenance attestation on GitHub, the <code>github_repository</code> parameter is mandatory.</p>
+<p class="markdown-alert-title">If the artifact is not associated with a provenance attestation on GitHub, the `github_repository` parameter is mandatory.</p>
 </div>
 <h2 id="uploading-a-deployment-record" title="Uploading a deployment record" data-entry-type="Section">Uploading a deployment record<a href="#uploading-a-deployment-record" aria-label="Link to heading 'Uploading a deployment record'" data-heading-content="Uploading a deployment record" class="anchor"></a></h2>
 <p>If you monitor deployed workloads with Dynatrace or Microsoft Defender for Cloud (MDC), you can use an integration to automatically sync deployment data to the linked artifacts page. Otherwise, you must set up a custom integration with the REST API.</p>
@@ -48,8 +47,7 @@
 <h3 id="using-the-rest-api-1">Using the REST API<a href="#using-the-rest-api-1" aria-label="Link to heading 'Using the REST API'" data-heading-content="Using the REST API" class="anchor"></a></h3>
 <p>The <a href="https://docs.github.com/en/rest/orgs/artifact-metadata#create-an-artifact-deployment-record" class="external">Create an artifact deployment record</a> API endpoint allows systems to send deployment data for a specific artifact to GitHub, such as its name, digest, environments, cluster, and deployment. You should call this endpoint whenever an artifact is deployed to a new staging or production environment.</p>
 <div class="markdown-alert markdown-alert-note">
-<p class="markdown-alert-title">Note</p>
-<p>If the artifact is not associated with a provenance attestation on GitHub, the <code>github_repository</code> parameter is mandatory.</p>
+<p class="markdown-alert-title">If the artifact is not associated with a provenance attestation on GitHub, the `github_repository` parameter is mandatory.</p>
 </div>
 <h2 id="verifying-an-upload" title="Verifying an upload" data-entry-type="Section">Verifying an upload<a href="#verifying-an-upload" aria-label="Link to heading 'Verifying an upload'" data-heading-content="Verifying an upload" class="anchor"></a></h2>
 <p>To check that a record has been uploaded successfully, you can view the updated artifact in your organization settings. See <a href="view-linked-artifacts.html">Auditing your organization's builds on the linked artifacts page</a>.</p>

@@ -439,6 +439,7 @@ Only show results that were last updated after the given time. This is a timesta
 <li><code>organization_custom_properties</code>: string, enum: <code>read</code>, <code>write</code>, <code>admin</code></li>
 <li><code>organization_copilot_seat_management</code>: string, enum: <code>read</code>, <code>write</code></li>
 <li><code>organization_copilot_agent_settings</code>: string, enum: <code>read</code>, <code>write</code></li>
+<li><code>organization_copilot_requests</code>: string, enum: <code>read</code></li>
 <li><code>organization_external_properties_for_repos</code>: string, enum: <code>read</code>, <code>write</code>, <code>admin</code></li>
 <li><code>organization_announcement_banners</code>: string, enum: <code>read</code>, <code>write</code></li>
 <li><code>organization_events</code>: string, enum: <code>read</code></li>
@@ -602,6 +603,7 @@ The unique identifier of the installation.</li>
 <li><code>organization_custom_properties</code>: string, enum: <code>read</code>, <code>write</code>, <code>admin</code></li>
 <li><code>organization_copilot_seat_management</code>: string, enum: <code>read</code>, <code>write</code></li>
 <li><code>organization_copilot_agent_settings</code>: string, enum: <code>read</code>, <code>write</code></li>
+<li><code>organization_copilot_requests</code>: string, enum: <code>read</code></li>
 <li><code>organization_external_properties_for_repos</code>: string, enum: <code>read</code>, <code>write</code>, <code>admin</code></li>
 <li><code>organization_announcement_banners</code>: string, enum: <code>read</code>, <code>write</code></li>
 <li><code>organization_events</code>: string, enum: <code>read</code></li>
@@ -815,6 +817,9 @@ Can be one of: <code>read</code>, <code>write</code></li>
 <li><strong><code>organization_copilot_agent_settings</code></strong> (string)<br>
 The level of permission to grant the access token to view and manage Copilot cloud agent settings for an organization.<br>
 Can be one of: <code>read</code>, <code>write</code></li>
+<li><strong><code>organization_copilot_requests</code></strong> (string)<br>
+The level of permission to grant the access token to make Copilot requests billed to the organization where the app is installed. This property is in public preview and is subject to change.<br>
+Can be one of: <code>read</code></li>
 <li><strong><code>organization_external_properties_for_repos</code></strong> (string)<br>
 The level of permission to grant the access token for managing external custom properties for repositories in an organization.<br>
 Can be one of: <code>read</code>, <code>write</code>, <code>admin</code></li>
@@ -954,6 +959,7 @@ Can be one of: <code>read</code>, <code>write</code>, <code>admin</code></li>
 <li><code>organization_custom_properties</code>: string, enum: <code>read</code>, <code>write</code>, <code>admin</code></li>
 <li><code>organization_copilot_seat_management</code>: string, enum: <code>read</code>, <code>write</code></li>
 <li><code>organization_copilot_agent_settings</code>: string, enum: <code>read</code>, <code>write</code></li>
+<li><code>organization_copilot_requests</code>: string, enum: <code>read</code></li>
 <li><code>organization_external_properties_for_repos</code>: string, enum: <code>read</code>, <code>write</code>, <code>admin</code></li>
 <li><code>organization_announcement_banners</code>: string, enum: <code>read</code>, <code>write</code></li>
 <li><code>organization_events</code>: string, enum: <code>read</code></li>
@@ -1205,6 +1211,10 @@ The unique identifier of the installation.</li>
 which repositories the token can access and which permissions are granted to the<br>
 token.<br>
 Invalid tokens will return 404 NOT FOUND.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This endpoint requires <a href="../authentication/authenticating-to-the-rest-api.html#using-basic-authentication">Basic authentication</a>. Use the application's <code>client_id</code> as the username and the <code>client_secret</code> as the password. Do not send an <code>Authorization: Bearer</code> header with this request, because it replaces the Basic credentials.</p>
+</div>
 <h3 id="parameters-8">Parameters<a href="#parameters-8" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-8">Headers<a href="#headers-8" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
@@ -1350,6 +1360,9 @@ Can be one of: <code>read</code>, <code>write</code></li>
 <li><strong><code>organization_copilot_agent_settings</code></strong> (string)<br>
 The level of permission to grant the access token to view and manage Copilot cloud agent settings for an organization.<br>
 Can be one of: <code>read</code>, <code>write</code></li>
+<li><strong><code>organization_copilot_requests</code></strong> (string)<br>
+The level of permission to grant the access token to make Copilot requests billed to the organization where the app is installed. This property is in public preview and is subject to change.<br>
+Can be one of: <code>read</code></li>
 <li><strong><code>organization_external_properties_for_repos</code></strong> (string)<br>
 The level of permission to grant the access token for managing external custom properties for repositories in an organization.<br>
 Can be one of: <code>read</code>, <code>write</code>, <code>admin</code></li>
@@ -1437,6 +1450,7 @@ Can be one of: <code>read</code>, <code>write</code>, <code>admin</code></li>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X POST \
 </span><span style="color:#c0c5ce;">  https://api.github.com/applications/Iv1.8a61f9b3a7aba766/token/scoped \
+</span><span style="color:#c0c5ce;">  -u "&lt;YOUR_CLIENT_ID&gt;:&lt;YOUR_CLIENT_SECRET&gt;" \
 </span><span style="color:#c0c5ce;">  -d '{
 </span><span style="color:#c0c5ce;">  "access_token": "e72e16c7e42f292c6912e7710c838347ae178b4a",
 </span><span style="color:#c0c5ce;">  "target": "octocat",
@@ -1541,6 +1555,7 @@ Can be one of: <code>read</code>, <code>write</code>, <code>admin</code></li>
 <li><code>organization_custom_properties</code>: string, enum: <code>read</code>, <code>write</code>, <code>admin</code></li>
 <li><code>organization_copilot_seat_management</code>: string, enum: <code>read</code>, <code>write</code></li>
 <li><code>organization_copilot_agent_settings</code>: string, enum: <code>read</code>, <code>write</code></li>
+<li><code>organization_copilot_requests</code>: string, enum: <code>read</code></li>
 <li><code>organization_external_properties_for_repos</code>: string, enum: <code>read</code>, <code>write</code>, <code>admin</code></li>
 <li><code>organization_announcement_banners</code>: string, enum: <code>read</code>, <code>write</code></li>
 <li><code>organization_events</code>: string, enum: <code>read</code></li>

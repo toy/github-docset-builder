@@ -72,7 +72,7 @@ Providing a substring will filter results where the API route contains the subst
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
-</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/insights/api/route-stats/ACTOR_TYPE/ACTOR_ID
+</span><span style="color:#c0c5ce;">  "https://api.github.com/orgs/ORG/insights/api/route-stats/ACTOR_TYPE/ACTOR_ID?min_timestamp=MIN_TIMESTAMP"
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <p>Array of objects:</p>
@@ -143,7 +143,7 @@ Providing a substring will filter results where the subject name contains the su
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
-</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/insights/api/subject-stats
+</span><span style="color:#c0c5ce;">  "https://api.github.com/orgs/ORG/insights/api/subject-stats?min_timestamp=MIN_TIMESTAMP"
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <p>Array of objects:</p>
@@ -191,7 +191,7 @@ The maximum timestamp to query for stats. Defaults to the time 30 days ago. This
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
-</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/insights/api/summary-stats
+</span><span style="color:#c0c5ce;">  "https://api.github.com/orgs/ORG/insights/api/summary-stats?min_timestamp=MIN_TIMESTAMP"
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <ul>
@@ -237,7 +237,7 @@ The maximum timestamp to query for stats. Defaults to the time 30 days ago. This
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
-</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/insights/api/summary-stats/users/USER_ID
+</span><span style="color:#c0c5ce;">  "https://api.github.com/orgs/ORG/insights/api/summary-stats/users/USER_ID?min_timestamp=MIN_TIMESTAMP"
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <p>Same response schema as <a href="#get-summary-stats">Get summary stats</a>.</p>
@@ -285,7 +285,7 @@ The ID of the actor</p>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
-</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/insights/api/summary-stats/ACTOR_TYPE/ACTOR_ID
+</span><span style="color:#c0c5ce;">  "https://api.github.com/orgs/ORG/insights/api/summary-stats/ACTOR_TYPE/ACTOR_ID?min_timestamp=MIN_TIMESTAMP"
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <p>Same response schema as <a href="#get-summary-stats">Get summary stats</a>.</p>
@@ -328,7 +328,7 @@ The increment of time used to breakdown the query results (5m, 10m, 1h, etc.)</p
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
-</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/insights/api/time-stats
+</span><span style="color:#c0c5ce;">  "https://api.github.com/orgs/ORG/insights/api/time-stats?min_timestamp=MIN_TIMESTAMP&amp;timestamp_increment=TIMESTAMP_INCREMENT"
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <p>Array of objects:</p>
@@ -380,7 +380,7 @@ The increment of time used to breakdown the query results (5m, 10m, 1h, etc.)</p
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
-</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/insights/api/time-stats/users/USER_ID
+</span><span style="color:#c0c5ce;">  "https://api.github.com/orgs/ORG/insights/api/time-stats/users/USER_ID?min_timestamp=MIN_TIMESTAMP&amp;timestamp_increment=TIMESTAMP_INCREMENT"
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <p>Same response schema as <a href="#get-time-stats">Get time stats</a>.</p>
@@ -432,7 +432,7 @@ The increment of time used to breakdown the query results (5m, 10m, 1h, etc.)</p
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
-</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/insights/api/time-stats/ACTOR_TYPE/ACTOR_ID
+</span><span style="color:#c0c5ce;">  "https://api.github.com/orgs/ORG/insights/api/time-stats/ACTOR_TYPE/ACTOR_ID?min_timestamp=MIN_TIMESTAMP&amp;timestamp_increment=TIMESTAMP_INCREMENT"
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <p>Same response schema as <a href="#get-time-stats">Get time stats</a>.</p>
@@ -499,7 +499,7 @@ Providing a substring will filter results where the actor name contains the subs
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
-</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/insights/api/user-stats/USER_ID
+</span><span style="color:#c0c5ce;">  "https://api.github.com/orgs/ORG/insights/api/user-stats/USER_ID?min_timestamp=MIN_TIMESTAMP"
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <p>Array of objects:</p>

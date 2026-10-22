@@ -3,8 +3,7 @@
 <h2 id="introduction" title="Introduction" data-entry-type="Section">Introduction<a href="#introduction" aria-label="Link to heading 'Introduction'" data-heading-content="Introduction" class="anchor"></a></h2>
 <p>This guide shows you how to create a workflow that publishes Java packages to GitHub Packages and the Maven Central Repository. With a single workflow, you can publish packages to a single repository or to multiple repositories.</p>
 <div class="markdown-alert markdown-alert-warning">
-<p class="markdown-alert-title">Warning</p>
-<p>The examples used in this guide refer to the Legacy OSSRH service. See <a href="https://central.sonatype.org/faq/what-is-different-between-central-portal-and-legacy-ossrh/#publishing" class="external">Publishing</a> in the Maven Central Repository documentation.</p>
+<p class="markdown-alert-title">The examples used in this guide refer to the Legacy OSSRH service. See [Publishing](https://central.sonatype.org/faq/what-is-different-between-central-portal-and-legacy-ossrh/#publishing) in the Maven Central Repository documentation.</p>
 </div>
 <h2 id="prerequisites" title="Prerequisites" data-entry-type="Section">Prerequisites<a href="#prerequisites" aria-label="Link to heading 'Prerequisites'" data-heading-content="Prerequisites" class="anchor"></a></h2>
 <p>We recommend that you have a basic understanding of workflow files and configuration options. For more information, see <a href="../../how-tos/write-workflows/index.html">Writing workflows</a>.</p>
@@ -19,8 +18,7 @@
 <h2 id="about-package-configuration" title="About package configuration" data-entry-type="Section">About package configuration<a href="#about-package-configuration" aria-label="Link to heading 'About package configuration'" data-heading-content="About package configuration" class="anchor"></a></h2>
 <p>The <code>groupId</code> and <code>artifactId</code> fields in the <em>pom.xml</em> file create a unique identifier for your package that registries use to link your package to a registry. For more information see <a href="https://maven.apache.org/repository/guide-central-repository-upload.html" class="external">Guide to uploading artifacts to the Central Repository</a> in the Apache Maven documentation.</p>
 <div class="markdown-alert markdown-alert-warning">
-<p class="markdown-alert-title">Warning</p>
-<p>Your Apache Maven package must follow the naming convention, and therefore the <code>artifactId</code> field should only contain lowercase letters, digits, or hyphens. For more information, see <a href="https://maven.apache.org/guides/mini/guide-naming-conventions.html" class="external">Naming convention of Maven coordinates</a> in the maven.apache.org documentation. If you use uppercase letters in the artifact name, you'll get a <em>422 Unprocessable Entity</em> response.</p>
+<p class="markdown-alert-title">Your Apache Maven package must follow the naming convention, and therefore the `artifactId` field should only contain lowercase letters, digits, or hyphens. For more information, see [Naming convention of Maven coordinates](https://maven.apache.org/guides/mini/guide-naming-conventions.html) in the maven.apache.org documentation. If you use uppercase letters in the artifact name, you'll get a *422 Unprocessable Entity* response.</p>
 </div>
 <p>The <em>pom.xml</em> file also contains configuration for the distribution management repositories that Maven will deploy packages to. Each repository must have a name and a deployment URL. Authentication for these repositories can be configured in the <em>.m2/settings.xml</em> file in the home directory of the user running Maven.</p>
 <p>You can use the <code>setup-java</code> action to configure the deployment repository as well as authentication for that repository. For more information, see <a href="https://github.com/actions/setup-java" class="external"><code>setup-java</code></a>.</p>

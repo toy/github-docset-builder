@@ -149,7 +149,31 @@ Default: <code>1</code></p>
 </li>
 </ul>
 </li>
-<li><code>labels</code>: required, array of object</li>
+<li><code>labels</code>: required, array of items:
+<ul>
+<li>one of:
+<ul>
+<li><strong>string</strong></li>
+<li><strong>object</strong>
+<ul>
+<li><code>id</code>: integer, format: int64</li>
+<li><code>node_id</code>: string</li>
+<li><code>url</code>: string, format: uri</li>
+<li><code>name</code>: string</li>
+<li><code>description</code>: string or null</li>
+<li><code>color</code>: string or null</li>
+<li><code>default</code>: boolean</li>
+<li><code>archived_by</code>: all of:
+<ul>
+<li><strong>Simple User</strong> (see above)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><code>assignees</code>: array of <code>Simple User</code> (see above)</li>
 <li><code>milestone</code>: required, any of:
 <ul>
@@ -877,7 +901,31 @@ The id of the parent issue to add this issue to as a sub-issue. NOTE: Only users
 </li>
 </ul>
 </li>
-<li><code>labels</code>: required, array of object</li>
+<li><code>labels</code>: required, array of items:
+<ul>
+<li>one of:
+<ul>
+<li><strong>string</strong></li>
+<li><strong>object</strong>
+<ul>
+<li><code>id</code>: integer, format: int64</li>
+<li><code>node_id</code>: string</li>
+<li><code>url</code>: string, format: uri</li>
+<li><code>name</code>: string</li>
+<li><code>description</code>: string or null</li>
+<li><code>color</code>: string or null</li>
+<li><code>default</code>: boolean</li>
+<li><code>archived_by</code>: all of:
+<ul>
+<li><strong>Simple User</strong> (see above)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><code>assignees</code>: array of <code>Simple User</code> (see above)</li>
 <li><code>milestone</code>: required, any of:
 <ul>
@@ -1494,7 +1542,31 @@ The issue type to associate with this issue. Only users with push access can set
 </li>
 </ul>
 </li>
-<li><code>labels</code>: required, array of object</li>
+<li><code>labels</code>: required, array of items:
+<ul>
+<li>one of:
+<ul>
+<li><strong>string</strong></li>
+<li><strong>object</strong>
+<ul>
+<li><code>id</code>: integer, format: int64</li>
+<li><code>node_id</code>: string</li>
+<li><code>url</code>: string, format: uri</li>
+<li><code>name</code>: string</li>
+<li><code>description</code>: string or null</li>
+<li><code>color</code>: string or null</li>
+<li><code>default</code>: boolean</li>
+<li><code>archived_by</code>: all of:
+<ul>
+<li><strong>Simple User</strong> (see above)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><code>assignees</code>: array of <code>Simple User</code> (see above)</li>
 <li><code>milestone</code>: required, any of:
 <ul>
@@ -1957,14 +2029,16 @@ The number that identifies the issue.</p>
 </ul>
 <h4 id="body-parameters-2">Body parameters<a href="#body-parameters-2" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
 <ul>
-<li><strong><code>lock_reason</code></strong> (string)<br>
-The reason for locking the issue or pull request conversation. Lock will fail if you don't use one of these reasons:</li>
-</ul>
+<li>
+<p><strong><code>lock_reason</code></strong> (string)<br>
+The reason for locking the issue or pull request conversation. Lock will fail if you don't use one of these reasons:</p>
 <p>off-topic<br>
 too heated<br>
 resolved<br>
 spam<br>
 Can be one of: <code>off-topic</code>, <code>too heated</code>, <code>resolved</code>, <code>spam</code></p>
+</li>
+</ul>
 <h3 id="http-response-status-codes-6">HTTP response status codes<a href="#http-response-status-codes-6" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>

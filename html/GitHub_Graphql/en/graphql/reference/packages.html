@@ -54,7 +54,7 @@
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (PackageVersionOrder): Ordering of the returned packages.</li>
+<li><code>orderBy</code> (PackageVersionOrder): Ordering of the returned packages. Default: <code>{field: CREATED_AT, direction: DESC}</code>.</li>
 </ul>
 </li>
 </ul>
@@ -143,7 +143,7 @@
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
 <li><code>names</code> ([String]): Find packages by their names.</li>
-<li><code>orderBy</code> (PackageOrder): Ordering of the returned packages.</li>
+<li><code>orderBy</code> (PackageOrder): Ordering of the returned packages. Default: <code>{field: CREATED_AT, direction: DESC}</code>.</li>
 <li><code>packageType</code> (PackageType): Filter registry package by type.</li>
 <li><code>repositoryId</code> (ID): Find packages in a repository by ID.</li>
 </ul>
@@ -175,12 +175,12 @@
 <h3 id="values-for-packagetype">Values for <code>PackageType</code><a href="#values-for-packagetype" aria-label="Link to heading 'Values for PackageType'" data-heading-content="Values for PackageType" class="anchor"></a></h3>
 <ul>
 <li><code>DEBIAN</code>: A debian package.</li>
-<li><code>DOCKER</code>: A docker image.</li>
-<li><code>MAVEN</code>: A maven package.</li>
-<li><code>NPM</code>: An npm package.</li>
-<li><code>NUGET</code>: A nuget package.</li>
+<li><code>DOCKER</code>: A docker image. <strong>Deprecated:</strong> DOCKER will be removed from this enum as this type will be migrated to only be used by the Packages REST API. Removal on 2021-06-21 UTC.</li>
+<li><code>MAVEN</code>: A maven package. <strong>Deprecated:</strong> MAVEN will be removed from this enum as this type will be migrated to only be used by the Packages REST API. Removal on 2023-02-10 UTC.</li>
+<li><code>NPM</code>: An npm package. <strong>Deprecated:</strong> NPM will be removed from this enum as this type will be migrated to only be used by the Packages REST API. Removal on 2022-11-21 UTC.</li>
+<li><code>NUGET</code>: A nuget package. <strong>Deprecated:</strong> NUGET will be removed from this enum as this type will be migrated to only be used by the Packages REST API. Removal on 2022-11-21 UTC.</li>
 <li><code>PYPI</code>: A python package.</li>
-<li><code>RUBYGEMS</code>: A rubygems package.</li>
+<li><code>RUBYGEMS</code>: A rubygems package. <strong>Deprecated:</strong> RUBYGEMS will be removed from this enum as this type will be migrated to only be used by the Packages REST API. Removal on 2022-12-28 UTC.</li>
 </ul>
 <h2 id="packageversion---object" title="PackageVersion - object" data-entry-type="Section">PackageVersion - object<a href="#packageversion---object" aria-label="Link to heading 'PackageVersion - object'" data-heading-content="PackageVersion - object" class="anchor"></a></h2>
 <p>Information about a specific package version.</p>
@@ -194,7 +194,7 @@
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (PackageFileOrder): Ordering of the returned package files.</li>
+<li><code>orderBy</code> (PackageFileOrder): Ordering of the returned package files. Default: <code>{field: CREATED_AT, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>

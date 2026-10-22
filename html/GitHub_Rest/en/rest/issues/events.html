@@ -119,7 +119,31 @@ Default: <code>1</code></p>
 <li><strong>Simple User</strong> (see above)</li>
 </ul>
 </li>
-<li><code>labels</code>: required, array of object</li>
+<li><code>labels</code>: required, array of items:
+<ul>
+<li>one of:
+<ul>
+<li><strong>string</strong></li>
+<li><strong>object</strong>
+<ul>
+<li><code>id</code>: integer, format: int64</li>
+<li><code>node_id</code>: string</li>
+<li><code>url</code>: string, format: uri</li>
+<li><code>name</code>: string</li>
+<li><code>description</code>: string or null</li>
+<li><code>color</code>: string or null</li>
+<li><code>default</code>: boolean</li>
+<li><code>archived_by</code>: all of:
+<ul>
+<li><strong>Simple User</strong> (see above)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><code>assignees</code>: array of <code>Simple User</code> (see above)</li>
 <li><code>milestone</code>: required, any of:
 <ul>
@@ -599,8 +623,20 @@ Default: <code>1</code></p>
 <li><code>to</code>: required, string</li>
 </ul>
 </li>
-<li><code>issue_type</code>: <code>Issue Type</code> (see above)</li>
-<li><code>prev_issue_type</code>: <code>Issue Type</code> (see above)</li>
+<li><code>issue_type</code>: <code>Issue Type</code>:
+<ul>
+<li><code>id</code>: required, integer</li>
+<li><code>name</code>: required, string</li>
+<li><code>color</code>: string or null, enum: <code>gray</code>, <code>blue</code>, <code>green</code>, <code>yellow</code>, <code>orange</code>, <code>red</code>, <code>pink</code>, <code>purple</code>, <code>null</code></li>
+</ul>
+</li>
+<li><code>prev_issue_type</code>: <code>Issue Type</code>:
+<ul>
+<li><code>id</code>: required, integer</li>
+<li><code>name</code>: required, string</li>
+<li><code>color</code>: string or null, enum: <code>gray</code>, <code>blue</code>, <code>green</code>, <code>yellow</code>, <code>orange</code>, <code>red</code>, <code>pink</code>, <code>purple</code>, <code>null</code></li>
+</ul>
+</li>
 <li><code>sub_issue</code>: any of:
 <ul>
 <li><strong>null</strong></li>
@@ -660,7 +696,14 @@ Default: <code>1</code></p>
 <li><code>hooks_url</code>: required, string, format: uri</li>
 </ul>
 </li>
-<li><code>issue_type</code>: required, <code>Issue Type</code> (see above)</li>
+<li><code>issue_type</code>: required, <code>Issue Type</code>:
+<ul>
+<li><code>id</code>: required, integer</li>
+<li><code>node_id</code>: required, string</li>
+<li><code>name</code>: required, string</li>
+<li><code>color</code>: string or null</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -813,7 +856,31 @@ The name of the repository without the .git extension. The name is not case sens
 <li><strong>Simple User</strong> (see above)</li>
 </ul>
 </li>
-<li><code>labels</code>: required, array of object</li>
+<li><code>labels</code>: required, array of items:
+<ul>
+<li>one of:
+<ul>
+<li><strong>string</strong></li>
+<li><strong>object</strong>
+<ul>
+<li><code>id</code>: integer, format: int64</li>
+<li><code>node_id</code>: string</li>
+<li><code>url</code>: string, format: uri</li>
+<li><code>name</code>: string</li>
+<li><code>description</code>: string or null</li>
+<li><code>color</code>: string or null</li>
+<li><code>default</code>: boolean</li>
+<li><code>archived_by</code>: all of:
+<ul>
+<li><strong>Simple User</strong> (see above)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><code>assignees</code>: array of <code>Simple User</code> (see above)</li>
 <li><code>milestone</code>: required, any of:
 <ul>
@@ -1293,8 +1360,20 @@ The name of the repository without the .git extension. The name is not case sens
 <li><code>to</code>: required, string</li>
 </ul>
 </li>
-<li><code>issue_type</code>: <code>Issue Type</code> (see above)</li>
-<li><code>prev_issue_type</code>: <code>Issue Type</code> (see above)</li>
+<li><code>issue_type</code>: <code>Issue Type</code>:
+<ul>
+<li><code>id</code>: required, integer</li>
+<li><code>name</code>: required, string</li>
+<li><code>color</code>: string or null, enum: <code>gray</code>, <code>blue</code>, <code>green</code>, <code>yellow</code>, <code>orange</code>, <code>red</code>, <code>pink</code>, <code>purple</code>, <code>null</code></li>
+</ul>
+</li>
+<li><code>prev_issue_type</code>: <code>Issue Type</code>:
+<ul>
+<li><code>id</code>: required, integer</li>
+<li><code>name</code>: required, string</li>
+<li><code>color</code>: string or null, enum: <code>gray</code>, <code>blue</code>, <code>green</code>, <code>yellow</code>, <code>orange</code>, <code>red</code>, <code>pink</code>, <code>purple</code>, <code>null</code></li>
+</ul>
+</li>
 <li><code>sub_issue</code>: any of:
 <ul>
 <li><strong>null</strong></li>
@@ -1354,7 +1433,14 @@ The name of the repository without the .git extension. The name is not case sens
 <li><code>hooks_url</code>: required, string, format: uri</li>
 </ul>
 </li>
-<li><code>issue_type</code>: required, <code>Issue Type</code> (see above)</li>
+<li><code>issue_type</code>: required, <code>Issue Type</code>:
+<ul>
+<li><code>id</code>: required, integer</li>
+<li><code>node_id</code>: required, string</li>
+<li><code>name</code>: required, string</li>
+<li><code>color</code>: string or null</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -2099,7 +2185,14 @@ Default: <code>1</code></p>
 <li><code>hooks_url</code>: required, string, format: uri</li>
 </ul>
 </li>
-<li><code>issue_type</code>: required, <code>Issue Type</code> (see above)</li>
+<li><code>issue_type</code>: required, <code>Issue Type</code>:
+<ul>
+<li><code>id</code>: required, integer</li>
+<li><code>node_id</code>: required, string</li>
+<li><code>name</code>: required, string</li>
+<li><code>color</code>: string or null</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

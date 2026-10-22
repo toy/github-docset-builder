@@ -37,7 +37,6 @@
 <ul>
 <li><code>x64</code> - Linux, macOS, Windows.</li>
 <li><code>ARM64</code> - Linux, macOS, Windows (currently in public preview).</li>
-<li><code>ARM32</code> - Linux.</li>
 </ul>
 <h2 id="routing-precedence-for-self-hosted-runners" title="Routing precedence for self-hosted runners" data-entry-type="Section">Routing precedence for self-hosted runners<a href="#routing-precedence-for-self-hosted-runners" aria-label="Link to heading 'Routing precedence for self-hosted runners'" data-heading-content="Routing precedence for self-hosted runners" class="anchor"></a></h2>
 <p>When routing a job to a self-hosted runner, GitHub looks for a runner that matches the job's <code>runs-on</code> labels and groups:</p>
@@ -90,8 +89,7 @@
 <p>If you disable automatic updates, you will be required to update your runner version within 30 days of a new version being made available. You may want to subscribe to notifications for releases in the <a href="https://github.com/actions/runner/releases" class="external"><code>actions/runner</code> repository</a>. For more information, see <a href="https://docs.github.com/en/subscriptions-and-notifications/get-started/configuring-notifications#about-custom-notifications" class="external">Configuring notifications</a>.</p>
 <p>For instructions on how to install the latest runner version, see the installation instructions for <a href="https://github.com/actions/runner/releases" class="external">the latest release</a>.</p>
 <div class="markdown-alert markdown-alert-warning">
-<p class="markdown-alert-title">Warning</p>
-<p>Any updates released for the software, including major, minor, or patch releases, are considered as an available update. If you do not perform a software update within 30 days, the GitHub Actions service will not queue jobs to your runner. In addition, if a critical security update is required, the GitHub Actions service will not queue jobs to your runner until it has been updated.</p>
+<p class="markdown-alert-title">Any updates released for the software, including major, minor, or patch releases, are considered as an available update. If you do not perform a software update within 30 days, the GitHub Actions service will not queue jobs to your runner. In addition, if a critical security update is required, the GitHub Actions service will not queue jobs to your runner until it has been updated.</p>
 </div>
 <h3 id="webhooks-for-autoscaling">Webhooks for autoscaling<a href="#webhooks-for-autoscaling" aria-label="Link to heading 'Webhooks for autoscaling'" data-heading-content="Webhooks for autoscaling" class="anchor"></a></h3>
 <p>You can create your own autoscaling environment by using payloads received from the <a href="https://docs.github.com/en/webhooks/webhook-events-and-payloads#workflow_job" class="external"><code>workflow_job</code></a> webhook. This webhook is available at the repository, organization, and enterprise levels, and the payload for this event contains an <code>action</code> key that corresponds to the stages of a workflow job's life-cycle; for example when jobs are <code>queued</code>, <code>in_progress</code>, and <code>completed</code>. You must then create your own scaling automation in response to these webhook payloads.</p>

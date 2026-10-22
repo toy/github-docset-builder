@@ -46,6 +46,7 @@ The repository context to use when creating references in gfm mode.  For example
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X POST \
 </span><span style="color:#c0c5ce;">  https://api.github.com/markdown \
+</span><span style="color:#c0c5ce;">  -H "Accept: text/html" \
 </span><span style="color:#c0c5ce;">  -d '{
 </span><span style="color:#c0c5ce;">  "text": "Hello **world**"
 </span><span style="color:#c0c5ce;">}'
@@ -71,9 +72,9 @@ The repository context to use when creating references in gfm mode.  For example
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X POST \
 </span><span style="color:#c0c5ce;">  https://api.github.com/markdown/raw \
-</span><span style="color:#c0c5ce;">  -d '{
-</span><span style="color:#c0c5ce;">  "text": "Hello **world**"
-</span><span style="color:#c0c5ce;">}'
+</span><span style="color:#c0c5ce;">  -H "Accept: text/html" \
+</span><span style="color:#c0c5ce;">  -H "Content-Type: text/plain" \
+</span><span style="color:#c0c5ce;">  --data-binary 'Hello **world**'
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <p>Same response schema as <a href="#render-a-markdown-document">Render a Markdown document</a>.</p>
@@ -82,9 +83,9 @@ The repository context to use when creating references in gfm mode.  For example
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X POST \
 </span><span style="color:#c0c5ce;">  https://api.github.com/markdown/raw \
-</span><span style="color:#c0c5ce;">  -d '{
-</span><span style="color:#c0c5ce;">  "text": "Hello **world**"
-</span><span style="color:#c0c5ce;">}'
+</span><span style="color:#c0c5ce;">  -H "Accept: text/html" \
+</span><span style="color:#c0c5ce;">  -H "Content-Type: text/x-markdown" \
+</span><span style="color:#c0c5ce;">  --data-binary 'Hello **world**'
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <p>Same response schema as <a href="#render-a-markdown-document">Render a Markdown document</a>.</p>

@@ -61,7 +61,7 @@
 <li><code>identifier</code> (SecurityAdvisoryIdentifierFilter): Filter advisories by identifier, e.g. GHSA or CVE.</li>
 <li><code>isWithdrawn</code> (Boolean): Filter advisories by withdrawn status. True returns only withdrawn advisories. False excludes withdrawn advisories.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (SecurityAdvisoryOrder): Ordering options for the returned topics.</li>
+<li><code>orderBy</code> (SecurityAdvisoryOrder): Ordering options for the returned topics. Default: <code>{field: UPDATED_AT, direction: DESC}</code>.</li>
 <li><code>publishedSince</code> (DateTime): Filter advisories to those published since a time in the past.</li>
 <li><code>severities</code> ([SecurityAdvisorySeverity!]): A list of advisory severities to filter advisories by.</li>
 <li><code>updatedSince</code> (DateTime): Filter advisories to those updated since a time in the past.</li>
@@ -149,7 +149,7 @@
 <li><code>ecosystem</code> (SecurityAdvisoryEcosystem): An ecosystem to filter vulnerabilities by.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (SecurityVulnerabilityOrder): Ordering options for the returned topics.</li>
+<li><code>orderBy</code> (SecurityVulnerabilityOrder): Ordering options for the returned topics. Default: <code>{field: UPDATED_AT, direction: DESC}</code>.</li>
 <li><code>package</code> (String): A package name to filter vulnerabilities by.</li>
 <li><code>severities</code> ([SecurityAdvisorySeverity!]): A list of severities to filter vulnerabilities by.</li>
 </ul>
@@ -282,7 +282,7 @@
 <li><code>ecosystem</code> (SecurityAdvisoryEcosystem): An ecosystem to filter vulnerabilities by.</li>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
-<li><code>orderBy</code> (SecurityVulnerabilityOrder): Ordering options for the returned topics.</li>
+<li><code>orderBy</code> (SecurityVulnerabilityOrder): Ordering options for the returned topics. Default: <code>{field: UPDATED_AT, direction: DESC}</code>.</li>
 <li><code>package</code> (String): A package name to filter vulnerabilities by.</li>
 <li><code>severities</code> ([SecurityAdvisorySeverity!]): A list of severities to filter vulnerabilities by.</li>
 </ul>

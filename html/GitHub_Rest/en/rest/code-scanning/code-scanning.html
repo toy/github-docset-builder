@@ -120,7 +120,7 @@ The organization name. The name is not case sensitive.</p>
 The name of a code scanning tool. Only results by this tool will be listed. You can specify the tool by using either tool<span data-escaped-char="">_</span>name or tool<span data-escaped-char="">_</span>guid, but not both.</p>
 </li>
 <li>
-<p><strong><code>tool_guid</code></strong> (string,null)<br>
+<p><strong><code>tool_guid</code></strong> (string or null)<br>
 The GUID of a code scanning tool. Only results by this tool will be listed. Note that some code scanning tools may not include a GUID in their analysis data. You can specify the tool by using either tool<span data-escaped-char="">_</span>guid or tool<span data-escaped-char="">_</span>name, but not both.</p>
 </li>
 <li>
@@ -465,7 +465,7 @@ The name of the repository without the .git extension. The name is not case sens
 The name of a code scanning tool. Only results by this tool will be listed. You can specify the tool by using either tool<span data-escaped-char="">_</span>name or tool<span data-escaped-char="">_</span>guid, but not both.</p>
 </li>
 <li>
-<p><strong><code>tool_guid</code></strong> (string,null)<br>
+<p><strong><code>tool_guid</code></strong> (string or null)<br>
 The GUID of a code scanning tool. Only results by this tool will be listed. Note that some code scanning tools may not include a GUID in their analysis data. You can specify the tool by using either tool<span data-escaped-char="">_</span>guid or tool<span data-escaped-char="">_</span>name, but not both.</p>
 </li>
 <li>
@@ -1537,7 +1537,7 @@ The name of the repository without the .git extension. The name is not case sens
 The name of a code scanning tool. Only results by this tool will be listed. You can specify the tool by using either tool<span data-escaped-char="">_</span>name or tool<span data-escaped-char="">_</span>guid, but not both.</p>
 </li>
 <li>
-<p><strong><code>tool_guid</code></strong> (string,null)<br>
+<p><strong><code>tool_guid</code></strong> (string or null)<br>
 The GUID of a code scanning tool. Only results by this tool will be listed. Note that some code scanning tools may not include a GUID in their analysis data. You can specify the tool by using either tool<span data-escaped-char="">_</span>guid or tool<span data-escaped-char="">_</span>name, but not both.</p>
 </li>
 <li>
@@ -1711,7 +1711,8 @@ The ID of the analysis, as returned from the GET /repos/{owner}/{repo}/code-scan
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
-</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/code-scanning/analyses/ANALYSIS_ID
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/code-scanning/analyses/ANALYSIS_ID \
+</span><span style="color:#c0c5ce;">  -H "Accept: application/sarif+json"
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <p>object, additional properties allowed</p>
@@ -1786,7 +1787,7 @@ The name of the repository without the .git extension. The name is not case sens
 The ID of the analysis, as returned from the GET /repos/{owner}/{repo}/code-scanning/analyses operation.</p>
 </li>
 <li>
-<p><strong><code>confirm_delete</code></strong> (string,null)<br>
+<p><strong><code>confirm_delete</code></strong> (string or null)<br>
 Allow deletion if the specified analysis is the last in a set. If you attempt to delete the final analysis in a set without setting this parameter to true, you'll get a 400 response with the message: Analysis is last of its type and deletion may result in the loss of historical alert data. Please specify confirm<span data-escaped-char="">_</span>delete.</p>
 </li>
 </ul>

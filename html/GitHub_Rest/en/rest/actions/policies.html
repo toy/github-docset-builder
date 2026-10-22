@@ -1,0 +1,1114 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>REST API endpoints for GitHub Actions policies</title><link rel="stylesheet" href="../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../index.html">REST API</a> / <a href="index.html">Actions</a> / </nav><h1 id="rest-api-endpoints-for-github-actions-policies">REST API endpoints for GitHub Actions policies<a href="#rest-api-endpoints-for-github-actions-policies" aria-label="Link to heading 'REST API endpoints for GitHub Actions policies'" data-heading-content="REST API endpoints for GitHub Actions policies" class="anchor"></a></h1>
+<p>Use the REST API to view and manage policies for GitHub Actions.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Most endpoints use <code>Authorization: Bearer &lt;YOUR-TOKEN&gt;</code> and <code>Accept: application/vnd.github+json</code> headers, plus <code>X-GitHub-Api-Version: 2026-03-10</code>. Curl examples below omit these standard headers for brevity.</p>
+</div>
+<h2 id="list-organization-actions-policies" title="GET /orgs/{org}/actions/policies (List organization Actions policies)" data-entry-type="Resource">List organization Actions policies<a href="#list-organization-actions-policies" aria-label="Link to heading 'List organization Actions policies'" data-heading-content="List organization Actions policies" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /orgs/{org}/actions/policies
+</span></code></pre>
+<p>List all Actions policies for an organization.</p>
+<h3 id="parameters">Parameters<a href="#parameters" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers">Headers<a href="#headers" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters">Path and query parameters<a href="#path-and-query-parameters" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>org</code></strong> (string) (required)<br>
+The organization name. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>per_page</code></strong> (integer)<br>
+The number of results per page (max 100). For more information, see "Using pagination in the REST API."<br>
+Default: <code>30</code></p>
+</li>
+<li>
+<p><strong><code>page</code></strong> (integer)<br>
+The page number of the results to fetch. For more information, see "Using pagination in the REST API."<br>
+Default: <code>1</code></p>
+</li>
+<li>
+<p><strong><code>has_parents</code></strong> (boolean)<br>
+Include policies configured at higher levels that apply to this organization<br>
+Default: <code>true</code></p>
+</li>
+</ul>
+<h3 id="http-response-status-codes">HTTP response status codes<a href="#http-response-status-codes" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - OK</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>500</strong> - Internal Error</p>
+</li>
+</ul>
+<h3 id="code-examples">Code examples<a href="#code-examples" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example">Example<a href="#example" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X GET \
+</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/actions/policies
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<ul>
+<li><code>total_count</code>: required, integer</li>
+<li><code>policies</code>: required, array of <code>Actions Policy</code>:
+<ul>
+<li><code>id</code>: required, integer</li>
+<li><code>name</code>: required, string</li>
+<li><code>target</code>: required, string, enum: <code>actions</code></li>
+<li><code>source_type</code>: required, string, enum: <code>Repository</code>, <code>Organization</code>, <code>Enterprise</code></li>
+<li><code>source</code>: required, string</li>
+<li><code>enforcement</code>: required, string, enum: <code>disabled</code>, <code>active</code>, <code>evaluate</code></li>
+<li><code>conditions</code>: any of:
+<ul>
+<li><strong>Repository Actions policy conditions</strong></li>
+<li><strong>Organization Actions policy conditions</strong></li>
+<li><strong>Enterprise Actions policy conditions</strong></li>
+</ul>
+</li>
+<li><code>rules</code>: array of <code>Actions Rule</code>:
+<ul>
+<li>one of:
+<ul>
+<li><strong>restrict_actions_actors</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>restrict_actions_actors</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>allowed_actors</code>: required, array of <code>Actor</code>:
+<ul>
+<li><code>id</code>: required, integer</li>
+<li><code>type</code>: required, string, enum: <code>User</code>, <code>Bot</code>, <code>Team</code>, <code>BusinessTeam</code>, <code>EnterpriseTeam</code>, <code>IntegrationInstallation</code>, <code>App</code>, <code>RepositoryRole</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>restrict_action_events</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>restrict_action_events</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>allowed_events</code>: required, array of string, enum: <code>branch_protection_rule</code>, <code>check_run</code>, <code>check_suite</code>, <code>create</code>, <code>delete</code>, <code>deployment</code>, <code>deployment_status</code>, <code>discussion</code>, <code>discussion_comment</code>, <code>fork</code>, <code>gollum</code>, <code>image_version</code>, <code>issue_comment</code>, <code>issues</code>, <code>label</code>, <code>merge_group</code>, <code>milestone</code>, <code>page_build</code>, <code>project</code>, <code>project_card</code>, <code>project_column</code>, <code>public</code>, <code>pull_request</code>, <code>pull_request_review</code>, <code>pull_request_review_comment</code>, <code>pull_request_target</code>, <code>push</code>, <code>registry_package</code>, <code>release</code>, <code>repository_dispatch</code>, <code>schedule</code>, <code>status</code>, <code>watch</code>, <code>workflow_call</code>, <code>workflow_dispatch</code>, <code>workflow_run</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>node_id</code>: string</li>
+<li><code>_links</code>: object:
+<ul>
+<li><code>self</code>: object:
+<ul>
+<li><code>href</code>: string</li>
+</ul>
+</li>
+<li><code>html</code>: object:
+<ul>
+<li><code>href</code>: string</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>created_at</code>: string, format: date-time</li>
+<li><code>updated_at</code>: string, format: date-time</li>
+</ul>
+</li>
+</ul>
+<h2 id="create-an-organization-actions-policy" title="POST /orgs/{org}/actions/policies (Create an organization Actions policy)" data-entry-type="Resource">Create an organization Actions policy<a href="#create-an-organization-actions-policy" aria-label="Link to heading 'Create an organization Actions policy'" data-heading-content="Create an organization Actions policy" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">POST /orgs/{org}/actions/policies
+</span></code></pre>
+<p>Create an Actions policy for an organization.<br>
+Omitting workflow_path targets all workflows without storing an explicit condition.</p>
+<h3 id="parameters-1">Parameters<a href="#parameters-1" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-1">Headers<a href="#headers-1" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-1">Path and query parameters<a href="#path-and-query-parameters-1" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li><strong><code>org</code></strong> (string) (required)<br>
+The organization name. The name is not case sensitive.</li>
+</ul>
+<h4 id="body-parameters">Body parameters<a href="#body-parameters" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>name</code></strong> (string) (required)<br>
+The name of the policy.</p>
+</li>
+<li>
+<p><strong><code>enforcement</code></strong> (string) (required)<br>
+The enforcement level of the ruleset. evaluate allows admins to test rules before enforcing them. Admins can view insights on the Rule Insights page (evaluate is only available with GitHub Enterprise).<br>
+Can be one of: <code>disabled</code>, <code>active</code>, <code>evaluate</code></p>
+</li>
+<li>
+<p><strong><code>conditions</code></strong> (object)<br>
+Conditions for an organization Actions policy. The conditions object should contain one of<br>
+repository_name, repository_id, or repository_property, and may also contain workflow_path.</p>
+<ul>
+<li><strong><code>Repository ruleset conditions for repository names</code></strong> (object)<br>
+Parameters for a repository name condition
+<ul>
+<li><strong><code>repository_name</code></strong> (object) (required)
+<ul>
+<li><strong><code>include</code></strong> (array of strings)<br>
+Array of repository names or patterns to include. One of these patterns must match for the condition to pass. Also accepts ~ALL to include all repositories.</li>
+<li><strong><code>exclude</code></strong> (array of strings)<br>
+Array of repository names or patterns to exclude. The condition will not pass if any of these patterns match.</li>
+<li><strong><code>protected</code></strong> (boolean)<br>
+Whether renaming of target repositories is prevented.</li>
+</ul>
+</li>
+<li><strong><code>workflow_path</code></strong> (object)
+<ul>
+<li><strong><code>include</code></strong> (array of strings) (required)<br>
+Array of workflow file paths or glob patterns to include. An empty array includes all<br>
+workflows not matched by an excluded pattern. Use ~ALL by itself to include all workflows.<br>
+~ALL cannot be combined with other included patterns.</li>
+<li><strong><code>exclude</code></strong> (array of strings) (required)<br>
+Array of workflow file paths or glob patterns to exclude. The condition will not pass<br>
+if any of these patterns match. ~ALL is not allowed in this array.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong><code>Repository ruleset conditions for repository IDs</code></strong> (object)<br>
+Parameters for a repository ID condition
+<ul>
+<li><strong><code>repository_id</code></strong> (object) (required)
+<ul>
+<li><strong><code>repository_ids</code></strong> (array of integers)<br>
+The repository IDs that the ruleset applies to. One of these IDs must match for the condition to pass.</li>
+</ul>
+</li>
+<li><strong><code>workflow_path</code></strong> (object)
+<ul>
+<li><strong><code>include</code></strong> (array of strings) (required)<br>
+Array of workflow file paths or glob patterns to include. An empty array includes all<br>
+workflows not matched by an excluded pattern. Use ~ALL by itself to include all workflows.<br>
+~ALL cannot be combined with other included patterns.</li>
+<li><strong><code>exclude</code></strong> (array of strings) (required)<br>
+Array of workflow file paths or glob patterns to exclude. The condition will not pass<br>
+if any of these patterns match. ~ALL is not allowed in this array.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong><code>Repository ruleset conditions for repository properties</code></strong> (object)<br>
+Parameters for a repository property condition
+<ul>
+<li><strong><code>repository_property</code></strong> (object) (required)
+<ul>
+<li><strong><code>include</code></strong> (array of objects)<br>
+The repository properties and values to include. All of these properties must match for the condition to pass.
+<ul>
+<li><strong><code>name</code></strong> (string) (required)<br>
+The name of the repository property to target</li>
+<li><strong><code>property_values</code></strong> (array of strings) (required)<br>
+The values to match for the repository property</li>
+<li><strong><code>source</code></strong> (string)<br>
+The source of the repository property. Defaults to 'custom' if not specified.<br>
+Can be one of: <code>custom</code>, <code>system</code></li>
+</ul>
+</li>
+<li><strong><code>exclude</code></strong> (array of objects)<br>
+The repository properties and values to exclude. The condition will not pass if any of these properties match.
+<ul>
+<li><strong><code>name</code></strong> (string) (required)<br>
+The name of the repository property to target</li>
+<li><strong><code>property_values</code></strong> (array of strings) (required)<br>
+The values to match for the repository property</li>
+<li><strong><code>source</code></strong> (string)<br>
+The source of the repository property. Defaults to 'custom' if not specified.<br>
+Can be one of: <code>custom</code>, <code>system</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong><code>workflow_path</code></strong> (object)
+<ul>
+<li><strong><code>include</code></strong> (array of strings) (required)<br>
+Array of workflow file paths or glob patterns to include. An empty array includes all<br>
+workflows not matched by an excluded pattern. Use ~ALL by itself to include all workflows.<br>
+~ALL cannot be combined with other included patterns.</li>
+<li><strong><code>exclude</code></strong> (array of strings) (required)<br>
+Array of workflow file paths or glob patterns to exclude. The condition will not pass<br>
+if any of these patterns match. ~ALL is not allowed in this array.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>rules</code></strong> (array of objects)<br>
+An array of rules within the policy.</p>
+<ul>
+<li><strong><code>restrict_actions_actors</code></strong> (object)<br>
+Choose specific actors that are authorized to trigger Actions workflows.
+<ul>
+<li><strong><code>type</code></strong> (string) (required)<br>
+Can be one of: <code>restrict_actions_actors</code></li>
+<li><strong><code>parameters</code></strong> (object)
+<ul>
+<li><strong><code>allowed_actors</code></strong> (array of objects) (required)<br>
+Select the actors who can run Actions workflows.
+<ul>
+<li><strong><code>id</code></strong> (integer) (required)<br>
+ID of the actor authorized to trigger Actions workflows.</li>
+<li><strong><code>type</code></strong> (string) (required)<br>
+The type of the actor<br>
+Can be one of: <code>User</code>, <code>Bot</code>, <code>Team</code>, <code>BusinessTeam</code>, <code>EnterpriseTeam</code>, <code>IntegrationInstallation</code>, <code>App</code>, <code>RepositoryRole</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong><code>restrict_action_events</code></strong> (object)<br>
+Choose specific GitHub events that will trigger Actions workflows.
+<ul>
+<li><strong><code>type</code></strong> (string) (required)<br>
+Can be one of: <code>restrict_action_events</code></li>
+<li><strong><code>parameters</code></strong> (object)
+<ul>
+<li><strong><code>allowed_events</code></strong> (array of strings) (required)<br>
+Select the events that can trigger Actions workflows.<br>
+Supported values are: branch_protection_rule, check_run, check_suite, create, delete, deployment, deployment_status, discussion, discussion_comment, fork, gollum, image_version, issue_comment, issues, label, merge_group, milestone, page_build, project, project_card, project_column, public, pull_request, pull_request_review, pull_request_review_comment, pull_request_target, push, registry_package, release, repository_dispatch, schedule, status, watch, workflow_call, workflow_dispatch, workflow_run</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="http-response-status-codes-1">HTTP response status codes<a href="#http-response-status-codes-1" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>201</strong> - Created</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+<li>
+<p><strong>500</strong> - Internal Error</p>
+</li>
+</ul>
+<h3 id="code-examples-1">Code examples<a href="#code-examples-1" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-1">Example<a href="#example-1" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X POST \
+</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/actions/policies \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "name": "Require approved actors",
+</span><span style="color:#c0c5ce;">  "enforcement": "active",
+</span><span style="color:#c0c5ce;">  "rules": [
+</span><span style="color:#c0c5ce;">    {
+</span><span style="color:#c0c5ce;">      "type": "restrict_actions_actors",
+</span><span style="color:#c0c5ce;">      "parameters": {
+</span><span style="color:#c0c5ce;">        "allowed_actors": [
+</span><span style="color:#c0c5ce;">          {
+</span><span style="color:#c0c5ce;">            "id": 1234,
+</span><span style="color:#c0c5ce;">            "type": "Team"
+</span><span style="color:#c0c5ce;">          }
+</span><span style="color:#c0c5ce;">        ]
+</span><span style="color:#c0c5ce;">      }
+</span><span style="color:#c0c5ce;">    }
+</span><span style="color:#c0c5ce;">  ]
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 201):</strong></p>
+<ul>
+<li><code>id</code>: required, integer</li>
+<li><code>name</code>: required, string</li>
+<li><code>target</code>: required, string, enum: <code>actions</code></li>
+<li><code>source_type</code>: required, string, enum: <code>Repository</code>, <code>Organization</code>, <code>Enterprise</code></li>
+<li><code>source</code>: required, string</li>
+<li><code>enforcement</code>: required, string, enum: <code>disabled</code>, <code>active</code>, <code>evaluate</code></li>
+<li><code>conditions</code>: any of:
+<ul>
+<li><strong>Repository Actions policy conditions</strong></li>
+<li><strong>Organization Actions policy conditions</strong></li>
+<li><strong>Enterprise Actions policy conditions</strong></li>
+</ul>
+</li>
+<li><code>rules</code>: array of <code>Actions Rule</code>:
+<ul>
+<li>one of:
+<ul>
+<li><strong>restrict_actions_actors</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>restrict_actions_actors</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>allowed_actors</code>: required, array of <code>Actor</code>:
+<ul>
+<li><code>id</code>: required, integer</li>
+<li><code>type</code>: required, string, enum: <code>User</code>, <code>Bot</code>, <code>Team</code>, <code>BusinessTeam</code>, <code>EnterpriseTeam</code>, <code>IntegrationInstallation</code>, <code>App</code>, <code>RepositoryRole</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>restrict_action_events</strong>
+<ul>
+<li><code>type</code>: required, string, enum: <code>restrict_action_events</code></li>
+<li><code>parameters</code>: object:
+<ul>
+<li><code>allowed_events</code>: required, array of string, enum: <code>branch_protection_rule</code>, <code>check_run</code>, <code>check_suite</code>, <code>create</code>, <code>delete</code>, <code>deployment</code>, <code>deployment_status</code>, <code>discussion</code>, <code>discussion_comment</code>, <code>fork</code>, <code>gollum</code>, <code>image_version</code>, <code>issue_comment</code>, <code>issues</code>, <code>label</code>, <code>merge_group</code>, <code>milestone</code>, <code>page_build</code>, <code>project</code>, <code>project_card</code>, <code>project_column</code>, <code>public</code>, <code>pull_request</code>, <code>pull_request_review</code>, <code>pull_request_review_comment</code>, <code>pull_request_target</code>, <code>push</code>, <code>registry_package</code>, <code>release</code>, <code>repository_dispatch</code>, <code>schedule</code>, <code>status</code>, <code>watch</code>, <code>workflow_call</code>, <code>workflow_dispatch</code>, <code>workflow_run</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>node_id</code>: string</li>
+<li><code>_links</code>: object:
+<ul>
+<li><code>self</code>: object:
+<ul>
+<li><code>href</code>: string</li>
+</ul>
+</li>
+<li><code>html</code>: object:
+<ul>
+<li><code>href</code>: string</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>created_at</code>: string, format: date-time</li>
+<li><code>updated_at</code>: string, format: date-time</li>
+</ul>
+<h2 id="get-an-organization-actions-policy" title="GET /orgs/{org}/actions/policies/{policy_id} (Get an organization Actions policy)" data-entry-type="Resource">Get an organization Actions policy<a href="#get-an-organization-actions-policy" aria-label="Link to heading 'Get an organization Actions policy'" data-heading-content="Get an organization Actions policy" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /orgs/{org}/actions/policies/{policy_id}
+</span></code></pre>
+<p>Get a specific Actions policy for an organization.</p>
+<h3 id="parameters-2">Parameters<a href="#parameters-2" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-2">Headers<a href="#headers-2" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-2">Path and query parameters<a href="#path-and-query-parameters-2" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>org</code></strong> (string) (required)<br>
+The organization name. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>policy_id</code></strong> (integer) (required)<br>
+The ID of the policy.</p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-2">HTTP response status codes<a href="#http-response-status-codes-2" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - OK</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>500</strong> - Internal Error</p>
+</li>
+</ul>
+<h3 id="code-examples-2">Code examples<a href="#code-examples-2" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-2">Example<a href="#example-2" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X GET \
+</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/actions/policies/POLICY_ID
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<p>Same response schema as <a href="#create-an-organization-actions-policy">Create an organization Actions policy</a>.</p>
+<h2 id="update-an-organization-actions-policy" title="PUT /orgs/{org}/actions/policies/{policy_id} (Update an organization Actions policy)" data-entry-type="Resource">Update an organization Actions policy<a href="#update-an-organization-actions-policy" aria-label="Link to heading 'Update an organization Actions policy'" data-heading-content="Update an organization Actions policy" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PUT /orgs/{org}/actions/policies/{policy_id}
+</span></code></pre>
+<p>Update an Actions policy for an organization.<br>
+Omitting workflow_path preserves the policy's existing workflow targeting.</p>
+<h3 id="parameters-3">Parameters<a href="#parameters-3" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-3">Headers<a href="#headers-3" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-3">Path and query parameters<a href="#path-and-query-parameters-3" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>org</code></strong> (string) (required)<br>
+The organization name. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>policy_id</code></strong> (integer) (required)<br>
+The ID of the policy.</p>
+</li>
+</ul>
+<h4 id="body-parameters-1">Body parameters<a href="#body-parameters-1" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>name</code></strong> (string)<br>
+The name of the policy.</p>
+</li>
+<li>
+<p><strong><code>enforcement</code></strong> (string)<br>
+The enforcement level of the ruleset. evaluate allows admins to test rules before enforcing them. Admins can view insights on the Rule Insights page (evaluate is only available with GitHub Enterprise).<br>
+Can be one of: <code>disabled</code>, <code>active</code>, <code>evaluate</code></p>
+</li>
+<li>
+<p><strong><code>conditions</code></strong> (object)<br>
+Conditions for an organization Actions policy. The conditions object should contain one of<br>
+repository_name, repository_id, or repository_property, and may also contain workflow_path.</p>
+<ul>
+<li><strong><code>Repository ruleset conditions for repository names</code></strong> (object)<br>
+Parameters for a repository name condition
+<ul>
+<li><strong><code>repository_name</code></strong> (object) (required)
+<ul>
+<li><strong><code>include</code></strong> (array of strings)<br>
+Array of repository names or patterns to include. One of these patterns must match for the condition to pass. Also accepts ~ALL to include all repositories.</li>
+<li><strong><code>exclude</code></strong> (array of strings)<br>
+Array of repository names or patterns to exclude. The condition will not pass if any of these patterns match.</li>
+<li><strong><code>protected</code></strong> (boolean)<br>
+Whether renaming of target repositories is prevented.</li>
+</ul>
+</li>
+<li><strong><code>workflow_path</code></strong> (object)
+<ul>
+<li><strong><code>include</code></strong> (array of strings) (required)<br>
+Array of workflow file paths or glob patterns to include. An empty array includes all<br>
+workflows not matched by an excluded pattern. Use ~ALL by itself to include all workflows.<br>
+~ALL cannot be combined with other included patterns.</li>
+<li><strong><code>exclude</code></strong> (array of strings) (required)<br>
+Array of workflow file paths or glob patterns to exclude. The condition will not pass<br>
+if any of these patterns match. ~ALL is not allowed in this array.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong><code>Repository ruleset conditions for repository IDs</code></strong> (object)<br>
+Parameters for a repository ID condition
+<ul>
+<li><strong><code>repository_id</code></strong> (object) (required)
+<ul>
+<li><strong><code>repository_ids</code></strong> (array of integers)<br>
+The repository IDs that the ruleset applies to. One of these IDs must match for the condition to pass.</li>
+</ul>
+</li>
+<li><strong><code>workflow_path</code></strong> (object)
+<ul>
+<li><strong><code>include</code></strong> (array of strings) (required)<br>
+Array of workflow file paths or glob patterns to include. An empty array includes all<br>
+workflows not matched by an excluded pattern. Use ~ALL by itself to include all workflows.<br>
+~ALL cannot be combined with other included patterns.</li>
+<li><strong><code>exclude</code></strong> (array of strings) (required)<br>
+Array of workflow file paths or glob patterns to exclude. The condition will not pass<br>
+if any of these patterns match. ~ALL is not allowed in this array.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong><code>Repository ruleset conditions for repository properties</code></strong> (object)<br>
+Parameters for a repository property condition
+<ul>
+<li><strong><code>repository_property</code></strong> (object) (required)
+<ul>
+<li><strong><code>include</code></strong> (array of objects)<br>
+The repository properties and values to include. All of these properties must match for the condition to pass.
+<ul>
+<li><strong><code>name</code></strong> (string) (required)<br>
+The name of the repository property to target</li>
+<li><strong><code>property_values</code></strong> (array of strings) (required)<br>
+The values to match for the repository property</li>
+<li><strong><code>source</code></strong> (string)<br>
+The source of the repository property. Defaults to 'custom' if not specified.<br>
+Can be one of: <code>custom</code>, <code>system</code></li>
+</ul>
+</li>
+<li><strong><code>exclude</code></strong> (array of objects)<br>
+The repository properties and values to exclude. The condition will not pass if any of these properties match.
+<ul>
+<li><strong><code>name</code></strong> (string) (required)<br>
+The name of the repository property to target</li>
+<li><strong><code>property_values</code></strong> (array of strings) (required)<br>
+The values to match for the repository property</li>
+<li><strong><code>source</code></strong> (string)<br>
+The source of the repository property. Defaults to 'custom' if not specified.<br>
+Can be one of: <code>custom</code>, <code>system</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong><code>workflow_path</code></strong> (object)
+<ul>
+<li><strong><code>include</code></strong> (array of strings) (required)<br>
+Array of workflow file paths or glob patterns to include. An empty array includes all<br>
+workflows not matched by an excluded pattern. Use ~ALL by itself to include all workflows.<br>
+~ALL cannot be combined with other included patterns.</li>
+<li><strong><code>exclude</code></strong> (array of strings) (required)<br>
+Array of workflow file paths or glob patterns to exclude. The condition will not pass<br>
+if any of these patterns match. ~ALL is not allowed in this array.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>rules</code></strong> (array of objects)<br>
+An array of rules within the policy.</p>
+<ul>
+<li><strong><code>restrict_actions_actors</code></strong> (object)<br>
+Choose specific actors that are authorized to trigger Actions workflows.
+<ul>
+<li><strong><code>type</code></strong> (string) (required)<br>
+Can be one of: <code>restrict_actions_actors</code></li>
+<li><strong><code>parameters</code></strong> (object)
+<ul>
+<li><strong><code>allowed_actors</code></strong> (array of objects) (required)<br>
+Select the actors who can run Actions workflows.
+<ul>
+<li><strong><code>id</code></strong> (integer) (required)<br>
+ID of the actor authorized to trigger Actions workflows.</li>
+<li><strong><code>type</code></strong> (string) (required)<br>
+The type of the actor<br>
+Can be one of: <code>User</code>, <code>Bot</code>, <code>Team</code>, <code>BusinessTeam</code>, <code>EnterpriseTeam</code>, <code>IntegrationInstallation</code>, <code>App</code>, <code>RepositoryRole</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong><code>restrict_action_events</code></strong> (object)<br>
+Choose specific GitHub events that will trigger Actions workflows.
+<ul>
+<li><strong><code>type</code></strong> (string) (required)<br>
+Can be one of: <code>restrict_action_events</code></li>
+<li><strong><code>parameters</code></strong> (object)
+<ul>
+<li><strong><code>allowed_events</code></strong> (array of strings) (required)<br>
+Select the events that can trigger Actions workflows.<br>
+Supported values are: branch_protection_rule, check_run, check_suite, create, delete, deployment, deployment_status, discussion, discussion_comment, fork, gollum, image_version, issue_comment, issues, label, merge_group, milestone, page_build, project, project_card, project_column, public, pull_request, pull_request_review, pull_request_review_comment, pull_request_target, push, registry_package, release, repository_dispatch, schedule, status, watch, workflow_call, workflow_dispatch, workflow_run</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="http-response-status-codes-3">HTTP response status codes<a href="#http-response-status-codes-3" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - OK</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+<li>
+<p><strong>500</strong> - Internal Error</p>
+</li>
+</ul>
+<h3 id="code-examples-3">Code examples<a href="#code-examples-3" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-3">Example<a href="#example-3" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X PUT \
+</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/actions/policies/POLICY_ID \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "name": "Updated policy name",
+</span><span style="color:#c0c5ce;">  "enforcement": "active"
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<p>Same response schema as <a href="#create-an-organization-actions-policy">Create an organization Actions policy</a>.</p>
+<h2 id="delete-an-organization-actions-policy" title="DELETE /orgs/{org}/actions/policies/{policy_id} (Delete an organization Actions policy)" data-entry-type="Resource">Delete an organization Actions policy<a href="#delete-an-organization-actions-policy" aria-label="Link to heading 'Delete an organization Actions policy'" data-heading-content="Delete an organization Actions policy" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">DELETE /orgs/{org}/actions/policies/{policy_id}
+</span></code></pre>
+<p>Delete an Actions policy for an organization.</p>
+<h3 id="parameters-4">Parameters<a href="#parameters-4" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-4">Headers<a href="#headers-4" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-4">Path and query parameters<a href="#path-and-query-parameters-4" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>org</code></strong> (string) (required)<br>
+The organization name. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>policy_id</code></strong> (integer) (required)<br>
+The ID of the policy.</p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-4">HTTP response status codes<a href="#http-response-status-codes-4" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>204</strong> - No Content</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>500</strong> - Internal Error</p>
+</li>
+</ul>
+<h3 id="code-examples-4">Code examples<a href="#code-examples-4" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-4">Example<a href="#example-4" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X DELETE \
+</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/actions/policies/POLICY_ID
+</span></code></pre>
+<p><strong>Response schema (Status: 204):</strong></p>
+<h2 id="list-repository-actions-policies" title="GET /repos/{owner}/{repo}/actions/policies (List repository Actions policies)" data-entry-type="Resource">List repository Actions policies<a href="#list-repository-actions-policies" aria-label="Link to heading 'List repository Actions policies'" data-heading-content="List repository Actions policies" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /repos/{owner}/{repo}/actions/policies
+</span></code></pre>
+<p>List all Actions policies for a repository.</p>
+<h3 id="parameters-5">Parameters<a href="#parameters-5" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-5">Headers<a href="#headers-5" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-5">Path and query parameters<a href="#path-and-query-parameters-5" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>per_page</code></strong> (integer)<br>
+The number of results per page (max 100). For more information, see "Using pagination in the REST API."<br>
+Default: <code>30</code></p>
+</li>
+<li>
+<p><strong><code>page</code></strong> (integer)<br>
+The page number of the results to fetch. For more information, see "Using pagination in the REST API."<br>
+Default: <code>1</code></p>
+</li>
+<li>
+<p><strong><code>has_parents</code></strong> (boolean)<br>
+Include policies configured at higher levels that apply to this repository<br>
+Default: <code>true</code></p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-5">HTTP response status codes<a href="#http-response-status-codes-5" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - OK</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>500</strong> - Internal Error</p>
+</li>
+</ul>
+<h3 id="code-examples-5">Code examples<a href="#code-examples-5" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-5">Example<a href="#example-5" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X GET \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/actions/policies
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<p>Same response schema as <a href="#list-organization-actions-policies">List organization Actions policies</a>.</p>
+<h2 id="create-a-repository-actions-policy" title="POST /repos/{owner}/{repo}/actions/policies (Create a repository Actions policy)" data-entry-type="Resource">Create a repository Actions policy<a href="#create-a-repository-actions-policy" aria-label="Link to heading 'Create a repository Actions policy'" data-heading-content="Create a repository Actions policy" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">POST /repos/{owner}/{repo}/actions/policies
+</span></code></pre>
+<p>Create an Actions policy for a repository.<br>
+Omitting workflow_path targets all workflows without storing an explicit condition.</p>
+<h3 id="parameters-6">Parameters<a href="#parameters-6" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-6">Headers<a href="#headers-6" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-6">Path and query parameters<a href="#path-and-query-parameters-6" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+</ul>
+<h4 id="body-parameters-2">Body parameters<a href="#body-parameters-2" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>name</code></strong> (string) (required)<br>
+The name of the policy.</p>
+</li>
+<li>
+<p><strong><code>enforcement</code></strong> (string) (required)<br>
+The enforcement level of the ruleset. evaluate allows admins to test rules before enforcing them. Admins can view insights on the Rule Insights page (evaluate is only available with GitHub Enterprise).<br>
+Can be one of: <code>disabled</code>, <code>active</code>, <code>evaluate</code></p>
+</li>
+<li>
+<p><strong><code>conditions</code></strong> (object)<br>
+Conditions for a repository Actions policy. The object may be empty to preserve or use the<br>
+default workflow targeting, or contain only workflow_path.</p>
+<ul>
+<li><strong>``</strong> (object)</li>
+<li><strong><code>Actions policy workflow path condition</code></strong> (object)<br>
+Parameters for an Actions policy workflow path condition. Omitting workflow_path when creating<br>
+a policy targets all workflows without storing an explicit condition. Omitting it when updating a<br>
+policy preserves the existing workflow targeting. For new or changed workflow conditions, the API<br>
+requires at least one included or excluded pattern. This is validated server-side rather than by<br>
+this schema, which can also describe existing stored conditions.
+<ul>
+<li><strong><code>workflow_path</code></strong> (object) (required)
+<ul>
+<li><strong><code>include</code></strong> (array of strings) (required)<br>
+Array of workflow file paths or glob patterns to include. An empty array includes all<br>
+workflows not matched by an excluded pattern. Use ~ALL by itself to include all workflows.<br>
+~ALL cannot be combined with other included patterns.</li>
+<li><strong><code>exclude</code></strong> (array of strings) (required)<br>
+Array of workflow file paths or glob patterns to exclude. The condition will not pass<br>
+if any of these patterns match. ~ALL is not allowed in this array.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>rules</code></strong> (array of objects)<br>
+An array of rules within the policy.</p>
+<ul>
+<li><strong><code>restrict_actions_actors</code></strong> (object)<br>
+Choose specific actors that are authorized to trigger Actions workflows.
+<ul>
+<li><strong><code>type</code></strong> (string) (required)<br>
+Can be one of: <code>restrict_actions_actors</code></li>
+<li><strong><code>parameters</code></strong> (object)
+<ul>
+<li><strong><code>allowed_actors</code></strong> (array of objects) (required)<br>
+Select the actors who can run Actions workflows.
+<ul>
+<li><strong><code>id</code></strong> (integer) (required)<br>
+ID of the actor authorized to trigger Actions workflows.</li>
+<li><strong><code>type</code></strong> (string) (required)<br>
+The type of the actor<br>
+Can be one of: <code>User</code>, <code>Bot</code>, <code>Team</code>, <code>BusinessTeam</code>, <code>EnterpriseTeam</code>, <code>IntegrationInstallation</code>, <code>App</code>, <code>RepositoryRole</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong><code>restrict_action_events</code></strong> (object)<br>
+Choose specific GitHub events that will trigger Actions workflows.
+<ul>
+<li><strong><code>type</code></strong> (string) (required)<br>
+Can be one of: <code>restrict_action_events</code></li>
+<li><strong><code>parameters</code></strong> (object)
+<ul>
+<li><strong><code>allowed_events</code></strong> (array of strings) (required)<br>
+Select the events that can trigger Actions workflows.<br>
+Supported values are: branch_protection_rule, check_run, check_suite, create, delete, deployment, deployment_status, discussion, discussion_comment, fork, gollum, image_version, issue_comment, issues, label, merge_group, milestone, page_build, project, project_card, project_column, public, pull_request, pull_request_review, pull_request_review_comment, pull_request_target, push, registry_package, release, repository_dispatch, schedule, status, watch, workflow_call, workflow_dispatch, workflow_run</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="http-response-status-codes-6">HTTP response status codes<a href="#http-response-status-codes-6" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>201</strong> - Created</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+<li>
+<p><strong>500</strong> - Internal Error</p>
+</li>
+</ul>
+<h3 id="code-examples-6">Code examples<a href="#code-examples-6" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-6">Example<a href="#example-6" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X POST \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/actions/policies \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "name": "Require approved actors",
+</span><span style="color:#c0c5ce;">  "enforcement": "active",
+</span><span style="color:#c0c5ce;">  "rules": [
+</span><span style="color:#c0c5ce;">    {
+</span><span style="color:#c0c5ce;">      "type": "restrict_actions_actors",
+</span><span style="color:#c0c5ce;">      "parameters": {
+</span><span style="color:#c0c5ce;">        "allowed_actors": [
+</span><span style="color:#c0c5ce;">          {
+</span><span style="color:#c0c5ce;">            "id": 1234,
+</span><span style="color:#c0c5ce;">            "type": "Team"
+</span><span style="color:#c0c5ce;">          }
+</span><span style="color:#c0c5ce;">        ]
+</span><span style="color:#c0c5ce;">      }
+</span><span style="color:#c0c5ce;">    }
+</span><span style="color:#c0c5ce;">  ]
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 201):</strong></p>
+<p>Same response schema as <a href="#create-an-organization-actions-policy">Create an organization Actions policy</a>.</p>
+<h2 id="get-a-repository-actions-policy" title="GET /repos/{owner}/{repo}/actions/policies/{policy_id} (Get a repository Actions policy)" data-entry-type="Resource">Get a repository Actions policy<a href="#get-a-repository-actions-policy" aria-label="Link to heading 'Get a repository Actions policy'" data-heading-content="Get a repository Actions policy" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /repos/{owner}/{repo}/actions/policies/{policy_id}
+</span></code></pre>
+<p>Get a specific Actions policy for a repository.</p>
+<h3 id="parameters-7">Parameters<a href="#parameters-7" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-7">Headers<a href="#headers-7" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-7">Path and query parameters<a href="#path-and-query-parameters-7" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>policy_id</code></strong> (integer) (required)<br>
+The ID of the policy.</p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-7">HTTP response status codes<a href="#http-response-status-codes-7" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - OK</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>500</strong> - Internal Error</p>
+</li>
+</ul>
+<h3 id="code-examples-7">Code examples<a href="#code-examples-7" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-7">Example<a href="#example-7" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X GET \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/actions/policies/POLICY_ID
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<p>Same response schema as <a href="#create-an-organization-actions-policy">Create an organization Actions policy</a>.</p>
+<h2 id="update-a-repository-actions-policy" title="PUT /repos/{owner}/{repo}/actions/policies/{policy_id} (Update a repository Actions policy)" data-entry-type="Resource">Update a repository Actions policy<a href="#update-a-repository-actions-policy" aria-label="Link to heading 'Update a repository Actions policy'" data-heading-content="Update a repository Actions policy" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PUT /repos/{owner}/{repo}/actions/policies/{policy_id}
+</span></code></pre>
+<p>Update an Actions policy for a repository.<br>
+Omitting workflow_path preserves the policy's existing workflow targeting.</p>
+<h3 id="parameters-8">Parameters<a href="#parameters-8" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-8">Headers<a href="#headers-8" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-8">Path and query parameters<a href="#path-and-query-parameters-8" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>policy_id</code></strong> (integer) (required)<br>
+The ID of the policy.</p>
+</li>
+</ul>
+<h4 id="body-parameters-3">Body parameters<a href="#body-parameters-3" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>name</code></strong> (string)<br>
+The name of the policy.</p>
+</li>
+<li>
+<p><strong><code>enforcement</code></strong> (string)<br>
+The enforcement level of the ruleset. evaluate allows admins to test rules before enforcing them. Admins can view insights on the Rule Insights page (evaluate is only available with GitHub Enterprise).<br>
+Can be one of: <code>disabled</code>, <code>active</code>, <code>evaluate</code></p>
+</li>
+<li>
+<p><strong><code>conditions</code></strong> (object)<br>
+Conditions for a repository Actions policy. The object may be empty to preserve or use the<br>
+default workflow targeting, or contain only workflow_path.</p>
+<ul>
+<li><strong>``</strong> (object)</li>
+<li><strong><code>Actions policy workflow path condition</code></strong> (object)<br>
+Parameters for an Actions policy workflow path condition. Omitting workflow_path when creating<br>
+a policy targets all workflows without storing an explicit condition. Omitting it when updating a<br>
+policy preserves the existing workflow targeting. For new or changed workflow conditions, the API<br>
+requires at least one included or excluded pattern. This is validated server-side rather than by<br>
+this schema, which can also describe existing stored conditions.
+<ul>
+<li><strong><code>workflow_path</code></strong> (object) (required)
+<ul>
+<li><strong><code>include</code></strong> (array of strings) (required)<br>
+Array of workflow file paths or glob patterns to include. An empty array includes all<br>
+workflows not matched by an excluded pattern. Use ~ALL by itself to include all workflows.<br>
+~ALL cannot be combined with other included patterns.</li>
+<li><strong><code>exclude</code></strong> (array of strings) (required)<br>
+Array of workflow file paths or glob patterns to exclude. The condition will not pass<br>
+if any of these patterns match. ~ALL is not allowed in this array.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>rules</code></strong> (array of objects)<br>
+An array of rules within the policy.</p>
+<ul>
+<li><strong><code>restrict_actions_actors</code></strong> (object)<br>
+Choose specific actors that are authorized to trigger Actions workflows.
+<ul>
+<li><strong><code>type</code></strong> (string) (required)<br>
+Can be one of: <code>restrict_actions_actors</code></li>
+<li><strong><code>parameters</code></strong> (object)
+<ul>
+<li><strong><code>allowed_actors</code></strong> (array of objects) (required)<br>
+Select the actors who can run Actions workflows.
+<ul>
+<li><strong><code>id</code></strong> (integer) (required)<br>
+ID of the actor authorized to trigger Actions workflows.</li>
+<li><strong><code>type</code></strong> (string) (required)<br>
+The type of the actor<br>
+Can be one of: <code>User</code>, <code>Bot</code>, <code>Team</code>, <code>BusinessTeam</code>, <code>EnterpriseTeam</code>, <code>IntegrationInstallation</code>, <code>App</code>, <code>RepositoryRole</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong><code>restrict_action_events</code></strong> (object)<br>
+Choose specific GitHub events that will trigger Actions workflows.
+<ul>
+<li><strong><code>type</code></strong> (string) (required)<br>
+Can be one of: <code>restrict_action_events</code></li>
+<li><strong><code>parameters</code></strong> (object)
+<ul>
+<li><strong><code>allowed_events</code></strong> (array of strings) (required)<br>
+Select the events that can trigger Actions workflows.<br>
+Supported values are: branch_protection_rule, check_run, check_suite, create, delete, deployment, deployment_status, discussion, discussion_comment, fork, gollum, image_version, issue_comment, issues, label, merge_group, milestone, page_build, project, project_card, project_column, public, pull_request, pull_request_review, pull_request_review_comment, pull_request_target, push, registry_package, release, repository_dispatch, schedule, status, watch, workflow_call, workflow_dispatch, workflow_run</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="http-response-status-codes-8">HTTP response status codes<a href="#http-response-status-codes-8" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - OK</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+<li>
+<p><strong>500</strong> - Internal Error</p>
+</li>
+</ul>
+<h3 id="code-examples-8">Code examples<a href="#code-examples-8" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-8">Example<a href="#example-8" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X PUT \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/actions/policies/POLICY_ID \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "name": "Updated policy name",
+</span><span style="color:#c0c5ce;">  "enforcement": "active"
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<p>Same response schema as <a href="#create-an-organization-actions-policy">Create an organization Actions policy</a>.</p>
+<h2 id="delete-a-repository-actions-policy" title="DELETE /repos/{owner}/{repo}/actions/policies/{policy_id} (Delete a repository Actions policy)" data-entry-type="Resource">Delete a repository Actions policy<a href="#delete-a-repository-actions-policy" aria-label="Link to heading 'Delete a repository Actions policy'" data-heading-content="Delete a repository Actions policy" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">DELETE /repos/{owner}/{repo}/actions/policies/{policy_id}
+</span></code></pre>
+<p>Delete an Actions policy for a repository.</p>
+<h3 id="parameters-9">Parameters<a href="#parameters-9" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-9">Headers<a href="#headers-9" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-9">Path and query parameters<a href="#path-and-query-parameters-9" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>policy_id</code></strong> (integer) (required)<br>
+The ID of the policy.</p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-9">HTTP response status codes<a href="#http-response-status-codes-9" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>204</strong> - No Content</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>500</strong> - Internal Error</p>
+</li>
+</ul>
+<h3 id="code-examples-9">Code examples<a href="#code-examples-9" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-9">Example<a href="#example-9" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X DELETE \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/actions/policies/POLICY_ID
+</span></code></pre>
+<p><strong>Response schema (Status: 204):</strong></p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

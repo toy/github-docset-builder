@@ -1,5 +1,5 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><title>Exploring the dependencies of a repository</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">Secure your supply chain</a> / <a href="index.html">Secure your dependencies</a> / </nav><h1 id="exploring-the-dependencies-of-a-repository">Exploring the dependencies of a repository<a href="#exploring-the-dependencies-of-a-repository" aria-label="Link to heading 'Exploring the dependencies of a repository'" data-heading-content="Exploring the dependencies of a repository" class="anchor"></a></h1>
-<p>You can use the dependency graph to see the packages your project depends on. In addition, you can see any vulnerabilities detected in its dependencies.</p>
+<p>You can use the dependency graph to see the packages your project depends on and the repositories that depend on it. In addition, you can see any vulnerabilities detected in its dependencies.</p>
 <h2 id="viewing-the-dependency-graph" title="Viewing the dependency graph" data-entry-type="Section">Viewing the dependency graph<a href="#viewing-the-dependency-graph" aria-label="Link to heading 'Viewing the dependency graph'" data-heading-content="Viewing the dependency graph" class="anchor"></a></h2>
 <p>The dependency graph shows the dependencies and dependents of your repository.  For each dependency, you can see the version, license information, the manifest file which included it, and whether it has known vulnerabilities. For package ecosystems supporting transitive dependencies, the relationship status will be displayed and you can click "<svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-kebab-horizontal" aria-label="Show dependency options" role="img"><path d="M8 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM1.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm13 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path></svg>", then "Show paths", to see the transitive path which brought in the dependency.</p>
 <p>You can also search for a specific dependency using the search bar. Dependencies are sorted automatically with vulnerable packages at the top. For information about the detection of dependencies and which ecosystems are supported, see <a href="../../../reference/supply-chain-security/dependency-graph-supported-package-ecosystems.html">Dependency graph supported package ecosystems</a>.</p>
@@ -22,8 +22,7 @@
 <p>Optionally, to view the repositories and packages that depend on your repository, under "Dependency graph", click <strong>Dependents</strong>.</p>
 <p><img src="../../../../..//assets/images/help/graphs/dependency-graph-dependents-tab.png" alt="Screenshot of the &quot;Dependency graph&quot; page. The &quot;Dependents&quot; tab is highlighted with an orange outline."></p>
 <div class="markdown-alert markdown-alert-note">
-<p class="markdown-alert-title">Note</p>
-<p>GitHub currently only determines dependents for public repositories.</p>
+<p class="markdown-alert-title">GitHub currently only determines dependents for public repositories.</p>
 </div>
 </li>
 </ol>

@@ -1,0 +1,31 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>About Actions policies</title><link rel="stylesheet" href="../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../index.html">GitHub Actions</a> / <a href="index.html">Concepts</a> / </nav><h1 id="about-actions-policies">About Actions policies<a href="#about-actions-policies" aria-label="Link to heading 'About Actions policies'" data-heading-content="About Actions policies" class="anchor"></a></h1>
+<p>Govern how GitHub Actions workflows run within your repository, organization, or enterprise.</p>
+<h2 id="about-actions-policies-1" title="About Actions policies" data-entry-type="Section">About Actions policies<a href="#about-actions-policies-1" aria-label="Link to heading 'About Actions policies'" data-heading-content="About Actions policies" class="anchor"></a></h2>
+<p>Actions policies let you govern how GitHub Actions workflows run. You can configure them in the <strong>Policies</strong> section of your GitHub Actions settings (separate from the <strong>General</strong> settings).</p>
+<p>Actions policies are available at the enterprise, organization, and repository levels. They currently contain one type of policy: workflow execution protections. GitHub plans to add more policies over time.</p>
+<h2 id="about-workflow-execution-protections" title="About workflow execution protections" data-entry-type="Section">About workflow execution protections<a href="#about-workflow-execution-protections" aria-label="Link to heading 'About workflow execution protections'" data-heading-content="About workflow execution protections" class="anchor"></a></h2>
+<p>With workflow execution protections, you can define an allowlist that controls who can trigger GitHub Actions workflows and which events are permitted to run them. These protections can disrupt several real-world attack patterns:</p>
+<ul>
+<li><strong>Poisoned pipeline execution from pull requests.</strong> Restrict or prohibit <code>pull_request_target</code>, including in public repositories where it is most often exploited.</li>
+<li><strong>Manual-trigger abuse.</strong> Limit <code>workflow_dispatch</code> so untrusted identities cannot start workflows.</li>
+<li><strong>Untrusted-actor execution.</strong> Block low-trust identities from triggering workflows entirely.</li>
+<li><strong>Misconfiguration exploitation.</strong> Apply central policy that overrides any single misconfigured workflow file.</li>
+</ul>
+<p>When enforced, disallowed workflow runs will fail with an error. For example:</p>
+<pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">Event 'workflow_dispatch' is not allowed to trigger Actions workflows. Workflow file: '.github/workflows/0-welcome.yml'.
+</span></code></pre>
+<!-- expires 2026-11-02 -->
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">GitHub has added a default policy that will block the `pull_request_target` event in public repositories. This policy will be enforced on November 2, 2026. See [Securely using pull_request_target](/en/actions/reference/security/securely-using-pull_request_target#default-policy-for-pull_request_target).</p>
+</div>
+<!-- end expires 2026-11-02 -->
+<h3 id="available-rules">Available rules<a href="#available-rules" aria-label="Link to heading 'Available rules'" data-heading-content="Available rules" class="anchor"></a></h3>
+<ul>
+<li><strong>Actor rules</strong> control who can trigger workflows, including individual users, repository roles, GitHub Apps, Copilot, and Dependabot. By default, every user with write access to a repository can trigger workflows. Actor rules let you separate who contributes code from who runs your CI, so you can grant a contributor write access without granting them the ability to execute workflows.</li>
+<li><strong>Event rules</strong> control which events are permitted, such as <code>push</code>, <code>pull_request</code>, <code>pull_request_target</code>, and <code>workflow_dispatch</code>.</li>
+</ul>
+<p>GitHub plans to add more rules over time.</p>
+<h2 id="next-steps" title="Next steps" data-entry-type="Section">Next steps<a href="#next-steps" aria-label="Link to heading 'Next steps'" data-heading-content="Next steps" class="anchor"></a></h2>
+<p>To configure workflow execution protections, see <a href="../how-tos/administer/control-workflow-execution.html">Governing execution of GitHub Actions workflows</a>.</p>
+<p>To manage policies programmatically, see <a href="https://docs.github.com/en/rest/actions/policies" class="external">REST API endpoints for GitHub Actions policies</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -7,7 +7,7 @@
 <li><code>GITHUB_TOKEN</code> has read-only permissions by default.</li>
 <li>Secrets are populated from Dependabot secrets. GitHub Actions secrets are not available.</li>
 </ul>
-<p>For workflows initiated by Dependabot (<code>github.actor == 'dependabot[bot]'</code>) using the <code>pull_request_target</code> event, if the base ref of the pull request was created by Dependabot (<code>github.event.pull_request.user.login == 'dependabot[bot]'</code>), the <code>GITHUB_TOKEN</code> will be read-only and secrets are not available.</p>
+<p>For workflows initiated by Dependabot (<code>github.actor == 'dependabot[bot]'</code>) using the <code>pull_request_target</code> event, if the base ref of the pull request was created by Dependabot, the <code>GITHUB_TOKEN</code> will be read-only and secrets are not available.</p>
 <p>These restrictions apply even if the workflow is re-run by a different actor.</p>
 <p>For more information, see <a href="https://securitylab.github.com/research/github-actions-preventing-pwn-requests/" class="external">Keeping your GitHub Actions and workflows secure: Preventing pwn requests</a>.</p>
 <h2 id="requirements-for-using-dependabot-with-self-hosted-runners" title="Requirements for using Dependabot with self-hosted runners" data-entry-type="Section">Requirements for using Dependabot with self-hosted runners<a href="#requirements-for-using-dependabot-with-self-hosted-runners" aria-label="Link to heading 'Requirements for using Dependabot with self-hosted runners'" data-heading-content="Requirements for using Dependabot with self-hosted runners" class="anchor"></a></h2>

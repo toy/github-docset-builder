@@ -10,8 +10,12 @@
 <h2 id="delete-an-app-authorization" title="DELETE /applications/{client_id}/grant (Delete an app authorization)" data-entry-type="Resource">Delete an app authorization<a href="#delete-an-app-authorization" aria-label="Link to heading 'Delete an app authorization'" data-heading-content="Delete an app authorization" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">DELETE /applications/{client_id}/grant
 </span></code></pre>
-<p>OAuth and GitHub application owners can revoke a grant for their application and a specific user. You must provide a valid OAuth access_token as an input parameter and the grant for the token's owner will be deleted.<br>
+<p>OAuth and GitHub application owners can revoke a grant for their application and a specific user. You must provide a valid OAuth access<span data-escaped-char="">_</span>token as an input parameter and the grant for the token's owner will be deleted.<br>
 Deleting an application's grant will also delete all OAuth tokens associated with the application for the user. Once deleted, the application will have no access to the user's account and will no longer be listed on the application authorizations settings screen within GitHub.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This endpoint requires <a href="../authentication/authenticating-to-the-rest-api.html#using-basic-authentication">Basic authentication</a>. Use the application's <code>client_id</code> as the username and the <code>client_secret</code> as the password. Do not send an <code>Authorization: Bearer</code> header with this request, because it replaces the Basic credentials.</p>
+</div>
 <h3 id="parameters">Parameters<a href="#parameters" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers">Headers<a href="#headers" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
@@ -43,6 +47,7 @@ The OAuth access token used to authenticate to the GitHub API.</li>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X DELETE \
 </span><span style="color:#c0c5ce;">  https://api.github.com/applications/Iv1.8a61f9b3a7aba766/grant \
+</span><span style="color:#c0c5ce;">  -u "&lt;YOUR_CLIENT_ID&gt;:&lt;YOUR_CLIENT_SECRET&gt;" \
 </span><span style="color:#c0c5ce;">  -d '{
 </span><span style="color:#c0c5ce;">  "access_token": "e72e16c7e42f292c6912e7710c838347ae178b4a"
 </span><span style="color:#c0c5ce;">}'
@@ -52,6 +57,10 @@ The OAuth access token used to authenticate to the GitHub API.</li>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">POST /applications/{client_id}/token
 </span></code></pre>
 <p>OAuth applications and GitHub applications with OAuth authorizations can use this API method for checking OAuth token validity without exceeding the normal rate limits for failed login attempts. Authentication works differently with this particular endpoint. Invalid tokens will return 404 NOT FOUND.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This endpoint requires <a href="../authentication/authenticating-to-the-rest-api.html#using-basic-authentication">Basic authentication</a>. Use the application's <code>client_id</code> as the username and the <code>client_secret</code> as the password. Do not send an <code>Authorization: Bearer</code> header with this request, because it replaces the Basic credentials.</p>
+</div>
 <h3 id="parameters-1">Parameters<a href="#parameters-1" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-1">Headers<a href="#headers-1" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
@@ -66,7 +75,7 @@ The client ID of the GitHub app.</li>
 <h4 id="body-parameters-1">Body parameters<a href="#body-parameters-1" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
 <ul>
 <li><strong><code>access_token</code></strong> (string) (required)<br>
-The access_token of the OAuth or GitHub application.</li>
+The access<span data-escaped-char="">_</span>token of the OAuth or GitHub application.</li>
 </ul>
 <h3 id="http-response-status-codes-1">HTTP response status codes<a href="#http-response-status-codes-1" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
@@ -86,6 +95,7 @@ The access_token of the OAuth or GitHub application.</li>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X POST \
 </span><span style="color:#c0c5ce;">  https://api.github.com/applications/Iv1.8a61f9b3a7aba766/token \
+</span><span style="color:#c0c5ce;">  -u "&lt;YOUR_CLIENT_ID&gt;:&lt;YOUR_CLIENT_SECRET&gt;" \
 </span><span style="color:#c0c5ce;">  -d '{
 </span><span style="color:#c0c5ce;">  "access_token": "e72e16c7e42f292c6912e7710c838347ae178b4a"
 </span><span style="color:#c0c5ce;">}'
@@ -184,6 +194,7 @@ The access_token of the OAuth or GitHub application.</li>
 <li><code>organization_custom_properties</code>: string, enum: <code>read</code>, <code>write</code>, <code>admin</code></li>
 <li><code>organization_copilot_seat_management</code>: string, enum: <code>read</code>, <code>write</code></li>
 <li><code>organization_copilot_agent_settings</code>: string, enum: <code>read</code>, <code>write</code></li>
+<li><code>organization_copilot_requests</code>: string, enum: <code>read</code></li>
 <li><code>organization_external_properties_for_repos</code>: string, enum: <code>read</code>, <code>write</code>, <code>admin</code></li>
 <li><code>organization_announcement_banners</code>: string, enum: <code>read</code>, <code>write</code></li>
 <li><code>organization_events</code>: string, enum: <code>read</code></li>
@@ -222,6 +233,10 @@ The access_token of the OAuth or GitHub application.</li>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PATCH /applications/{client_id}/token
 </span></code></pre>
 <p>OAuth applications and GitHub applications with OAuth authorizations can use this API method to reset a valid OAuth token without end-user involvement. Applications must save the "token" property in the response because changes take effect immediately. Invalid tokens will return 404 NOT FOUND.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This endpoint requires <a href="../authentication/authenticating-to-the-rest-api.html#using-basic-authentication">Basic authentication</a>. Use the application's <code>client_id</code> as the username and the <code>client_secret</code> as the password. Do not send an <code>Authorization: Bearer</code> header with this request, because it replaces the Basic credentials.</p>
+</div>
 <h3 id="parameters-2">Parameters<a href="#parameters-2" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-2">Headers<a href="#headers-2" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
@@ -236,7 +251,7 @@ The client ID of the GitHub app.</li>
 <h4 id="body-parameters-2">Body parameters<a href="#body-parameters-2" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
 <ul>
 <li><strong><code>access_token</code></strong> (string) (required)<br>
-The access_token of the OAuth or GitHub application.</li>
+The access<span data-escaped-char="">_</span>token of the OAuth or GitHub application.</li>
 </ul>
 <h3 id="http-response-status-codes-2">HTTP response status codes<a href="#http-response-status-codes-2" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
@@ -253,6 +268,7 @@ The access_token of the OAuth or GitHub application.</li>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X PATCH \
 </span><span style="color:#c0c5ce;">  https://api.github.com/applications/Iv1.8a61f9b3a7aba766/token \
+</span><span style="color:#c0c5ce;">  -u "&lt;YOUR_CLIENT_ID&gt;:&lt;YOUR_CLIENT_SECRET&gt;" \
 </span><span style="color:#c0c5ce;">  -d '{
 </span><span style="color:#c0c5ce;">  "access_token": "e72e16c7e42f292c6912e7710c838347ae178b4a"
 </span><span style="color:#c0c5ce;">}'
@@ -263,6 +279,10 @@ The access_token of the OAuth or GitHub application.</li>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">DELETE /applications/{client_id}/token
 </span></code></pre>
 <p>OAuth  or GitHub application owners can revoke a single token for an OAuth application or a GitHub application with an OAuth authorization.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This endpoint requires <a href="../authentication/authenticating-to-the-rest-api.html#using-basic-authentication">Basic authentication</a>. Use the application's <code>client_id</code> as the username and the <code>client_secret</code> as the password. Do not send an <code>Authorization: Bearer</code> header with this request, because it replaces the Basic credentials.</p>
+</div>
 <h3 id="parameters-3">Parameters<a href="#parameters-3" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-3">Headers<a href="#headers-3" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
@@ -294,6 +314,7 @@ The OAuth access token used to authenticate to the GitHub API.</li>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X DELETE \
 </span><span style="color:#c0c5ce;">  https://api.github.com/applications/Iv1.8a61f9b3a7aba766/token \
+</span><span style="color:#c0c5ce;">  -u "&lt;YOUR_CLIENT_ID&gt;:&lt;YOUR_CLIENT_SECRET&gt;" \
 </span><span style="color:#c0c5ce;">  -d '{
 </span><span style="color:#c0c5ce;">  "access_token": "e72e16c7e42f292c6912e7710c838347ae178b4a"
 </span><span style="color:#c0c5ce;">}'

@@ -90,8 +90,7 @@ For <code>oidc_discovery_url</code> and <code>bound_issuer</code> parameters, us
 <h3 id="adding-permissions-settings">Adding permissions settings<a href="#adding-permissions-settings" aria-label="Link to heading 'Adding permissions settings'" data-heading-content="Adding permissions settings" class="anchor"></a></h3>
 <p>The job or workflow run requires a <code>permissions</code> setting with <a href="../../../tutorials/authenticate-with-github_token.html#modifying-the-permissions-for-the-github_token"><code>id-token: write</code></a> to allow GitHub's OIDC provider to create a JSON Web Token for every run.</p>
 <div class="markdown-alert markdown-alert-note">
-<p class="markdown-alert-title">Note</p>
-<p>Setting <code>id-token: write</code> in the workflow’s permissions does not give the workflow permission to modify or write to any resources. Instead, it only allows the workflow to request (fetch) and use (set) an OIDC token for an action or step. This token is then used to authenticate with external services using a short-lived access token.</p>
+<p class="markdown-alert-title">Setting `id-token: write` in the workflow’s permissions does not give the workflow permission to modify or write to any resources. Instead, it only allows the workflow to request (fetch) and use (set) an OIDC token for an action or step. This token is then used to authenticate with external services using a short-lived access token.</p>
 </div>
 <p>For detailed information on required permissions, configuration examples, and advanced scenarios, see <a href="../../../reference/security/oidc.html#workflow-permissions-for-the-requesting-the-oidc-token">OpenID Connect reference</a>.</p>
 <div class="markdown-alert markdown-alert-note">
