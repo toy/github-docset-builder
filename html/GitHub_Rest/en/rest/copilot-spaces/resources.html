@@ -117,6 +117,73 @@ Resource-specific metadata.</p>
 <p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
 </li>
 </ul>
+<h3 id="code-examples-1">Code examples<a href="#code-examples-1" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-1-status-code-201">Example 1: Status Code 201<a href="#example-1-status-code-201" aria-label="Link to heading 'Example 1: Status Code 201'" data-heading-content="Example 1: Status Code 201" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X POST \
+</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/copilot-spaces/SPACE_NUMBER/resources \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "resource_type": "free_text",
+</span><span style="color:#c0c5ce;">  "metadata": {
+</span><span style="color:#c0c5ce;">    "name": "notes.txt",
+</span><span style="color:#c0c5ce;">    "text": "Some helpful notes"
+</span><span style="color:#c0c5ce;">  }
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 201):</strong></p>
+<ul>
+<li><code>id</code>: required, integer</li>
+<li><code>resource_type</code>: required, string, enum: <code>repository</code>, <code>github_file</code>, <code>free_text</code>, <code>github_issue</code>, <code>github_pull_request</code>, <code>media_content</code>, <code>uploaded_text_file</code></li>
+<li><code>copilot_chat_attachment_id</code>: integer or null</li>
+<li><code>metadata</code>: required, object, additional properties allowed</li>
+<li><code>created_at</code>: required, string, format: date-time</li>
+<li><code>updated_at</code>: required, string, format: date-time</li>
+</ul>
+<h4 id="example-2-status-code-201">Example 2: Status Code 201<a href="#example-2-status-code-201" aria-label="Link to heading 'Example 2: Status Code 201'" data-heading-content="Example 2: Status Code 201" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X POST \
+</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/copilot-spaces/SPACE_NUMBER/resources \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "resource_type": "repository",
+</span><span style="color:#c0c5ce;">  "metadata": {
+</span><span style="color:#c0c5ce;">    "repository_id": 42
+</span><span style="color:#c0c5ce;">  }
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 201):</strong></p>
+<ul>
+<li><code>id</code>: required, integer</li>
+<li><code>resource_type</code>: required, string, enum: <code>repository</code>, <code>github_file</code>, <code>free_text</code>, <code>github_issue</code>, <code>github_pull_request</code>, <code>media_content</code>, <code>uploaded_text_file</code></li>
+<li><code>copilot_chat_attachment_id</code>: integer or null</li>
+<li><code>metadata</code>: required, object, additional properties allowed</li>
+<li><code>created_at</code>: required, string, format: date-time</li>
+<li><code>updated_at</code>: required, string, format: date-time</li>
+</ul>
+<h4 id="example-3-status-code-201">Example 3: Status Code 201<a href="#example-3-status-code-201" aria-label="Link to heading 'Example 3: Status Code 201'" data-heading-content="Example 3: Status Code 201" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X POST \
+</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/copilot-spaces/SPACE_NUMBER/resources \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "resource_type": "github_file",
+</span><span style="color:#c0c5ce;">  "metadata": {
+</span><span style="color:#c0c5ce;">    "repository_id": 42,
+</span><span style="color:#c0c5ce;">    "file_path": "README.md",
+</span><span style="color:#c0c5ce;">    "sha": "abc123"
+</span><span style="color:#c0c5ce;">  }
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 201):</strong></p>
+<ul>
+<li><code>id</code>: required, integer</li>
+<li><code>resource_type</code>: required, string, enum: <code>repository</code>, <code>github_file</code>, <code>free_text</code>, <code>github_issue</code>, <code>github_pull_request</code>, <code>media_content</code>, <code>uploaded_text_file</code></li>
+<li><code>copilot_chat_attachment_id</code>: integer or null</li>
+<li><code>metadata</code>: required, object, additional properties allowed</li>
+<li><code>created_at</code>: required, string, format: date-time</li>
+<li><code>updated_at</code>: required, string, format: date-time</li>
+</ul>
 <h2 id="get-a-resource-for-an-organization-copilot-space" title="GET /orgs/{org}/copilot-spaces/{space_number}/resources/{space_resource_id} (Get a resource for an organization Copilot Space)" data-entry-type="Resource">Get a resource for an organization Copilot Space<a href="#get-a-resource-for-an-organization-copilot-space" aria-label="Link to heading 'Get a resource for an organization Copilot Space'" data-heading-content="Get a resource for an organization Copilot Space" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /orgs/{org}/copilot-spaces/{space_number}/resources/{space_resource_id}
 </span></code></pre>
@@ -157,7 +224,7 @@ The unique identifier of the resource.</p>
 <p><strong>404</strong> - Resource not found</p>
 </li>
 </ul>
-<h3 id="code-examples-1">Code examples<a href="#code-examples-1" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h3 id="code-examples-2">Code examples<a href="#code-examples-2" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
 <h4 id="example-1">Example<a href="#example-1" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
@@ -165,14 +232,7 @@ The unique identifier of the resource.</p>
 </span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/copilot-spaces/SPACE_NUMBER/resources/SPACE_RESOURCE_ID
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
-<ul>
-<li><code>id</code>: required, integer</li>
-<li><code>resource_type</code>: required, string, enum: <code>repository</code>, <code>github_file</code>, <code>free_text</code>, <code>github_issue</code>, <code>github_pull_request</code>, <code>media_content</code>, <code>uploaded_text_file</code></li>
-<li><code>copilot_chat_attachment_id</code>: integer or null</li>
-<li><code>metadata</code>: required, object, additional properties allowed</li>
-<li><code>created_at</code>: required, string, format: date-time</li>
-<li><code>updated_at</code>: required, string, format: date-time</li>
-</ul>
+<p>Same response schema as <a href="#create-a-resource-for-an-organization-copilot-space">Create a resource for an organization Copilot Space</a>.</p>
 <h2 id="set-a-resource-for-an-organization-copilot-space" title="PUT /orgs/{org}/copilot-spaces/{space_number}/resources/{space_resource_id} (Set a resource for an organization Copilot Space)" data-entry-type="Resource">Set a resource for an organization Copilot Space<a href="#set-a-resource-for-an-organization-copilot-space" aria-label="Link to heading 'Set a resource for an organization Copilot Space'" data-heading-content="Set a resource for an organization Copilot Space" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PUT /orgs/{org}/copilot-spaces/{space_number}/resources/{space_resource_id}
 </span></code></pre>
@@ -221,7 +281,7 @@ Updated resource-specific metadata.</li>
 <p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
 </li>
 </ul>
-<h3 id="code-examples-2">Code examples<a href="#code-examples-2" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h3 id="code-examples-3">Code examples<a href="#code-examples-3" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
 <h4 id="example-2">Example<a href="#example-2" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
@@ -235,7 +295,7 @@ Updated resource-specific metadata.</li>
 </span><span style="color:#c0c5ce;">}'
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
-<p>Same response schema as <a href="#get-a-resource-for-an-organization-copilot-space">Get a resource for an organization Copilot Space</a>.</p>
+<p>Same response schema as <a href="#create-a-resource-for-an-organization-copilot-space">Create a resource for an organization Copilot Space</a>.</p>
 <h2 id="delete-a-resource-from-an-organization-copilot-space" title="DELETE /orgs/{org}/copilot-spaces/{space_number}/resources/{space_resource_id} (Delete a resource from an organization Copilot Space)" data-entry-type="Resource">Delete a resource from an organization Copilot Space<a href="#delete-a-resource-from-an-organization-copilot-space" aria-label="Link to heading 'Delete a resource from an organization Copilot Space'" data-heading-content="Delete a resource from an organization Copilot Space" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">DELETE /orgs/{org}/copilot-spaces/{space_number}/resources/{space_resource_id}
 </span></code></pre>
@@ -276,7 +336,7 @@ The unique identifier of the resource.</p>
 <p><strong>404</strong> - Resource not found</p>
 </li>
 </ul>
-<h3 id="code-examples-3">Code examples<a href="#code-examples-3" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h3 id="code-examples-4">Code examples<a href="#code-examples-4" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
 <h4 id="example-3">Example<a href="#example-3" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
@@ -319,7 +379,7 @@ The unique identifier of the Copilot Space.</p>
 <p><strong>404</strong> - Resource not found</p>
 </li>
 </ul>
-<h3 id="code-examples-4">Code examples<a href="#code-examples-4" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h3 id="code-examples-5">Code examples<a href="#code-examples-5" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
 <h4 id="example-4">Example<a href="#example-4" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
@@ -384,6 +444,52 @@ Resource-specific metadata.</p>
 <p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
 </li>
 </ul>
+<h3 id="code-examples-6">Code examples<a href="#code-examples-6" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-1-status-code-201-1">Example 1: Status Code 201<a href="#example-1-status-code-201-1" aria-label="Link to heading 'Example 1: Status Code 201'" data-heading-content="Example 1: Status Code 201" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X POST \
+</span><span style="color:#c0c5ce;">  https://api.github.com/users/USERNAME/copilot-spaces/SPACE_NUMBER/resources \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "resource_type": "free_text",
+</span><span style="color:#c0c5ce;">  "metadata": {
+</span><span style="color:#c0c5ce;">    "name": "notes.txt",
+</span><span style="color:#c0c5ce;">    "text": "Some helpful notes"
+</span><span style="color:#c0c5ce;">  }
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 201):</strong></p>
+<p>Same response schema as <a href="#create-a-resource-for-an-organization-copilot-space">Create a resource for an organization Copilot Space</a>.</p>
+<h4 id="example-2-status-code-201-1">Example 2: Status Code 201<a href="#example-2-status-code-201-1" aria-label="Link to heading 'Example 2: Status Code 201'" data-heading-content="Example 2: Status Code 201" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X POST \
+</span><span style="color:#c0c5ce;">  https://api.github.com/users/USERNAME/copilot-spaces/SPACE_NUMBER/resources \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "resource_type": "repository",
+</span><span style="color:#c0c5ce;">  "metadata": {
+</span><span style="color:#c0c5ce;">    "repository_id": 42
+</span><span style="color:#c0c5ce;">  }
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 201):</strong></p>
+<p>Same response schema as <a href="#create-a-resource-for-an-organization-copilot-space">Create a resource for an organization Copilot Space</a>.</p>
+<h4 id="example-3-status-code-201-1">Example 3: Status Code 201<a href="#example-3-status-code-201-1" aria-label="Link to heading 'Example 3: Status Code 201'" data-heading-content="Example 3: Status Code 201" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X POST \
+</span><span style="color:#c0c5ce;">  https://api.github.com/users/USERNAME/copilot-spaces/SPACE_NUMBER/resources \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "resource_type": "github_file",
+</span><span style="color:#c0c5ce;">  "metadata": {
+</span><span style="color:#c0c5ce;">    "repository_id": 42,
+</span><span style="color:#c0c5ce;">    "file_path": "README.md",
+</span><span style="color:#c0c5ce;">    "sha": "abc123"
+</span><span style="color:#c0c5ce;">  }
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 201):</strong></p>
+<p>Same response schema as <a href="#create-a-resource-for-an-organization-copilot-space">Create a resource for an organization Copilot Space</a>.</p>
 <h2 id="get-a-resource-for-a-copilot-space-for-a-user" title="GET /users/{username}/copilot-spaces/{space_number}/resources/{space_resource_id} (Get a resource for a Copilot Space for a user)" data-entry-type="Resource">Get a resource for a Copilot Space for a user<a href="#get-a-resource-for-a-copilot-space-for-a-user" aria-label="Link to heading 'Get a resource for a Copilot Space for a user'" data-heading-content="Get a resource for a Copilot Space for a user" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /users/{username}/copilot-spaces/{space_number}/resources/{space_resource_id}
 </span></code></pre>
@@ -423,7 +529,7 @@ The unique identifier of the resource.</p>
 <p><strong>404</strong> - Resource not found</p>
 </li>
 </ul>
-<h3 id="code-examples-5">Code examples<a href="#code-examples-5" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h3 id="code-examples-7">Code examples<a href="#code-examples-7" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
 <h4 id="example-5">Example<a href="#example-5" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
@@ -431,7 +537,7 @@ The unique identifier of the resource.</p>
 </span><span style="color:#c0c5ce;">  https://api.github.com/users/USERNAME/copilot-spaces/SPACE_NUMBER/resources/SPACE_RESOURCE_ID
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
-<p>Same response schema as <a href="#get-a-resource-for-an-organization-copilot-space">Get a resource for an organization Copilot Space</a>.</p>
+<p>Same response schema as <a href="#create-a-resource-for-an-organization-copilot-space">Create a resource for an organization Copilot Space</a>.</p>
 <h2 id="set-a-resource-for-a-copilot-space-for-a-user" title="PUT /users/{username}/copilot-spaces/{space_number}/resources/{space_resource_id} (Set a resource for a Copilot Space for a user)" data-entry-type="Resource">Set a resource for a Copilot Space for a user<a href="#set-a-resource-for-a-copilot-space-for-a-user" aria-label="Link to heading 'Set a resource for a Copilot Space for a user'" data-heading-content="Set a resource for a Copilot Space for a user" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PUT /users/{username}/copilot-spaces/{space_number}/resources/{space_resource_id}
 </span></code></pre>
@@ -479,7 +585,7 @@ Updated resource-specific metadata.</li>
 <p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
 </li>
 </ul>
-<h3 id="code-examples-6">Code examples<a href="#code-examples-6" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h3 id="code-examples-8">Code examples<a href="#code-examples-8" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
 <h4 id="example-6">Example<a href="#example-6" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
@@ -493,7 +599,7 @@ Updated resource-specific metadata.</li>
 </span><span style="color:#c0c5ce;">}'
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
-<p>Same response schema as <a href="#get-a-resource-for-an-organization-copilot-space">Get a resource for an organization Copilot Space</a>.</p>
+<p>Same response schema as <a href="#create-a-resource-for-an-organization-copilot-space">Create a resource for an organization Copilot Space</a>.</p>
 <h2 id="delete-a-resource-from-a-copilot-space-for-a-user" title="DELETE /users/{username}/copilot-spaces/{space_number}/resources/{space_resource_id} (Delete a resource from a Copilot Space for a user)" data-entry-type="Resource">Delete a resource from a Copilot Space for a user<a href="#delete-a-resource-from-a-copilot-space-for-a-user" aria-label="Link to heading 'Delete a resource from a Copilot Space for a user'" data-heading-content="Delete a resource from a Copilot Space for a user" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">DELETE /users/{username}/copilot-spaces/{space_number}/resources/{space_resource_id}
 </span></code></pre>
@@ -533,7 +639,7 @@ The unique identifier of the resource.</p>
 <p><strong>404</strong> - Resource not found</p>
 </li>
 </ul>
-<h3 id="code-examples-7">Code examples<a href="#code-examples-7" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h3 id="code-examples-9">Code examples<a href="#code-examples-9" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
 <h4 id="example-7">Example<a href="#example-7" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \

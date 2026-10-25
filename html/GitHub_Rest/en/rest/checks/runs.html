@@ -35,8 +35,101 @@ The name of the repository without the .git extension. The name is not case sens
 </ul>
 <h4 id="body-parameters">Body parameters<a href="#body-parameters" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
 <ul>
-<li><strong><code>status</code></strong> (string) (required)<br>
-Can be one of: <code>completed</code></li>
+<li>
+<p><strong><code>name</code></strong> (string) (required)<br>
+The name of the check. For example, "code-coverage".</p>
+</li>
+<li>
+<p><strong><code>head_sha</code></strong> (string) (required)<br>
+The SHA of the commit.</p>
+</li>
+<li>
+<p><strong><code>details_url</code></strong> (string)<br>
+The URL of the integrator's site that has the full details of the check. If the integrator does not provide this, then the homepage of the GitHub app is used.</p>
+</li>
+<li>
+<p><strong><code>external_id</code></strong> (string)<br>
+A reference for the run on the integrator's system.</p>
+</li>
+<li>
+<p><strong><code>status</code></strong> (string)<br>
+The current status of the check run. Only GitHub Actions can set a status of waiting, pending, or requested.<br>
+Default: <code>queued</code><br>
+Can be one of: <code>queued</code>, <code>in_progress</code>, <code>completed</code>, <code>waiting</code>, <code>requested</code>, <code>pending</code></p>
+</li>
+<li>
+<p><strong><code>started_at</code></strong> (string)<br>
+The time that the check run began. This is a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ.</p>
+</li>
+<li>
+<p><strong><code>conclusion</code></strong> (string)<br>
+Required if you provide completed<span data-escaped-char="">_</span>at or a status of completed. The final conclusion of the check.<br>
+Note: Providing conclusion will automatically set the status parameter to completed. You cannot change a check run conclusion to stale, only GitHub can set this.<br>
+Can be one of: <code>action_required</code>, <code>cancelled</code>, <code>failure</code>, <code>neutral</code>, <code>success</code>, <code>skipped</code>, <code>stale</code>, <code>timed_out</code></p>
+</li>
+<li>
+<p><strong><code>completed_at</code></strong> (string)<br>
+The time the check completed. This is a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ.</p>
+</li>
+<li>
+<p><strong><code>output</code></strong> (object)<br>
+Check runs can accept a variety of data in the output object, including a title and summary and can optionally provide descriptive details about the run.</p>
+<ul>
+<li><strong><code>title</code></strong> (string) (required)<br>
+The title of the check run.</li>
+<li><strong><code>summary</code></strong> (string) (required)<br>
+The summary of the check run. This parameter supports Markdown. Maximum length: 65535 characters.</li>
+<li><strong><code>text</code></strong> (string)<br>
+The details of the check run. This parameter supports Markdown. Maximum length: 65535 characters.</li>
+<li><strong><code>annotations</code></strong> (array of objects)<br>
+Adds information from your analysis to specific lines of code. Annotations are visible on GitHub in the Checks and Files changed tab of the pull request. The Checks API limits the number of annotations to a maximum of 50 per API request. To create more than 50 annotations, you have to make multiple requests to the Update a check run endpoint. Each time you update the check run, annotations are appended to the list of annotations that already exist for the check run. GitHub Actions are limited to 10 warning annotations and 10 error annotations per step. For details about how you can view annotations on GitHub, see "About status checks".
+<ul>
+<li><strong><code>path</code></strong> (string) (required)<br>
+The path of the file to add an annotation to. For example, assets/css/main.css.</li>
+<li><strong><code>start_line</code></strong> (integer) (required)<br>
+The start line of the annotation. Line numbers start at 1.</li>
+<li><strong><code>end_line</code></strong> (integer) (required)<br>
+The end line of the annotation.</li>
+<li><strong><code>start_column</code></strong> (integer)<br>
+The start column of the annotation. Annotations only support start<span data-escaped-char="">_</span>column and end<span data-escaped-char="">_</span>column on the same line. Omit this parameter if start<span data-escaped-char="">_</span>line and end<span data-escaped-char="">_</span>line have different values. Column numbers start at 1.</li>
+<li><strong><code>end_column</code></strong> (integer)<br>
+The end column of the annotation. Annotations only support start<span data-escaped-char="">_</span>column and end<span data-escaped-char="">_</span>column on the same line. Omit this parameter if start<span data-escaped-char="">_</span>line and end<span data-escaped-char="">_</span>line have different values.</li>
+<li><strong><code>annotation_level</code></strong> (string) (required)<br>
+The level of the annotation.<br>
+Can be one of: <code>notice</code>, <code>warning</code>, <code>failure</code></li>
+<li><strong><code>message</code></strong> (string) (required)<br>
+A short description of the feedback for these lines of code. The maximum size is 64 KB.</li>
+<li><strong><code>title</code></strong> (string)<br>
+The title that represents the annotation. The maximum size is 255 characters.</li>
+<li><strong><code>raw_details</code></strong> (string)<br>
+Details about this annotation. The maximum size is 64 KB.</li>
+</ul>
+</li>
+<li><strong><code>images</code></strong> (array of objects)<br>
+Adds images to the output displayed in the GitHub pull request UI.
+<ul>
+<li><strong><code>alt</code></strong> (string) (required)<br>
+The alternative text for the image.</li>
+<li><strong><code>image_url</code></strong> (string) (required)<br>
+The full URL of the image.</li>
+<li><strong><code>caption</code></strong> (string)<br>
+A short image description.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>actions</code></strong> (array of objects)<br>
+Displays a button on GitHub that can be clicked to alert your app to do additional tasks. For example, a code linting app can display a button that automatically fixes detected errors. The button created in this object is displayed after the check run completes. When a user clicks the button, GitHub sends the check<span data-escaped-char="">_</span>run.requested<span data-escaped-char="">_</span>action webhook to your app. Each action includes a label, identifier and description. A maximum of three actions are accepted. To learn more about check runs and requested actions, see "Check runs and requested actions."</p>
+<ul>
+<li><strong><code>label</code></strong> (string) (required)<br>
+The text to be displayed on a button in the web UI. The maximum size is 20 characters.</li>
+<li><strong><code>description</code></strong> (string) (required)<br>
+A short explanation of what this action would do. The maximum size is 40 characters.</li>
+<li><strong><code>identifier</code></strong> (string) (required)<br>
+A reference for the action on the integrator's system. The maximum size is 20 characters.</li>
+</ul>
+</li>
 </ul>
 <h3 id="http-response-status-codes">HTTP response status codes<a href="#http-response-status-codes" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>

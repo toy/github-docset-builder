@@ -548,6 +548,34 @@ The GCP service account email to impersonate. Optional for oidc_gcp auth type. I
 <p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
 </li>
 </ul>
+<h3 id="code-examples-4">Code examples<a href="#code-examples-4" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="update-a-secret-based-private-registry">Update a secret-based private registry<a href="#update-a-secret-based-private-registry" aria-label="Link to heading 'Update a secret-based private registry'" data-heading-content="Update a secret-based private registry" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X PATCH \
+</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/private-registries/SECRET_NAME \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "username": "monalisa",
+</span><span style="color:#c0c5ce;">  "encrypted_value": "c2VjcmV0",
+</span><span style="color:#c0c5ce;">  "key_id": "012345678912345678"
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 204):</strong></p>
+<h4 id="update-an-oidc-private-registry-azure">Update an OIDC private registry (Azure)<a href="#update-an-oidc-private-registry-azure" aria-label="Link to heading 'Update an OIDC private registry (Azure)'" data-heading-content="Update an OIDC private registry (Azure)" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X PATCH \
+</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/private-registries/SECRET_NAME \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "tenant_id": "12345678-1234-1234-1234-123456789012",
+</span><span style="color:#c0c5ce;">  "visibility": "selected",
+</span><span style="color:#c0c5ce;">  "selected_repository_ids": [
+</span><span style="color:#c0c5ce;">    1296269,
+</span><span style="color:#c0c5ce;">    1296280
+</span><span style="color:#c0c5ce;">  ]
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 204):</strong></p>
 <h2 id="delete-a-private-registry-for-an-organization" title="DELETE /orgs/{org}/private-registries/{secret_name} (Delete a private registry for an organization)" data-entry-type="Resource">Delete a private registry for an organization<a href="#delete-a-private-registry-for-an-organization" aria-label="Link to heading 'Delete a private registry for an organization'" data-heading-content="Delete a private registry for an organization" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">DELETE /orgs/{org}/private-registries/{secret_name}
 </span></code></pre>
@@ -582,7 +610,7 @@ The name of the secret.</p>
 <p><strong>404</strong> - Resource not found</p>
 </li>
 </ul>
-<h3 id="code-examples-4">Code examples<a href="#code-examples-4" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h3 id="code-examples-5">Code examples<a href="#code-examples-5" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
 <h4 id="example-3">Example<a href="#example-3" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \

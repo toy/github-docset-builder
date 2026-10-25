@@ -1,5 +1,5 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><title>Viewing public monitoring alerts</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">View and interpret data</a> / <a href="index.html">Analyze organization data</a> / </nav><h1 id="viewing-public-monitoring-alerts">Viewing public monitoring alerts<a href="#viewing-public-monitoring-alerts" aria-label="Link to heading 'Viewing public monitoring alerts'" data-heading-content="Viewing public monitoring alerts" class="anchor"></a></h1>
-<p>Find out which credentials your enterprise members have exposed in public repositories across GitHub.</p>
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Viewing and managing public monitoring alerts</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">View and interpret data</a> / <a href="index.html">Analyze organization data</a> / </nav><h1 id="viewing-and-managing-public-monitoring-alerts">Viewing and managing public monitoring alerts<a href="#viewing-and-managing-public-monitoring-alerts" aria-label="Link to heading 'Viewing and managing public monitoring alerts'" data-heading-content="Viewing and managing public monitoring alerts" class="anchor"></a></h1>
+<p>Find and manage alerts for credentials your enterprise members have exposed in public repositories across GitHub.</p>
 <div class="markdown-alert markdown-alert-note">
 <p class="markdown-alert-title">Note</p>
 <p>Public monitoring for secret scanning is currently in public preview and subject to change. If you have feedback, please join the <a href="https://github.com/orgs/community/discussions/categories/code-security" class="external">discussion</a>.</p>
@@ -12,7 +12,7 @@
 </div>
 <h2 id="prerequisites" title="Prerequisites" data-entry-type="Section">Prerequisites<a href="#prerequisites" aria-label="Link to heading 'Prerequisites'" data-heading-content="Prerequisites" class="anchor"></a></h2>
 <p>Public monitoring must be enabled for your enterprise. See <a href="../../secure-at-scale/configure-enterprise-security/manage-your-coverage/enabling-public-monitoring-for-your-enterprise.html">Enabling public monitoring for your enterprise</a>.</p>
-<h2 id="viewing-public-monitoring-alerts-1" title="Viewing public monitoring alerts" data-entry-type="Section">Viewing public monitoring alerts<a href="#viewing-public-monitoring-alerts-1" aria-label="Link to heading 'Viewing public monitoring alerts'" data-heading-content="Viewing public monitoring alerts" class="anchor"></a></h2>
+<h2 id="viewing-public-monitoring-alerts" title="Viewing public monitoring alerts" data-entry-type="Section">Viewing public monitoring alerts<a href="#viewing-public-monitoring-alerts" aria-label="Link to heading 'Viewing public monitoring alerts'" data-heading-content="Viewing public monitoring alerts" class="anchor"></a></h2>
 <ol>
 <li>
 <p>Navigate to your enterprise. For example, from the <a href="https://github.com/settings/enterprises?ref_product=ghec&amp;ref_type=engagement&amp;ref_style=text" class="external">Enterprises</a> page on GitHub.com.</p>
@@ -40,5 +40,28 @@
 <li>A <strong>Recommendations</strong> tab with suggested remediation steps</li>
 </ul>
 </li>
+</ol>
+<h2 id="dismissing-and-reopening-alerts" title="Dismissing and reopening alerts" data-entry-type="Section">Dismissing and reopening alerts<a href="#dismissing-and-reopening-alerts" aria-label="Link to heading 'Dismissing and reopening alerts'" data-heading-content="Dismissing and reopening alerts" class="anchor"></a></h2>
+<p>When you have reviewed an alert, you can dismiss it to remove it from the list of open alerts. If you need to revisit a dismissed alert later, you can reopen it. When you dismiss or reopen an alert, you can add an optional comment to record the reason for your decision.</p>
+<p>Dismissing alerts you have already triaged helps you manage a high volume of public monitoring alerts, keeping the active list focused on the exposures that still need attention.</p>
+<h3 id="dismissing-an-alert">Dismissing an alert<a href="#dismissing-an-alert" aria-label="Link to heading 'Dismissing an alert'" data-heading-content="Dismissing an alert" class="anchor"></a></h3>
+<ol>
+<li>Navigate to your enterprise. For example, from the <a href="https://github.com/settings/enterprises?ref_product=ghec&amp;ref_type=engagement&amp;ref_style=text" class="external">Enterprises</a> page on GitHub.com.</li>
+<li>At the top of the page, click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong>.</li>
+<li>In the left sidebar, click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-key" aria-label="key" role="img"><path d="M10.5 0a5.499 5.499 0 1 1-1.288 10.848l-.932.932a.749.749 0 0 1-.53.22H7v.75a.749.749 0 0 1-.22.53l-.5.5a.749.749 0 0 1-.53.22H5v.75a.749.749 0 0 1-.22.53l-.5.5a.749.749 0 0 1-.53.22h-2A1.75 1.75 0 0 1 0 14.25v-2c0-.199.079-.389.22-.53l4.932-4.932A5.5 5.5 0 0 1 10.5 0Zm-4 5.5c-.001.431.069.86.205 1.269a.75.75 0 0 1-.181.768L1.5 12.56v1.69c0 .138.112.25.25.25h1.69l.06-.06v-1.19a.75.75 0 0 1 .75-.75h1.19l.06-.06v-1.19a.75.75 0 0 1 .75-.75h1.19l1.023-1.025a.75.75 0 0 1 .768-.18A4 4 0 1 0 6.5 5.5ZM11 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg> Public monitoring</strong>.</li>
+<li>Click the alert you want to dismiss.</li>
+<li>Select the <strong>Close as</strong> dropdown menu, then click a reason for dismissing the alert.</li>
+<li>Optionally, in the comment field, add a dismissal comment.</li>
+<li>To confirm, click <strong>Dismiss</strong>.</li>
+</ol>
+<h3 id="reopening-an-alert">Reopening an alert<a href="#reopening-an-alert" aria-label="Link to heading 'Reopening an alert'" data-heading-content="Reopening an alert" class="anchor"></a></h3>
+<ol>
+<li>Navigate to your enterprise. For example, from the <a href="https://github.com/settings/enterprises?ref_product=ghec&amp;ref_type=engagement&amp;ref_style=text" class="external">Enterprises</a> page on GitHub.com.</li>
+<li>At the top of the page, click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-shield" aria-label="shield" role="img"><path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg> Security and quality</strong>.</li>
+<li>In the left sidebar, click <strong><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-key" aria-label="key" role="img"><path d="M10.5 0a5.499 5.499 0 1 1-1.288 10.848l-.932.932a.749.749 0 0 1-.53.22H7v.75a.749.749 0 0 1-.22.53l-.5.5a.749.749 0 0 1-.53.22H5v.75a.749.749 0 0 1-.22.53l-.5.5a.749.749 0 0 1-.53.22h-2A1.75 1.75 0 0 1 0 14.25v-2c0-.199.079-.389.22-.53l4.932-4.932A5.5 5.5 0 0 1 10.5 0Zm-4 5.5c-.001.431.069.86.205 1.269a.75.75 0 0 1-.181.768L1.5 12.56v1.69c0 .138.112.25.25.25h1.69l.06-.06v-1.19a.75.75 0 0 1 .75-.75h1.19l.06-.06v-1.19a.75.75 0 0 1 .75-.75h1.19l1.023-1.025a.75.75 0 0 1 .768-.18A4 4 0 1 0 6.5 5.5ZM11 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg> Public monitoring</strong>.</li>
+<li>To view closed alerts, click <strong>Closed</strong>, then click the alert you want to reopen.&nbsp;</li>
+<li>Click <strong>Reopen alert</strong>.</li>
+<li>Optionally, in the comment field, type a reason for reopening the alert.</li>
+<li>To confirm, click <strong>Reopen</strong>.</li>
 </ol>
 <footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

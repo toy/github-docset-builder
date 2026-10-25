@@ -193,6 +193,48 @@ Setting to <code>application/vnd.github+json</code> is recommended.</li>
 <li><strong><code>org</code></strong> (string) (required)<br>
 The organization name. The name is not case sensitive.</li>
 </ul>
+<h4 id="body-parameters">Body parameters<a href="#body-parameters" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>name</code></strong> (string) (required)<br>
+The name of the campaign</p>
+</li>
+<li>
+<p><strong><code>description</code></strong> (string) (required)<br>
+A description for the campaign</p>
+</li>
+<li>
+<p><strong><code>managers</code></strong> (array of strings)<br>
+The logins of the users to set as the campaign managers. At this time, only a single manager can be supplied.</p>
+</li>
+<li>
+<p><strong><code>team_managers</code></strong> (array of strings)<br>
+The slugs of the teams to set as the campaign managers.</p>
+</li>
+<li>
+<p><strong><code>ends_at</code></strong> (string) (required)<br>
+The end date and time of the campaign. The date must be in the future.</p>
+</li>
+<li>
+<p><strong><code>contact_link</code></strong> (string or null)<br>
+The contact link of the campaign. Must be a URI.</p>
+</li>
+<li>
+<p><strong><code>code_scanning_alerts</code></strong> (array of objects or null)<br>
+The code scanning alerts to include in this campaign</p>
+<ul>
+<li><strong><code>repository_id</code></strong> (integer) (required)<br>
+The repository id</li>
+<li><strong><code>alert_numbers</code></strong> (array of integers) (required)<br>
+The alert numbers</li>
+</ul>
+</li>
+<li>
+<p><strong><code>generate_issues</code></strong> (boolean)<br>
+If true, will automatically generate issues for the campaign. The default is false.<br>
+Default: <code>false</code></p>
+</li>
+</ul>
 <h3 id="http-response-status-codes-1">HTTP response status codes<a href="#http-response-status-codes-1" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
@@ -408,7 +450,7 @@ The organization name. The name is not case sensitive.</p>
 The campaign number.</p>
 </li>
 </ul>
-<h4 id="body-parameters">Body parameters<a href="#body-parameters" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<h4 id="body-parameters-1">Body parameters<a href="#body-parameters-1" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>name</code></strong> (string)<br>

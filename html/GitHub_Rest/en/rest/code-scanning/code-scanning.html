@@ -2072,6 +2072,30 @@ The account owner of the repository. The name is not case sensitive.</p>
 The name of the repository without the .git extension. The name is not case sensitive.</p>
 </li>
 </ul>
+<h4 id="body-parameters-4">Body parameters<a href="#body-parameters-4" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>language</code></strong> (string) (required)<br>
+The language targeted by the CodeQL query<br>
+Can be one of: <code>actions</code>, <code>cpp</code>, <code>csharp</code>, <code>go</code>, <code>java</code>, <code>javascript</code>, <code>python</code>, <code>ruby</code>, <code>rust</code>, <code>swift</code></p>
+</li>
+<li>
+<p><strong><code>query_pack</code></strong> (string) (required)<br>
+A Base64-encoded tarball containing a CodeQL query and all its dependencies</p>
+</li>
+<li>
+<p><strong><code>repositories</code></strong> (array of strings)<br>
+List of repository names (in the form owner/repo-name) to run the query against. Precisely one property from repositories, repository<span data-escaped-char="">_</span>lists and repository<span data-escaped-char="">_</span>owners is required.</p>
+</li>
+<li>
+<p><strong><code>repository_lists</code></strong> (array of strings)<br>
+List of repository lists to run the query against. Precisely one property from repositories, repository<span data-escaped-char="">_</span>lists and repository<span data-escaped-char="">_</span>owners is required.</p>
+</li>
+<li>
+<p><strong><code>repository_owners</code></strong> (array of strings)<br>
+List of organization or user names whose repositories the query should be run against. Precisely one property from repositories, repository<span data-escaped-char="">_</span>lists and repository<span data-escaped-char="">_</span>owners is required.</p>
+</li>
+</ul>
 <h3 id="http-response-status-codes-18">HTTP response status codes<a href="#http-response-status-codes-18" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
@@ -2792,7 +2816,7 @@ The account owner of the repository. The name is not case sensitive.</p>
 The name of the repository without the .git extension. The name is not case sensitive.</p>
 </li>
 </ul>
-<h4 id="body-parameters-4">Body parameters<a href="#body-parameters-4" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<h4 id="body-parameters-5">Body parameters<a href="#body-parameters-5" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>state</code></strong> (string)<br>
@@ -2898,7 +2922,7 @@ The account owner of the repository. The name is not case sensitive.</p>
 The name of the repository without the .git extension. The name is not case sensitive.</p>
 </li>
 </ul>
-<h4 id="body-parameters-5">Body parameters<a href="#body-parameters-5" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<h4 id="body-parameters-6">Body parameters<a href="#body-parameters-6" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>commit_sha</code></strong> (string) (required)<br>
