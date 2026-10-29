@@ -1114,6 +1114,22 @@ The name of the repository without the .git extension. The name is not case sens
 The unique identifier of the workflow run.</p>
 </li>
 </ul>
+<h4 id="body-parameters-1">Body parameters<a href="#body-parameters-1" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>environment_name</code></strong> (string) (required)<br>
+The name of the environment to approve or reject.</p>
+</li>
+<li>
+<p><strong><code>comment</code></strong> (string)<br>
+Comment associated with the pending deployment protection rule. Required when state is not provided.</p>
+</li>
+<li>
+<p><strong><code>state</code></strong> (string)<br>
+Whether to approve or reject deployment to the specified environments.<br>
+Can be one of: <code>approved</code>, <code>rejected</code></p>
+</li>
+</ul>
 <h3 id="http-response-status-codes-9">HTTP response status codes<a href="#http-response-status-codes-9" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li><strong>204</strong> - No Content</li>
@@ -1431,7 +1447,7 @@ The name of the repository without the .git extension. The name is not case sens
 The unique identifier of the workflow run.</p>
 </li>
 </ul>
-<h4 id="body-parameters-1">Body parameters<a href="#body-parameters-1" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<h4 id="body-parameters-2">Body parameters<a href="#body-parameters-2" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>environment_ids</code></strong> (array of integers) (required)<br>
@@ -1596,7 +1612,7 @@ The name of the repository without the .git extension. The name is not case sens
 The unique identifier of the workflow run.</p>
 </li>
 </ul>
-<h4 id="body-parameters-2">Body parameters<a href="#body-parameters-2" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<h4 id="body-parameters-3">Body parameters<a href="#body-parameters-3" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
 <ul>
 <li><strong><code>enable_debug_logging</code></strong> (boolean)<br>
 Whether to enable debug logging for the re-run.<br>
@@ -1640,7 +1656,7 @@ The name of the repository without the .git extension. The name is not case sens
 The unique identifier of the workflow run.</p>
 </li>
 </ul>
-<h4 id="body-parameters-3">Body parameters<a href="#body-parameters-3" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<h4 id="body-parameters-4">Body parameters<a href="#body-parameters-4" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
 <ul>
 <li><strong><code>enable_debug_logging</code></strong> (boolean)<br>
 Whether to enable debug logging for the re-run.<br>
@@ -1766,7 +1782,7 @@ The account owner of the repository. The name is not case sensitive.</p>
 The name of the repository without the .git extension. The name is not case sensitive.</p>
 </li>
 <li>
-<p><strong><code>workflow_id</code></strong> (string) (required)<br>
+<p><strong><code>workflow_id</code></strong> (integer or string) (required)<br>
 The ID of the workflow. You can also pass the workflow file name as a string.</p>
 </li>
 <li>

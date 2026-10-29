@@ -62,7 +62,7 @@ A range like n..n, where n is a number from 0.0 to 1.0</p>
 <p>Filters the list of alerts based on EPSS percentages. If specified, only alerts with the provided EPSS percentages will be returned.</p>
 </li>
 <li>
-<p><strong><code>has</code></strong> (string)<br>
+<p><strong><code>has</code></strong> (string or array of strings)<br>
 Filters the list of alerts based on whether the alert has the given value. If specified, only alerts meeting this criterion will be returned.<br>
 Multiple has filters can be passed to filter for alerts that have all of the values. Currently, only patch is supported.</p>
 </li>
@@ -297,6 +297,12 @@ Default: <code>30</code></p>
 </ul>
 </li>
 <li><code>assignees</code>: array of <code>Simple User</code> (see above)</li>
+<li><code>reachability</code>: object, read-only:
+<ul>
+<li><code>verdict</code>: required, string, enum: <code>reachable</code>, <code>unreachable</code>, <code>potentially_reachable</code>, <code>unavailable</code>, <code>disabled</code>, read-only</li>
+<li><code>reason</code>: string, enum: <code>unknown</code>, <code>unavailable_unsupported_ecosystem</code>, <code>unavailable_analysis_timed_out</code>, <code>potentially_reachable_invalid_manifest_path</code>, <code>potentially_reachable_missing_vulnerable_function_annotation</code>, <code>potentially_reachable_dependency_not_found</code>, <code>potentially_reachable_dependency_analysis_incomplete</code>, <code>potentially_reachable_repository_analysis_incomplete</code>, <code>potentially_reachable_call_found_outside_manifest_scope</code>, <code>potentially_reachable_unclassified_analysis_state</code>, <code>reachable_vulnerable_function_called</code>, <code>unreachable_vulnerable_function_not_called</code>, <code>potentially_reachable_unresolved_dynamic_call</code>, read-only</li>
+</ul>
+</li>
 <li><code>repository</code>: required, <code>Simple Repository</code>:
 <ul>
 <li><code>id</code>: required, integer, format: int64</li>
@@ -408,7 +414,7 @@ A comma-separated list of Artifact Registry name strings. If specified, only ale
 Can be: jfrog-artifactory</p>
 </li>
 <li>
-<p><strong><code>has</code></strong> (string)<br>
+<p><strong><code>has</code></strong> (string or array of strings)<br>
 Filters the list of alerts based on whether the alert has the given value. If specified, only alerts meeting this criterion will be returned.<br>
 Multiple has filters can be passed to filter for alerts that have all of the values.</p>
 </li>
@@ -550,7 +556,7 @@ A range like n..n, where n is a number from 0.0 to 1.0</p>
 <p>Filters the list of alerts based on EPSS percentages. If specified, only alerts with the provided EPSS percentages will be returned.</p>
 </li>
 <li>
-<p><strong><code>has</code></strong> (string)<br>
+<p><strong><code>has</code></strong> (string or array of strings)<br>
 Filters the list of alerts based on whether the alert has the given value. If specified, only alerts meeting this criterion will be returned.<br>
 Multiple has filters can be passed to filter for alerts that have all of the values. Currently, only patch is supported.</p>
 </li>
@@ -788,6 +794,12 @@ Default: <code>30</code></p>
 </ul>
 </li>
 <li><code>assignees</code>: array of <code>Simple User</code> (see above)</li>
+<li><code>reachability</code>: object, read-only:
+<ul>
+<li><code>verdict</code>: required, string, enum: <code>reachable</code>, <code>unreachable</code>, <code>potentially_reachable</code>, <code>unavailable</code>, <code>disabled</code>, read-only</li>
+<li><code>reason</code>: string, enum: <code>unknown</code>, <code>unavailable_unsupported_ecosystem</code>, <code>unavailable_analysis_timed_out</code>, <code>potentially_reachable_invalid_manifest_path</code>, <code>potentially_reachable_missing_vulnerable_function_annotation</code>, <code>potentially_reachable_dependency_not_found</code>, <code>potentially_reachable_dependency_analysis_incomplete</code>, <code>potentially_reachable_repository_analysis_incomplete</code>, <code>potentially_reachable_call_found_outside_manifest_scope</code>, <code>potentially_reachable_unclassified_analysis_state</code>, <code>reachable_vulnerable_function_called</code>, <code>unreachable_vulnerable_function_not_called</code>, <code>potentially_reachable_unresolved_dynamic_call</code>, read-only</li>
+</ul>
+</li>
 </ul>
 <h2 id="get-a-dependabot-alert" title="GET /repos/{owner}/{repo}/dependabot/alerts/{alert_number} (Get a Dependabot alert)" data-entry-type="Resource">Get a Dependabot alert<a href="#get-a-dependabot-alert" aria-label="Link to heading 'Get a Dependabot alert'" data-heading-content="Get a Dependabot alert" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /repos/{owner}/{repo}/dependabot/alerts/{alert_number}
@@ -1001,6 +1013,12 @@ GET /repos/{owner}/{repo}/dependabot/alerts operation.</p>
 </ul>
 </li>
 <li><code>assignees</code>: array of <code>Simple User</code> (see above)</li>
+<li><code>reachability</code>: object, read-only:
+<ul>
+<li><code>verdict</code>: required, string, enum: <code>reachable</code>, <code>unreachable</code>, <code>potentially_reachable</code>, <code>unavailable</code>, <code>disabled</code>, read-only</li>
+<li><code>reason</code>: string, enum: <code>unknown</code>, <code>unavailable_unsupported_ecosystem</code>, <code>unavailable_analysis_timed_out</code>, <code>potentially_reachable_invalid_manifest_path</code>, <code>potentially_reachable_missing_vulnerable_function_annotation</code>, <code>potentially_reachable_dependency_not_found</code>, <code>potentially_reachable_dependency_analysis_incomplete</code>, <code>potentially_reachable_repository_analysis_incomplete</code>, <code>potentially_reachable_call_found_outside_manifest_scope</code>, <code>potentially_reachable_unclassified_analysis_state</code>, <code>reachable_vulnerable_function_called</code>, <code>unreachable_vulnerable_function_not_called</code>, <code>potentially_reachable_unresolved_dynamic_call</code>, read-only</li>
+</ul>
+</li>
 </ul>
 <h2 id="update-a-dependabot-alert" title="PATCH /repos/{owner}/{repo}/dependabot/alerts/{alert_number} (Update a Dependabot alert)" data-entry-type="Resource">Update a Dependabot alert<a href="#update-a-dependabot-alert" aria-label="Link to heading 'Update a Dependabot alert'" data-heading-content="Update a Dependabot alert" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PATCH /repos/{owner}/{repo}/dependabot/alerts/{alert_number}

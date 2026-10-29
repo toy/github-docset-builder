@@ -1,7 +1,8 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><title>AI Scan for pull requests</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Code scanning</a> / </nav><h1 id="ai-scan-for-pull-requests">AI Scan for pull requests<a href="#ai-scan-for-pull-requests" aria-label="Link to heading 'AI Scan for pull requests'" data-heading-content="AI Scan for pull requests" class="anchor"></a></h1>
 <p>AI Scan uses an AI-based scanning engine to find security vulnerabilities in pull requests for languages and frameworks not covered by CodeQL.</p>
-<p>AI Scan for pull requests produces additional security findings with an AI-based scanning engine that runs on pull requests and complements CodeQL. Unlike CodeQL alerts, AI Scan findings are only available on pull requests and do not appear as backlog alerts in the repository's security view.</p>
-<p>AI Scan expands code scanning coverage without requiring a separate scanning tool or build configuration.</p>
+<p>AI Scan for pull requests produces additional security findings with an AI-based scanning engine that runs on pull requests and complements CodeQL.</p>
+<p>AI Scan expands code scanning coverage for pull requests without requiring a separate scanning tool or build configuration.</p>
+<p>AI Scan for pull requests is one of the independently controlled features grouped under <strong>AI Scan</strong> in GitHub settings. See <a href="/en/code-security/concepts/code-scanning/ai-scan">About AI Scan</a>.</p>
 <h2 id="availability" title="Availability" data-entry-type="Section">Availability<a href="#availability" aria-label="Link to heading 'Availability'" data-heading-content="Availability" class="anchor"></a></h2>
 <p>Availability depends on who owns the repository and its visibility.</p>
 <table>
@@ -38,10 +39,10 @@
 <p>AI Scan for pull requests is not available for repositories in a managed user account's personal namespace, even if code scanning is enabled for the repository.</p>
 <p>You do not need a GitHub Copilot license to use AI Scan.</p>
 <h2 id="billing" title="Billing" data-entry-type="Section">Billing<a href="#billing" aria-label="Link to heading 'Billing'" data-heading-content="Billing" class="anchor"></a></h2>
-<p>AI Scan usage is separate from active-committer licensing and is reported under the <strong>Code Security AI Credits</strong> SKU. Usage begins only when a qualifying pull request is scanned.</p>
+<p>AI Scan usage is separate from active-committer licensing and is reported under the <strong>Code Security AI creditss</strong> SKU. Usage begins only when a qualifying pull request is scanned.</p>
 <p>For organization-owned repositories, usage is billed to the account responsible for the organization's billing.</p>
 <p>For public repositories owned by a personal account, usage is billed to that personal account unless the repository owner has a GitHub Copilot license provided by an organization or enterprise. In that case, usage is billed to the organization or enterprise that provides the license.</p>
-<p>If the billing account receives included AI credits through a GitHub Copilot entitlement, AI Scan uses those credits first. After the included credits are exhausted, or if the account has no included credits, usage is metered and governed by the applicable budgets. If a hard budget leaves no Code Security AI Credits available, AI Scan cannot produce findings. Scanning resumes when an administrator increases the limiting budget or a new billing cycle begins.</p>
+<p>If the billing account receives included AI credits through a GitHub Copilot entitlement, AI Scan uses those credits first. After the included credits are exhausted, or if the account has no included credits, usage is metered and governed by the applicable budgets. If a hard budget leaves no Code Security AI credits available, AI Scan cannot produce findings. Scanning resumes when an administrator increases the limiting budget or a new billing cycle begins.</p>
 <p>For details about the billing model, see <a href="https://docs.github.com/en/billing/concepts/product-billing/github-advanced-security#how-ai-feature-usage-is-billed" class="external">GitHub Advanced Security license billing</a>.</p>
 <h2 id="how-ai-scan-works" title="How AI Scan works" data-entry-type="Section">How AI Scan works<a href="#how-ai-scan-works" aria-label="Link to heading 'How AI Scan works'" data-heading-content="How AI Scan works" class="anchor"></a></h2>
 <p>AI Scan runs automatically when all the following conditions are met:</p>
@@ -61,14 +62,13 @@
 <p>You can use the thumbs up or thumbs down control to provide feedback and help improve detection quality.</p>
 <h2 id="limitations" title="Limitations" data-entry-type="Section">Limitations<a href="#limitations" aria-label="Link to heading 'Limitations'" data-heading-content="Limitations" class="anchor"></a></h2>
 <ul>
-<li>AI Scan analyzes pull requests only. Full repository scans are not supported.</li>
 <li>AI Scan findings cannot yet be used in rulesets to enforce merge requirements.</li>
 <li>AI Scan does not run on pull requests from forks or pull requests created by Dependabot.</li>
 <li>Detection categories and supported languages may change as the feature evolves.</li>
 <li>As with any AI-based tool, AI Scan findings may include false positives. Use the feedback mechanism to report inaccurate results.</li>
 </ul>
 <h2 id="supported-languages" title="Supported languages" data-entry-type="Section">Supported languages<a href="#supported-languages" aria-label="Link to heading 'Supported languages'" data-heading-content="Supported languages" class="anchor"></a></h2>
-<p>AI Scan supports selected languages and frameworks that CodeQL does not currently cover. Examples include PHP, Shell/Bash, Terraform configuration (HCL), Dockerfiles, JSP for Java, and Blazor for C#.</p>
+<p>AI Scan on pull requests supports selected languages and frameworks that CodeQL does not currently cover. Examples include PHP, Shell/Bash, Terraform configuration (HCL), Dockerfiles, JSP for Java, and Blazor for C#.</p>
 <p>To check whether CodeQL supports a language, see <a href="codeql/codeql-code-scanning.html">Code scanning with CodeQL</a>.</p>
 <h2 id="detection-categories" title="Detection categories" data-entry-type="Section">Detection categories<a href="#detection-categories" aria-label="Link to heading 'Detection categories'" data-heading-content="Detection categories" class="anchor"></a></h2>
 <p>AI Scan currently classifies findings into the following categories. Coverage may change as the feature evolves.</p>
@@ -84,12 +84,13 @@
 <li><strong>Supply chain risks</strong> — Unpinned third-party actions, packages, or images, or downloads without integrity checks.</li>
 </ul>
 <h2 id="enabling-ai-scan" title="Enabling AI Scan" data-entry-type="Section">Enabling AI Scan<a href="#enabling-ai-scan" aria-label="Link to heading 'Enabling AI Scan'" data-heading-content="Enabling AI Scan" class="anchor"></a></h2>
+<p>AI Scan for pull requests and AI applications scanning are separate features under AI Scan. AI applications scanning has its own <strong>Scan for AI applications</strong> control and detects risks such as indirect prompt injection in AI applications and agents. Enabling either feature doesn't enable the other. For more information about AI applications scanning, see <a href="/en/code-security/concepts/code-scanning/ai-applications-scanning-for-pull-requests">AI applications scanning for pull requests</a>.</p>
 <p>Before enabling AI Scan on pull requests for an organization, confirm repository eligibility, review the billing account's included AI credits, and configure budgets for metered usage.</p>
 <p>Enabling the organization setting enables AI Scan immediately for all eligible repositories where code scanning is enabled. Repository administrators can then opt out, but qualifying pull requests can consume Code Security AI Credits before they do.</p>
 <p>You do not need to select a model to enable AI Scan.</p>
 <ul>
-<li><strong>Enterprise</strong>: Enterprise owners can allow or prevent organizations from enabling AI Scan. The policy is set to "Not allowed" by default. Allowing AI Scan does not enable it automatically. See <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-code-security-and-analysis-for-your-enterprise#enforcing-a-policy-to-manage-ai-scan-in-your-enterprises-repositories" class="external">Enforcing policies for code security and analysis for your enterprise</a>.</li>
-<li><strong>Organization</strong>: Organization owners and security managers can enable AI Scan for pull requests for eligible repositories. Repositories inherit the organization setting. See <a href="../../how-tos/secure-at-scale/configure-organization-security/establish-complete-coverage/configure-global-settings.html#enabling-ai-scan">Configuring global security settings for your organization</a>.</li>
+<li><strong>Enterprise</strong>: Enterprise owners can allow or prevent organizations from enabling AI Scan. The policy is set to "Not allowed" by default. This policy controls both AI Scan on pull requests and AI Scan for a repository's backlog. Allowing AI Scan does not enable it automatically. See <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-code-security-and-analysis-for-your-enterprise#enforcing-a-policy-to-manage-ai-scan-in-your-enterprises-repositories" class="external">Enforcing policies for code security and analysis for your enterprise</a>.</li>
+<li><strong>Organization</strong>: Organization owners and security managers can enable AI Scan for pull requests for eligible repositories. Repositories inherit the organization setting. See <a href="../../how-tos/secure-at-scale/configure-organization-security/establish-complete-coverage/configure-global-settings.html#enabling-ai-scan-for-pull-requests">Configuring global security settings for your organization</a>.</li>
 <li><strong>Organization-owned repository</strong>: People with admin access to the repository can opt out when the organization has enabled AI Scan. They cannot opt in when the organization setting is disabled.</li>
 <li><strong>Public repository owned by a personal account</strong>: People with admin access to the repository enable or disable AI Scan directly by using the <strong>AI Scan for pull requests</strong> toggle under "Code scanning".</li>
 </ul>

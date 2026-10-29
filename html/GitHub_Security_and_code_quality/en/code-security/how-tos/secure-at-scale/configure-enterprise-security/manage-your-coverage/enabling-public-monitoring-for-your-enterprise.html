@@ -1,15 +1,15 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><title>Enabling public monitoring for your enterprise</title><link rel="stylesheet" href="../../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../../index.html">Security and code quality</a> / <a href="../../../index.html">How-tos</a> / <a href="../../index.html">Secure at scale</a> / <a href="../index.html">Configure enterprise security</a> / <a href="index.html">Manage your coverage</a> / </nav><h1 id="enabling-public-monitoring-for-your-enterprise">Enabling public monitoring for your enterprise<a href="#enabling-public-monitoring-for-your-enterprise" aria-label="Link to heading 'Enabling public monitoring for your enterprise'" data-heading-content="Enabling public monitoring for your enterprise" class="anchor"></a></h1>
 <p>Start detecting secrets your enterprise members leak in public repositories outside your enterprise's boundaries.</p>
-<div class="markdown-alert markdown-alert-note">
-<p class="markdown-alert-title">Note</p>
-<p>Public monitoring for secret scanning is currently in public preview and subject to change. If you have feedback, please join the <a href="https://github.com/orgs/community/discussions/categories/code-security" class="external">discussion</a>.</p>
-</div>
 <h2 id="prerequisites" title="Prerequisites" data-entry-type="Section">Prerequisites<a href="#prerequisites" aria-label="Link to heading 'Prerequisites'" data-heading-content="Prerequisites" class="anchor"></a></h2>
 <p>Before enabling public monitoring, ensure your enterprise has:</p>
 <ul>
 <li>GitHub Advanced Security or GitHub Secret Protection enabled</li>
-<li>While not necessary, we recommend having at one verified domain configured (see <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/configuring-settings/configuring-user-applications-for-your-enterprise/verifying-or-approving-a-domain-for-your-enterprise" class="external">Verifying or approving a domain for your enterprise</a>) in order to get the full value for the feature.</li>
+<li>For GitHub Enterprise Cloud with data residency enterprises, we strongly recommend at least one verified domain configured, since it's the only method available to receive attributed alerts. See <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/configuring-settings/configuring-user-applications-for-your-enterprise/verifying-or-approving-a-domain-for-your-enterprise" class="external">Verifying or approving a domain for your enterprise</a>.</li>
 </ul>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>A verified domain isn't required to enable public monitoring. For enterprises not using GitHub Enterprise Cloud with data residency, configuring one is optional, but it provides full attribution coverage. See <a href="../../../../concepts/secret-security/public-monitoring.html#attribution-methods">Public monitoring for secret scanning</a>.</p>
+</div>
 <h2 id="enabling-public-monitoring" title="Enabling public monitoring" data-entry-type="Section">Enabling public monitoring<a href="#enabling-public-monitoring" aria-label="Link to heading 'Enabling public monitoring'" data-heading-content="Enabling public monitoring" class="anchor"></a></h2>
 <ol>
 <li>Navigate to your enterprise. For example, from the <a href="https://github.com/settings/enterprises?ref_product=ghec&amp;ref_type=engagement&amp;ref_style=text" class="external">Enterprises</a> page on GitHub.com.</li>

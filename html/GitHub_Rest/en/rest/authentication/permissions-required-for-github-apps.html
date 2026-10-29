@@ -55,6 +55,37 @@
 </tr>
 </tbody>
 </table>
+<h2 id="enterprise-permissions-for-enterprise-security-products" title="Enterprise permissions for &quot;Enterprise security products&quot;" data-entry-type="Section">Enterprise permissions for "Enterprise security products"<a href="#enterprise-permissions-for-enterprise-security-products" aria-label="Link to heading 'Enterprise permissions for &quot;Enterprise security products&quot;'" data-heading-content="Enterprise permissions for &quot;Enterprise security products&quot;" class="anchor"></a></h2>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Access</th>
+<th>Tokens</th>
+<th>Additional Permissions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PATCH /enterprises/{enterprise}/dependabot/repository-access</code></td>
+<td>write</td>
+<td>UAT, IAT</td>
+<td>✓</td>
+</tr>
+<tr>
+<td><code>PUT /enterprises/{enterprise}/dependabot/repository-access/default-level</code></td>
+<td>write</td>
+<td>UAT, IAT</td>
+<td>✓</td>
+</tr>
+<tr>
+<td><code>GET /enterprises/{enterprise}/dependabot/repository-access</code></td>
+<td>read</td>
+<td>UAT, IAT</td>
+<td>✓</td>
+</tr>
+</tbody>
+</table>
 <h2 id="organization-permissions-for-api-insights" title="Organization permissions for &quot;API Insights&quot;" data-entry-type="Section">Organization permissions for "API Insights"<a href="#organization-permissions-for-api-insights" aria-label="Link to heading 'Organization permissions for &quot;API Insights&quot;'" data-heading-content="Organization permissions for &quot;API Insights&quot;" class="anchor"></a></h2>
 <table>
 <thead>
@@ -5557,6 +5588,24 @@
 <td>✓</td>
 </tr>
 <tr>
+<td><code>POST /repos/{owner}/{repo}/issues/{issue_number}/artifacts</code></td>
+<td>write</td>
+<td>UAT, IAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>PATCH /repos/{owner}/{repo}/issues/{issue_number}/artifacts/{artifact_number}</code></td>
+<td>write</td>
+<td>UAT, IAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>DELETE /repos/{owner}/{repo}/issues/{issue_number}/artifacts/{artifact_number}</code></td>
+<td>write</td>
+<td>UAT, IAT</td>
+<td>✗</td>
+</tr>
+<tr>
 <td><code>POST /repos/{owner}/{repo}/issues/{issue_number}/assignees</code></td>
 <td>write</td>
 <td>UAT, IAT</td>
@@ -5783,6 +5832,18 @@
 <td>read</td>
 <td>UAT, IAT</td>
 <td>✗</td>
+</tr>
+<tr>
+<td><code>GET /repos/{owner}/{repo}/issues/{issue_number}/artifacts</code></td>
+<td>read</td>
+<td>UAT, IAT</td>
+<td>✓</td>
+</tr>
+<tr>
+<td><code>GET /repos/{owner}/{repo}/issues/{issue_number}/artifacts/{artifact_number}</code></td>
+<td>read</td>
+<td>UAT, IAT</td>
+<td>✓</td>
 </tr>
 <tr>
 <td><code>GET /repos/{owner}/{repo}/issues/{issue_number}/assignees/{assignee}</code></td>
@@ -6508,6 +6569,18 @@
 <td>✓</td>
 </tr>
 <tr>
+<td><code>GET /repos/{owner}/{repo}/issues/{issue_number}/artifacts</code></td>
+<td>read</td>
+<td>UAT, IAT</td>
+<td>✓</td>
+</tr>
+<tr>
+<td><code>GET /repos/{owner}/{repo}/issues/{issue_number}/artifacts/{artifact_number}</code></td>
+<td>read</td>
+<td>UAT, IAT</td>
+<td>✓</td>
+</tr>
+<tr>
 <td><code>GET /repos/{owner}/{repo}/issues/{issue_number}/assignees/{assignee}</code></td>
 <td>read</td>
 <td>UAT, IAT</td>
@@ -6738,6 +6811,18 @@
 <td>✗</td>
 </tr>
 <tr>
+<td><code>POST /repos/{owner}/{repo}/security-advisories/{ghsa_id}/comments</code></td>
+<td>write</td>
+<td>UAT, IAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>PATCH /repos/{owner}/{repo}/security-advisories/{ghsa_id}/comments/{comment_id}</code></td>
+<td>write</td>
+<td>UAT, IAT</td>
+<td>✗</td>
+</tr>
+<tr>
 <td><code>POST /repos/{owner}/{repo}/security-advisories/{ghsa_id}/cve</code></td>
 <td>write</td>
 <td>UAT, IAT</td>
@@ -6751,6 +6836,18 @@
 </tr>
 <tr>
 <td><code>GET /repos/{owner}/{repo}/security-advisories/{ghsa_id}</code></td>
+<td>read</td>
+<td>UAT, IAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>GET /repos/{owner}/{repo}/security-advisories/{ghsa_id}/comments</code></td>
+<td>read</td>
+<td>UAT, IAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>GET /repos/{owner}/{repo}/security-advisories/{ghsa_id}/comments/{comment_id}</code></td>
 <td>read</td>
 <td>UAT, IAT</td>
 <td>✗</td>

@@ -3,15 +3,70 @@
 <h2 id="what-is-push-protection" title="What is push protection?" data-entry-type="Section">What is push protection?<a href="#what-is-push-protection" aria-label="Link to heading 'What is push protection?'" data-heading-content="What is push protection?" class="anchor"></a></h2>
 <p>Push protection is a secret scanning feature designed to prevent hardcoded credentials, such as secrets or tokens, from ever being pushed to your repository. Rather than alerting you to credential leaks after the fact, push protection blocks pushes that contain secrets <em>before</em> they reach your repository.</p>
 <h2 id="how-push-protection-works" title="How push protection works" data-entry-type="Section">How push protection works<a href="#how-push-protection-works" aria-label="Link to heading 'How push protection works'" data-heading-content="How push protection works" class="anchor"></a></h2>
-<p>Push protection blocks secrets detected in:</p>
-<ul>
-<li>Pushes from the command line</li>
-<li>Commits made in the GitHub UI</li>
-<li>File uploads to a repository on GitHub</li>
-<li>Requests to the REST API</li>
-<li>Interactions with the GitHub MCP server (public repositories only)</li>
-</ul>
 <p>When push protection detects a potential secret during a push attempt, it will block the push and provide a detailed message explaining the reason for the block. You will need to review the code in question, remove any sensitive information, and reattempt the push.</p>
+<p>Push protection can block the following types of secrets.</p>
+<h3 id="partner-patterns">Partner patterns<a href="#partner-patterns" aria-label="Link to heading 'Partner patterns'" data-heading-content="Partner patterns" class="anchor"></a></h3>
+<p>GitHub blocks pushes containing provider-specific credentials where push protection is supported for that secret as part of secret scanning's partner program. See <a href="../../reference/secret-security/supported-secret-scanning-patterns.html#supported-provider-patterns">Supported provider patterns</a>.</p>
+<h3 id="generic-patterns">Generic patterns<a href="#generic-patterns" aria-label="Link to heading 'Generic patterns'" data-heading-content="Generic patterns" class="anchor"></a></h3>
+<p>GitHub blocks pushes containing structured secrets that are not tied to a specific provider, such as private keys and database connection strings. Scanning for generic patterns and push protection must be enabled in your repository's security settings or security configuration for this to work. The relevant patterns must also be enabled in your organization or enterprise's push protection pattern configuration. See <a href="../../how-tos/secure-at-scale/configure-organization-security/establish-complete-coverage/configure-global-settings.html#specifying-patterns-to-include-in-push-protection">Specifying patterns to include in push protection</a>.</p>
+<h3 id="custom-patterns">Custom patterns<a href="#custom-patterns" aria-label="Link to heading 'Custom patterns'" data-heading-content="Custom patterns" class="anchor"></a></h3>
+<p>GitHub blocks pushes containing custom patterns, which are regular expressions that you define to detect secrets specific to your repository, organization, or enterprise. When defining a custom pattern, you can choose to enable push protection for it. See <a href="../../how-tos/secure-your-secrets/customize-leak-detection/define-custom-patterns.html">Defining custom patterns for secret scanning</a>.</p>
+<h3 id="generic-secrets-found-with-ai">Generic secrets found with AI<a href="#generic-secrets-found-with-ai" aria-label="Link to heading 'Generic secrets found with AI'" data-heading-content="Generic secrets found with AI" class="anchor"></a></h3>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Push protection for AI-detected secrets is in public preview and subject to change.</p>
+</div>
+<p>GitHub blocks pushing containing unstructured secrets, such as passwords, that have been found using AI based on surrounding code context. To understand how this feature is billed, see <a href="https://docs.github.com/en/billing/concepts/product-billing/github-advanced-security#secret-protection-ai-credits" class="external">GitHub Advanced Security license billing</a>. To enable the feature, see <a href="/en/code-security/how-tos/secure-your-secrets/prevent-future-leaks/enable-ai-push-protection">Enabling push protection for AI-detected secrets</a>.</p>
+<h3 id="supported-push-surfaces">Supported push surfaces<a href="#supported-push-surfaces" aria-label="Link to heading 'Supported push surfaces'" data-heading-content="Supported push surfaces" class="anchor"></a></h3>
+<p>The following table shows which secret types are blocked on each push surface.</p>
+<table>
+<thead>
+<tr>
+<th>Push surface</th>
+<th align="center">Partner patterns</th>
+<th align="center">Generic patterns</th>
+<th align="center">Custom patterns</th>
+<th align="center">Generic secrets found with AI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pushes from the command line</td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+</tr>
+<tr>
+<td>Commits made in the GitHub UI</td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+</tr>
+<tr>
+<td>File uploads to a repository on GitHub</td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+</tr>
+<tr>
+<td>Requests to the REST API</td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Not supported" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+</tr>
+<tr>
+<td>Interactions with the GitHub MCP server (public repositories only)</td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Not supported" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+</tr>
+</tbody>
+</table>
 <h2 id="types-of-push-protection" title="Types of push protection" data-entry-type="Section">Types of push protection<a href="#types-of-push-protection" aria-label="Link to heading 'Types of push protection'" data-heading-content="Types of push protection" class="anchor"></a></h2>
 <p>There are two types of push protection:</p>
 <ul>
@@ -80,6 +135,7 @@
 <li><strong>Efficient secret management:</strong> Instead of retrospectively dealing with exposed secrets, developers can address issues at the source. This makes secret management more efficient and less time-consuming.</li>
 <li><strong>Bypass functionality for flexibility:</strong> For cases where false positives occur or when certain patterns are necessary, you can bypass push protection for users, and designated users can use the delegated bypass feature to bypass push protection for repositories. Additionally, you can exempt trusted actors from push protection entirely. This provides flexibility without compromising overall security.</li>
 <li><strong>Ability to detect custom patterns (for repositories in organizations):</strong> Organizations can define custom patterns for detecting secrets unique to their environment. This customization ensures that push protection can effectively identify and block even non-standard secrets.</li>
+<li><strong>Coverage beyond known patterns:</strong> AI detects unstructured secrets, such as passwords, that no regular expression can reliably match.</li>
 </ul>
 <h2 id="customization" title="Customization" data-entry-type="Section">Customization<a href="#customization" aria-label="Link to heading 'Customization'" data-heading-content="Customization" class="anchor"></a></h2>
 <p>After you enable push protection for repositories, you can customize it by:</p>

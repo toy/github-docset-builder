@@ -20,7 +20,13 @@
 <p>The Dependabot security updates feature is available for repositories where you have enabled the dependency graph and Dependabot alerts. You will see a Dependabot alert for every vulnerable dependency identified in your full dependency graph. However, security updates are triggered only for dependencies that are specified in a manifest or lock file. For more information, see <a href="dependency-graph.html">Dependency graph</a>.</p>
 <div class="markdown-alert markdown-alert-note">
 <p class="markdown-alert-title">Note</p>
-<p>For npm, Dependabot will raise a pull request to update an explicitly defined dependency to a secure version, even if it means updating the parent dependency or dependencies, or even removing a sub-dependency that is no longer needed by the parent. For other ecosystems, Dependabot is unable to update an indirect or transitive dependency if it would also require an update to the parent dependency. For more information, see <a href="../../reference/supply-chain-security/troubleshoot-dependabot/dependabot-errors.html#updates-dependencies-without-an-alert">Dependabot errors</a>.</p>
+<p>Dependabot can update an indirect (transitive) dependency to a secure version, but how it does so depends on your ecosystem:</p>
+<ul>
+<li><strong>npm:</strong> Dependabot raises a pull request to update an explicitly defined dependency to a secure version. This may mean updating the parent dependency or dependencies, or removing a sub-dependency that the parent no longer needs.</li>
+<li><strong>NuGet projects that use <code>PackageReference</code>:</strong> Dependabot tries to update the parent dependency to a version that resolves to a secure version of the transitive dependency. If no compatible parent update is available, it adds a direct reference that pins the transitive dependency to the secure version.</li>
+<li><strong>Other ecosystems, and NuGet projects that use <code>packages.config</code>:</strong> Dependabot can't update an indirect or transitive dependency if doing so would also require updating the parent dependency.</li>
+</ul>
+<p>For more information, see <a href="../../reference/supply-chain-security/troubleshoot-dependabot/dependabot-errors.html#updates-dependencies-without-an-alert">Dependabot errors</a>.</p>
 </div>
 <p>You can enable a related feature, Dependabot version updates, so that Dependabot raises pull requests to update the manifest to the latest version of the dependency, whenever it detects an outdated dependency. For more information, see <a href="dependabot-version-updates.html">Dependabot version updates</a>.</p>
 <p>When Dependabot raises pull requests, these pull requests could be for <em>security</em> or <em>version</em> updates:</p>

@@ -8,7 +8,7 @@
 <li><strong>Severity</strong>: Indicates the potential impact of a vulnerability (e.g., low, medium, high, critical).</li>
 <li><strong>Exploitability</strong>: Assesses how easily a vulnerability can be exploited.</li>
 <li><strong>Dependency relationship</strong>: Differentiates between direct and transitive dependencies.</li>
-<li><strong>Dependency scope</strong>: Differentiates between runtime and development dependencies. Determines if the vulnerable code is actually used in your application.</li>
+<li><strong>Dependency scope</strong>: Differentiates between runtime and development dependencies.</li>
 <li><strong>Alerts closed in the last 30 days, including the number of alerts fixed by Dependabot, manually dismissed, and auto dismissed</strong>: Tracks alert resolution progress. Illustrates how GitHub Code Security can help you detect vulnerabilities early.</li>
 <li><strong>Table showing the total number of open alerts for each repository, as well as severity and expoitability data</strong>: Allows you to dig deeper at the repository level.</li>
 </ul>
@@ -22,6 +22,17 @@
 <p>Start by identifying alerts with the highest severity by using the <code>severity-critical</code> or <code>severity-high</code> filters. These vulnerabilities pose the greatest risk and are often prioritized by compliance standards.</p>
 <h3 id="3-assess-exploitability-and-reachability">3. Assess exploitability and reachability<a href="#3-assess-exploitability-and-reachability" aria-label="Link to heading '3. Assess exploitability and reachability'" data-heading-content="3. Assess exploitability and reachability" class="anchor"></a></h3>
 <p>Prioritize vulnerabilities that are the most likely to be exploited in your codebase. To identify alerts that are most likely to be exploited, you can use the <code>epss-percentage</code> filter associated to a value (for example <code>epss-percentage:&gt;=0.10</code>).</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Reachability analysis for Dependabot alerts is in public preview and subject to change.</p>
+</div>
+<p>For JavaScript repositories that use npm, pnpm, or Yarn, and TypeScript repositories, use reachability analysis to assess whether your application can call vulnerable functions in its dependencies. This is a separate signal from exploitability: a call path does not prove that an attacker can exploit a vulnerability.</p>
+<ol>
+<li>Open a repository's Dependabot alerts and filter for <code>reachability:reachable,potentially-reachable</code>.</li>
+<li>Prioritize these alerts alongside severity and EPSS. For reachable alerts, review the call-path evidence to understand how your code calls the vulnerable function. See <a href="../../how-tos/manage-security-alerts/manage-dependabot-alerts/view-dependabot-alerts.html#reviewing-reachability-evidence">Viewing and updating Dependabot alerts</a>.</li>
+</ol>
+<p>For "Reachability unavailable" results, use severity, EPSS, dependency scope, and dependency relationship to prioritize alerts. An unavailable result does not mean the vulnerable function cannot be called.</p>
+<p>Give "Unreachable" alerts a lower priority, but do not close or dismiss an alert solely because of its verdict. Verdicts are point-in-time assessments and can change as your code or an advisory changes.</p>
 <h3 id="4-review-dependency-scope-and-relationship">4. Review dependency scope and relationship<a href="#4-review-dependency-scope-and-relationship" aria-label="Link to heading '4. Review dependency scope and relationship'" data-heading-content="4. Review dependency scope and relationship" class="anchor"></a></h3>
 <p>Direct dependencies are typically easier to update and may have a greater impact on your application’s security. We recommend addressing these before transitive dependencies when possible.<br>
 Filtering alerts using the <code>relationship:direct</code> filter allows us to see vulnerabilities on direct dependencies for supported ecosystems like npm.</p>

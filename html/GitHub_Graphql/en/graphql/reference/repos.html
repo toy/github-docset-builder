@@ -337,6 +337,7 @@ Reason: Suggested topics are no longer supported.</li>
 being pushed to the commit graph. This includes absolute paths that contain file names.</p>
 <h3 id="fields-for-filepathrestrictionparameters">Fields for <code>FilePathRestrictionParameters</code><a href="#fields-for-filepathrestrictionparameters" aria-label="Link to heading 'Fields for FilePathRestrictionParameters'" data-heading-content="Fields for FilePathRestrictionParameters" class="anchor"></a></h3>
 <ul>
+<li><code>ignoredFilePaths</code> ([String!]): Files matching these patterns are allowed even when they also match a restricted path.</li>
 <li><code>restrictedFilePaths</code> ([String!]!): The file paths that are restricted from being pushed to the commit graph.</li>
 </ul>
 <h2 id="filepathrestrictionparametersinput---input-object" title="FilePathRestrictionParametersInput - input object" data-entry-type="Section">FilePathRestrictionParametersInput - input object<a href="#filepathrestrictionparametersinput---input-object" aria-label="Link to heading 'FilePathRestrictionParametersInput - input object'" data-heading-content="FilePathRestrictionParametersInput - input object" class="anchor"></a></h2>
@@ -344,6 +345,7 @@ being pushed to the commit graph. This includes absolute paths that contain file
 being pushed to the commit graph. This includes absolute paths that contain file names.</p>
 <h3 id="input-fields-for-filepathrestrictionparametersinput">Input fields for <code>FilePathRestrictionParametersInput</code><a href="#input-fields-for-filepathrestrictionparametersinput" aria-label="Link to heading 'Input fields for FilePathRestrictionParametersInput'" data-heading-content="Input fields for FilePathRestrictionParametersInput" class="anchor"></a></h3>
 <ul>
+<li><code>ignoredFilePaths</code> ([String!]): Files matching these patterns are allowed even when they also match a restricted path.</li>
 <li><code>restrictedFilePaths</code> ([String!]!): The file paths that are restricted from being pushed to the commit graph.</li>
 </ul>
 <h2 id="fundinglink---object" title="FundingLink - object" data-entry-type="Section">FundingLink - object<a href="#fundinglink---object" aria-label="Link to heading 'FundingLink - object'" data-heading-content="FundingLink - object" class="anchor"></a></h2>
@@ -427,12 +429,14 @@ being pushed to the commit graph. This includes absolute paths that contain file
 <p>Prevent commits with individual files that exceed the specified limit from being pushed to the commit graph.</p>
 <h3 id="fields-for-maxfilesizeparameters">Fields for <code>MaxFileSizeParameters</code><a href="#fields-for-maxfilesizeparameters" aria-label="Link to heading 'Fields for MaxFileSizeParameters'" data-heading-content="Fields for MaxFileSizeParameters" class="anchor"></a></h3>
 <ul>
+<li><code>ignoredFilePaths</code> ([String!]): Files matching these patterns may exceed the maximum size.</li>
 <li><code>maxFileSize</code> (Int!): The maximum file size allowed in megabytes. This limit does not apply to Git Large File Storage (Git LFS).</li>
 </ul>
 <h2 id="maxfilesizeparametersinput---input-object" title="MaxFileSizeParametersInput - input object" data-entry-type="Section">MaxFileSizeParametersInput - input object<a href="#maxfilesizeparametersinput---input-object" aria-label="Link to heading 'MaxFileSizeParametersInput - input object'" data-heading-content="MaxFileSizeParametersInput - input object" class="anchor"></a></h2>
 <p>Prevent commits with individual files that exceed the specified limit from being pushed to the commit graph.</p>
 <h3 id="input-fields-for-maxfilesizeparametersinput">Input fields for <code>MaxFileSizeParametersInput</code><a href="#input-fields-for-maxfilesizeparametersinput" aria-label="Link to heading 'Input fields for MaxFileSizeParametersInput'" data-heading-content="Input fields for MaxFileSizeParametersInput" class="anchor"></a></h3>
 <ul>
+<li><code>ignoredFilePaths</code> ([String!]): Files matching these patterns may exceed the maximum size.</li>
 <li><code>maxFileSize</code> (Int!): The maximum file size allowed in megabytes. This limit does not apply to Git Large File Storage (Git LFS).</li>
 </ul>
 <h2 id="mergecommitmessage---enum" title="MergeCommitMessage - enum" data-entry-type="Section">MergeCommitMessage - enum<a href="#mergecommitmessage---enum" aria-label="Link to heading 'MergeCommitMessage - enum'" data-heading-content="MergeCommitMessage - enum" class="anchor"></a></h2>

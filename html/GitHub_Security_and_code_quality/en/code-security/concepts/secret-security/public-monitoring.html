@@ -1,22 +1,28 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><title>Public monitoring for secret scanning</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Secret security</a> / </nav><h1 id="public-monitoring-for-secret-scanning">Public monitoring for secret scanning<a href="#public-monitoring-for-secret-scanning" aria-label="Link to heading 'Public monitoring for secret scanning'" data-heading-content="Public monitoring for secret scanning" class="anchor"></a></h1>
 <p>Public monitoring detects credentials leaked by your enterprise members in public repositories across GitHub, giving you visibility into secret exposure beyond your enterprise's boundaries.</p>
-<div class="markdown-alert markdown-alert-note">
-<p class="markdown-alert-title">Note</p>
-<p>Public monitoring for secret scanning is currently in public preview and subject to change. If you have feedback, please join the <a href="https://github.com/orgs/community/discussions/categories/code-security" class="external">discussion</a>.</p>
-</div>
 <h2 id="about-public-monitoring" title="About public monitoring" data-entry-type="Section">About public monitoring<a href="#about-public-monitoring" aria-label="Link to heading 'About public monitoring'" data-heading-content="About public monitoring" class="anchor"></a></h2>
 <p>GitHub monitors for secrets leaked across GitHub in real time. Public monitoring attributes publicly exposed secrets back to your enterprise, based on where your people commit.</p>
-<p>Secret scanning detects secrets in repositories that your enterprise owns. Public monitoring extends this detection to secrets found in arbitrary public repos across GitHub.com, regardless of whether or not your enterprise owns the repository where it was leaked.</p>
+<p>Secret scanning detects secrets in repositories that your enterprise owns. Public monitoring extends this detection to secrets found in arbitrary public repositories across GitHub, regardless of whether or not your enterprise owns the repository where they were leaked.</p>
 <p>This gives enterprise security administrators visibility into credential exposure they wouldn't otherwise be aware of, helping identify potential risks and leaked secrets which could be exploited by bad actors.</p>
 <h2 id="how-public-monitoring-works" title="How public monitoring works" data-entry-type="Section">How public monitoring works<a href="#how-public-monitoring-works" aria-label="Link to heading 'How public monitoring works'" data-heading-content="How public monitoring works" class="anchor"></a></h2>
-<p>Public monitoring scans public repositories, including non-code content like issue and pull request comments across GitHub for secrets associated with your enterprise. When a secret is detected, an alert is surfaced in the enterprise-level security overview.</p>
+<p>Public monitoring scans public repositories across GitHub, including non-code content such as issue and pull request comments, and gists. It detects secrets associated with your enterprise. When a secret is detected, an alert is surfaced in the enterprise-level security overview.</p>
 <h3 id="attribution-methods">Attribution methods<a href="#attribution-methods" aria-label="Link to heading 'Attribution methods'" data-heading-content="Attribution methods" class="anchor"></a></h3>
 <p>Public monitoring uses two methods to associate detected secrets with your enterprise:</p>
 <ul>
-<li><strong>Enterprise membership:</strong> Secrets leaked by users who are members of your enterprise</li>
-<li><strong>Verified domain matching:</strong> Secrets leaked by users whose email address matches a verified domain of your enterprise, even if they are not direct enterprise members</li>
+<li><strong>Enterprise membership:</strong> Secrets leaked by users who are members of your enterprise. This method isn't available for enterprises on GitHub Enterprise Cloud with data residency, because tenant isolation means enterprise membership rosters aren't shared with GitHub.</li>
+<li><strong>Verified domain matching:</strong> Secrets leaked by users whose email address matches a verified domain of your enterprise, even if they are not direct enterprise members.</li>
 </ul>
-<p>Both attribution methods are active when public monitoring is enabled.</p>
+<p>Both methods are active when public monitoring is enabled, except for the data residency limitation noted above.</p>
+<h3 id="alert-triage-and-integrations">Alert triage and integrations<a href="#alert-triage-and-integrations" aria-label="Link to heading 'Alert triage and integrations'" data-heading-content="Alert triage and integrations" class="anchor"></a></h3>
+<p>Public monitoring includes tools to help security teams triage alerts and connect findings to existing security workflows:</p>
+<ul>
+<li><strong>Alert management:</strong> Dismiss and reopen alerts, add comments to record decisions, and review each alert's activity timeline.</li>
+<li><strong>Filtering:</strong> Filter alerts by repository, committer, secret type, attribution method, or state.</li>
+<li><strong>Validity checks:</strong> For supported secret types, review the <code>active</code>, <code>inactive</code>, or <code>unknown</code> status of a detected credential.</li>
+<li><strong>Integrations:</strong> Use the REST API to work with alerts programmatically. Use enterprise webhook events to connect public monitoring activity to your existing security workflows.</li>
+</ul>
+<p>For API details, see <a href="https://docs.github.com/en/rest/secret-scanning/secret-scanning#list-public-monitoring-alerts-for-an-enterprise" class="external">List public monitoring alerts for an enterprise</a>. For webhook payload details, see the <a href="https://docs.github.com/en/webhooks/webhook-events-and-payloads#secret_scanning_public_monitoring_alert" class="external"><code>secret_scanning_public_monitoring_alert</code> event</a>.</p>
+<p>For more information about viewing and triaging alerts, see <a href="../../how-tos/view-and-interpret-data/analyze-organization-data/viewing-public-monitoring-alerts.html">Viewing and managing public monitoring alerts</a>.</p>
 <h2 id="requirements" title="Requirements" data-entry-type="Section">Requirements<a href="#requirements" aria-label="Link to heading 'Requirements'" data-heading-content="Requirements" class="anchor"></a></h2>
 <p>To use public monitoring, your enterprise must:</p>
 <ul>

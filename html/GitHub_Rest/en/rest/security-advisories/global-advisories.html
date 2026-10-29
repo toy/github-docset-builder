@@ -42,7 +42,7 @@ If specified, only advisories with these severities will be returned.<br>
 Can be one of: <code>unknown</code>, <code>low</code>, <code>medium</code>, <code>high</code>, <code>critical</code></p>
 </li>
 <li>
-<p><strong><code>cwes</code></strong> (string)<br>
+<p><strong><code>cwes</code></strong> (string or array of strings)<br>
 If specified, only advisories with these Common Weakness Enumerations (CWEs) will be returned.<br>
 Example: cwes=79,284,22 or cwes[]=79&amp;cwes[]=284&amp;cwes[]=22</p>
 </li>
@@ -51,7 +51,7 @@ Example: cwes=79,284,22 or cwes[]=79&amp;cwes[]=284&amp;cwes[]=22</p>
 Whether to only return advisories that have been withdrawn.</p>
 </li>
 <li>
-<p><strong><code>affects</code></strong> (string)<br>
+<p><strong><code>affects</code></strong> (string or array of strings)<br>
 If specified, only return advisories that affect any of package or package@version. A maximum of 1000 packages can be specified.<br>
 If the query parameter causes the URL to exceed the maximum URL length supported by your client, you must specify fewer packages.<br>
 Example: affects=package1,package2@1.0.0,package3@2.0.0 or affects[]=package1&amp;affects[]=package2@1.0.0</p>

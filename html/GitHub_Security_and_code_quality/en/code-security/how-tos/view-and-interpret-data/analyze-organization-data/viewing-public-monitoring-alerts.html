@@ -1,9 +1,5 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><title>Viewing and managing public monitoring alerts</title><link rel="stylesheet" href="../../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../../index.html">Security and code quality</a> / <a href="../../index.html">How-tos</a> / <a href="../index.html">View and interpret data</a> / <a href="index.html">Analyze organization data</a> / </nav><h1 id="viewing-and-managing-public-monitoring-alerts">Viewing and managing public monitoring alerts<a href="#viewing-and-managing-public-monitoring-alerts" aria-label="Link to heading 'Viewing and managing public monitoring alerts'" data-heading-content="Viewing and managing public monitoring alerts" class="anchor"></a></h1>
 <p>Find and manage alerts for credentials your enterprise members have exposed in public repositories across GitHub.</p>
-<div class="markdown-alert markdown-alert-note">
-<p class="markdown-alert-title">Note</p>
-<p>Public monitoring for secret scanning is currently in public preview and subject to change. If you have feedback, please join the <a href="https://github.com/orgs/community/discussions/categories/code-security" class="external">discussion</a>.</p>
-</div>
 <h2 id="about-the-public-monitoring-page" title="About the public monitoring page" data-entry-type="Section">About the public monitoring page<a href="#about-the-public-monitoring-page" aria-label="Link to heading 'About the public monitoring page'" data-heading-content="About the public monitoring page" class="anchor"></a></h2>
 <p>The <strong>Public monitoring</strong> page is a dedicated view within the enterprise-level security overview. It displays alerts for secrets detected in public repositories across GitHub that are attributed to your enterprise members or users with an email matching your enterprise's verified domain.</p>
 <div class="markdown-alert markdown-alert-note">
@@ -41,8 +37,16 @@
 </ul>
 </li>
 </ol>
+<h2 id="triaging-public-monitoring-alerts" title="Triaging public monitoring alerts" data-entry-type="Section">Triaging public monitoring alerts<a href="#triaging-public-monitoring-alerts" aria-label="Link to heading 'Triaging public monitoring alerts'" data-heading-content="Triaging public monitoring alerts" class="anchor"></a></h2>
+<p>Use the available alert information and controls to focus and prioritize your review:</p>
+<ul>
+<li><strong>Activity:</strong> Review an alert's timeline to see actions and state changes. This shows how your enterprise has triaged the alert.</li>
+<li><strong>Filters:</strong> Filter the alert list by repository, committer, secret type, attribution method, or state. Use the state filter to focus on open or closed alerts.</li>
+<li><strong>Validity:</strong> For supported secret types, public monitoring periodically checks credential validity. Use the <code>active</code>, <code>inactive</code>, or <code>unknown</code> status to prioritize active credentials for remediation.</li>
+</ul>
 <h2 id="dismissing-and-reopening-alerts" title="Dismissing and reopening alerts" data-entry-type="Section">Dismissing and reopening alerts<a href="#dismissing-and-reopening-alerts" aria-label="Link to heading 'Dismissing and reopening alerts'" data-heading-content="Dismissing and reopening alerts" class="anchor"></a></h2>
 <p>When you have reviewed an alert, you can dismiss it to remove it from the list of open alerts. If you need to revisit a dismissed alert later, you can reopen it. When you dismiss or reopen an alert, you can add an optional comment to record the reason for your decision.</p>
+<p>Dismissing a public monitoring alert updates its state for your enterprise. It does not affect a repository-level secret scanning alert for the same secret. It also does not revoke the credential or remove the secret from its public location.</p>
 <p>Dismissing alerts you have already triaged helps you manage a high volume of public monitoring alerts, keeping the active list focused on the exposures that still need attention.</p>
 <h3 id="dismissing-an-alert">Dismissing an alert<a href="#dismissing-an-alert" aria-label="Link to heading 'Dismissing an alert'" data-heading-content="Dismissing an alert" class="anchor"></a></h3>
 <ol>

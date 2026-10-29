@@ -73,7 +73,7 @@ The organization name. The name is not case sensitive.</li>
 <li><code>platform_chat</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>unconfigured</code></li>
 <li><code>cli</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>unconfigured</code></li>
 <li><code>seat_management_setting</code>: required, string, enum: <code>assign_all</code>, <code>assign_selected</code>, <code>disabled</code>, <code>unconfigured</code></li>
-<li><code>plan_type</code>: string, enum: <code>business</code>, <code>enterprise</code></li>
+<li><code>plan_type</code>: string, enum: <code>business</code>, <code>enterprise</code>, <code>access</code></li>
 </ul>
 <h2 id="list-all-copilot-seat-assignments-for-an-organization" title="GET /orgs/{org}/copilot/billing/seats (List all Copilot seat assignments for an organization)" data-entry-type="Resource">List all Copilot seat assignments for an organization<a href="#list-all-copilot-seat-assignments-for-an-organization" aria-label="Link to heading 'List all Copilot seat assignments for an organization'" data-heading-content="List all Copilot seat assignments for an organization" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /orgs/{org}/copilot/billing/seats
@@ -272,7 +272,7 @@ Default: <code>50</code></p>
 <li><code>last_authenticated_at</code>: string or null, format: date-time</li>
 <li><code>created_at</code>: required, string, format: date-time</li>
 <li><code>updated_at</code>: string, format: date-time, deprecated</li>
-<li><code>plan_type</code>: string, enum: <code>business</code>, <code>enterprise</code>, <code>unknown</code></li>
+<li><code>plan_type</code>: string, enum: <code>business</code>, <code>enterprise</code>, <code>unknown</code>, <code>access</code></li>
 </ul>
 </li>
 </ul>
@@ -729,6 +729,6 @@ The handle for the GitHub user account.</p>
 <li><code>last_authenticated_at</code>: string or null, format: date-time</li>
 <li><code>created_at</code>: required, string, format: date-time</li>
 <li><code>updated_at</code>: string, format: date-time, deprecated</li>
-<li><code>plan_type</code>: string, enum: <code>business</code>, <code>enterprise</code>, <code>unknown</code></li>
+<li><code>plan_type</code>: string, enum: <code>business</code>, <code>enterprise</code>, <code>unknown</code>, <code>access</code></li>
 </ul>
 <footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

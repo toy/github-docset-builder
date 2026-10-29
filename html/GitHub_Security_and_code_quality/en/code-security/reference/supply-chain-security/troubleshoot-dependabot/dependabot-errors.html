@@ -28,7 +28,7 @@
 <h3 id="updates-dependencies-without-an-alert">Updates dependencies without an alert<a href="#updates-dependencies-without-an-alert" aria-label="Link to heading 'Updates dependencies without an alert'" data-heading-content="Updates dependencies without an alert" class="anchor"></a></h3>
 <p><strong>Applies to:</strong> Security updates only</p>
 <p><strong>Error message:</strong> <code>Dependabot tries to update dependencies without an alert</code></p>
-<p>Dependabot updates explicitly defined transitive dependencies that are vulnerable for all ecosystems. For npm, Dependabot will raise a pull request that also updates the parent dependency if it's the only way to fix the transitive dependency.</p>
+<p>Dependabot updates explicitly defined transitive dependencies that are vulnerable for all ecosystems. For npm, Dependabot will raise a pull request that also updates the parent dependency if it's the only way to fix the transitive dependency. For NuGet projects that use <code>PackageReference</code>, Dependabot first tries to update the parent dependency. If no compatible parent update is available, it adds a direct reference that pins the transitive dependency to the secure version.</p>
 <p>For example, a project with a dependency on <code>A</code> version <code>~2.0.0</code> which has a transitive dependency on <code>B</code> version <code>~1.0.0</code> which has resolved to <code>1.0.1</code>.</p>
 <pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">my project
 </span><span style="color:#c0c5ce;">|

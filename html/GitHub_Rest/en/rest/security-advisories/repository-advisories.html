@@ -1045,13 +1045,12 @@ A list of team slugs which have been granted write access to the advisory.</p>
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <p>Same response schema as <a href="#create-a-repository-security-advisory">Create a repository security advisory</a>.</p>
-<h2 id="request-a-cve-for-a-repository-security-advisory" title="POST /repos/{owner}/{repo}/security-advisories/{ghsa_id}/cve (Request a CVE for a repository security advisory)" data-entry-type="Resource">Request a CVE for a repository security advisory<a href="#request-a-cve-for-a-repository-security-advisory" aria-label="Link to heading 'Request a CVE for a repository security advisory'" data-heading-content="Request a CVE for a repository security advisory" class="anchor"></a></h2>
-<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">POST /repos/{owner}/{repo}/security-advisories/{ghsa_id}/cve
+<h2 id="list-repository-security-advisory-comments" title="GET /repos/{owner}/{repo}/security-advisories/{ghsa_id}/comments (List repository security advisory comments)" data-entry-type="Resource">List repository security advisory comments<a href="#list-repository-security-advisory-comments" aria-label="Link to heading 'List repository security advisory comments'" data-heading-content="List repository security advisory comments" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /repos/{owner}/{repo}/security-advisories/{ghsa_id}/comments
 </span></code></pre>
-<p>If you want a CVE identification number for the security vulnerability in your project, and don't already have one, you can request a CVE identification number from GitHub. For more information see "Requesting a CVE identification number."<br>
-You may request a CVE for public repositories, but cannot do so for private repositories.<br>
-In order to request a CVE for a repository security advisory, the authenticated user must be a security manager or administrator of that repository.<br>
-OAuth app tokens and personal access tokens (classic) need the repo or repository_advisories:write scope to use this endpoint.</p>
+<p>Lists comments on a repository security advisory.<br>
+Accessing internal comments requires write access to the advisory.<br>
+Callers with read-only access to the advisory receive only eligible post-publication comments. For unpublished advisories, these callers receive an empty list.</p>
 <h3 id="parameters-6">Parameters<a href="#parameters-6" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-6">Headers<a href="#headers-6" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
@@ -1072,14 +1071,25 @@ The name of the repository without the .git extension. The name is not case sens
 <p><strong><code>ghsa_id</code></strong> (string) (required)<br>
 The GHSA (GitHub Security Advisory) identifier of the advisory.</p>
 </li>
+<li>
+<p><strong><code>since</code></strong> (string)<br>
+Only show results that were last updated after the given time. This is a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ.</p>
+</li>
+<li>
+<p><strong><code>per_page</code></strong> (integer)<br>
+The number of results per page (max 100). For more information, see "Using pagination in the REST API."<br>
+Default: <code>30</code></p>
+</li>
+<li>
+<p><strong><code>page</code></strong> (integer)<br>
+The page number of the results to fetch. For more information, see "Using pagination in the REST API."<br>
+Default: <code>1</code></p>
+</li>
 </ul>
 <h3 id="http-response-status-codes-6">HTTP response status codes<a href="#http-response-status-codes-6" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
-<p><strong>202</strong> - Accepted</p>
-</li>
-<li>
-<p><strong>400</strong> - Bad Request</p>
+<p><strong>200</strong> - OK</p>
 </li>
 <li>
 <p><strong>403</strong> - Forbidden</p>
@@ -1087,26 +1097,63 @@ The GHSA (GitHub Security Advisory) identifier of the advisory.</p>
 <li>
 <p><strong>404</strong> - Resource not found</p>
 </li>
-<li>
-<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
-</li>
 </ul>
 <h3 id="code-examples-6">Code examples<a href="#code-examples-6" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
 <h4 id="example-5">Example<a href="#example-5" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
-</span><span style="color:#c0c5ce;">  -X POST \
-</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/security-advisories/GHSA_ID/cve
+</span><span style="color:#c0c5ce;">  -X GET \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/security-advisories/GHSA_ID/comments
 </span></code></pre>
-<p><strong>Response schema (Status: 202):</strong></p>
-<p>object</p>
-<h2 id="create-a-temporary-private-fork" title="POST /repos/{owner}/{repo}/security-advisories/{ghsa_id}/forks (Create a temporary private fork)" data-entry-type="Resource">Create a temporary private fork<a href="#create-a-temporary-private-fork" aria-label="Link to heading 'Create a temporary private fork'" data-heading-content="Create a temporary private fork" class="anchor"></a></h2>
-<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">POST /repos/{owner}/{repo}/security-advisories/{ghsa_id}/forks
+<p><strong>Response schema (Status: 200):</strong></p>
+<p>Array of <code>Repository Advisory Comment</code>:</p>
+<ul>
+<li><code>id</code>: required, integer, format: int64</li>
+<li><code>node_id</code>: required, string</li>
+<li><code>url</code>: required, string, format: uri</li>
+<li><code>html_url</code>: required, string, format: uri</li>
+<li><code>body</code>: required, string</li>
+<li><code>user</code>: required, any of:
+<ul>
+<li><strong>null</strong></li>
+<li><strong>Simple User</strong>
+<ul>
+<li><code>name</code>: string or null</li>
+<li><code>email</code>: string or null</li>
+<li><code>login</code>: required, string</li>
+<li><code>id</code>: required, integer, format: int64</li>
+<li><code>node_id</code>: required, string</li>
+<li><code>avatar_url</code>: required, string, format: uri</li>
+<li><code>gravatar_id</code>: required, string or null</li>
+<li><code>url</code>: required, string, format: uri</li>
+<li><code>html_url</code>: required, string, format: uri</li>
+<li><code>followers_url</code>: required, string, format: uri</li>
+<li><code>following_url</code>: required, string</li>
+<li><code>gists_url</code>: required, string</li>
+<li><code>starred_url</code>: required, string</li>
+<li><code>subscriptions_url</code>: required, string, format: uri</li>
+<li><code>organizations_url</code>: required, string, format: uri</li>
+<li><code>repos_url</code>: required, string, format: uri</li>
+<li><code>events_url</code>: required, string</li>
+<li><code>received_events_url</code>: required, string, format: uri</li>
+<li><code>type</code>: required, string</li>
+<li><code>site_admin</code>: required, boolean</li>
+<li><code>starred_at</code>: string</li>
+<li><code>user_view_type</code>: string</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>created_at</code>: required, string, format: date-time</li>
+<li><code>updated_at</code>: required, string, format: date-time</li>
+<li><code>advisory_url</code>: required, string, format: uri</li>
+<li><code>author_association</code>: required, string, enum: <code>COLLABORATOR</code>, <code>CONTRIBUTOR</code>, <code>FIRST_TIMER</code>, <code>FIRST_TIME_CONTRIBUTOR</code>, <code>MANNEQUIN</code>, <code>MEMBER</code>, <code>NONE</code>, <code>OWNER</code></li>
+</ul>
+<h2 id="create-a-repository-advisory-comment" title="POST /repos/{owner}/{repo}/security-advisories/{ghsa_id}/comments (Create a repository advisory comment)" data-entry-type="Resource">Create a repository advisory comment<a href="#create-a-repository-advisory-comment" aria-label="Link to heading 'Create a repository advisory comment'" data-heading-content="Create a repository advisory comment" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">POST /repos/{owner}/{repo}/security-advisories/{ghsa_id}/comments
 </span></code></pre>
-<p>Create a temporary private fork to collaborate on fixing a security vulnerability in a repository.<br>
-Repository administrators, organization owners, and security managers can create a temporary private fork. The original reporter of a privately reported vulnerability can also create one while they remain a collaborator on the security advisory.<br>
-Note</p>
-<p>Forking a repository happens asynchronously. You may have to wait up to 5 minutes before you can access the fork.</p>
+<p>Creates a comment on a repository security advisory.<br>
+In order to create a comment, the authenticated user must be an advisory collaborator, security manager, or repository administrator.</p>
 <h3 id="parameters-7">Parameters<a href="#parameters-7" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-7">Headers<a href="#headers-7" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
@@ -1128,7 +1175,225 @@ The name of the repository without the .git extension. The name is not case sens
 The GHSA (GitHub Security Advisory) identifier of the advisory.</p>
 </li>
 </ul>
+<h4 id="body-parameters-3">Body parameters<a href="#body-parameters-3" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li><strong><code>body</code></strong> (string) (required)<br>
+The contents of the comment.</li>
+</ul>
 <h3 id="http-response-status-codes-7">HTTP response status codes<a href="#http-response-status-codes-7" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>201</strong> - Created</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+</ul>
+<h3 id="code-examples-7">Code examples<a href="#code-examples-7" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-6">Example<a href="#example-6" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X POST \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/security-advisories/GHSA_ID/comments \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "body": "Thanks for the report. We are working on a fix."
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 201):</strong></p>
+<ul>
+<li><code>id</code>: required, integer, format: int64</li>
+<li><code>node_id</code>: required, string</li>
+<li><code>url</code>: required, string, format: uri</li>
+<li><code>html_url</code>: required, string, format: uri</li>
+<li><code>body</code>: required, string</li>
+<li><code>user</code>: required, any of:
+<ul>
+<li><strong>null</strong></li>
+<li><strong>Simple User</strong>
+<ul>
+<li><code>name</code>: string or null</li>
+<li><code>email</code>: string or null</li>
+<li><code>login</code>: required, string</li>
+<li><code>id</code>: required, integer, format: int64</li>
+<li><code>node_id</code>: required, string</li>
+<li><code>avatar_url</code>: required, string, format: uri</li>
+<li><code>gravatar_id</code>: required, string or null</li>
+<li><code>url</code>: required, string, format: uri</li>
+<li><code>html_url</code>: required, string, format: uri</li>
+<li><code>followers_url</code>: required, string, format: uri</li>
+<li><code>following_url</code>: required, string</li>
+<li><code>gists_url</code>: required, string</li>
+<li><code>starred_url</code>: required, string</li>
+<li><code>subscriptions_url</code>: required, string, format: uri</li>
+<li><code>organizations_url</code>: required, string, format: uri</li>
+<li><code>repos_url</code>: required, string, format: uri</li>
+<li><code>events_url</code>: required, string</li>
+<li><code>received_events_url</code>: required, string, format: uri</li>
+<li><code>type</code>: required, string</li>
+<li><code>site_admin</code>: required, boolean</li>
+<li><code>starred_at</code>: string</li>
+<li><code>user_view_type</code>: string</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>created_at</code>: required, string, format: date-time</li>
+<li><code>updated_at</code>: required, string, format: date-time</li>
+<li><code>advisory_url</code>: required, string, format: uri</li>
+<li><code>author_association</code>: required, string, enum: <code>COLLABORATOR</code>, <code>CONTRIBUTOR</code>, <code>FIRST_TIMER</code>, <code>FIRST_TIME_CONTRIBUTOR</code>, <code>MANNEQUIN</code>, <code>MEMBER</code>, <code>NONE</code>, <code>OWNER</code></li>
+</ul>
+<h2 id="get-a-repository-advisory-comment" title="GET /repos/{owner}/{repo}/security-advisories/{ghsa_id}/comments/{comment_id} (Get a repository advisory comment)" data-entry-type="Resource">Get a repository advisory comment<a href="#get-a-repository-advisory-comment" aria-label="Link to heading 'Get a repository advisory comment'" data-heading-content="Get a repository advisory comment" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /repos/{owner}/{repo}/security-advisories/{ghsa_id}/comments/{comment_id}
+</span></code></pre>
+<p>Get a comment on a repository security advisory using the comment's ID.<br>
+Advisory collaborators can view all non-confidential comments on advisories they have access to.<br>
+Other users can only view comments that are not considered internal.<br>
+GitHub Apps and fine-grained personal access tokens with the repository_advisories: read permission can view all non-confidential comments, including internal comments.<br>
+OAuth app tokens and personal access tokens (classic) need the repo or repository_advisories:read scope to get a comment on a security advisory in a private repository, or any unpublished security advisory that the authenticated user has access to.</p>
+<h3 id="parameters-8">Parameters<a href="#parameters-8" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-8">Headers<a href="#headers-8" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-8">Path and query parameters<a href="#path-and-query-parameters-8" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>ghsa_id</code></strong> (string) (required)<br>
+The GHSA (GitHub Security Advisory) identifier of the advisory.</p>
+</li>
+<li>
+<p><strong><code>comment_id</code></strong> (integer) (required)<br>
+The unique identifier of the comment.</p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-8">HTTP response status codes<a href="#http-response-status-codes-8" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - OK</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+</ul>
+<h3 id="code-examples-8">Code examples<a href="#code-examples-8" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-7">Example<a href="#example-7" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X GET \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/security-advisories/GHSA_ID/comments/COMMENT_ID
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<p>Same response schema as <a href="#create-a-repository-advisory-comment">Create a repository advisory comment</a>.</p>
+<h2 id="update-a-repository-advisory-comment" title="PATCH /repos/{owner}/{repo}/security-advisories/{ghsa_id}/comments/{comment_id} (Update a repository advisory comment)" data-entry-type="Resource">Update a repository advisory comment<a href="#update-a-repository-advisory-comment" aria-label="Link to heading 'Update a repository advisory comment'" data-heading-content="Update a repository advisory comment" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PATCH /repos/{owner}/{repo}/security-advisories/{ghsa_id}/comments/{comment_id}
+</span></code></pre>
+<p>Update the body of a comment on a repository security advisory using the comment's ID.<br>
+In order to update a comment, the authenticated user must be the author of the comment, or a security manager or administrator of the repository.<br>
+OAuth app tokens and personal access tokens (classic) need the repo or repository_advisories:write scope to use this endpoint.</p>
+<h3 id="parameters-9">Parameters<a href="#parameters-9" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-9">Headers<a href="#headers-9" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-9">Path and query parameters<a href="#path-and-query-parameters-9" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>ghsa_id</code></strong> (string) (required)<br>
+The GHSA (GitHub Security Advisory) identifier of the advisory.</p>
+</li>
+<li>
+<p><strong><code>comment_id</code></strong> (integer) (required)<br>
+The unique identifier of the comment.</p>
+</li>
+</ul>
+<h4 id="body-parameters-4">Body parameters<a href="#body-parameters-4" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li><strong><code>body</code></strong> (string) (required)<br>
+The contents of the comment.</li>
+</ul>
+<h3 id="http-response-status-codes-9">HTTP response status codes<a href="#http-response-status-codes-9" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - OK</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+</ul>
+<h3 id="code-examples-9">Code examples<a href="#code-examples-9" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-8">Example<a href="#example-8" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X PATCH \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/security-advisories/GHSA_ID/comments/COMMENT_ID \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "body": "Updated comment body."
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<p>Same response schema as <a href="#create-a-repository-advisory-comment">Create a repository advisory comment</a>.</p>
+<h2 id="request-a-cve-for-a-repository-security-advisory" title="POST /repos/{owner}/{repo}/security-advisories/{ghsa_id}/cve (Request a CVE for a repository security advisory)" data-entry-type="Resource">Request a CVE for a repository security advisory<a href="#request-a-cve-for-a-repository-security-advisory" aria-label="Link to heading 'Request a CVE for a repository security advisory'" data-heading-content="Request a CVE for a repository security advisory" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">POST /repos/{owner}/{repo}/security-advisories/{ghsa_id}/cve
+</span></code></pre>
+<p>If you want a CVE identification number for the security vulnerability in your project, and don't already have one, you can request a CVE identification number from GitHub. For more information see "Requesting a CVE identification number."<br>
+You may request a CVE for public repositories, but cannot do so for private repositories.<br>
+In order to request a CVE for a repository security advisory, the authenticated user must be a security manager or administrator of that repository.<br>
+OAuth app tokens and personal access tokens (classic) need the repo or repository_advisories:write scope to use this endpoint.</p>
+<h3 id="parameters-10">Parameters<a href="#parameters-10" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-10">Headers<a href="#headers-10" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-10">Path and query parameters<a href="#path-and-query-parameters-10" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>ghsa_id</code></strong> (string) (required)<br>
+The GHSA (GitHub Security Advisory) identifier of the advisory.</p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-10">HTTP response status codes<a href="#http-response-status-codes-10" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>202</strong> - Accepted</p>
@@ -1146,8 +1411,63 @@ The GHSA (GitHub Security Advisory) identifier of the advisory.</p>
 <p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
 </li>
 </ul>
-<h3 id="code-examples-7">Code examples<a href="#code-examples-7" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-6">Example<a href="#example-6" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-10">Code examples<a href="#code-examples-10" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-9">Example<a href="#example-9" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X POST \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/security-advisories/GHSA_ID/cve
+</span></code></pre>
+<p><strong>Response schema (Status: 202):</strong></p>
+<p>object</p>
+<h2 id="create-a-temporary-private-fork" title="POST /repos/{owner}/{repo}/security-advisories/{ghsa_id}/forks (Create a temporary private fork)" data-entry-type="Resource">Create a temporary private fork<a href="#create-a-temporary-private-fork" aria-label="Link to heading 'Create a temporary private fork'" data-heading-content="Create a temporary private fork" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">POST /repos/{owner}/{repo}/security-advisories/{ghsa_id}/forks
+</span></code></pre>
+<p>Create a temporary private fork to collaborate on fixing a security vulnerability in a repository.<br>
+Repository administrators, organization owners, and security managers can create a temporary private fork. The original reporter of a privately reported vulnerability can also create one while they remain a collaborator on the security advisory.<br>
+Note</p>
+<p>Forking a repository happens asynchronously. You may have to wait up to 5 minutes before you can access the fork.</p>
+<h3 id="parameters-11">Parameters<a href="#parameters-11" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-11">Headers<a href="#headers-11" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-11">Path and query parameters<a href="#path-and-query-parameters-11" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>ghsa_id</code></strong> (string) (required)<br>
+The GHSA (GitHub Security Advisory) identifier of the advisory.</p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-11">HTTP response status codes<a href="#http-response-status-codes-11" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>202</strong> - Accepted</p>
+</li>
+<li>
+<p><strong>400</strong> - Bad Request</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+</ul>
+<h3 id="code-examples-11">Code examples<a href="#code-examples-11" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-10">Example<a href="#example-10" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X POST \

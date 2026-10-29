@@ -71,6 +71,7 @@ A cursor, as given in the Link header. If specified, the query only searches for
 </ul>
 </li>
 <li><code>dependabot_alerts</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
+<li><code>dependabot_reachability</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>dependabot_security_updates</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>dependabot_delegated_alert_dismissal</code>: string or null, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code>, <code>null</code></li>
 <li><code>code_scanning_options</code>: object or null:
@@ -104,6 +105,7 @@ A cursor, as given in the Link header. If specified, the query only searches for
 <li><code>secret_scanning_validity_checks</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_non_provider_patterns</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_generic_secrets</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
+<li><code>secret_scanning_generic_secrets_push_protection</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_delegated_alert_dismissal</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_extended_metadata</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>private_vulnerability_reporting</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
@@ -181,6 +183,14 @@ Default: <code>disabled</code><br>
 Can be one of: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></p>
 </li>
 <li>
+<p><strong><code>dependabot_reachability</code></strong> (string)<br>
+The enablement status of reachability analysis for Dependabot. Only available for enterprises with access to reachability analysis.<br>
+Requires Dependabot alerts to be enabled when set to enabled. Must be disabled when Dependabot alerts is disabled.<br>
+not_set leaves existing repository settings unchanged.<br>
+Default: <code>disabled</code><br>
+Can be one of: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></p>
+</li>
+<li>
 <p><strong><code>dependabot_security_updates</code></strong> (string)<br>
 The enablement status of Dependabot security updates<br>
 Default: <code>disabled</code><br>
@@ -249,6 +259,12 @@ Can be one of: <code>enabled</code>, <code>disabled</code>, <code>not_set</code>
 <li>
 <p><strong><code>secret_scanning_generic_secrets</code></strong> (string)<br>
 The enablement status of Copilot secret scanning<br>
+Default: <code>disabled</code><br>
+Can be one of: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></p>
+</li>
+<li>
+<p><strong><code>secret_scanning_generic_secrets_push_protection</code></strong> (string)<br>
+The enablement status of generic secrets push protection<br>
 Default: <code>disabled</code><br>
 Can be one of: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></p>
 </li>
@@ -325,6 +341,7 @@ Can be one of: <code>enforced</code>, <code>unenforced</code>, <code>enterprise_
 </ul>
 </li>
 <li><code>dependabot_alerts</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
+<li><code>dependabot_reachability</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>dependabot_security_updates</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>dependabot_delegated_alert_dismissal</code>: string or null, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code>, <code>null</code></li>
 <li><code>code_scanning_options</code>: object or null:
@@ -358,6 +375,7 @@ Can be one of: <code>enforced</code>, <code>unenforced</code>, <code>enterprise_
 <li><code>secret_scanning_validity_checks</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_non_provider_patterns</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_generic_secrets</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
+<li><code>secret_scanning_generic_secrets_push_protection</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_delegated_alert_dismissal</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_extended_metadata</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>private_vulnerability_reporting</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
@@ -414,6 +432,7 @@ The slug version of the enterprise name.</li>
 </ul>
 </li>
 <li><code>dependabot_alerts</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
+<li><code>dependabot_reachability</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>dependabot_security_updates</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>dependabot_delegated_alert_dismissal</code>: string or null, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code>, <code>null</code></li>
 <li><code>code_scanning_options</code>: object or null:
@@ -447,6 +466,7 @@ The slug version of the enterprise name.</li>
 <li><code>secret_scanning_validity_checks</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_non_provider_patterns</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_generic_secrets</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
+<li><code>secret_scanning_generic_secrets_push_protection</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_delegated_alert_dismissal</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_extended_metadata</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>private_vulnerability_reporting</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
@@ -574,6 +594,13 @@ The enablement status of Dependabot alerts<br>
 Can be one of: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></p>
 </li>
 <li>
+<p><strong><code>dependabot_reachability</code></strong> (string)<br>
+The enablement status of reachability analysis for Dependabot. Only available for enterprises with access to reachability analysis.<br>
+Requires Dependabot alerts to be enabled when set to enabled. Must be disabled when Dependabot alerts is disabled.<br>
+not_set leaves existing repository settings unchanged. Omit this field to preserve the configuration's current value.<br>
+Can be one of: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></p>
+</li>
+<li>
 <p><strong><code>dependabot_security_updates</code></strong> (string)<br>
 The enablement status of Dependabot security updates<br>
 Can be one of: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></p>
@@ -636,6 +663,12 @@ Can be one of: <code>enabled</code>, <code>disabled</code>, <code>not_set</code>
 <li>
 <p><strong><code>secret_scanning_generic_secrets</code></strong> (string)<br>
 The enablement status of Copilot secret scanning<br>
+Default: <code>disabled</code><br>
+Can be one of: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></p>
+</li>
+<li>
+<p><strong><code>secret_scanning_generic_secrets_push_protection</code></strong> (string)<br>
+The enablement status of generic secrets push protection<br>
 Default: <code>disabled</code><br>
 Can be one of: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></p>
 </li>
@@ -884,6 +917,7 @@ Can be one of: <code>all</code>, <code>none</code>, <code>private_and_internal</
 </ul>
 </li>
 <li><code>dependabot_alerts</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
+<li><code>dependabot_reachability</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>dependabot_security_updates</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>dependabot_delegated_alert_dismissal</code>: string or null, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code>, <code>null</code></li>
 <li><code>code_scanning_options</code>: object or null:
@@ -917,6 +951,7 @@ Can be one of: <code>all</code>, <code>none</code>, <code>private_and_internal</
 <li><code>secret_scanning_validity_checks</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_non_provider_patterns</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_generic_secrets</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
+<li><code>secret_scanning_generic_secrets_push_protection</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_delegated_alert_dismissal</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_extended_metadata</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>private_vulnerability_reporting</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
@@ -1199,6 +1234,14 @@ Default: <code>disabled</code><br>
 Can be one of: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></p>
 </li>
 <li>
+<p><strong><code>dependabot_reachability</code></strong> (string)<br>
+The enablement status of reachability analysis for Dependabot. Only available for organizations with access to reachability analysis.<br>
+Requires Dependabot alerts to be enabled when set to enabled. Must be disabled when Dependabot alerts is disabled.<br>
+not_set leaves existing repository settings unchanged.<br>
+Default: <code>disabled</code><br>
+Can be one of: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></p>
+</li>
+<li>
 <p><strong><code>dependabot_security_updates</code></strong> (string)<br>
 The enablement status of Dependabot security updates<br>
 Default: <code>disabled</code><br>
@@ -1299,6 +1342,12 @@ Can be one of: <code>enabled</code>, <code>disabled</code>, <code>not_set</code>
 <li>
 <p><strong><code>secret_scanning_generic_secrets</code></strong> (string)<br>
 The enablement status of Copilot secret scanning<br>
+Default: <code>disabled</code><br>
+Can be one of: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></p>
+</li>
+<li>
+<p><strong><code>secret_scanning_generic_secrets_push_protection</code></strong> (string)<br>
+The enablement status of generic secrets push protection<br>
 Default: <code>disabled</code><br>
 Can be one of: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></p>
 </li>
@@ -1573,6 +1622,13 @@ The enablement status of Dependabot alerts<br>
 Can be one of: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></p>
 </li>
 <li>
+<p><strong><code>dependabot_reachability</code></strong> (string)<br>
+The enablement status of reachability analysis for Dependabot. Only available for organizations with access to reachability analysis.<br>
+Requires Dependabot alerts to be enabled when set to enabled. Must be disabled when Dependabot alerts is disabled.<br>
+not_set leaves existing repository settings unchanged. Omit this field to preserve the configuration's current value.<br>
+Can be one of: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></p>
+</li>
+<li>
 <p><strong><code>dependabot_security_updates</code></strong> (string)<br>
 The enablement status of Dependabot security updates<br>
 Can be one of: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></p>
@@ -1665,6 +1721,11 @@ Can be one of: <code>enabled</code>, <code>disabled</code>, <code>not_set</code>
 <li>
 <p><strong><code>secret_scanning_generic_secrets</code></strong> (string)<br>
 The enablement status of Copilot secret scanning<br>
+Can be one of: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></p>
+</li>
+<li>
+<p><strong><code>secret_scanning_generic_secrets_push_protection</code></strong> (string)<br>
+The enablement status of generic secrets push protection<br>
 Can be one of: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></p>
 </li>
 <li>
@@ -2049,6 +2110,7 @@ The name of the repository without the .git extension. The name is not case sens
 </ul>
 </li>
 <li><code>dependabot_alerts</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
+<li><code>dependabot_reachability</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>dependabot_security_updates</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>dependabot_delegated_alert_dismissal</code>: string or null, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code>, <code>null</code></li>
 <li><code>code_scanning_options</code>: object or null:
@@ -2082,6 +2144,7 @@ The name of the repository without the .git extension. The name is not case sens
 <li><code>secret_scanning_validity_checks</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_non_provider_patterns</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_generic_secrets</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
+<li><code>secret_scanning_generic_secrets_push_protection</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_delegated_alert_dismissal</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>secret_scanning_extended_metadata</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>
 <li><code>private_vulnerability_reporting</code>: string, enum: <code>enabled</code>, <code>disabled</code>, <code>not_set</code></li>

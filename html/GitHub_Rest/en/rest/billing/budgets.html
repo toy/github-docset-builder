@@ -1,5 +1,10 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><title>Budgets</title><link rel="stylesheet" href="../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../index.html">REST API</a> / <a href="index.html">Billing</a> / </nav><h1 id="budgets">Budgets<a href="#budgets" aria-label="Link to heading 'Budgets'" data-heading-content="Budgets" class="anchor"></a></h1>
 <p>Use the REST API to get budget information.</p>
+<h2 id="authentication-for-enterprise-budgets" title="Authentication for enterprise budgets" data-entry-type="Section">Authentication for enterprise budgets<a href="#authentication-for-enterprise-budgets" aria-label="Link to heading 'Authentication for enterprise budgets'" data-heading-content="Authentication for enterprise budgets" class="anchor"></a></h2>
+<p>GitHub App authentication for enterprise cost center and budget endpoints is not generally available. The "Enterprise billing" permission shown in the generated endpoint details is not available to all enterprises when registering an enterprise-owned GitHub App, on either GitHub.com or GHE.com.</p>
+<p>The generated endpoint descriptions and authentication tables do not indicate whether your enterprise can grant this permission. Do not plan an integration using GitHub App user or installation access tokens unless your enterprise can grant this permission.</p>
+<p>For enterprise owners and billing managers, use a personal access token (classic) or an OAuth access token with the <code>manage_billing:enterprise</code> scope. The token's user must have access to the resources being requested. Fine-grained personal access tokens cannot access these enterprise endpoints. See <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens" class="external">Managing your personal access tokens</a>.</p>
+<h2 id="creating-a-user-scoped-budget" title="Creating a user-scoped budget" data-entry-type="Section">Creating a user-scoped budget<a href="#creating-a-user-scoped-budget" aria-label="Link to heading 'Creating a user-scoped budget'" data-heading-content="Creating a user-scoped budget" class="anchor"></a></h2>
 <div class="markdown-alert markdown-alert-important">
 <p class="markdown-alert-title">Important</p>
 <p>The request body schema below is missing a required field. When <code>budget_scope</code> is <code>user</code>, you must also include a <code>user</code> field set to the GitHub username the budget applies to. If you omit this field, the API returns <code>HTTP 400: Missing required fields: budget_entity_name</code>. For user-scoped budgets, <code>budget_entity_name</code> can be an empty string.</p>
@@ -55,7 +60,7 @@ Default: <code>10</code></p>
 Filter budgets by scope type.</p>
 <p>organization: Budgets scoped to the organization.<br>
 repository: Budgets scoped to a repository.<br>
-multi_user_customer: Universal budgets that apply to all users in the organization.<br>
+multi<span data-escaped-char="">_</span>user<span data-escaped-char="">_</span>customer: Universal budgets that apply to all users in the organization.<br>
 user: Budgets scoped to an individual user.<br>
 Can be one of: <code>enterprise</code>, <code>organization</code>, <code>repository</code>, <code>cost_center</code>, <code>multi_user_customer</code>, <code>user</code></p>
 </li>
@@ -192,7 +197,7 @@ The budget amount in whole dollars. For license-based products, this represents 
 </li>
 <li>
 <p><strong><code>prevent_further_usage</code></strong> (boolean)<br>
-Whether to prevent additional spending once the budget is exceeded. For user and multi_user_customer scopes, this must be true.</p>
+Whether to prevent additional spending once the budget is exceeded. For user and multi<span data-escaped-char="">_</span>user<span data-escaped-char="">_</span>customer scopes, this must be true.</p>
 </li>
 <li>
 <p><strong><code>budget_alerting</code></strong> (object)</p>
@@ -208,23 +213,25 @@ Array of user login names who will receive alerts. Rejected for user-scope as al
 The scope of the budget for this organization.</p>
 <p>organization: Apply the budget to the organization.<br>
 repository: Apply the budget to a specific repository in the organization.<br>
-multi_user_customer: Apply a universal budget to all users in the organization.<br>
+multi<span data-escaped-char="">_</span>user<span data-escaped-char="">_</span>customer: Apply a universal budget to all users in the organization.<br>
 user: Apply the budget to a single user in the organization.</p>
-<p>user and multi_user_customer scopes are only supported when<br>
-budget_product_sku is ai_credits or premium_requests.<br>
+<p>user and multi<span data-escaped-char="">_</span>user<span data-escaped-char="">_</span>customer scopes are only supported when<br>
+budget<span data-escaped-char="">_</span>product<span data-escaped-char="">_</span>sku is ai<span data-escaped-char="">_</span>credits or premium<span data-escaped-char="">_</span>requests.<br>
 Can be one of: <code>organization</code>, <code>repository</code>, <code>multi_user_customer</code>, <code>user</code></p>
 </li>
 <li>
 <p><strong><code>budget_entity_name</code></strong> (string)<br>
-The name of the entity to apply the budget to<br>
-Default: ``</p>
+The entity to apply the budget to. The expected value depends on budget<span data-escaped-char="">_</span>scope.</p>
+<p>repository: The repository name, or owner/repo.<br>
+organization, multi<span data-escaped-char="">_</span>user<span data-escaped-char="">_</span>customer, and user: Not used. For user, set the user field instead.<br>
+Default: <span data-escaped-char="">`</span><span data-escaped-char="">`</span></p>
 </li>
 <li>
 <p><strong><code>budget_type</code></strong> (string)<br>
-The type of pricing model used by the budget. Determines how budget_product_sku is interpreted.</p>
-<p>BundlePricing: Covers all AI credit SKUs. Set budget_product_sku to ai_credits.<br>
-ProductPricing: Covers all SKUs that belong to a product. Set budget_product_sku to a product such as actions or packages.<br>
-SkuPricing: Covers a single, specific SKU. Set budget_product_sku to a SKU such as actions_linux.</p>
+The type of pricing model used by the budget. Determines how budget<span data-escaped-char="">_</span>product<span data-escaped-char="">_</span>sku is interpreted.</p>
+<p>BundlePricing: Covers all AI credit SKUs. Set budget<span data-escaped-char="">_</span>product<span data-escaped-char="">_</span>sku to ai<span data-escaped-char="">_</span>credits.<br>
+ProductPricing: Covers all SKUs that belong to a product. Set budget<span data-escaped-char="">_</span>product<span data-escaped-char="">_</span>sku to a product such as actions or packages.<br>
+SkuPricing: Covers a single, specific SKU. Set budget<span data-escaped-char="">_</span>product<span data-escaped-char="">_</span>sku to a SKU such as actions<span data-escaped-char="">_</span>linux.</p>
 </li>
 <li>
 <p><strong><code>budget_product_sku</code></strong> (string)<br>
@@ -232,13 +239,13 @@ A single product or SKU that will be covered in the budget</p>
 </li>
 <li>
 <p><strong><code>user</code></strong> (string)<br>
-The username of the user for user scope budgets. This field is required when budget_scope is user.</p>
+The username of the user for user scope budgets. This field is required when budget<span data-escaped-char="">_</span>scope is user.</p>
 </li>
 <li>
 <p><strong><code>expires_at</code></strong> (string)<br>
 The date the budget will expire in YYYY-MM-DD format. Only dates in the future are accepted.<br>
 If not provided, the budget will not expire.<br>
-Only supported for budgets with budget_scope of user</p>
+Only supported for budgets with budget<span data-escaped-char="">_</span>scope of user</p>
 </li>
 </ul>
 <h3 id="http-response-status-codes-1">HTTP response status codes<a href="#http-response-status-codes-1" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
@@ -412,7 +419,7 @@ The budget amount in whole dollars. For license-based products, this represents 
 </li>
 <li>
 <p><strong><code>prevent_further_usage</code></strong> (boolean)<br>
-Whether to prevent additional spending once the budget is exceeded. For budgets with user or multi_user_customer scope, this must remain true.</p>
+Whether to prevent additional spending once the budget is exceeded. For budgets with user or multi<span data-escaped-char="">_</span>user<span data-escaped-char="">_</span>customer scope, this must remain true.</p>
 </li>
 <li>
 <p><strong><code>budget_alerting</code></strong> (object)</p>

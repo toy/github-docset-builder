@@ -791,6 +791,7 @@ The custom properties for the new repository. The keys are the custom property n
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /repos/{owner}/{repo}
 </span></code></pre>
 <p>The parent and source objects are present when the repository is a fork. parent is the repository this repository was forked from, source is the ultimate source for the network.<br>
+When present and non-empty, temp_clone_token is a temporary credential for read-only Git access to this repository. It expires five minutes after generation and cannot be used to push changes. Treat this value as sensitive and avoid recording it in logs.<br>
 Note</p>
 <p>In order to see the security_and_analysis block for a repository you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "Managing security managers in your organization."<br>
 To view merge-related settings, you must have the contents:read and contents:write permissions.</p>
