@@ -28,9 +28,11 @@
 <!--This functionality is shown in modal dialogs when you enable a security configuration following the release of separate SKUs for GHAS.-->
 <h2 id="turning-off-secret-protection-or-code-security" title="Turning off Secret Protection or Code Security" data-entry-type="Section">Turning off Secret Protection or Code Security<a href="#turning-off-secret-protection-or-code-security" aria-label="Link to heading 'Turning off Secret Protection or Code Security'" data-heading-content="Turning off Secret Protection or Code Security" class="anchor"></a></h2>
 <p>The simplest way to turn off all Secret Protection or Code Security features for one or more repositories is to create a security configuration where the product is disabled at the top level. You can apply this custom configuration to repositories where you want to turn off paid features.</p>
-<div class="markdown-alert markdown-alert-tip">
-<p class="markdown-alert-title">Tip</p>
-<p>Ensure that you give your custom configuration a very clear name, for example: "No Code Security" or "Secret Protection and Supply chain only" to avoid confusion.</p>
+<p>To keep Code Security disabled, set "Default setup" and "Prevent direct alert dismissals" in the "Code scanning" section to <strong>Disabled</strong>. You can leave "Dependency graph" and "Dependabot alerts" enabled because they are included in all plans.</p>
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>Changing "Prevent direct alert dismissals" in the "Code scanning" section to <strong>Not set</strong> automatically switches Code Security to <strong>Enabled</strong>. To avoid unintentionally enabling paid features, organization administrators must keep "Default setup" and "Prevent direct alert dismissals" in this section <strong>Disabled</strong> and recheck the top-level Code Security setting before saving and applying the configuration.</p>
 </div>
+<p>Ensure that you give your custom configuration a very clear name, for example: "No Code Security" or "Secret Protection and Supply chain only" to avoid confusion.</p>
 <p>For more information, see <a href="../establish-complete-coverage/create-custom-configuration.html">Creating a custom security configuration</a> and <a href="../establish-complete-coverage/apply-custom-configuration.html">Applying a custom security configuration</a>.</p>
 <footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

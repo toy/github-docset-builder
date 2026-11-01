@@ -509,6 +509,10 @@
 <p>To customize the spec, comment out or remove <code>containerMode</code>, and append the configuration you want in the <code>template</code> section.</p>
 <h4 id="example-running-dind-rootless">Example: running <code>dind-rootless</code><a href="#example-running-dind-rootless" aria-label="Link to heading 'Example: running dind-rootless'" data-heading-content="Example: running dind-rootless" class="anchor"></a></h4>
 <p>Before deciding to run <code>dind-rootless</code>, make sure you are aware of <a href="https://docs.docker.com/engine/security/rootless/#known-limitations" class="external">known limitations</a>.</p>
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>On Kubernetes nodes running Ubuntu 24.04 and later, restrictions on unprivileged user namespaces can prevent RootlessKit from starting the Docker daemon in the <code>dind</code> container. Before using this configuration, see <a href="https://docs.docker.com/engine/security/rootless/troubleshoot/#distribution-specific-hint" class="external">Troubleshooting</a> in the Docker documentation and review the Ubuntu-specific guidance with your cluster administrator.</p>
+</div>
 <p>For versions of Kubernetes &gt;= v1.29, sidecar container will be used to run docker daemon.</p>
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#65737e;">## githubConfigUrl is the GitHub url for where you want to configure runners
 </span><span style="color:#65737e;">## ex: https://github.com/myorg/myrepo or https://github.com/myorg
