@@ -14,9 +14,9 @@
 metadata and generates output in the specified format.</p>
 <h2 id="options" title="Options" data-entry-type="Section">Options<a href="#options" aria-label="Link to heading 'Options'" data-heading-content="Options" class="anchor"></a></h2>
 <h3 id="primary-options">Primary Options<a href="#primary-options" aria-label="Link to heading 'Primary Options'" data-heading-content="Primary Options" class="anchor"></a></h3>
-<h4 id="bqrs-file"><code>&lt;bqrs-file&gt;</code><a href="#bqrs-file" aria-label="Link to heading '<bqrs-file>'" data-heading-content="<bqrs-file>" class="anchor"></a></h4>
+<h4 id="bqrs-file"><code>&lt;bqrs-file&gt;</code><a href="#bqrs-file" aria-label="Link to heading '&lt;bqrs-file&gt;'" data-heading-content="&lt;bqrs-file&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Mandatory] The BQRS file to interpret.</p>
-<h4 id="--formatformat"><code>--format=&lt;format&gt;</code><a href="#--formatformat" aria-label="Link to heading '--format=<format>'" data-heading-content="--format=<format>" class="anchor"></a></h4>
+<h4 id="--formatformat"><code>--format=&lt;format&gt;</code><a href="#--formatformat" aria-label="Link to heading '--format=&lt;format&gt;'" data-heading-content="--format=&lt;format&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Mandatory] The format in which to write the results. One of:</p>
 <p><code>csv</code>: Formatted comma-separated values, including columns with both<br>
 rule and alert metadata.</p>
@@ -32,16 +32,16 @@ queries with @kind graph.</p>
 describing graphs. Only compatible with queries with @kind graph.</p>
 <p><code>dot</code>: Graphviz DOT language, a text-based format for describing graphs.<br>
 Only compatible with queries with @kind graph.</p>
-<h4 id="-o---outputoutput"><code>-o, --output=&lt;output&gt;</code><a href="#-o---outputoutput" aria-label="Link to heading '-o, --output=<output>'" data-heading-content="-o, --output=<output>" class="anchor"></a></h4>
+<h4 id="-o---outputoutput"><code>-o, --output=&lt;output&gt;</code><a href="#-o---outputoutput" aria-label="Link to heading '-o, --output=&lt;output&gt;'" data-heading-content="-o, --output=&lt;output&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Mandatory] The output path to write results to. For graph formats<br>
 this should be a directory, and the result (or results if this command<br>
 supports interpreting more than one query) will be written within that<br>
 directory.</p>
-<h4 id="-tstringstring"><code>-t=&lt;String=String&gt;</code><a href="#-tstringstring" aria-label="Link to heading '-t=<String=String>'" data-heading-content="-t=<String=String>" class="anchor"></a></h4>
+<h4 id="-tstringstring"><code>-t=&lt;String=String&gt;</code><a href="#-tstringstring" aria-label="Link to heading '-t=&lt;String=String&gt;'" data-heading-content="-t=&lt;String=String&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Mandatory] A query metadata key value pair. Repeat for each piece of<br>
 metadata. At least the keys 'kind' and 'id' must be specified. Keys<br>
 do not need to be prefixed with @.</p>
-<h4 id="--max-pathsmaxpaths"><code>--max-paths=&lt;maxPaths&gt;</code><a href="#--max-pathsmaxpaths" aria-label="Link to heading '--max-paths=<maxPaths>'" data-heading-content="--max-paths=<maxPaths>" class="anchor"></a></h4>
+<h4 id="--max-pathsmaxpaths"><code>--max-paths=&lt;maxPaths&gt;</code><a href="#--max-pathsmaxpaths" aria-label="Link to heading '--max-paths=&lt;maxPaths&gt;'" data-heading-content="--max-paths=&lt;maxPaths&gt;" class="anchor"></a></h4>
 <p>The maximum number of paths to produce for each alert with paths.<br>
 (Default: 4)</p>
 <h4 id="--no-sarif-add-file-contents"><code>--[no-]sarif-add-file-contents</code><a href="#--no-sarif-add-file-contents" aria-label="Link to heading '--[no-]sarif-add-file-contents'" data-heading-content="--[no-]sarif-add-file-contents" class="anchor"></a></h4>
@@ -58,7 +58,7 @@ all queries. It loads query help for /path/to/query.ql from the<br>
 behavior is to include help only for custom queries i.e. those in query<br>
 packs which are not of the form <span data-escaped-char="">`</span>codeql/<span data-escaped-char="">&lt;</span>lang<span data-escaped-char="">&amp;</span>rt;-queries<span data-escaped-char="">`</span>. This<br>
 option has no effect when passed to codeql bqrs interpret.</p>
-<h4 id="--sarif-include-query-helpmode"><code>--sarif-include-query-help=&lt;mode&gt;</code><a href="#--sarif-include-query-helpmode" aria-label="Link to heading '--sarif-include-query-help=<mode>'" data-heading-content="--sarif-include-query-help=<mode>" class="anchor"></a></h4>
+<h4 id="--sarif-include-query-helpmode"><code>--sarif-include-query-help=&lt;mode&gt;</code><a href="#--sarif-include-query-helpmode" aria-label="Link to heading '--sarif-include-query-help=&lt;mode&gt;'" data-heading-content="--sarif-include-query-help=&lt;mode&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>SARIF formats only] Specify whether to include query help in the<br>
 SARIF output. One of:</p>
 <p><code>always</code>: Include query help for all queries.</p>
@@ -83,16 +83,16 @@ as a plain string.</p>
 <h4 id="--no-sarif-minify"><code>--no-sarif-minify</code><a href="#--no-sarif-minify" aria-label="Link to heading '--no-sarif-minify'" data-heading-content="--no-sarif-minify" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>SARIF formats only] Produce pretty-printed SARIF output. By default,<br>
 SARIF output is minified to reduce the size of the output file.</p>
-<h4 id="--sarif-run-propertystringstring"><code>--sarif-run-property=&lt;String=String&gt;</code><a href="#--sarif-run-propertystringstring" aria-label="Link to heading '--sarif-run-property=<String=String>'" data-heading-content="--sarif-run-property=<String=String>" class="anchor"></a></h4>
+<h4 id="--sarif-run-propertystringstring"><code>--sarif-run-property=&lt;String=String&gt;</code><a href="#--sarif-run-propertystringstring" aria-label="Link to heading '--sarif-run-property=&lt;String=String&gt;'" data-heading-content="--sarif-run-property=&lt;String=String&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>SARIF formats only] A key value pair to add to the generated SARIF<br>
 'run' property bag. Can be repeated.</p>
 <h4 id="--no-group-results"><code>--no-group-results</code><a href="#--no-group-results" aria-label="Link to heading '--no-group-results'" data-heading-content="--no-group-results" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>SARIF formats only] Produce one result per message, rather than one<br>
 result per unique location.</p>
-<h4 id="--csv-location-formatcsvlocationformat"><code>--csv-location-format=&lt;csvLocationFormat&gt;</code><a href="#--csv-location-formatcsvlocationformat" aria-label="Link to heading '--csv-location-format=<csvLocationFormat>'" data-heading-content="--csv-location-format=<csvLocationFormat>" class="anchor"></a></h4>
+<h4 id="--csv-location-formatcsvlocationformat"><code>--csv-location-format=&lt;csvLocationFormat&gt;</code><a href="#--csv-location-formatcsvlocationformat" aria-label="Link to heading '--csv-location-format=&lt;csvLocationFormat&gt;'" data-heading-content="--csv-location-format=&lt;csvLocationFormat&gt;" class="anchor"></a></h4>
 <p>The format in which to produce locations in CSV output. One of: uri,<br>
 line-column, offset-length. (Default: line-column)</p>
-<h4 id="--dot-location-url-formatdotlocationurlformat"><code>--dot-location-url-format=&lt;dotLocationUrlFormat&gt;</code><a href="#--dot-location-url-formatdotlocationurlformat" aria-label="Link to heading '--dot-location-url-format=<dotLocationUrlFormat>'" data-heading-content="--dot-location-url-format=<dotLocationUrlFormat>" class="anchor"></a></h4>
+<h4 id="--dot-location-url-formatdotlocationurlformat"><code>--dot-location-url-format=&lt;dotLocationUrlFormat&gt;</code><a href="#--dot-location-url-formatdotlocationurlformat" aria-label="Link to heading '--dot-location-url-format=&lt;dotLocationUrlFormat&gt;'" data-heading-content="--dot-location-url-format=&lt;dotLocationUrlFormat&gt;" class="anchor"></a></h4>
 <p>A format string defining the format in which to produce file location<br>
 URLs in DOT output. The following place holders can be used {path}<br>
 {start:line} {start:column} {end:line} {end:column}, {offset}, {length}</p>
@@ -103,7 +103,7 @@ exports separate file coverage information for languages which share a<br>
 CodeQL extractor like C and C++, Java and Kotlin, and JavaScript and<br>
 TypeScript.</p>
 <p>Available since <code>v2.15.2</code>.</p>
-<h4 id="--sarif-categorycategory"><code>--sarif-category=&lt;category&gt;</code><a href="#--sarif-categorycategory" aria-label="Link to heading '--sarif-category=<category>'" data-heading-content="--sarif-category=<category>" class="anchor"></a></h4>
+<h4 id="--sarif-categorycategory"><code>--sarif-category=&lt;category&gt;</code><a href="#--sarif-categorycategory" aria-label="Link to heading '--sarif-category=&lt;category&gt;'" data-heading-content="--sarif-category=&lt;category&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>SARIF formats only] <span data-escaped-char="">[</span>Recommended] Specify a category for this<br>
 analysis to include in the SARIF output. A category can be used to<br>
 distinguish multiple analyses performed on the same commit and<br>
@@ -117,12 +117,12 @@ between runs of the same analysis for <em>different</em> versions of the code<br
 base.)</p>
 <p>This value will appear (with a trailing slash appended if not already<br>
 present) as the <code>&lt;run&gt;.automationDetails.id</code> property.</p>
-<h4 id="-j---threadsnum"><code>-j, --threads=&lt;num&gt;</code><a href="#-j---threadsnum" aria-label="Link to heading '-j, --threads=<num>'" data-heading-content="-j, --threads=<num>" class="anchor"></a></h4>
+<h4 id="-j---threadsnum"><code>-j, --threads=&lt;num&gt;</code><a href="#-j---threadsnum" aria-label="Link to heading '-j, --threads=&lt;num&gt;'" data-heading-content="-j, --threads=&lt;num&gt;" class="anchor"></a></h4>
 <p>The number of threads used for computing paths.</p>
 <p>Defaults to 1. You can pass 0 to use one thread per core on the machine,<br>
 or -<em>N</em> to leave <em>N</em> cores unused (except still use at least one<br>
 thread).</p>
-<h4 id="--column-kindcolumnkind"><code>--column-kind=&lt;columnKind&gt;</code><a href="#--column-kindcolumnkind" aria-label="Link to heading '--column-kind=<columnKind>'" data-heading-content="--column-kind=<columnKind>" class="anchor"></a></h4>
+<h4 id="--column-kindcolumnkind"><code>--column-kind=&lt;columnKind&gt;</code><a href="#--column-kindcolumnkind" aria-label="Link to heading '--column-kind=&lt;columnKind&gt;'" data-heading-content="--column-kind=&lt;columnKind&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>SARIF only] The column kind used to interpret location columns. One<br>
 of: utf8, utf16, utf32, bytes.</p>
 <h4 id="--no-unicode-new-lines"><code>--[no-]unicode-new-lines</code><a href="#--no-unicode-new-lines" aria-label="Link to heading '--[no-]unicode-new-lines'" data-heading-content="--[no-]unicode-new-lines" class="anchor"></a></h4>
@@ -130,32 +130,32 @@ of: utf8, utf16, utf32, bytes.</p>
 Separator, U+2028) and PS (Paragraph Separator, U+2029) are considered<br>
 as new lines when interpreting location line numbers.</p>
 <h3 id="source-archive-options---must-be-given-together-or-not-at-all">Source archive options - must be given together or not at all<a href="#source-archive-options---must-be-given-together-or-not-at-all" aria-label="Link to heading 'Source archive options - must be given together or not at all'" data-heading-content="Source archive options - must be given together or not at all" class="anchor"></a></h3>
-<h4 id="-s---source-archivesourcearchive"><code>-s, --source-archive=&lt;sourceArchive&gt;</code><a href="#-s---source-archivesourcearchive" aria-label="Link to heading '-s, --source-archive=<sourceArchive>'" data-heading-content="-s, --source-archive=<sourceArchive>" class="anchor"></a></h4>
+<h4 id="-s---source-archivesourcearchive"><code>-s, --source-archive=&lt;sourceArchive&gt;</code><a href="#-s---source-archivesourcearchive" aria-label="Link to heading '-s, --source-archive=&lt;sourceArchive&gt;'" data-heading-content="-s, --source-archive=&lt;sourceArchive&gt;" class="anchor"></a></h4>
 <p>The directory or zip file containing the source archive.</p>
-<h4 id="-p---source-location-prefixsourcelocationprefix"><code>-p, --source-location-prefix=&lt;sourceLocationPrefix&gt;</code><a href="#-p---source-location-prefixsourcelocationprefix" aria-label="Link to heading '-p, --source-location-prefix=<sourceLocationPrefix>'" data-heading-content="-p, --source-location-prefix=<sourceLocationPrefix>" class="anchor"></a></h4>
+<h4 id="-p---source-location-prefixsourcelocationprefix"><code>-p, --source-location-prefix=&lt;sourceLocationPrefix&gt;</code><a href="#-p---source-location-prefixsourcelocationprefix" aria-label="Link to heading '-p, --source-location-prefix=&lt;sourceLocationPrefix&gt;'" data-heading-content="-p, --source-location-prefix=&lt;sourceLocationPrefix&gt;" class="anchor"></a></h4>
 <p>The file path on the original file system where the source code was<br>
 stored.</p>
 <h3 id="common-options">Common options<a href="#common-options" aria-label="Link to heading 'Common options'" data-heading-content="Common options" class="anchor"></a></h3>
 <h4 id="-h---help"><code>-h, --help</code><a href="#-h---help" aria-label="Link to heading '-h, --help'" data-heading-content="-h, --help" class="anchor"></a></h4>
 <p>Show this help text.</p>
-<h4 id="-jopt"><code>-J=&lt;opt&gt;</code><a href="#-jopt" aria-label="Link to heading '-J=<opt>'" data-heading-content="-J=<opt>" class="anchor"></a></h4>
+<h4 id="-jopt"><code>-J=&lt;opt&gt;</code><a href="#-jopt" aria-label="Link to heading '-J=&lt;opt&gt;'" data-heading-content="-J=&lt;opt&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Give option to the JVM running the command.</p>
 <p>(Beware that options containing spaces will not be handled correctly.)</p>
 <h4 id="-v---verbose"><code>-v, --verbose</code><a href="#-v---verbose" aria-label="Link to heading '-v, --verbose'" data-heading-content="-v, --verbose" class="anchor"></a></h4>
 <p>Incrementally increase the number of progress messages printed.</p>
 <h4 id="-q---quiet"><code>-q, --quiet</code><a href="#-q---quiet" aria-label="Link to heading '-q, --quiet'" data-heading-content="-q, --quiet" class="anchor"></a></h4>
 <p>Incrementally decrease the number of progress messages printed.</p>
-<h4 id="--verbositylevel"><code>--verbosity=&lt;level&gt;</code><a href="#--verbositylevel" aria-label="Link to heading '--verbosity=<level>'" data-heading-content="--verbosity=<level>" class="anchor"></a></h4>
+<h4 id="--verbositylevel"><code>--verbosity=&lt;level&gt;</code><a href="#--verbositylevel" aria-label="Link to heading '--verbosity=&lt;level&gt;'" data-heading-content="--verbosity=&lt;level&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Explicitly set the verbosity level to one of errors,<br>
 warnings, progress, progress+, progress++, progress+++. Overrides <code>-v</code><br>
 and <code>-q</code>.</p>
-<h4 id="--logdirdir"><code>--logdir=&lt;dir&gt;</code><a href="#--logdirdir" aria-label="Link to heading '--logdir=<dir>'" data-heading-content="--logdir=<dir>" class="anchor"></a></h4>
+<h4 id="--logdirdir"><code>--logdir=&lt;dir&gt;</code><a href="#--logdirdir" aria-label="Link to heading '--logdir=&lt;dir&gt;'" data-heading-content="--logdir=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Write detailed logs to one or more files in the given<br>
 directory, with generated names that include timestamps and the name of<br>
 the running subcommand.</p>
 <p>(To write a log file with a name you have full control over, instead<br>
 give <code>--log-to-stderr</code> and redirect stderr as desired.)</p>
-<h4 id="--common-cachesdir"><code>--common-caches=&lt;dir&gt;</code><a href="#--common-cachesdir" aria-label="Link to heading '--common-caches=<dir>'" data-heading-content="--common-caches=<dir>" class="anchor"></a></h4>
+<h4 id="--common-cachesdir"><code>--common-caches=&lt;dir&gt;</code><a href="#--common-cachesdir" aria-label="Link to heading '--common-caches=&lt;dir&gt;'" data-heading-content="--common-caches=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Controls the location of cached data on disk that will<br>
 persist between several runs of the CLI, such as downloaded QL packs and<br>
 compiled query plans. If not set explicitly, this defaults to a<br>

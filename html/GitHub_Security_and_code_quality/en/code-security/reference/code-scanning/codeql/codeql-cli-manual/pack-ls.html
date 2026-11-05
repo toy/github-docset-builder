@@ -16,16 +16,16 @@ This directory must contain a qlpack.yml or .codeqlmanifest.json file.</p>
 <p>Available since <code>v2.7.1</code>.</p>
 <h2 id="options" title="Options" data-entry-type="Section">Options<a href="#options" aria-label="Link to heading 'Options'" data-heading-content="Options" class="anchor"></a></h2>
 <h3 id="primary-options">Primary Options<a href="#primary-options" aria-label="Link to heading 'Primary Options'" data-heading-content="Primary Options" class="anchor"></a></h3>
-<h4 id="dir"><code>&lt;dir&gt;</code><a href="#dir" aria-label="Link to heading '<dir>'" data-heading-content="<dir>" class="anchor"></a></h4>
+<h4 id="dir"><code>&lt;dir&gt;</code><a href="#dir" aria-label="Link to heading '&lt;dir&gt;'" data-heading-content="&lt;dir&gt;" class="anchor"></a></h4>
 <p>The root directory of the package or workspace, defaults to the current<br>
 working directory. If this parameter points to a directory containing a<br>
 qlpack.yml, then this operation will run on only that CodeQL package. If<br>
 this parameter points to a directory containing a codeql-workspace.yml,<br>
 then this operation will run on all CodeQL packages in the workspace.</p>
 <h3 id="options-for-configuring-which-codeql-packs-to-apply-this-command-to">Options for configuring which CodeQL packs to apply this command to.<a href="#options-for-configuring-which-codeql-packs-to-apply-this-command-to" aria-label="Link to heading 'Options for configuring which CodeQL packs to apply this command to.'" data-heading-content="Options for configuring which CodeQL packs to apply this command to." class="anchor"></a></h3>
-<h4 id="--formatfmt"><code>--format=&lt;fmt&gt;</code><a href="#--formatfmt" aria-label="Link to heading '--format=<fmt>'" data-heading-content="--format=<fmt>" class="anchor"></a></h4>
+<h4 id="--formatfmt"><code>--format=&lt;fmt&gt;</code><a href="#--formatfmt" aria-label="Link to heading '--format=&lt;fmt&gt;'" data-heading-content="--format=&lt;fmt&gt;" class="anchor"></a></h4>
 <p>Select output format, either <code>text</code> <em>(default)</em> or <code>json</code>.</p>
-<h4 id="--groups-group-group"><code>--groups=[-]&lt;group&gt;[,[-]&lt;group&gt;...]</code><a href="#--groups-group-group" aria-label="Link to heading '--groups=[-]<group>[,[-]<group>...]'" data-heading-content="--groups=[-]<group>[,[-]<group>...]" class="anchor"></a></h4>
+<h4 id="--groups-group-group"><code>--groups=[-]&lt;group&gt;[,[-]&lt;group&gt;...]</code><a href="#--groups-group-group" aria-label="Link to heading '--groups=[-]&lt;group&gt;[,[-]&lt;group&gt;...]'" data-heading-content="--groups=[-]&lt;group&gt;[,[-]&lt;group&gt;...]" class="anchor"></a></h4>
 <p>List of CodeQL pack groups to include or exclude from this operation. A<br>
 qlpack in the given workspace is included if:</p>
 <ul>
@@ -37,24 +37,24 @@ without a minus sign), and</li>
 <h3 id="common-options">Common options<a href="#common-options" aria-label="Link to heading 'Common options'" data-heading-content="Common options" class="anchor"></a></h3>
 <h4 id="-h---help"><code>-h, --help</code><a href="#-h---help" aria-label="Link to heading '-h, --help'" data-heading-content="-h, --help" class="anchor"></a></h4>
 <p>Show this help text.</p>
-<h4 id="-jopt"><code>-J=&lt;opt&gt;</code><a href="#-jopt" aria-label="Link to heading '-J=<opt>'" data-heading-content="-J=<opt>" class="anchor"></a></h4>
+<h4 id="-jopt"><code>-J=&lt;opt&gt;</code><a href="#-jopt" aria-label="Link to heading '-J=&lt;opt&gt;'" data-heading-content="-J=&lt;opt&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Give option to the JVM running the command.</p>
 <p>(Beware that options containing spaces will not be handled correctly.)</p>
 <h4 id="-v---verbose"><code>-v, --verbose</code><a href="#-v---verbose" aria-label="Link to heading '-v, --verbose'" data-heading-content="-v, --verbose" class="anchor"></a></h4>
 <p>Incrementally increase the number of progress messages printed.</p>
 <h4 id="-q---quiet"><code>-q, --quiet</code><a href="#-q---quiet" aria-label="Link to heading '-q, --quiet'" data-heading-content="-q, --quiet" class="anchor"></a></h4>
 <p>Incrementally decrease the number of progress messages printed.</p>
-<h4 id="--verbositylevel"><code>--verbosity=&lt;level&gt;</code><a href="#--verbositylevel" aria-label="Link to heading '--verbosity=<level>'" data-heading-content="--verbosity=<level>" class="anchor"></a></h4>
+<h4 id="--verbositylevel"><code>--verbosity=&lt;level&gt;</code><a href="#--verbositylevel" aria-label="Link to heading '--verbosity=&lt;level&gt;'" data-heading-content="--verbosity=&lt;level&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Explicitly set the verbosity level to one of errors,<br>
 warnings, progress, progress+, progress++, progress+++. Overrides <code>-v</code><br>
 and <code>-q</code>.</p>
-<h4 id="--logdirdir"><code>--logdir=&lt;dir&gt;</code><a href="#--logdirdir" aria-label="Link to heading '--logdir=<dir>'" data-heading-content="--logdir=<dir>" class="anchor"></a></h4>
+<h4 id="--logdirdir"><code>--logdir=&lt;dir&gt;</code><a href="#--logdirdir" aria-label="Link to heading '--logdir=&lt;dir&gt;'" data-heading-content="--logdir=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Write detailed logs to one or more files in the given<br>
 directory, with generated names that include timestamps and the name of<br>
 the running subcommand.</p>
 <p>(To write a log file with a name you have full control over, instead<br>
 give <code>--log-to-stderr</code> and redirect stderr as desired.)</p>
-<h4 id="--common-cachesdir"><code>--common-caches=&lt;dir&gt;</code><a href="#--common-cachesdir" aria-label="Link to heading '--common-caches=<dir>'" data-heading-content="--common-caches=<dir>" class="anchor"></a></h4>
+<h4 id="--common-cachesdir"><code>--common-caches=&lt;dir&gt;</code><a href="#--common-cachesdir" aria-label="Link to heading '--common-caches=&lt;dir&gt;'" data-heading-content="--common-caches=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Controls the location of cached data on disk that will<br>
 persist between several runs of the CLI, such as downloaded QL packs and<br>
 compiled query plans. If not set explicitly, this defaults to a<br>

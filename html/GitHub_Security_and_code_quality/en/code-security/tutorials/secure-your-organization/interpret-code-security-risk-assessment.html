@@ -16,6 +16,7 @@
 <li><strong>Total vulnerabilities found</strong>: The total number of vulnerabilities found across all scanned repositories.</li>
 <li><strong>Copilot Autofix</strong>: The number of vulnerabilities that are eligible for Copilot Autofix. Enabling GitHub Code Security gives you access to Copilot Autofix, which can automatically suggest fixes for these alerts.</li>
 </ul>
+<p>The metrics also show how many vulnerabilities were found in <strong>protected</strong> repositories, where GitHub Code Security is enabled, and <strong>unprotected</strong> repositories, where it is not. Use this breakdown to understand risk outside your existing coverage.</p>
 <h2 id="step-2-review-vulnerabilities-by-language" title="Step 2: Review vulnerabilities by language" data-entry-type="Section">Step 2: Review vulnerabilities by language<a href="#step-2-review-vulnerabilities-by-language" aria-label="Link to heading 'Step 2: Review vulnerabilities by language'" data-heading-content="Step 2: Review vulnerabilities by language" class="anchor"></a></h2>
 <p>Look at the <strong>Vulnerabilities by language</strong> chart to understand which languages in your codebase are contributing most to your overall vulnerability count.</p>
 <p>If vulnerabilities are concentrated in a particular language, this may indicate:</p>
@@ -24,8 +25,8 @@
 <li>Teams working in that language who may benefit from targeted secure coding guidance</li>
 </ul>
 <h2 id="step-3-identify-the-most-affected-repositories" title="Step 3: Identify the most affected repositories" data-entry-type="Section">Step 3: Identify the most affected repositories<a href="#step-3-identify-the-most-affected-repositories" aria-label="Link to heading 'Step 3: Identify the most affected repositories'" data-heading-content="Step 3: Identify the most affected repositories" class="anchor"></a></h2>
-<p>In the <strong>Repositories scanned</strong> table, you can see each scanned repository alongside the ratio of vulnerabilities eligible for Copilot Autofix out of the total vulnerabilities found.</p>
-<p>The <strong>Most vulnerable repository</strong> metric at the top of the page highlights the repository with the highest vulnerability count. This is a good place to start when prioritizing remediation.</p>
+<p>In the <strong>Repositories scanned</strong> table, you can see each scanned repository, its protection status, and the ratio of vulnerabilities eligible for Copilot Autofix out of the total vulnerabilities found.</p>
+<p>The <strong>Most vulnerable repository</strong> metric at the top of the page highlights the repository with the highest vulnerability count and its protection status. This is a good place to start when prioritizing remediation.</p>
 <p>If a <strong>high percentage</strong> of repositories contain vulnerabilities, this may indicate:</p>
 <ul>
 <li>Widespread gaps in secure coding practices across teams</li>
@@ -61,7 +62,7 @@
 <p>Remediating the vulnerabilities or leaks identified by the risk assessment is easier with GitHub Advanced Security. Owners of eligible organizations on GitHub Team can start a trial from a completed code security risk assessment.</p>
 <p>To start remediating vulnerabilities with Copilot Autofix, enable GitHub Code Security for your organization. You have two options:</p>
 <ul>
-<li>To enable GitHub Code Security for an individual repository, click <strong>Enable</strong> next to a repository in the "Repositories scanned" table.</li>
-<li>To enable GitHub Code Security across your organization, click <strong>Enable Code Security</strong> at the top of the page. Here, you can choose whether to enable it for all repositories or selected repositories, then review the estimated cost before confirming.</li>
+<li>To enable GitHub Code Security for an individual repository, click <strong>Enable</strong> next to an unprotected repository in the "Repositories scanned" table.</li>
+<li>To enable GitHub Code Security across your organization, click <strong>Enable</strong> at the top of the page. Here, you can choose whether to enable it for all repositories or selected repositories, then review the estimated cost before confirming. If you choose selected repositories, the unprotected repositories scanned in your assessment are automatically selected.</li>
 </ul>
 <footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

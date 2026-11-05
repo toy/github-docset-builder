@@ -20,7 +20,7 @@ actually be resolved. The caller may use the actual locations to format<br>
 an error message.</p>
 <h2 id="options" title="Options" data-entry-type="Section">Options<a href="#options" aria-label="Link to heading 'Options'" data-heading-content="Options" class="anchor"></a></h2>
 <h3 id="primary-options">Primary Options<a href="#primary-options" aria-label="Link to heading 'Primary Options'" data-heading-content="Primary Options" class="anchor"></a></h3>
-<h4 id="--search-pathdirdir"><code>--search-path=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--search-pathdirdir" aria-label="Link to heading '--search-path=<dir>[:<dir>...]'" data-heading-content="--search-path=<dir>[:<dir>...]" class="anchor"></a></h4>
+<h4 id="--search-pathdirdir"><code>--search-path=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--search-pathdirdir" aria-label="Link to heading '--search-path=&lt;dir&gt;[:&lt;dir&gt;...]'" data-heading-content="--search-path=&lt;dir&gt;[:&lt;dir&gt;...]" class="anchor"></a></h4>
 <p>A list of directories under which QL packs may be found. Each directory<br>
 can either be a QL pack (or bundle of packs containing a<br>
 <code>.codeqlmanifest.json</code> file at the root) or the immediate parent of one<br>
@@ -38,7 +38,7 @@ found otherwise. (If this default does not work, it is strongly<br>
 recommended to set up <code>--search-path</code> once and for all in a per-user<br>
 configuration file).</p>
 <p>(Note: On Windows the path separator is <code>;</code>).</p>
-<h4 id="--additional-packsdirdir"><code>--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--additional-packsdirdir" aria-label="Link to heading '--additional-packs=<dir>[:<dir>...]'" data-heading-content="--additional-packs=<dir>[:<dir>...]" class="anchor"></a></h4>
+<h4 id="--additional-packsdirdir"><code>--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--additional-packsdirdir" aria-label="Link to heading '--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]'" data-heading-content="--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]" class="anchor"></a></h4>
 <p>If this list of directories is given, they will be searched for packs<br>
 before the ones in <code>--search-path</code>. The order between these doesn't<br>
 matter; it is an error if a pack name is found in two different places<br>
@@ -49,12 +49,12 @@ recommended</em> to override this option in a config file; some internal<br>
 actions will add this option on the fly, overriding any configured<br>
 value.</p>
 <p>(Note: On Windows the path separator is <code>;</code>).</p>
-<h4 id="--kindkind"><code>--kind=&lt;kind&gt;</code><a href="#--kindkind" aria-label="Link to heading '--kind=<kind>'" data-heading-content="--kind=<kind>" class="anchor"></a></h4>
+<h4 id="--kindkind"><code>--kind=&lt;kind&gt;</code><a href="#--kindkind" aria-label="Link to heading '--kind=&lt;kind&gt;'" data-heading-content="--kind=&lt;kind&gt;" class="anchor"></a></h4>
 <p>Specifies which kind of packages to return. Options are: <code>query</code>,<br>
 <code>library</code>, <code>extension</code>, and <code>all</code> (default).</p>
 <p>Note that extension packs are a kind of library pack and are included<br>
 when the kind is <code>library</code>.</p>
-<h4 id="--formatfmt"><code>--format=&lt;fmt&gt;</code><a href="#--formatfmt" aria-label="Link to heading '--format=<fmt>'" data-heading-content="--format=<fmt>" class="anchor"></a></h4>
+<h4 id="--formatfmt"><code>--format=&lt;fmt&gt;</code><a href="#--formatfmt" aria-label="Link to heading '--format=&lt;fmt&gt;'" data-heading-content="--format=&lt;fmt&gt;" class="anchor"></a></h4>
 <p>Select output format, either <code>text</code> <em>(default)</em> or <code>json</code>.</p>
 <h4 id="--no-recursive"><code>--no-recursive</code><a href="#--no-recursive" aria-label="Link to heading '--no-recursive'" data-heading-content="--no-recursive" class="anchor"></a></h4>
 <p>Do not recurse through dependencies. Only return packs directly<br>
@@ -82,24 +82,24 @@ variable.</p>
 <h3 id="common-options">Common options<a href="#common-options" aria-label="Link to heading 'Common options'" data-heading-content="Common options" class="anchor"></a></h3>
 <h4 id="-h---help"><code>-h, --help</code><a href="#-h---help" aria-label="Link to heading '-h, --help'" data-heading-content="-h, --help" class="anchor"></a></h4>
 <p>Show this help text.</p>
-<h4 id="-jopt"><code>-J=&lt;opt&gt;</code><a href="#-jopt" aria-label="Link to heading '-J=<opt>'" data-heading-content="-J=<opt>" class="anchor"></a></h4>
+<h4 id="-jopt"><code>-J=&lt;opt&gt;</code><a href="#-jopt" aria-label="Link to heading '-J=&lt;opt&gt;'" data-heading-content="-J=&lt;opt&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Give option to the JVM running the command.</p>
 <p>(Beware that options containing spaces will not be handled correctly.)</p>
 <h4 id="-v---verbose"><code>-v, --verbose</code><a href="#-v---verbose" aria-label="Link to heading '-v, --verbose'" data-heading-content="-v, --verbose" class="anchor"></a></h4>
 <p>Incrementally increase the number of progress messages printed.</p>
 <h4 id="-q---quiet"><code>-q, --quiet</code><a href="#-q---quiet" aria-label="Link to heading '-q, --quiet'" data-heading-content="-q, --quiet" class="anchor"></a></h4>
 <p>Incrementally decrease the number of progress messages printed.</p>
-<h4 id="--verbositylevel"><code>--verbosity=&lt;level&gt;</code><a href="#--verbositylevel" aria-label="Link to heading '--verbosity=<level>'" data-heading-content="--verbosity=<level>" class="anchor"></a></h4>
+<h4 id="--verbositylevel"><code>--verbosity=&lt;level&gt;</code><a href="#--verbositylevel" aria-label="Link to heading '--verbosity=&lt;level&gt;'" data-heading-content="--verbosity=&lt;level&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Explicitly set the verbosity level to one of errors,<br>
 warnings, progress, progress+, progress++, progress+++. Overrides <code>-v</code><br>
 and <code>-q</code>.</p>
-<h4 id="--logdirdir"><code>--logdir=&lt;dir&gt;</code><a href="#--logdirdir" aria-label="Link to heading '--logdir=<dir>'" data-heading-content="--logdir=<dir>" class="anchor"></a></h4>
+<h4 id="--logdirdir"><code>--logdir=&lt;dir&gt;</code><a href="#--logdirdir" aria-label="Link to heading '--logdir=&lt;dir&gt;'" data-heading-content="--logdir=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Write detailed logs to one or more files in the given<br>
 directory, with generated names that include timestamps and the name of<br>
 the running subcommand.</p>
 <p>(To write a log file with a name you have full control over, instead<br>
 give <code>--log-to-stderr</code> and redirect stderr as desired.)</p>
-<h4 id="--common-cachesdir"><code>--common-caches=&lt;dir&gt;</code><a href="#--common-cachesdir" aria-label="Link to heading '--common-caches=<dir>'" data-heading-content="--common-caches=<dir>" class="anchor"></a></h4>
+<h4 id="--common-cachesdir"><code>--common-caches=&lt;dir&gt;</code><a href="#--common-cachesdir" aria-label="Link to heading '--common-caches=&lt;dir&gt;'" data-heading-content="--common-caches=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Controls the location of cached data on disk that will<br>
 persist between several runs of the CLI, such as downloaded QL packs and<br>
 compiled query plans. If not set explicitly, this defaults to a<br>

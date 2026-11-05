@@ -12,7 +12,7 @@
 <p>Generate end-user query help from .qhelp files.</p>
 <h2 id="options" title="Options" data-entry-type="Section">Options<a href="#options" aria-label="Link to heading 'Options'" data-heading-content="Options" class="anchor"></a></h2>
 <h3 id="primary-options">Primary Options<a href="#primary-options" aria-label="Link to heading 'Primary Options'" data-heading-content="Primary Options" class="anchor"></a></h3>
-<h4 id="qhelpmdhelpquerydirsuite"><code>&lt;qhelp|mdhelp|query|dir|suite&gt;...</code><a href="#qhelpmdhelpquerydirsuite" aria-label="Link to heading '<qhelp|mdhelp|query|dir|suite>...'" data-heading-content="<qhelp|mdhelp|query|dir|suite>..." class="anchor"></a></h4>
+<h4 id="qhelpmdhelpquerydirsuite"><code>&lt;qhelp|mdhelp|query|dir|suite&gt;...</code><a href="#qhelpmdhelpquerydirsuite" aria-label="Link to heading '&lt;qhelp|mdhelp|query|dir|suite&gt;...'" data-heading-content="&lt;qhelp|mdhelp|query|dir|suite&gt;..." class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Mandatory] Query help files to render. Each argument is one of:</p>
 <ul>
 <li>A .qhelp file to render.</li>
@@ -24,7 +24,7 @@ corresponding .qhelp or .md files.</li>
 <li>The basename of a "well-known" .qls file exported by one of the<br>
 installed QL packs.</li>
 </ul>
-<h4 id="--formatformat"><code>--format=&lt;format&gt;</code><a href="#--formatformat" aria-label="Link to heading '--format=<format>'" data-heading-content="--format=<format>" class="anchor"></a></h4>
+<h4 id="--formatformat"><code>--format=&lt;format&gt;</code><a href="#--formatformat" aria-label="Link to heading '--format=&lt;format&gt;'" data-heading-content="--format=&lt;format&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Mandatory] The format in which to render the documentation. One of:</p>
 <p><code>markdown</code>: GitHub flavored markdown.</p>
 <p><code>sarif-latest</code>: Static Analysis Results Interchange Format (SARIF), a<br>
@@ -33,7 +33,7 @@ option uses the most recent supported version (v2.1.0). This option is<br>
 not suitable for use in automation as it will produce different versions<br>
 of SARIF between different CodeQL versions.</p>
 <p><code>sarifv2.1.0</code>: SARIF v2.1.0.</p>
-<h4 id="-o---outputdirfile"><code>-o, --output=&lt;dir|file&gt;</code><a href="#-o---outputdirfile" aria-label="Link to heading '-o, --output=<dir|file>'" data-heading-content="-o, --output=<dir|file>" class="anchor"></a></h4>
+<h4 id="-o---outputdirfile"><code>-o, --output=&lt;dir|file&gt;</code><a href="#-o---outputdirfile" aria-label="Link to heading '-o, --output=&lt;dir|file&gt;'" data-heading-content="-o, --output=&lt;dir|file&gt;" class="anchor"></a></h4>
 <p>A path to write the rendered documentation to. Usually this is a<br>
 directory into which the rendered output will be written.</p>
 <p>If only a single .qhelp or .ql file is provided, and no directory exists<br>
@@ -43,7 +43,7 @@ path.</p>
 accepted, and the output will be written to stdout.</p>
 <p>If an output directory is used, filenames <em>within</em> the output directory<br>
 will be derived from the .qhelp file names.</p>
-<h4 id="--warningsmode"><code>--warnings=&lt;mode&gt;</code><a href="#--warningsmode" aria-label="Link to heading '--warnings=<mode>'" data-heading-content="--warnings=<mode>" class="anchor"></a></h4>
+<h4 id="--warningsmode"><code>--warnings=&lt;mode&gt;</code><a href="#--warningsmode" aria-label="Link to heading '--warnings=&lt;mode&gt;'" data-heading-content="--warnings=&lt;mode&gt;" class="anchor"></a></h4>
 <p>How to handle warnings from the query help renderer. One of:</p>
 <p><code>hide</code>: Suppress warnings.</p>
 <p><code>show</code> <em>(default)</em>: Print warnings but continue with rendering.</p>
@@ -52,7 +52,7 @@ will be derived from the .qhelp file names.</p>
 <p><span data-escaped-char="">[</span>SARIF formats only] Produce pretty-printed SARIF output. By default,<br>
 SARIF output is minified to reduce the size of the output file.</p>
 <h3 id="options-for-finding-ql-packs-which-may-be-necessary-to-resolve-query-suites">Options for finding QL packs (which may be necessary to resolve query suites)<a href="#options-for-finding-ql-packs-which-may-be-necessary-to-resolve-query-suites" aria-label="Link to heading 'Options for finding QL packs (which may be necessary to resolve query suites)'" data-heading-content="Options for finding QL packs (which may be necessary to resolve query suites)" class="anchor"></a></h3>
-<h4 id="--search-pathdirdir"><code>--search-path=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--search-pathdirdir" aria-label="Link to heading '--search-path=<dir>[:<dir>...]'" data-heading-content="--search-path=<dir>[:<dir>...]" class="anchor"></a></h4>
+<h4 id="--search-pathdirdir"><code>--search-path=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--search-pathdirdir" aria-label="Link to heading '--search-path=&lt;dir&gt;[:&lt;dir&gt;...]'" data-heading-content="--search-path=&lt;dir&gt;[:&lt;dir&gt;...]" class="anchor"></a></h4>
 <p>A list of directories under which QL packs may be found. Each directory<br>
 can either be a QL pack (or bundle of packs containing a<br>
 <code>.codeqlmanifest.json</code> file at the root) or the immediate parent of one<br>
@@ -70,7 +70,7 @@ found otherwise. (If this default does not work, it is strongly<br>
 recommended to set up <code>--search-path</code> once and for all in a per-user<br>
 configuration file).</p>
 <p>(Note: On Windows the path separator is <code>;</code>).</p>
-<h4 id="--additional-packsdirdir"><code>--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--additional-packsdirdir" aria-label="Link to heading '--additional-packs=<dir>[:<dir>...]'" data-heading-content="--additional-packs=<dir>[:<dir>...]" class="anchor"></a></h4>
+<h4 id="--additional-packsdirdir"><code>--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--additional-packsdirdir" aria-label="Link to heading '--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]'" data-heading-content="--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]" class="anchor"></a></h4>
 <p>If this list of directories is given, they will be searched for packs<br>
 before the ones in <code>--search-path</code>. The order between these doesn't<br>
 matter; it is an error if a pack name is found in two different places<br>
@@ -103,24 +103,24 @@ variable.</p>
 <h3 id="common-options">Common options<a href="#common-options" aria-label="Link to heading 'Common options'" data-heading-content="Common options" class="anchor"></a></h3>
 <h4 id="-h---help"><code>-h, --help</code><a href="#-h---help" aria-label="Link to heading '-h, --help'" data-heading-content="-h, --help" class="anchor"></a></h4>
 <p>Show this help text.</p>
-<h4 id="-jopt"><code>-J=&lt;opt&gt;</code><a href="#-jopt" aria-label="Link to heading '-J=<opt>'" data-heading-content="-J=<opt>" class="anchor"></a></h4>
+<h4 id="-jopt"><code>-J=&lt;opt&gt;</code><a href="#-jopt" aria-label="Link to heading '-J=&lt;opt&gt;'" data-heading-content="-J=&lt;opt&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Give option to the JVM running the command.</p>
 <p>(Beware that options containing spaces will not be handled correctly.)</p>
 <h4 id="-v---verbose"><code>-v, --verbose</code><a href="#-v---verbose" aria-label="Link to heading '-v, --verbose'" data-heading-content="-v, --verbose" class="anchor"></a></h4>
 <p>Incrementally increase the number of progress messages printed.</p>
 <h4 id="-q---quiet"><code>-q, --quiet</code><a href="#-q---quiet" aria-label="Link to heading '-q, --quiet'" data-heading-content="-q, --quiet" class="anchor"></a></h4>
 <p>Incrementally decrease the number of progress messages printed.</p>
-<h4 id="--verbositylevel"><code>--verbosity=&lt;level&gt;</code><a href="#--verbositylevel" aria-label="Link to heading '--verbosity=<level>'" data-heading-content="--verbosity=<level>" class="anchor"></a></h4>
+<h4 id="--verbositylevel"><code>--verbosity=&lt;level&gt;</code><a href="#--verbositylevel" aria-label="Link to heading '--verbosity=&lt;level&gt;'" data-heading-content="--verbosity=&lt;level&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Explicitly set the verbosity level to one of errors,<br>
 warnings, progress, progress+, progress++, progress+++. Overrides <code>-v</code><br>
 and <code>-q</code>.</p>
-<h4 id="--logdirdir"><code>--logdir=&lt;dir&gt;</code><a href="#--logdirdir" aria-label="Link to heading '--logdir=<dir>'" data-heading-content="--logdir=<dir>" class="anchor"></a></h4>
+<h4 id="--logdirdir"><code>--logdir=&lt;dir&gt;</code><a href="#--logdirdir" aria-label="Link to heading '--logdir=&lt;dir&gt;'" data-heading-content="--logdir=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Write detailed logs to one or more files in the given<br>
 directory, with generated names that include timestamps and the name of<br>
 the running subcommand.</p>
 <p>(To write a log file with a name you have full control over, instead<br>
 give <code>--log-to-stderr</code> and redirect stderr as desired.)</p>
-<h4 id="--common-cachesdir"><code>--common-caches=&lt;dir&gt;</code><a href="#--common-cachesdir" aria-label="Link to heading '--common-caches=<dir>'" data-heading-content="--common-caches=<dir>" class="anchor"></a></h4>
+<h4 id="--common-cachesdir"><code>--common-caches=&lt;dir&gt;</code><a href="#--common-cachesdir" aria-label="Link to heading '--common-caches=&lt;dir&gt;'" data-heading-content="--common-caches=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Controls the location of cached data on disk that will<br>
 persist between several runs of the CLI, such as downloaded QL packs and<br>
 compiled query plans. If not set explicitly, this defaults to a<br>

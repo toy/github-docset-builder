@@ -70,6 +70,14 @@ Default: <code>1</code></p>
 <p><strong>Response schema (Status: 200):</strong></p>
 <p>Array of <code>Pull Request Review Comment</code>:</p>
 <ul>
+<li><code>is_copilot_code_review</code>: boolean</li>
+<li><code>copilot_code_review_sources</code>: array of objects:
+<ul>
+<li><code>kind</code>: required, string, enum: <code>SKILL</code>, <code>MCP</code>, <code>CUSTOM_INSTRUCTIONS</code></li>
+<li><code>name</code>: required, string</li>
+<li><code>path</code>: string</li>
+</ul>
+</li>
 <li><code>url</code>: required, string</li>
 <li><code>pull_request_review_id</code>: required, integer or null, format: int64</li>
 <li><code>id</code>: required, integer, format: int64</li>
@@ -212,6 +220,14 @@ The unique identifier of the comment.</p>
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
 <ul>
+<li><code>is_copilot_code_review</code>: boolean</li>
+<li><code>copilot_code_review_sources</code>: array of objects:
+<ul>
+<li><code>kind</code>: required, string, enum: <code>SKILL</code>, <code>MCP</code>, <code>CUSTOM_INSTRUCTIONS</code></li>
+<li><code>name</code>: required, string</li>
+<li><code>path</code>: string</li>
+</ul>
+</li>
 <li><code>url</code>: required, string</li>
 <li><code>pull_request_review_id</code>: required, integer or null, format: int64</li>
 <li><code>id</code>: required, integer, format: int64</li>

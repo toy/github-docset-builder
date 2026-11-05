@@ -40,6 +40,36 @@ Dependabot also supports dependencies in private registries. For more informatio
 <td align="center"></td>
 </tr>
 <tr>
+<td><a href="#apm">APM</a></td>
+<td><code>apm</code></td>
+<td>Not applicable</td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-x" aria-label="Not supported" role="img"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path></svg></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></td>
+<td align="center"><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-check" aria-label="Supported" role="img"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg> (git only)</td>
+<td align="center">Not applicable</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
 <td>Bazel</td>
 <td><code>bazel</code></td>
 <td>v7, v8, v9</td>
@@ -636,6 +666,48 @@ Dependabot also supports dependencies in private registries. For more informatio
 <p>For package managers such as <code>pipenv</code> and <code>poetry</code>, you need to use the <code>pip</code> YAML value. For example, if you use <code>poetry</code> to manage your Python dependencies and want Dependabot to monitor your dependency manifest file for new versions, use <code>package-ecosystem: "pip"</code> in your <code>dependabot.yml</code> file.</p>
 </div>
 <p>For further information about ecosystem support for Dependabot security updates, see also <a href="dependency-graph-supported-package-ecosystems.html">Dependency graph supported package ecosystems</a>.</p>
+<h3 id="apm">APM<a href="#apm" aria-label="Link to heading 'APM'" data-heading-content="APM" class="anchor"></a></h3>
+<p>Dependabot can update git dependencies declared in <code>apm.yml</code> manifest files for APM (Agent Package Manager). Entries under both <code>dependencies.apm</code> and <code>devDependencies.apm</code> are updated. For more information about APM, see <a href="https://github.com/microsoft/apm" class="external"><code>microsoft/apm</code> repository</a> in the <code>microsoft/apm</code> repository.</p>
+<p>How Dependabot updates a dependency depends on how the dependency is pinned.</p>
+<table>
+<thead>
+<tr>
+<th>Pin type</th>
+<th>Example</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SemVer tag</td>
+<td><code>octo-org/octo-skills#v1.0.0</code></td>
+<td>Updated to the latest SemVer tag. Both plain tags (<code>v1.4.0</code>) and package-scoped tags are supported. A package-scoped tag must start with the package name, which is the repository name or the last component of a virtual package path. For example, <code>octo-org/octo-skills/skills/review#review-v1.4.0</code>.</td>
+</tr>
+<tr>
+<td>Commit SHA</td>
+<td><code>octo-org/octo-skills#&lt;40-character SHA&gt;</code></td>
+<td>Updated to the commit of the latest annotated, non-prerelease release tag. The tag name is added as a comment, for example <code># v1.4.0</code>.</td>
+</tr>
+<tr>
+<td>Branch</td>
+<td><code>octo-org/octo-skills#main</code></td>
+<td>Updated to the latest commit on the branch. Only <code>apm.lock.yaml</code> changes, because the manifest still names the branch. Requires an existing <code>apm.lock.yaml</code> file.</td>
+</tr>
+</tbody>
+</table>
+<p>If your repository contains an <code>apm.lock.yaml</code> file, Dependabot regenerates it by running <code>apm lock</code>. Dependabot doesn't create a lockfile if one doesn't exist.</p>
+<p>Dependabot doesn't update the following entries:</p>
+<ul>
+<li>Object-form entries (<code>git:</code>, <code>registry:</code>, <code>id:</code>, or <code>path:</code> maps) and <code>mcp:</code> entries</li>
+<li>Entries without a ref, such as <code>octo-org/octo-skills</code></li>
+<li>Local path entries, such as <code>./my-package</code></li>
+<li>Entries hosted on Azure DevOps</li>
+<li>Entries that use an <code>http://</code> or <code>git://</code> clone URL</li>
+<li>Entries written as YAML block scalars (<code>&gt;</code> or <code>|</code>) or as quoted strings that use escape sequences</li>
+<li>Abbreviated commit SHAs</li>
+<li>Shorthand entries, such as <code>octo-org/octo-skills#v1.2.0</code>, when the manifest sets <code>registries.default</code>. Entries that use an explicit clone URL are still updated.</li>
+</ul>
+<p>Private registry support uses git registries. You can configure access for private git repositories by specifying a git registry in your <code>dependabot.yml</code> file. See <a href="../../how-tos/secure-your-supply-chain/manage-your-dependency-security/configure-access-to-private-registries.html#git">Configuring access to private registries for Dependabot</a>.</p>
 <h3 id="bun">Bun<a href="#bun" aria-label="Link to heading 'Bun'" data-heading-content="Bun" class="anchor"></a></h3>
 <p>Dependabot supports the current default text-based <code>bun.lock</code> file, but not the legacy binary <code>bun.lockb</code> file. The <code>bun.lock</code> file is supported in version 1.1.39 and above. For more information, see <a href="https://bun.sh/docs/install/lockfile" class="external">Lockfile</a> in the Bun documentation.</p>
 <h3 id="cargo">Cargo<a href="#cargo" aria-label="Link to heading 'Cargo'" data-heading-content="Cargo" class="anchor"></a></h3>

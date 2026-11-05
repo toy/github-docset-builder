@@ -17,13 +17,13 @@ each upgrade script matches the "new" dbscheme of the previous script<br>
 an error will be reported.</p>
 <h2 id="options" title="Options" data-entry-type="Section">Options<a href="#options" aria-label="Link to heading 'Options'" data-heading-content="Options" class="anchor"></a></h2>
 <h3 id="primary-options">Primary Options<a href="#primary-options" aria-label="Link to heading 'Primary Options'" data-heading-content="Primary Options" class="anchor"></a></h3>
-<h4 id="dataset"><code>&lt;dataset&gt;</code><a href="#dataset" aria-label="Link to heading '<dataset>'" data-heading-content="<dataset>" class="anchor"></a></h4>
+<h4 id="dataset"><code>&lt;dataset&gt;</code><a href="#dataset" aria-label="Link to heading '&lt;dataset&gt;'" data-heading-content="&lt;dataset&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Mandatory] Path to the raw QL dataset to upgrade.</p>
-<h4 id="script"><code>&lt;script&gt;...</code><a href="#script" aria-label="Link to heading '<script>...'" data-heading-content="<script>..." class="anchor"></a></h4>
+<h4 id="script"><code>&lt;script&gt;...</code><a href="#script" aria-label="Link to heading '&lt;script&gt;...'" data-heading-content="&lt;script&gt;..." class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Mandatory] Paths to upgrade scripts to execute. (Each upgrade script<br>
 is a directory containing several files that define an upgrade<br>
 operation). They must be given in the order they are to be applied.</p>
-<h4 id="--search-pathdirdir"><code>--search-path=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--search-pathdirdir" aria-label="Link to heading '--search-path=<dir>[:<dir>...]'" data-heading-content="--search-path=<dir>[:<dir>...]" class="anchor"></a></h4>
+<h4 id="--search-pathdirdir"><code>--search-path=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--search-pathdirdir" aria-label="Link to heading '--search-path=&lt;dir&gt;[:&lt;dir&gt;...]'" data-heading-content="--search-path=&lt;dir&gt;[:&lt;dir&gt;...]" class="anchor"></a></h4>
 <p>A list of directories under which QL packs may be found. Each directory<br>
 can either be a QL pack (or bundle of packs containing a<br>
 <code>.codeqlmanifest.json</code> file at the root) or the immediate parent of one<br>
@@ -41,7 +41,7 @@ found otherwise. (If this default does not work, it is strongly<br>
 recommended to set up <code>--search-path</code> once and for all in a per-user<br>
 configuration file).</p>
 <p>(Note: On Windows the path separator is <code>;</code>).</p>
-<h4 id="--additional-packsdirdir"><code>--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--additional-packsdirdir" aria-label="Link to heading '--additional-packs=<dir>[:<dir>...]'" data-heading-content="--additional-packs=<dir>[:<dir>...]" class="anchor"></a></h4>
+<h4 id="--additional-packsdirdir"><code>--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--additional-packsdirdir" aria-label="Link to heading '--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]'" data-heading-content="--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]" class="anchor"></a></h4>
 <p>If this list of directories is given, they will be searched for packs<br>
 before the ones in <code>--search-path</code>. The order between these doesn't<br>
 matter; it is an error if a pack name is found in two different places<br>
@@ -59,7 +59,7 @@ evaluator logs. If the <code>--evaluator-log</code> option is provided, tuple<br
 counts will be included in both the text-based and structured JSON logs<br>
 produced by the command. (This can be useful for performance<br>
 optimization of complex QL code).</p>
-<h4 id="--timeoutseconds"><code>--timeout=&lt;seconds&gt;</code><a href="#--timeoutseconds" aria-label="Link to heading '--timeout=<seconds>'" data-heading-content="--timeout=<seconds>" class="anchor"></a></h4>
+<h4 id="--timeoutseconds"><code>--timeout=&lt;seconds&gt;</code><a href="#--timeoutseconds" aria-label="Link to heading '--timeout=&lt;seconds&gt;'" data-heading-content="--timeout=&lt;seconds&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Set the timeout length for query evaluation, in seconds.</p>
 <p>The timeout feature is intended to catch cases where a complex query<br>
 would take "forever" to evaluate. It is not an effective way to limit<br>
@@ -70,7 +70,7 @@ timed parts are "RA layers" of the optimized query, but that might<br>
 change in the future.</p>
 <p>If no timeout is specified, or is given as 0, no timeout will be set<br>
 (except for <a href="test-run.html">codeql test run</a>, where the default timeout is 5 minutes).</p>
-<h4 id="-j---threadsnum"><code>-j, --threads=&lt;num&gt;</code><a href="#-j---threadsnum" aria-label="Link to heading '-j, --threads=<num>'" data-heading-content="-j, --threads=<num>" class="anchor"></a></h4>
+<h4 id="-j---threadsnum"><code>-j, --threads=&lt;num&gt;</code><a href="#-j---threadsnum" aria-label="Link to heading '-j, --threads=&lt;num&gt;'" data-heading-content="-j, --threads=&lt;num&gt;" class="anchor"></a></h4>
 <p>Use this many threads to evaluate queries.</p>
 <p>Defaults to 1. You can pass 0 to use one thread per core on the machine,<br>
 or -<em>N</em> to leave <em>N</em> cores unused (except still use at least one<br>
@@ -84,7 +84,7 @@ be discarded after the queries have been executed.</p>
 <h4 id="--no-keep-full-cache"><code>--[no-]keep-full-cache</code><a href="#--no-keep-full-cache" aria-label="Link to heading '--[no-]keep-full-cache'" data-heading-content="--[no-]keep-full-cache" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Don't clean up the disk cache after evaluation completes.<br>
 This may save time if you're going to do <a href="dataset-cleanup.html">codeql dataset cleanup</a> or <a href="database-cleanup.html">codeql database cleanup</a> afterwards anyway.</p>
-<h4 id="--max-disk-cachemb"><code>--max-disk-cache=&lt;MB&gt;</code><a href="#--max-disk-cachemb" aria-label="Link to heading '--max-disk-cache=<MB>'" data-heading-content="--max-disk-cache=<MB>" class="anchor"></a></h4>
+<h4 id="--max-disk-cachemb"><code>--max-disk-cache=&lt;MB&gt;</code><a href="#--max-disk-cachemb" aria-label="Link to heading '--max-disk-cache=&lt;MB&gt;'" data-heading-content="--max-disk-cache=&lt;MB&gt;" class="anchor"></a></h4>
 <p>Set the maximum amount of space that the disk cache for intermediate<br>
 query results can use.</p>
 <p>If this size is not configured explicitly, the evaluator will try to use<br>
@@ -92,20 +92,20 @@ a "reasonable" amount of cache space, based on the size of the dataset<br>
 and the complexity of the queries. Explicitly setting a higher limit<br>
 than this default usage will enable additional caching which can speed<br>
 up later queries.</p>
-<h4 id="--min-disk-freemb"><code>--min-disk-free=&lt;MB&gt;</code><a href="#--min-disk-freemb" aria-label="Link to heading '--min-disk-free=<MB>'" data-heading-content="--min-disk-free=<MB>" class="anchor"></a></h4>
+<h4 id="--min-disk-freemb"><code>--min-disk-free=&lt;MB&gt;</code><a href="#--min-disk-freemb" aria-label="Link to heading '--min-disk-free=&lt;MB&gt;'" data-heading-content="--min-disk-free=&lt;MB&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Set target amount of free space on file system.</p>
 <p>If <code>--max-disk-cache</code> is not given, the evaluator will try hard to<br>
 curtail disk cache usage if the free space on the file system drops<br>
 below this value.</p>
-<h4 id="--min-disk-free-pctpct"><code>--min-disk-free-pct=&lt;pct&gt;</code><a href="#--min-disk-free-pctpct" aria-label="Link to heading '--min-disk-free-pct=<pct>'" data-heading-content="--min-disk-free-pct=<pct>" class="anchor"></a></h4>
+<h4 id="--min-disk-free-pctpct"><code>--min-disk-free-pct=&lt;pct&gt;</code><a href="#--min-disk-free-pctpct" aria-label="Link to heading '--min-disk-free-pct=&lt;pct&gt;'" data-heading-content="--min-disk-free-pct=&lt;pct&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Set target fraction of free space on file system.</p>
 <p>If <code>--max-disk-cache</code> is not given, the evaluator will try hard to<br>
 curtail disk cache usage if the free space on the file system drops<br>
 below this percentage.</p>
-<h4 id="--externalpredfilecsv"><code>--external=&lt;pred&gt;=&lt;file.csv&gt;</code><a href="#--externalpredfilecsv" aria-label="Link to heading '--external=<pred>=<file.csv>'" data-heading-content="--external=<pred>=<file.csv>" class="anchor"></a></h4>
+<h4 id="--externalpredfilecsv"><code>--external=&lt;pred&gt;=&lt;file.csv&gt;</code><a href="#--externalpredfilecsv" aria-label="Link to heading '--external=&lt;pred&gt;=&lt;file.csv&gt;'" data-heading-content="--external=&lt;pred&gt;=&lt;file.csv&gt;" class="anchor"></a></h4>
 <p>A CSV file that contains rows for external predicate <em><span data-escaped-char="">&lt;</span>pred&gt;</em>.<br>
 Multiple <code>--external</code> options can be supplied.</p>
-<h4 id="--xterm-progressmode"><code>--xterm-progress=&lt;mode&gt;</code><a href="#--xterm-progressmode" aria-label="Link to heading '--xterm-progress=<mode>'" data-heading-content="--xterm-progress=<mode>" class="anchor"></a></h4>
+<h4 id="--xterm-progressmode"><code>--xterm-progress=&lt;mode&gt;</code><a href="#--xterm-progressmode" aria-label="Link to heading '--xterm-progress=&lt;mode&gt;'" data-heading-content="--xterm-progress=&lt;mode&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Controls whether to show progress tracking during QL<br>
 evaluation using xterm control sequences. Possible values are:</p>
 <p><code>no</code>: Never produce fancy progress; assume a dumb terminal.</p>
@@ -120,7 +120,7 @@ the terminal. (Unlike <code>yes</code>, this should work on Windows.)</p>
 <p><code>25x80:/dev/pts/17</code> (or similar): show fancy progress on a <em>different</em><br>
 terminal than stderr. Mostly useful for internal testing.</p>
 <h3 id="options-for-controlling-outputting-of-structured-evaluator-logs">Options for controlling outputting of structured evaluator logs<a href="#options-for-controlling-outputting-of-structured-evaluator-logs" aria-label="Link to heading 'Options for controlling outputting of structured evaluator logs'" data-heading-content="Options for controlling outputting of structured evaluator logs" class="anchor"></a></h3>
-<h4 id="--evaluator-logfile"><code>--evaluator-log=&lt;file&gt;</code><a href="#--evaluator-logfile" aria-label="Link to heading '--evaluator-log=<file>'" data-heading-content="--evaluator-log=<file>" class="anchor"></a></h4>
+<h4 id="--evaluator-logfile"><code>--evaluator-log=&lt;file&gt;</code><a href="#--evaluator-logfile" aria-label="Link to heading '--evaluator-log=&lt;file&gt;'" data-heading-content="--evaluator-log=&lt;file&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Output structured logs about evaluator performance to the<br>
 given file. The format of this log file is subject to change with no<br>
 notice, but will be a stream of JSON objects separated by either two<br>
@@ -154,24 +154,24 @@ variable.</p>
 <h3 id="common-options">Common options<a href="#common-options" aria-label="Link to heading 'Common options'" data-heading-content="Common options" class="anchor"></a></h3>
 <h4 id="-h---help"><code>-h, --help</code><a href="#-h---help" aria-label="Link to heading '-h, --help'" data-heading-content="-h, --help" class="anchor"></a></h4>
 <p>Show this help text.</p>
-<h4 id="-jopt"><code>-J=&lt;opt&gt;</code><a href="#-jopt" aria-label="Link to heading '-J=<opt>'" data-heading-content="-J=<opt>" class="anchor"></a></h4>
+<h4 id="-jopt"><code>-J=&lt;opt&gt;</code><a href="#-jopt" aria-label="Link to heading '-J=&lt;opt&gt;'" data-heading-content="-J=&lt;opt&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Give option to the JVM running the command.</p>
 <p>(Beware that options containing spaces will not be handled correctly.)</p>
 <h4 id="-v---verbose"><code>-v, --verbose</code><a href="#-v---verbose" aria-label="Link to heading '-v, --verbose'" data-heading-content="-v, --verbose" class="anchor"></a></h4>
 <p>Incrementally increase the number of progress messages printed.</p>
 <h4 id="-q---quiet"><code>-q, --quiet</code><a href="#-q---quiet" aria-label="Link to heading '-q, --quiet'" data-heading-content="-q, --quiet" class="anchor"></a></h4>
 <p>Incrementally decrease the number of progress messages printed.</p>
-<h4 id="--verbositylevel"><code>--verbosity=&lt;level&gt;</code><a href="#--verbositylevel" aria-label="Link to heading '--verbosity=<level>'" data-heading-content="--verbosity=<level>" class="anchor"></a></h4>
+<h4 id="--verbositylevel"><code>--verbosity=&lt;level&gt;</code><a href="#--verbositylevel" aria-label="Link to heading '--verbosity=&lt;level&gt;'" data-heading-content="--verbosity=&lt;level&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Explicitly set the verbosity level to one of errors,<br>
 warnings, progress, progress+, progress++, progress+++. Overrides <code>-v</code><br>
 and <code>-q</code>.</p>
-<h4 id="--logdirdir"><code>--logdir=&lt;dir&gt;</code><a href="#--logdirdir" aria-label="Link to heading '--logdir=<dir>'" data-heading-content="--logdir=<dir>" class="anchor"></a></h4>
+<h4 id="--logdirdir"><code>--logdir=&lt;dir&gt;</code><a href="#--logdirdir" aria-label="Link to heading '--logdir=&lt;dir&gt;'" data-heading-content="--logdir=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Write detailed logs to one or more files in the given<br>
 directory, with generated names that include timestamps and the name of<br>
 the running subcommand.</p>
 <p>(To write a log file with a name you have full control over, instead<br>
 give <code>--log-to-stderr</code> and redirect stderr as desired.)</p>
-<h4 id="--common-cachesdir"><code>--common-caches=&lt;dir&gt;</code><a href="#--common-cachesdir" aria-label="Link to heading '--common-caches=<dir>'" data-heading-content="--common-caches=<dir>" class="anchor"></a></h4>
+<h4 id="--common-cachesdir"><code>--common-caches=&lt;dir&gt;</code><a href="#--common-cachesdir" aria-label="Link to heading '--common-caches=&lt;dir&gt;'" data-heading-content="--common-caches=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Controls the location of cached data on disk that will<br>
 persist between several runs of the CLI, such as downloaded QL packs and<br>
 compiled query plans. If not set explicitly, this defaults to a<br>

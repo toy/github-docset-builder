@@ -19,19 +19,19 @@ configured memory outside the Java heap.</p>
 desired <em>total</em> RAM amount.</p>
 <h2 id="options" title="Options" data-entry-type="Section">Options<a href="#options" aria-label="Link to heading 'Options'" data-heading-content="Options" class="anchor"></a></h2>
 <h3 id="primary-options">Primary Options<a href="#primary-options" aria-label="Link to heading 'Primary Options'" data-heading-content="Primary Options" class="anchor"></a></h3>
-<h4 id="--formatfmt"><code>--format=&lt;fmt&gt;</code><a href="#--formatfmt" aria-label="Link to heading '--format=<fmt>'" data-heading-content="--format=<fmt>" class="anchor"></a></h4>
+<h4 id="--formatfmt"><code>--format=&lt;fmt&gt;</code><a href="#--formatfmt" aria-label="Link to heading '--format=&lt;fmt&gt;'" data-heading-content="--format=&lt;fmt&gt;" class="anchor"></a></h4>
 <p>Select output format. Choices include:</p>
 <p><code>lines</code> <em>(default)</em>: Print command-line arguments on one line each.</p>
 <p><code>json</code>: Print them as a JSON array.</p>
 <h3 id="options-from-the-invoking-commands-command-line">Options from the invoking command's command line<a href="#options-from-the-invoking-commands-command-line" aria-label="Link to heading 'Options from the invoking command's command line'" data-heading-content="Options from the invoking command's command line" class="anchor"></a></h3>
-<h4 id="-m---rammb"><code>-M, --ram=&lt;MB&gt;</code><a href="#-m---rammb" aria-label="Link to heading '-M, --ram=<MB>'" data-heading-content="-M, --ram=<MB>" class="anchor"></a></h4>
+<h4 id="-m---rammb"><code>-M, --ram=&lt;MB&gt;</code><a href="#-m---rammb" aria-label="Link to heading '-M, --ram=&lt;MB&gt;'" data-heading-content="-M, --ram=&lt;MB&gt;" class="anchor"></a></h4>
 <p>The query evaluator will try hard to keep its total memory footprint<br>
 below this value. (However, for large databases it is possible that the<br>
 threshold may be broken by file-backed memory maps, which can be swapped<br>
 to disk in case of memory pressure).</p>
 <p>The value should be at least 2048 MB; smaller values will be<br>
 transparently rounded up.</p>
-<h4 id="--datasetdirectory"><code>--dataset=&lt;directory&gt;</code><a href="#--datasetdirectory" aria-label="Link to heading '--dataset=<directory>'" data-heading-content="--dataset=<directory>" class="anchor"></a></h4>
+<h4 id="--datasetdirectory"><code>--dataset=&lt;directory&gt;</code><a href="#--datasetdirectory" aria-label="Link to heading '--dataset=&lt;directory&gt;'" data-heading-content="--dataset=&lt;directory&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Tune the RAM settings appropriately for querying the given<br>
 dataset, taking into account components of RAM usage that scale with the<br>
 size of the database. If this is not given, a generic default size will<br>
@@ -39,24 +39,24 @@ be assumed.</p>
 <h3 id="common-options">Common options<a href="#common-options" aria-label="Link to heading 'Common options'" data-heading-content="Common options" class="anchor"></a></h3>
 <h4 id="-h---help"><code>-h, --help</code><a href="#-h---help" aria-label="Link to heading '-h, --help'" data-heading-content="-h, --help" class="anchor"></a></h4>
 <p>Show this help text.</p>
-<h4 id="-jopt"><code>-J=&lt;opt&gt;</code><a href="#-jopt" aria-label="Link to heading '-J=<opt>'" data-heading-content="-J=<opt>" class="anchor"></a></h4>
+<h4 id="-jopt"><code>-J=&lt;opt&gt;</code><a href="#-jopt" aria-label="Link to heading '-J=&lt;opt&gt;'" data-heading-content="-J=&lt;opt&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Give option to the JVM running the command.</p>
 <p>(Beware that options containing spaces will not be handled correctly.)</p>
 <h4 id="-v---verbose"><code>-v, --verbose</code><a href="#-v---verbose" aria-label="Link to heading '-v, --verbose'" data-heading-content="-v, --verbose" class="anchor"></a></h4>
 <p>Incrementally increase the number of progress messages printed.</p>
 <h4 id="-q---quiet"><code>-q, --quiet</code><a href="#-q---quiet" aria-label="Link to heading '-q, --quiet'" data-heading-content="-q, --quiet" class="anchor"></a></h4>
 <p>Incrementally decrease the number of progress messages printed.</p>
-<h4 id="--verbositylevel"><code>--verbosity=&lt;level&gt;</code><a href="#--verbositylevel" aria-label="Link to heading '--verbosity=<level>'" data-heading-content="--verbosity=<level>" class="anchor"></a></h4>
+<h4 id="--verbositylevel"><code>--verbosity=&lt;level&gt;</code><a href="#--verbositylevel" aria-label="Link to heading '--verbosity=&lt;level&gt;'" data-heading-content="--verbosity=&lt;level&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Explicitly set the verbosity level to one of errors,<br>
 warnings, progress, progress+, progress++, progress+++. Overrides <code>-v</code><br>
 and <code>-q</code>.</p>
-<h4 id="--logdirdir"><code>--logdir=&lt;dir&gt;</code><a href="#--logdirdir" aria-label="Link to heading '--logdir=<dir>'" data-heading-content="--logdir=<dir>" class="anchor"></a></h4>
+<h4 id="--logdirdir"><code>--logdir=&lt;dir&gt;</code><a href="#--logdirdir" aria-label="Link to heading '--logdir=&lt;dir&gt;'" data-heading-content="--logdir=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Write detailed logs to one or more files in the given<br>
 directory, with generated names that include timestamps and the name of<br>
 the running subcommand.</p>
 <p>(To write a log file with a name you have full control over, instead<br>
 give <code>--log-to-stderr</code> and redirect stderr as desired.)</p>
-<h4 id="--common-cachesdir"><code>--common-caches=&lt;dir&gt;</code><a href="#--common-cachesdir" aria-label="Link to heading '--common-caches=<dir>'" data-heading-content="--common-caches=<dir>" class="anchor"></a></h4>
+<h4 id="--common-cachesdir"><code>--common-caches=&lt;dir&gt;</code><a href="#--common-cachesdir" aria-label="Link to heading '--common-caches=&lt;dir&gt;'" data-heading-content="--common-caches=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Controls the location of cached data on disk that will<br>
 persist between several runs of the CLI, such as downloaded QL packs and<br>
 compiled query plans. If not set explicitly, this defaults to a<br>

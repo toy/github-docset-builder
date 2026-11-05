@@ -14,10 +14,9 @@ This includes both personal and shared automations created by the caller, but ex
 shared automations created by another user.<br>
 Use the repository-scoped list operation for those automations. The type filter<br>
 only narrows this creator-scoped collection.<br>
-To call this endpoint, OAuth app tokens and personal access tokens (classic) need:</p>
-<p>the repo scope for private or internal repositories<br>
-the repo scope or public_repo scope for public repositories</p>
-<p>Fine-grained access tokens for "List automations for user"<br>
+To call this endpoint, OAuth app tokens and personal access tokens (classic)<br>
+need the repo scope.<br>
+Fine-grained access tokens for "List automations for user"<br>
 This endpoint works with the following fine-grained token types:</p>
 <p>GitHub App user access tokens<br>
 Fine-grained personal access tokens</p>
@@ -70,6 +69,7 @@ Can be one of: <code>personal</code>, <code>shared</code></p>
 <p><strong>Response schema (Status: 200):</strong></p>
 <p>Array of objects:</p>
 <ul>
+<li><code>tools</code>: array of string</li>
 <li><code>id</code>: required, string</li>
 <li><code>repository</code>: required, object:
 <ul>
@@ -371,10 +371,9 @@ automations.<br>
 GitHub App installation access tokens can list shared automations.<br>
 The installation must belong to the repository owner and the token must have<br>
 "Agent tasks" repository permissions (read). Personal automations require a user token.<br>
-OAuth app tokens and personal access tokens (classic) need:</p>
-<p>the repo scope for private or internal repositories<br>
-the repo scope or public_repo scope for public repositories</p>
-<p>Fine-grained access tokens for "List automations for a repository"<br>
+To call this endpoint, OAuth app tokens and personal access tokens (classic)<br>
+need the repo scope.<br>
+Fine-grained access tokens for "List automations for a repository"<br>
 This endpoint works with the following fine-grained token types:</p>
 <p>GitHub App user access tokens<br>
 GitHub App installation access tokens<br>
@@ -439,6 +438,7 @@ Can be one of: <code>personal</code>, <code>shared</code></p>
 <ul>
 <li><code>automations</code>: required, array of objects:
 <ul>
+<li><code>tools</code>: array of string</li>
 <li><code>id</code>: required, string</li>
 <li><code>name</code>: required, string</li>
 <li><code>enabled</code>: boolean</li>
@@ -738,10 +738,9 @@ repository permissions (write). Personal automations require a user token.<br>
 For installation tokens, created_by identifies the App's bot account.<br>
 To call this endpoint, you must have write access to the repository and the<br>
 "Allow automations" setting must be enabled for the repository.<br>
-OAuth app tokens and personal access tokens (classic) need:</p>
-<p>the repo scope for private or internal repositories<br>
-the repo scope or public_repo scope for public repositories</p>
-<p>Fine-grained access tokens for "Create an automation for a repository"<br>
+To call this endpoint, OAuth app tokens and personal access tokens (classic)<br>
+need the repo scope.<br>
+Fine-grained access tokens for "Create an automation for a repository"<br>
 This endpoint works with the following fine-grained token types:</p>
 <p>GitHub App user access tokens<br>
 GitHub App installation access tokens<br>
@@ -800,7 +799,7 @@ When true, events Copilot creates, including from other automations and Copilot 
 <li><strong><code>query</code></strong> (string)<br>
 A GitHub issue or pull request search query.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -813,7 +812,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>labels</code></strong> (array of strings)<br>
 Label names matched case-insensitively against the label added by the event. Omit or use an empty array to match every added label.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -829,7 +828,7 @@ Supported values are: failure</li>
 <li><strong><code>query</code></strong> (string)<br>
 A GitHub issue or pull request search query.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -842,7 +841,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>paths</code></strong> (array of strings)<br>
 Gitignore-style changed-file path globs.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -855,7 +854,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>paths</code></strong> (array of strings)<br>
 Gitignore-style changed-file path globs.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -868,7 +867,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>paths</code></strong> (array of strings)<br>
 Gitignore-style changed-file path globs.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -881,7 +880,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>body_substring</code></strong> (string)<br>
 A case-insensitive substring matched against the event body.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -899,7 +898,7 @@ Gitignore-style changed-file path globs.</li>
 <li><strong><code>body_substring</code></strong> (string)<br>
 A case-insensitive substring matched against the event body.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -912,7 +911,7 @@ Discussion category names matched case-insensitively.</li>
 <li><strong><code>body_substring</code></strong> (string)<br>
 A case-insensitive substring matched against the event body.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -925,7 +924,7 @@ Discussion category names matched case-insensitively.</li>
 <li><strong><code>body_substring</code></strong> (string)<br>
 A case-insensitive substring matched against the event body.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -941,7 +940,7 @@ Discussion category names matched case-insensitively.</li>
 <li><strong><code>body_substring</code></strong> (string)<br>
 A case-insensitive substring matched against the event body.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -954,7 +953,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>assignees</code></strong> (array of strings)<br>
 Affected assignee logins matched case-insensitively.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -969,7 +968,7 @@ Gitignore-style changed-file path globs.</li>
 <li><strong><code>assignees</code></strong> (array of strings)<br>
 Affected assignee logins matched case-insensitively.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -980,7 +979,7 @@ When true, events Copilot creates, including from other automations and Copilot 
 <li><strong><code>query</code></strong> (string)<br>
 A GitHub issue or pull request search query.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -993,7 +992,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>paths</code></strong> (array of strings)<br>
 Gitignore-style changed-file path globs.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -1008,7 +1007,7 @@ Gitignore-style changed-file path globs.</li>
 <li><strong><code>labels</code></strong> (array of strings)<br>
 Label names matched case-insensitively against the label added by the event. Omit or use an empty array to match every added label.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -1021,7 +1020,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>paths</code></strong> (array of strings)<br>
 Gitignore-style changed-file path globs.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -1037,7 +1036,7 @@ Gitignore-style changed-file path globs.</li>
 Submitted review states to match.<br>
 Supported values are: approved, changes_requested, commented</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -1050,7 +1049,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>paths</code></strong> (array of strings)<br>
 Gitignore-style changed-file path globs.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -1061,7 +1060,7 @@ When true, events Copilot creates, including from other automations and Copilot 
 <li><strong><code>query</code></strong> (string)<br>
 A GitHub issue or pull request search query.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -1072,7 +1071,7 @@ When true, events Copilot creates, including from other automations and Copilot 
 <li><strong><code>query</code></strong> (string)<br>
 A GitHub issue or pull request search query.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -1085,7 +1084,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>paths</code></strong> (array of strings)<br>
 Gitignore-style changed-file path globs.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -1098,7 +1097,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>paths</code></strong> (array of strings)<br>
 Gitignore-style changed-file path globs.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -1111,7 +1110,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>paths</code></strong> (array of strings)<br>
 Gitignore-style changed-file path globs.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -1124,7 +1123,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>paths</code></strong> (array of strings)<br>
 Gitignore-style changed-file path globs.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -1137,7 +1136,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>paths</code></strong> (array of strings)<br>
 Gitignore-style changed-file path globs.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -1150,7 +1149,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>paths</code></strong> (array of strings)<br>
 Gitignore-style changed-file path globs.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -1161,7 +1160,7 @@ When true, events Copilot creates, including from other automations and Copilot 
 <li><strong><code>automation_ids</code></strong> (array of strings) (required)<br>
 Upstream Automation IDs in the same repository.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -1175,7 +1174,7 @@ Upstream Automation IDs in the same repository. An Automation cannot list itself
 Failure reasons to match. Omit to match only reported failures.<br>
 Supported values are: reported, crashed, timed_out</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -1185,7 +1184,7 @@ When true, events Copilot creates, including from other automations and Copilot 
 Runs on the default branch when a security alert of this kind is created in the repository. These are system events without an issue, pull request, or human actor, and cannot be run manually.
 <ul>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -1195,7 +1194,7 @@ When true, events Copilot creates, including from other automations and Copilot 
 Runs on the default branch when a security alert of this kind is created in the repository. These are system events without an issue, pull request, or human actor, and cannot be run manually.
 <ul>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -1205,7 +1204,7 @@ When true, events Copilot creates, including from other automations and Copilot 
 Runs on the default branch when a security alert of this kind is created in the repository. These are system events without an issue, pull request, or human actor, and cannot be run manually.
 <ul>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -1599,11 +1598,10 @@ any tool that exists on the server can be used.<br>
 GitHub App installation access tokens can list available automation tools.<br>
 The installation must belong to the repository owner and the token must have<br>
 "Agent tasks" repository permissions (read).<br>
-To call this endpoint, OAuth app tokens and personal access tokens (classic) need:</tool-name></server-name></p>
-<p>the repo scope for private or internal repositories<br>
-the repo scope or public_repo scope for public repositories</p>
-<p>Fine-grained access tokens for "List available automation tools for a repository"<br>
-This endpoint works with the following fine-grained token types:</p>
+To call this endpoint, OAuth app tokens and personal access tokens (classic)<br>
+need the repo scope.<br>
+Fine-grained access tokens for "List available automation tools for a repository"<br>
+This endpoint works with the following fine-grained token types:</tool-name></server-name></p>
 <p>GitHub App user access tokens<br>
 GitHub App installation access tokens<br>
 Fine-grained personal access tokens</p>
@@ -1685,10 +1683,9 @@ trigger.<br>
 GitHub App installation access tokens can list available automation triggers.<br>
 The installation must belong to the repository owner and the token must have<br>
 "Agent tasks" repository permissions (read).<br>
-To call this endpoint, OAuth app tokens and personal access tokens (classic) need:</p>
-<p>the repo scope for private or internal repositories<br>
-the repo scope or public_repo scope for public repositories</p>
-<p>Fine-grained access tokens for "List available automation triggers for a repository"<br>
+To call this endpoint, OAuth app tokens and personal access tokens (classic)<br>
+need the repo scope.<br>
+Fine-grained access tokens for "List available automation triggers for a repository"<br>
 This endpoint works with the following fine-grained token types:</p>
 <p>GitHub App user access tokens<br>
 GitHub App installation access tokens<br>
@@ -1793,10 +1790,9 @@ type.<br>
 GitHub App installation access tokens can access shared automations.<br>
 The installation must belong to the repository owner and the token must have<br>
 "Agent tasks" repository permissions (read). Personal automations require a user token.<br>
-OAuth app tokens and personal access tokens (classic) need:</p>
-<p>the repo scope for private or internal repositories<br>
-the repo scope or public_repo scope for public repositories</p>
-<p>Fine-grained access tokens for "Get an automation"<br>
+To call this endpoint, OAuth app tokens and personal access tokens (classic)<br>
+need the repo scope.<br>
+Fine-grained access tokens for "Get an automation"<br>
 This endpoint works with the following fine-grained token types:</p>
 <p>GitHub App user access tokens<br>
 GitHub App installation access tokens<br>
@@ -1861,10 +1857,9 @@ The installation must belong to the repository owner and the token must have<br>
 "Agent tasks" repository permissions (write). Personal automations require a user token.<br>
 To call this endpoint, you must have write access to the repository and the<br>
 "Allow automations" setting must be enabled for the repository.<br>
-OAuth app tokens and personal access tokens (classic) need:</p>
-<p>the repo scope for private or internal repositories<br>
-the repo scope or public_repo scope for public repositories</p>
-<p>Fine-grained access tokens for "Update an automation"<br>
+To call this endpoint, OAuth app tokens and personal access tokens (classic)<br>
+need the repo scope.<br>
+Fine-grained access tokens for "Update an automation"<br>
 This endpoint works with the following fine-grained token types:</p>
 <p>GitHub App user access tokens<br>
 GitHub App installation access tokens<br>
@@ -1947,7 +1942,7 @@ When true, events Copilot creates, including from other automations and Copilot 
 <li><strong><code>query</code></strong> (string)<br>
 A GitHub issue or pull request search query.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -1960,7 +1955,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>labels</code></strong> (array of strings)<br>
 Label names matched case-insensitively against the label added by the event. Omit or use an empty array to match every added label.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -1976,7 +1971,7 @@ Supported values are: failure</li>
 <li><strong><code>query</code></strong> (string)<br>
 A GitHub issue or pull request search query.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -1989,7 +1984,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>paths</code></strong> (array of strings)<br>
 Gitignore-style changed-file path globs.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2002,7 +1997,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>paths</code></strong> (array of strings)<br>
 Gitignore-style changed-file path globs.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2015,7 +2010,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>paths</code></strong> (array of strings)<br>
 Gitignore-style changed-file path globs.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2028,7 +2023,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>body_substring</code></strong> (string)<br>
 A case-insensitive substring matched against the event body.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2046,7 +2041,7 @@ Gitignore-style changed-file path globs.</li>
 <li><strong><code>body_substring</code></strong> (string)<br>
 A case-insensitive substring matched against the event body.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2059,7 +2054,7 @@ Discussion category names matched case-insensitively.</li>
 <li><strong><code>body_substring</code></strong> (string)<br>
 A case-insensitive substring matched against the event body.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2072,7 +2067,7 @@ Discussion category names matched case-insensitively.</li>
 <li><strong><code>body_substring</code></strong> (string)<br>
 A case-insensitive substring matched against the event body.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2088,7 +2083,7 @@ Discussion category names matched case-insensitively.</li>
 <li><strong><code>body_substring</code></strong> (string)<br>
 A case-insensitive substring matched against the event body.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2101,7 +2096,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>assignees</code></strong> (array of strings)<br>
 Affected assignee logins matched case-insensitively.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2116,7 +2111,7 @@ Gitignore-style changed-file path globs.</li>
 <li><strong><code>assignees</code></strong> (array of strings)<br>
 Affected assignee logins matched case-insensitively.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2127,7 +2122,7 @@ When true, events Copilot creates, including from other automations and Copilot 
 <li><strong><code>query</code></strong> (string)<br>
 A GitHub issue or pull request search query.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2140,7 +2135,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>paths</code></strong> (array of strings)<br>
 Gitignore-style changed-file path globs.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2155,7 +2150,7 @@ Gitignore-style changed-file path globs.</li>
 <li><strong><code>labels</code></strong> (array of strings)<br>
 Label names matched case-insensitively against the label added by the event. Omit or use an empty array to match every added label.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2168,7 +2163,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>paths</code></strong> (array of strings)<br>
 Gitignore-style changed-file path globs.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2184,7 +2179,7 @@ Gitignore-style changed-file path globs.</li>
 Submitted review states to match.<br>
 Supported values are: approved, changes_requested, commented</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2197,7 +2192,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>paths</code></strong> (array of strings)<br>
 Gitignore-style changed-file path globs.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2208,7 +2203,7 @@ When true, events Copilot creates, including from other automations and Copilot 
 <li><strong><code>query</code></strong> (string)<br>
 A GitHub issue or pull request search query.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2219,7 +2214,7 @@ When true, events Copilot creates, including from other automations and Copilot 
 <li><strong><code>query</code></strong> (string)<br>
 A GitHub issue or pull request search query.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2232,7 +2227,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>paths</code></strong> (array of strings)<br>
 Gitignore-style changed-file path globs.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2245,7 +2240,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>paths</code></strong> (array of strings)<br>
 Gitignore-style changed-file path globs.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2258,7 +2253,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>paths</code></strong> (array of strings)<br>
 Gitignore-style changed-file path globs.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2271,7 +2266,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>paths</code></strong> (array of strings)<br>
 Gitignore-style changed-file path globs.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2284,7 +2279,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>paths</code></strong> (array of strings)<br>
 Gitignore-style changed-file path globs.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2297,7 +2292,7 @@ A GitHub issue or pull request search query.</li>
 <li><strong><code>paths</code></strong> (array of strings)<br>
 Gitignore-style changed-file path globs.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2308,7 +2303,7 @@ When true, events Copilot creates, including from other automations and Copilot 
 <li><strong><code>automation_ids</code></strong> (array of strings) (required)<br>
 Upstream Automation IDs in the same repository.</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2322,7 +2317,7 @@ Upstream Automation IDs in the same repository. An Automation cannot list itself
 Failure reasons to match. Omit to match only reported failures.<br>
 Supported values are: reported, crashed, timed_out</li>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2332,7 +2327,7 @@ When true, events Copilot creates, including from other automations and Copilot 
 Runs on the default branch when a security alert of this kind is created in the repository. These are system events without an issue, pull request, or human actor, and cannot be run manually.
 <ul>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2342,7 +2337,7 @@ When true, events Copilot creates, including from other automations and Copilot 
 Runs on the default branch when a security alert of this kind is created in the repository. These are system events without an issue, pull request, or human actor, and cannot be run manually.
 <ul>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2352,7 +2347,7 @@ When true, events Copilot creates, including from other automations and Copilot 
 Runs on the default branch when a security alert of this kind is created in the repository. These are system events without an issue, pull request, or human actor, and cannot be run manually.
 <ul>
 <li><strong><code>write_scope</code></strong> (string)<br>
-Override the Automation write_scope for runs started by this trigger. If omitted, the automation's write_scope is used. Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
+Sets the write scope for this trigger's runs. Omit to inherit the automation's effective scope (default trigger). Organization or repository policy may restrict the effective scope to trigger. Explicitly setting repository on create or edit returns 422 when policy validation is enabled and that policy applies.<br>
 Can be one of: <code>trigger</code>, <code>repository</code></li>
 <li><strong><code>allow_copilot_triggers</code></strong> (boolean)<br>
 When true, events Copilot creates, including from other automations and Copilot sessions, can start this automation through this trigger. Defaults to false. The Copilot coding agent app cannot turn it on: creating a trigger with true, or changing it from false to true, returns 422.</li>
@@ -2414,15 +2409,16 @@ The tools available to the automation. Send an empty array to clear all tools.</
 <p>This endpoint is in public preview and is subject to change.</p>
 <p>Deletes an automation in a repository. The automation must be a personal<br>
 automation belonging to you or a shared automation.<br>
+Data dedicated to the automation is also deleted when present and may remain<br>
+recoverable for a limited period according to the configured retention policy.<br>
 GitHub App installation access tokens can delete shared automations.<br>
 The installation must belong to the repository owner and the token must have<br>
 "Agent tasks" repository permissions (write). Personal automations require a user token.<br>
 To call this endpoint, you must have write access to the repository and the<br>
 "Allow automations" setting must be enabled for the repository.<br>
-OAuth app tokens and personal access tokens (classic) need:</p>
-<p>the repo scope for private or internal repositories<br>
-the repo scope or public_repo scope for public repositories</p>
-<p>Fine-grained access tokens for "Delete an automation"<br>
+To call this endpoint, OAuth app tokens and personal access tokens (classic)<br>
+need the repo scope.<br>
+Fine-grained access tokens for "Delete an automation"<br>
 This endpoint works with the following fine-grained token types:</p>
 <p>GitHub App user access tokens<br>
 GitHub App installation access tokens<br>
@@ -2464,6 +2460,9 @@ The unique identifier of the automation.</p>
 <li>
 <p><strong>404</strong> - Resource not found</p>
 </li>
+<li>
+<p><strong>503</strong> - Automation deletion is temporarily unavailable and can be retried.</p>
+</li>
 </ul>
 <h3 id="code-examples-7">Code examples<a href="#code-examples-7" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
 <h4 id="example-7">Example<a href="#example-7" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
@@ -2473,6 +2472,773 @@ The unique identifier of the automation.</p>
 </span><span style="color:#c0c5ce;">  https://api.github.com/agents/repos/OWNER/REPO/automations/AUTOMATION_ID
 </span></code></pre>
 <p><strong>Response schema (Status: 204):</strong></p>
+<h2 id="list-revisions-for-an-automation" title="GET /agents/repos/{owner}/{repo}/automations/{automation_id}/revisions (List revisions for an automation)" data-entry-type="Resource">List revisions for an automation<a href="#list-revisions-for-an-automation" aria-label="Link to heading 'List revisions for an automation'" data-heading-content="List revisions for an automation" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /agents/repos/{owner}/{repo}/automations/{automation_id}/revisions
+</span></code></pre>
+<p>Note</p>
+<p>This endpoint is in public preview and is subject to change.</p>
+<p>Returns a list of revisions for an automation, ordered from newest to oldest.<br>
+Access follows the automation's own ownership rules: a user-owned automation's<br>
+history is readable only by its creator, and a repository-owned automation's<br>
+history follows repository read access. History remains readable after the<br>
+automation is deleted.<br>
+Follow the opaque cursor in the rel="next" link from the Link header to<br>
+continue when more revisions are available.<br>
+Fine-grained access tokens for "List revisions for an automation"<br>
+This endpoint works with the following fine-grained token types:</p>
+<p>GitHub App user access tokens<br>
+Fine-grained personal access tokens</p>
+<p>The fine-grained token must have the following permission set:</p>
+<p>"Agent tasks" repository permissions (read)</p>
+<p>GitHub App installation access tokens are not supported for this endpoint.</p>
+<h3 id="parameters-8">Parameters<a href="#parameters-8" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-8">Headers<a href="#headers-8" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-8">Path and query parameters<a href="#path-and-query-parameters-8" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>automation_id</code></strong> (string) (required)<br>
+The unique identifier of the automation.</p>
+</li>
+<li>
+<p><strong><code>cursor</code></strong> (string)<br>
+Opaque cursor identifying where to continue reading revision history,<br>
+taken from the next link of a previous response. Omit to start from<br>
+the most recent revision.</p>
+</li>
+<li>
+<p><strong><code>per_page</code></strong> (integer)<br>
+The number of results per page (max 100).<br>
+Default: <code>30</code></p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-8">HTTP response status codes<a href="#http-response-status-codes-8" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - Revision history retrieved successfully</p>
+</li>
+<li>
+<p><strong>400</strong> - Bad request</p>
+</li>
+<li>
+<p><strong>401</strong> - Authentication required</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+</ul>
+<h3 id="code-examples-8">Code examples<a href="#code-examples-8" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-8">Example<a href="#example-8" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X GET \
+</span><span style="color:#c0c5ce;">  https://api.github.com/agents/repos/OWNER/REPO/automations/AUTOMATION_ID/revisions
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<ul>
+<li><code>revisions</code>: required, array of objects:
+<ul>
+<li><code>id</code>: required, string</li>
+<li><code>automation_id</code>: required, string</li>
+<li><code>revision_number</code>: required, integer, format: int64</li>
+<li><code>change_type</code>: required, string, enum: <code>created</code>, <code>edited</code>, <code>enabled</code>, <code>disabled</code>, <code>deleted</code>, <code>rolled_back</code>, <code>unknown</code></li>
+<li><code>creator</code>: all of:
+<ul>
+<li><strong>object</strong>
+<ul>
+<li><code>id</code>: integer, format: int64</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>editor</code>: all of:
+<ul>
+<li><strong>object</strong>
+<ul>
+<li><code>id</code>: integer, format: int64</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>editor_type</code>: string, enum: <code>user</code>, <code>system</code>, <code>unknown</code></li>
+<li><code>changed_at</code>: required, string, format: date-time</li>
+<li><code>restored_from_revision_id</code>: string</li>
+<li><code>snapshot</code>: object:
+<ul>
+<li><code>id</code>: required, string</li>
+<li><code>name</code>: required, string</li>
+<li><code>enabled</code>: boolean</li>
+<li><code>type</code>: string, enum: <code>personal</code>, <code>shared</code>, read-only</li>
+<li><code>require_actor_write_permission</code>: boolean, default: <code>false</code></li>
+<li><code>triggers</code>: object:
+<ul>
+<li><code>interval</code>: object:
+<ul>
+<li><code>cadence</code>: required, array of string, enum: <code>hourly</code>, <code>daily</code>, <code>weekly</code></li>
+<li><code>hour_utc</code>: integer, minimum: 0, maximum: 23</li>
+<li><code>day_of_week</code>: integer, minimum: 0, maximum: 6</li>
+<li><code>minute_utc</code>: integer, enum: <code>0</code>, <code>15</code>, <code>30</code>, <code>45</code>, default: <code>0</code></li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>issue_opened</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>issue_labeled</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>labels</code>: array of string</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>workflow_run</code>: object:
+<ul>
+<li><code>workflows</code>: required, array of string, minLength: 1</li>
+<li><code>conclusions</code>: required, array of string, enum: <code>failure</code></li>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_opened</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_synchronize</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_merged</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>issue_comment</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>body_substring</code>: string</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_comment</code>: object:
+<ul>
+<li><code>comment_types</code>: required, array of string, enum: <code>timeline_comment</code>, <code>review_comment</code></li>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>body_substring</code>: string</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>discussion_opened</code>: object:
+<ul>
+<li><code>categories</code>: array of string</li>
+<li><code>body_substring</code>: string</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>discussion_updated</code>: object:
+<ul>
+<li><code>categories</code>: array of string</li>
+<li><code>body_substring</code>: string</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>discussion_comment</code>: object:
+<ul>
+<li><code>comment_types</code>: array of string, enum: <code>comment</code>, <code>reply</code></li>
+<li><code>categories</code>: array of string</li>
+<li><code>body_substring</code>: string</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>issue_assigned</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>assignees</code>: array of string</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_assigned</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>assignees</code>: array of string</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>sub_issue_added</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_ready_for_review</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_labeled</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>labels</code>: array of string</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_merge_conflict</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_review_submitted</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>states</code>: required, array of string, enum: <code>approved</code>, <code>changes_requested</code>, <code>commented</code></li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_review_requested</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>issue_closed</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>issue_reopened</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_closed</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_reopened</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_converted_to_draft</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_review_dismissed</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_review_thread_resolved</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_review_thread_unresolved</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>automation_completed</code>: object:
+<ul>
+<li><code>automation_ids</code>: required, array of string</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>automation_failed</code>: object:
+<ul>
+<li><code>automation_ids</code>: required, array of string</li>
+<li><code>reasons</code>: array of string, enum: <code>reported</code>, <code>crashed</code>, <code>timed_out</code></li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>code_scanning_alert</code>: object:
+<ul>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>secret_scanning_alert</code>: object:
+<ul>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>dependabot_alert</code>: object:
+<ul>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>prompt</code>: required, string</li>
+<li><code>tools</code>: array of string</li>
+<li><code>model</code>: string</li>
+<li><code>reasoning_effort</code>: string</li>
+<li><code>created_at</code>: required, string, format: date-time</li>
+<li><code>updated_at</code>: required, string, format: date-time</li>
+<li><code>created_by</code>: required, object:
+<ul>
+<li><code>id</code>: integer, format: int64</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="get-an-automation-revision" title="GET /agents/repos/{owner}/{repo}/automations/{automation_id}/revisions/{revision_id} (Get an automation revision)" data-entry-type="Resource">Get an automation revision<a href="#get-an-automation-revision" aria-label="Link to heading 'Get an automation revision'" data-heading-content="Get an automation revision" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /agents/repos/{owner}/{repo}/automations/{automation_id}/revisions/{revision_id}
+</span></code></pre>
+<p>Note</p>
+<p>This endpoint is in public preview and is subject to change.</p>
+<p>Returns a specific revision of an automation, including its configuration after that change.<br>
+Access follows the automation's own ownership rules: a user-owned automation's<br>
+history is readable only by its creator, and a repository-owned automation's<br>
+history follows repository read access. History remains readable after the<br>
+automation is deleted.<br>
+A revision ID belonging to a different automation returns 404.<br>
+Fine-grained access tokens for "Get an automation revision"<br>
+This endpoint works with the following fine-grained token types:</p>
+<p>GitHub App user access tokens<br>
+Fine-grained personal access tokens</p>
+<p>The fine-grained token must have the following permission set:</p>
+<p>"Agent tasks" repository permissions (read)</p>
+<p>GitHub App installation access tokens are not supported for this endpoint.</p>
+<h3 id="parameters-9">Parameters<a href="#parameters-9" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-9">Headers<a href="#headers-9" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-9">Path and query parameters<a href="#path-and-query-parameters-9" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>automation_id</code></strong> (string) (required)<br>
+The unique identifier of the automation.</p>
+</li>
+<li>
+<p><strong><code>revision_id</code></strong> (string) (required)<br>
+The unique identifier of the automation revision.</p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-9">HTTP response status codes<a href="#http-response-status-codes-9" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - Revision retrieved successfully</p>
+</li>
+<li>
+<p><strong>401</strong> - Authentication required</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+</ul>
+<h3 id="code-examples-9">Code examples<a href="#code-examples-9" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-9">Example<a href="#example-9" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X GET \
+</span><span style="color:#c0c5ce;">  https://api.github.com/agents/repos/OWNER/REPO/automations/AUTOMATION_ID/revisions/REVISION_ID
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<ul>
+<li><code>id</code>: required, string</li>
+<li><code>automation_id</code>: required, string</li>
+<li><code>revision_number</code>: required, integer, format: int64</li>
+<li><code>change_type</code>: required, string, enum: <code>created</code>, <code>edited</code>, <code>enabled</code>, <code>disabled</code>, <code>deleted</code>, <code>rolled_back</code>, <code>unknown</code></li>
+<li><code>creator</code>: all of:
+<ul>
+<li><strong>object</strong>
+<ul>
+<li><code>id</code>: integer, format: int64</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>editor</code>: all of:
+<ul>
+<li><strong>object</strong>
+<ul>
+<li><code>id</code>: integer, format: int64</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>editor_type</code>: string, enum: <code>user</code>, <code>system</code>, <code>unknown</code></li>
+<li><code>changed_at</code>: required, string, format: date-time</li>
+<li><code>restored_from_revision_id</code>: string</li>
+<li><code>snapshot</code>: object:
+<ul>
+<li><code>id</code>: required, string</li>
+<li><code>name</code>: required, string</li>
+<li><code>enabled</code>: boolean</li>
+<li><code>type</code>: string, enum: <code>personal</code>, <code>shared</code>, read-only</li>
+<li><code>require_actor_write_permission</code>: boolean, default: <code>false</code></li>
+<li><code>triggers</code>: object:
+<ul>
+<li><code>interval</code>: object:
+<ul>
+<li><code>cadence</code>: required, array of string, enum: <code>hourly</code>, <code>daily</code>, <code>weekly</code></li>
+<li><code>hour_utc</code>: integer, minimum: 0, maximum: 23</li>
+<li><code>day_of_week</code>: integer, minimum: 0, maximum: 6</li>
+<li><code>minute_utc</code>: integer, enum: <code>0</code>, <code>15</code>, <code>30</code>, <code>45</code>, default: <code>0</code></li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>issue_opened</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>issue_labeled</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>labels</code>: array of string</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>workflow_run</code>: object:
+<ul>
+<li><code>workflows</code>: required, array of string, minLength: 1</li>
+<li><code>conclusions</code>: required, array of string, enum: <code>failure</code></li>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_opened</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_synchronize</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_merged</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>issue_comment</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>body_substring</code>: string</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_comment</code>: object:
+<ul>
+<li><code>comment_types</code>: required, array of string, enum: <code>timeline_comment</code>, <code>review_comment</code></li>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>body_substring</code>: string</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>discussion_opened</code>: object:
+<ul>
+<li><code>categories</code>: array of string</li>
+<li><code>body_substring</code>: string</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>discussion_updated</code>: object:
+<ul>
+<li><code>categories</code>: array of string</li>
+<li><code>body_substring</code>: string</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>discussion_comment</code>: object:
+<ul>
+<li><code>comment_types</code>: array of string, enum: <code>comment</code>, <code>reply</code></li>
+<li><code>categories</code>: array of string</li>
+<li><code>body_substring</code>: string</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>issue_assigned</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>assignees</code>: array of string</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_assigned</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>assignees</code>: array of string</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>sub_issue_added</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_ready_for_review</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_labeled</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>labels</code>: array of string</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_merge_conflict</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_review_submitted</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>states</code>: required, array of string, enum: <code>approved</code>, <code>changes_requested</code>, <code>commented</code></li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_review_requested</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>issue_closed</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>issue_reopened</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_closed</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_reopened</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_converted_to_draft</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_review_dismissed</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_review_thread_resolved</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>pull_request_review_thread_unresolved</code>: object:
+<ul>
+<li><code>query</code>: string, minLength: 1</li>
+<li><code>paths</code>: array of string, minLength: 1</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>automation_completed</code>: object:
+<ul>
+<li><code>automation_ids</code>: required, array of string</li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>automation_failed</code>: object:
+<ul>
+<li><code>automation_ids</code>: required, array of string</li>
+<li><code>reasons</code>: array of string, enum: <code>reported</code>, <code>crashed</code>, <code>timed_out</code></li>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>code_scanning_alert</code>: object:
+<ul>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>secret_scanning_alert</code>: object:
+<ul>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+<li><code>dependabot_alert</code>: object:
+<ul>
+<li><code>write_scope</code>: string, enum: <code>trigger</code>, <code>repository</code></li>
+<li><code>allow_copilot_triggers</code>: boolean</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>prompt</code>: required, string</li>
+<li><code>tools</code>: array of string</li>
+<li><code>model</code>: string</li>
+<li><code>reasoning_effort</code>: string</li>
+<li><code>created_at</code>: required, string, format: date-time</li>
+<li><code>updated_at</code>: required, string, format: date-time</li>
+<li><code>created_by</code>: required, object:
+<ul>
+<li><code>id</code>: integer, format: int64</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 <h2 id="list-tasks-for-an-automation-in-a-repository" title="GET /agents/repos/{owner}/{repo}/automations/{automation_id}/tasks (List tasks for an automation in a repository)" data-entry-type="Resource">List tasks for an automation in a repository<a href="#list-tasks-for-an-automation-in-a-repository" aria-label="Link to heading 'List tasks for an automation in a repository'" data-heading-content="List tasks for an automation in a repository" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /agents/repos/{owner}/{repo}/automations/{automation_id}/tasks
 </span></code></pre>
@@ -2498,13 +3264,13 @@ GitHub App installation access tokens<br>
 Fine-grained personal access tokens</p>
 <p>The fine-grained token must have the following permission set:</p>
 <p>"Agent tasks" repository permissions (read)</p>
-<h3 id="parameters-8">Parameters<a href="#parameters-8" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-8">Headers<a href="#headers-8" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-10">Parameters<a href="#parameters-10" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-10">Headers<a href="#headers-10" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-8">Path and query parameters<a href="#path-and-query-parameters-8" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-10">Path and query parameters<a href="#path-and-query-parameters-10" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -2550,7 +3316,7 @@ Filter by archived status. When true, returns only archived tasks. When false or
 Default: <code>false</code></p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-8">HTTP response status codes<a href="#http-response-status-codes-8" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-10">HTTP response status codes<a href="#http-response-status-codes-10" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>200</strong> - Automation task history retrieved successfully</p>
@@ -2565,8 +3331,8 @@ Default: <code>false</code></p>
 <p><strong>422</strong> - Validation failed</p>
 </li>
 </ul>
-<h3 id="code-examples-8">Code examples<a href="#code-examples-8" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-8">Example<a href="#example-8" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-10">Code examples<a href="#code-examples-10" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-10">Example<a href="#example-10" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X GET \
@@ -2661,28 +3427,29 @@ GitHub App installation access tokens can run shared automations.<br>
 The installation must belong to the repository owner and the token must have<br>
 "Agent tasks" repository permissions (write). Personal automations require a user token.<br>
 A successful response accepts the run request and includes a preallocated<br>
-task_id, which can be fetched with the "Get a task by repo" Agent tasks API.<br>
-It does not confirm execution or task creation. Task creation is asynchronous,<br>
-so fetching the task immediately may return 404 Not Found, and downstream<br>
-skips or failures can prevent its creation.<br>
+task_id. User tokens can fetch it with the "Get a task by repo" Agent tasks<br>
+API. GitHub App installation tokens can list tasks for the automation in the<br>
+repository and match the returned task_id. The response does not confirm<br>
+execution or task creation. Task creation is asynchronous, so fetching the<br>
+task immediately may return 404 Not Found, and downstream skips or failures<br>
+can prevent its creation.<br>
 To call this endpoint, you must have write access to the repository.<br>
-OAuth app tokens and personal access tokens (classic) need:</p>
-<p>the repo scope for private or internal repositories<br>
-the repo scope or public_repo scope for public repositories</p>
-<p>Fine-grained access tokens for "Run an automation"<br>
+To call this endpoint, OAuth app tokens and personal access tokens (classic)<br>
+need the repo scope.<br>
+Fine-grained access tokens for "Run an automation"<br>
 This endpoint works with the following fine-grained token types:</p>
 <p>GitHub App user access tokens<br>
 GitHub App installation access tokens<br>
 Fine-grained personal access tokens</p>
 <p>The fine-grained token must have the following permission set:</p>
 <p>"Agent tasks" repository permissions (write)</p>
-<h3 id="parameters-9">Parameters<a href="#parameters-9" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
-<h4 id="headers-9">Headers<a href="#headers-9" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<h3 id="parameters-11">Parameters<a href="#parameters-11" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-11">Headers<a href="#headers-11" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
 <li><strong><code>accept</code></strong> (string)<br>
 Setting to <code>application/vnd.github+json</code> is recommended.</li>
 </ul>
-<h4 id="path-and-query-parameters-9">Path and query parameters<a href="#path-and-query-parameters-9" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<h4 id="path-and-query-parameters-11">Path and query parameters<a href="#path-and-query-parameters-11" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
 <ul>
 <li>
 <p><strong><code>owner</code></strong> (string) (required)<br>
@@ -2709,7 +3476,7 @@ Can be one of: <code>manual</code></p>
 Additional context for this automation run, up to 10,000 characters. Supported only when event is manual. The context supplements the automation's configured instructions.</p>
 </li>
 </ul>
-<h3 id="http-response-status-codes-9">HTTP response status codes<a href="#http-response-status-codes-9" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<h3 id="http-response-status-codes-11">HTTP response status codes<a href="#http-response-status-codes-11" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
 <li>
 <p><strong>202</strong> - Automation run request accepted for asynchronous processing</p>
@@ -2736,8 +3503,8 @@ Additional context for this automation run, up to 10,000 characters. Supported o
 <p><strong>503</strong> - Service unavailable</p>
 </li>
 </ul>
-<h3 id="code-examples-9">Code examples<a href="#code-examples-9" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
-<h4 id="example-9">Example<a href="#example-9" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<h3 id="code-examples-11">Code examples<a href="#code-examples-11" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-11">Example<a href="#example-11" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
 <p><strong>Request:</strong></p>
 <pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
 </span><span style="color:#c0c5ce;">  -X POST \

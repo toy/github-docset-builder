@@ -16,17 +16,17 @@ has the correct dbscheme <em>and</em> its ID pool has been preserved from the<br
 initial import.</p>
 <h2 id="options" title="Options" data-entry-type="Section">Options<a href="#options" aria-label="Link to heading 'Options'" data-heading-content="Options" class="anchor"></a></h2>
 <h3 id="primary-options">Primary Options<a href="#primary-options" aria-label="Link to heading 'Primary Options'" data-heading-content="Primary Options" class="anchor"></a></h3>
-<h4 id="dataset"><code>&lt;dataset&gt;</code><a href="#dataset" aria-label="Link to heading '<dataset>'" data-heading-content="<dataset>" class="anchor"></a></h4>
+<h4 id="dataset"><code>&lt;dataset&gt;</code><a href="#dataset" aria-label="Link to heading '&lt;dataset&gt;'" data-heading-content="&lt;dataset&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Mandatory] Path to the raw QL dataset to create or update. The<br>
 directory will be created if it doesn't already exist.</p>
-<h4 id="trap"><code>&lt;trap&gt;...</code><a href="#trap" aria-label="Link to heading '<trap>...'" data-heading-content="<trap>..." class="anchor"></a></h4>
+<h4 id="trap"><code>&lt;trap&gt;...</code><a href="#trap" aria-label="Link to heading '&lt;trap&gt;...'" data-heading-content="&lt;trap&gt;..." class="anchor"></a></h4>
 <p>Paths to .trap(.gz) files to import, or to directories that will be<br>
 recursively scanned for .trap(.gz) files. If no files are given, an<br>
 empty dataset will be created.</p>
-<h4 id="-s---dbschemefile"><code>-S, --dbscheme=&lt;file&gt;</code><a href="#-s---dbschemefile" aria-label="Link to heading '-S, --dbscheme=<file>'" data-heading-content="-S, --dbscheme=<file>" class="anchor"></a></h4>
+<h4 id="-s---dbschemefile"><code>-S, --dbscheme=&lt;file&gt;</code><a href="#-s---dbschemefile" aria-label="Link to heading '-S, --dbscheme=&lt;file&gt;'" data-heading-content="-S, --dbscheme=&lt;file&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Mandatory] The dbscheme definition that describes the TRAP files you<br>
 want to import.</p>
-<h4 id="-j---threadsnum"><code>-j, --threads=&lt;num&gt;</code><a href="#-j---threadsnum" aria-label="Link to heading '-j, --threads=<num>'" data-heading-content="-j, --threads=<num>" class="anchor"></a></h4>
+<h4 id="-j---threadsnum"><code>-j, --threads=&lt;num&gt;</code><a href="#-j---threadsnum" aria-label="Link to heading '-j, --threads=&lt;num&gt;'" data-heading-content="-j, --threads=&lt;num&gt;" class="anchor"></a></h4>
 <p>Use this many threads for the import operation.</p>
 <p>Defaults to 1. You can pass 0 to use one thread per core on the machine,<br>
 or -<em>N</em> to leave <em>N</em> cores unused (except still use at least one<br>
@@ -55,24 +55,24 @@ at the expense of database completeness.</p>
 <h3 id="common-options">Common options<a href="#common-options" aria-label="Link to heading 'Common options'" data-heading-content="Common options" class="anchor"></a></h3>
 <h4 id="-h---help"><code>-h, --help</code><a href="#-h---help" aria-label="Link to heading '-h, --help'" data-heading-content="-h, --help" class="anchor"></a></h4>
 <p>Show this help text.</p>
-<h4 id="-jopt"><code>-J=&lt;opt&gt;</code><a href="#-jopt" aria-label="Link to heading '-J=<opt>'" data-heading-content="-J=<opt>" class="anchor"></a></h4>
+<h4 id="-jopt"><code>-J=&lt;opt&gt;</code><a href="#-jopt" aria-label="Link to heading '-J=&lt;opt&gt;'" data-heading-content="-J=&lt;opt&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Give option to the JVM running the command.</p>
 <p>(Beware that options containing spaces will not be handled correctly.)</p>
 <h4 id="-v---verbose"><code>-v, --verbose</code><a href="#-v---verbose" aria-label="Link to heading '-v, --verbose'" data-heading-content="-v, --verbose" class="anchor"></a></h4>
 <p>Incrementally increase the number of progress messages printed.</p>
 <h4 id="-q---quiet"><code>-q, --quiet</code><a href="#-q---quiet" aria-label="Link to heading '-q, --quiet'" data-heading-content="-q, --quiet" class="anchor"></a></h4>
 <p>Incrementally decrease the number of progress messages printed.</p>
-<h4 id="--verbositylevel"><code>--verbosity=&lt;level&gt;</code><a href="#--verbositylevel" aria-label="Link to heading '--verbosity=<level>'" data-heading-content="--verbosity=<level>" class="anchor"></a></h4>
+<h4 id="--verbositylevel"><code>--verbosity=&lt;level&gt;</code><a href="#--verbositylevel" aria-label="Link to heading '--verbosity=&lt;level&gt;'" data-heading-content="--verbosity=&lt;level&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Explicitly set the verbosity level to one of errors,<br>
 warnings, progress, progress+, progress++, progress+++. Overrides <code>-v</code><br>
 and <code>-q</code>.</p>
-<h4 id="--logdirdir"><code>--logdir=&lt;dir&gt;</code><a href="#--logdirdir" aria-label="Link to heading '--logdir=<dir>'" data-heading-content="--logdir=<dir>" class="anchor"></a></h4>
+<h4 id="--logdirdir"><code>--logdir=&lt;dir&gt;</code><a href="#--logdirdir" aria-label="Link to heading '--logdir=&lt;dir&gt;'" data-heading-content="--logdir=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Write detailed logs to one or more files in the given<br>
 directory, with generated names that include timestamps and the name of<br>
 the running subcommand.</p>
 <p>(To write a log file with a name you have full control over, instead<br>
 give <code>--log-to-stderr</code> and redirect stderr as desired.)</p>
-<h4 id="--common-cachesdir"><code>--common-caches=&lt;dir&gt;</code><a href="#--common-cachesdir" aria-label="Link to heading '--common-caches=<dir>'" data-heading-content="--common-caches=<dir>" class="anchor"></a></h4>
+<h4 id="--common-cachesdir"><code>--common-caches=&lt;dir&gt;</code><a href="#--common-cachesdir" aria-label="Link to heading '--common-caches=&lt;dir&gt;'" data-heading-content="--common-caches=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Controls the location of cached data on disk that will<br>
 persist between several runs of the CLI, such as downloaded QL packs and<br>
 compiled query plans. If not set explicitly, this defaults to a<br>

@@ -15,9 +15,9 @@ include the mandatory components, unless the user specifically requests<br>
 that results, logs, TRAP, or similar should be included.</p>
 <h2 id="options" title="Options" data-entry-type="Section">Options<a href="#options" aria-label="Link to heading 'Options'" data-heading-content="Options" class="anchor"></a></h2>
 <h3 id="primary-options">Primary Options<a href="#primary-options" aria-label="Link to heading 'Primary Options'" data-heading-content="Primary Options" class="anchor"></a></h3>
-<h4 id="database"><code>&lt;database&gt;</code><a href="#database" aria-label="Link to heading '<database>'" data-heading-content="<database>" class="anchor"></a></h4>
+<h4 id="database"><code>&lt;database&gt;</code><a href="#database" aria-label="Link to heading '&lt;database&gt;'" data-heading-content="&lt;database&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Mandatory] Path to the CodeQL database to bundle.</p>
-<h4 id="-o---outputoutput"><code>-o, --output=&lt;output&gt;</code><a href="#-o---outputoutput" aria-label="Link to heading '-o, --output=<output>'" data-heading-content="-o, --output=<output>" class="anchor"></a></h4>
+<h4 id="-o---outputoutput"><code>-o, --output=&lt;output&gt;</code><a href="#-o---outputoutput" aria-label="Link to heading '-o, --output=&lt;output&gt;'" data-heading-content="-o, --output=&lt;output&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Mandatory] The output file, typically with the extension ".zip".</p>
 <h4 id="--no-include-diagnostics"><code>--[no-]include-diagnostics</code><a href="#--no-include-diagnostics" aria-label="Link to heading '--[no-]include-diagnostics'" data-heading-content="--[no-]include-diagnostics" class="anchor"></a></h4>
 <p>Include diagnostics in the bundle.</p>
@@ -34,15 +34,15 @@ suites are located.</p>
 <h4 id="--no-include-uncompressed-source"><code>--[no-]include-uncompressed-source</code><a href="#--no-include-uncompressed-source" aria-label="Link to heading '--[no-]include-uncompressed-source'" data-heading-content="--[no-]include-uncompressed-source" class="anchor"></a></h4>
 <p>Include an uncompressed version of the source archive directory. This is<br>
 necessary for legacy CodeQL plugins (like CodeQL for Eclipse).</p>
-<h4 id="--includeinclude"><code>--include=&lt;include&gt;</code><a href="#--includeinclude" aria-label="Link to heading '--include=<include>'" data-heading-content="--include=<include>" class="anchor"></a></h4>
+<h4 id="--includeinclude"><code>--include=&lt;include&gt;</code><a href="#--includeinclude" aria-label="Link to heading '--include=&lt;include&gt;'" data-heading-content="--include=&lt;include&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Additional paths relative to the database directory to<br>
 include in the bundle.</p>
 <p>Available since <code>v2.24.0</code>.</p>
-<h4 id="--namename"><code>--name=&lt;name&gt;</code><a href="#--namename" aria-label="Link to heading '--name=<name>'" data-heading-content="--name=<name>" class="anchor"></a></h4>
+<h4 id="--namename"><code>--name=&lt;name&gt;</code><a href="#--namename" aria-label="Link to heading '--name=&lt;name&gt;'" data-heading-content="--name=&lt;name&gt;" class="anchor"></a></h4>
 <p>The name of the top-level directory in the bundle. If not given, it<br>
 defaults to the name of the database directory.</p>
 <h3 id="low-level-dataset-cleanup-options">Low-level dataset cleanup options<a href="#low-level-dataset-cleanup-options" aria-label="Link to heading 'Low-level dataset cleanup options'" data-heading-content="Low-level dataset cleanup options" class="anchor"></a></h3>
-<h4 id="--max-disk-cachemb"><code>--max-disk-cache=&lt;MB&gt;</code><a href="#--max-disk-cachemb" aria-label="Link to heading '--max-disk-cache=<MB>'" data-heading-content="--max-disk-cache=<MB>" class="anchor"></a></h4>
+<h4 id="--max-disk-cachemb"><code>--max-disk-cache=&lt;MB&gt;</code><a href="#--max-disk-cachemb" aria-label="Link to heading '--max-disk-cache=&lt;MB&gt;'" data-heading-content="--max-disk-cache=&lt;MB&gt;" class="anchor"></a></h4>
 <p>Set the maximum amount of space that the disk cache for intermediate<br>
 query results can use.</p>
 <p>If this size is not configured explicitly, the evaluator will try to use<br>
@@ -50,17 +50,17 @@ a "reasonable" amount of cache space, based on the size of the dataset<br>
 and the complexity of the queries. Explicitly setting a higher limit<br>
 than this default usage will enable additional caching which can speed<br>
 up later queries.</p>
-<h4 id="--min-disk-freemb"><code>--min-disk-free=&lt;MB&gt;</code><a href="#--min-disk-freemb" aria-label="Link to heading '--min-disk-free=<MB>'" data-heading-content="--min-disk-free=<MB>" class="anchor"></a></h4>
+<h4 id="--min-disk-freemb"><code>--min-disk-free=&lt;MB&gt;</code><a href="#--min-disk-freemb" aria-label="Link to heading '--min-disk-free=&lt;MB&gt;'" data-heading-content="--min-disk-free=&lt;MB&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Set target amount of free space on file system.</p>
 <p>If <code>--max-disk-cache</code> is not given, the evaluator will try hard to<br>
 curtail disk cache usage if the free space on the file system drops<br>
 below this value.</p>
-<h4 id="--min-disk-free-pctpct"><code>--min-disk-free-pct=&lt;pct&gt;</code><a href="#--min-disk-free-pctpct" aria-label="Link to heading '--min-disk-free-pct=<pct>'" data-heading-content="--min-disk-free-pct=<pct>" class="anchor"></a></h4>
+<h4 id="--min-disk-free-pctpct"><code>--min-disk-free-pct=&lt;pct&gt;</code><a href="#--min-disk-free-pctpct" aria-label="Link to heading '--min-disk-free-pct=&lt;pct&gt;'" data-heading-content="--min-disk-free-pct=&lt;pct&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Set target fraction of free space on file system.</p>
 <p>If <code>--max-disk-cache</code> is not given, the evaluator will try hard to<br>
 curtail disk cache usage if the free space on the file system drops<br>
 below this percentage.</p>
-<h4 id="--cache-cleanupmode"><code>--cache-cleanup=&lt;mode&gt;</code><a href="#--cache-cleanupmode" aria-label="Link to heading '--cache-cleanup=<mode>'" data-heading-content="--cache-cleanup=<mode>" class="anchor"></a></h4>
+<h4 id="--cache-cleanupmode"><code>--cache-cleanup=&lt;mode&gt;</code><a href="#--cache-cleanupmode" aria-label="Link to heading '--cache-cleanup=&lt;mode&gt;'" data-heading-content="--cache-cleanup=&lt;mode&gt;" class="anchor"></a></h4>
 <p>Select how aggressively to trim the cache. Choices include:</p>
 <p><code>clear</code>: Remove the entire cache, trimming down to the state of a<br>
 freshly extracted dataset</p>
@@ -75,24 +75,24 @@ against an overlay.</p>
 <h3 id="common-options">Common options<a href="#common-options" aria-label="Link to heading 'Common options'" data-heading-content="Common options" class="anchor"></a></h3>
 <h4 id="-h---help"><code>-h, --help</code><a href="#-h---help" aria-label="Link to heading '-h, --help'" data-heading-content="-h, --help" class="anchor"></a></h4>
 <p>Show this help text.</p>
-<h4 id="-jopt"><code>-J=&lt;opt&gt;</code><a href="#-jopt" aria-label="Link to heading '-J=<opt>'" data-heading-content="-J=<opt>" class="anchor"></a></h4>
+<h4 id="-jopt"><code>-J=&lt;opt&gt;</code><a href="#-jopt" aria-label="Link to heading '-J=&lt;opt&gt;'" data-heading-content="-J=&lt;opt&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Give option to the JVM running the command.</p>
 <p>(Beware that options containing spaces will not be handled correctly.)</p>
 <h4 id="-v---verbose"><code>-v, --verbose</code><a href="#-v---verbose" aria-label="Link to heading '-v, --verbose'" data-heading-content="-v, --verbose" class="anchor"></a></h4>
 <p>Incrementally increase the number of progress messages printed.</p>
 <h4 id="-q---quiet"><code>-q, --quiet</code><a href="#-q---quiet" aria-label="Link to heading '-q, --quiet'" data-heading-content="-q, --quiet" class="anchor"></a></h4>
 <p>Incrementally decrease the number of progress messages printed.</p>
-<h4 id="--verbositylevel"><code>--verbosity=&lt;level&gt;</code><a href="#--verbositylevel" aria-label="Link to heading '--verbosity=<level>'" data-heading-content="--verbosity=<level>" class="anchor"></a></h4>
+<h4 id="--verbositylevel"><code>--verbosity=&lt;level&gt;</code><a href="#--verbositylevel" aria-label="Link to heading '--verbosity=&lt;level&gt;'" data-heading-content="--verbosity=&lt;level&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Explicitly set the verbosity level to one of errors,<br>
 warnings, progress, progress+, progress++, progress+++. Overrides <code>-v</code><br>
 and <code>-q</code>.</p>
-<h4 id="--logdirdir"><code>--logdir=&lt;dir&gt;</code><a href="#--logdirdir" aria-label="Link to heading '--logdir=<dir>'" data-heading-content="--logdir=<dir>" class="anchor"></a></h4>
+<h4 id="--logdirdir"><code>--logdir=&lt;dir&gt;</code><a href="#--logdirdir" aria-label="Link to heading '--logdir=&lt;dir&gt;'" data-heading-content="--logdir=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Write detailed logs to one or more files in the given<br>
 directory, with generated names that include timestamps and the name of<br>
 the running subcommand.</p>
 <p>(To write a log file with a name you have full control over, instead<br>
 give <code>--log-to-stderr</code> and redirect stderr as desired.)</p>
-<h4 id="--common-cachesdir"><code>--common-caches=&lt;dir&gt;</code><a href="#--common-cachesdir" aria-label="Link to heading '--common-caches=<dir>'" data-heading-content="--common-caches=<dir>" class="anchor"></a></h4>
+<h4 id="--common-cachesdir"><code>--common-caches=&lt;dir&gt;</code><a href="#--common-cachesdir" aria-label="Link to heading '--common-caches=&lt;dir&gt;'" data-heading-content="--common-caches=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Controls the location of cached data on disk that will<br>
 persist between several runs of the CLI, such as downloaded QL packs and<br>
 compiled query plans. If not set explicitly, this defaults to a<br>

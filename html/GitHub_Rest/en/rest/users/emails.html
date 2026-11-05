@@ -66,7 +66,8 @@ Can be one of: <code>public</code>, <code>private</code></li>
 </span></code></pre>
 <p>Lists all of your email addresses, and specifies which one is visible<br>
 to the public.<br>
-OAuth app tokens and personal access tokens (classic) need the user:email scope to use this endpoint.</p>
+OAuth app tokens and personal access tokens (classic) need the user:email scope to use this endpoint.<br>
+For enterprise-managed users, if their email is unverified, this endpoint will return a placeholder email in the format <a href="mailto:email+shortcode@domain.com" class="external">email+shortcode@domain.com</a> instead of their actual email. This placeholder email may cause issues with some third-party apps. Once the user has verified their email address, the endpoint will return their real email.</p>
 <h3 id="parameters-1">Parameters<a href="#parameters-1" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-1">Headers<a href="#headers-1" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>

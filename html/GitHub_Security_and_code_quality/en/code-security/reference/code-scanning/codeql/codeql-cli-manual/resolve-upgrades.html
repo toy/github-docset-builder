@@ -18,9 +18,9 @@ troubleshooting, and (b) provide a starting point for modifying the path<br>
 in extraordinary cases where exact control is needed.</p>
 <h2 id="options" title="Options" data-entry-type="Section">Options<a href="#options" aria-label="Link to heading 'Options'" data-heading-content="Options" class="anchor"></a></h2>
 <h3 id="primary-options">Primary Options<a href="#primary-options" aria-label="Link to heading 'Primary Options'" data-heading-content="Primary Options" class="anchor"></a></h3>
-<h4 id="--dbschemefile"><code>--dbscheme=&lt;file&gt;</code><a href="#--dbschemefile" aria-label="Link to heading '--dbscheme=<file>'" data-heading-content="--dbscheme=<file>" class="anchor"></a></h4>
+<h4 id="--dbschemefile"><code>--dbscheme=&lt;file&gt;</code><a href="#--dbschemefile" aria-label="Link to heading '--dbscheme=&lt;file&gt;'" data-heading-content="--dbscheme=&lt;file&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Mandatory] The <em>current</em> dbscheme of the dataset we want to upgrade.</p>
-<h4 id="--formatfmt"><code>--format=&lt;fmt&gt;</code><a href="#--formatfmt" aria-label="Link to heading '--format=<fmt>'" data-heading-content="--format=<fmt>" class="anchor"></a></h4>
+<h4 id="--formatfmt"><code>--format=&lt;fmt&gt;</code><a href="#--formatfmt" aria-label="Link to heading '--format=&lt;fmt&gt;'" data-heading-content="--format=&lt;fmt&gt;" class="anchor"></a></h4>
 <p>Select output format. Choices include:</p>
 <p><code>lines</code> <em>(default)</em>: Print upgrade scripts on one line each.</p>
 <p><code>json</code>: Print a JSON array of upgrade script paths.</p>
@@ -28,7 +28,7 @@ in extraordinary cases where exact control is needed.</p>
 <p>Don't print any output, but exit with code 0 if there are upgrades to<br>
 do, and code 1 if there are none.</p>
 <h3 id="options-from-the-invoking-commands-command-line">Options from the invoking command's command line<a href="#options-from-the-invoking-commands-command-line" aria-label="Link to heading 'Options from the invoking command's command line'" data-heading-content="Options from the invoking command's command line" class="anchor"></a></h3>
-<h4 id="--search-pathdirdir"><code>--search-path=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--search-pathdirdir" aria-label="Link to heading '--search-path=<dir>[:<dir>...]'" data-heading-content="--search-path=<dir>[:<dir>...]" class="anchor"></a></h4>
+<h4 id="--search-pathdirdir"><code>--search-path=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--search-pathdirdir" aria-label="Link to heading '--search-path=&lt;dir&gt;[:&lt;dir&gt;...]'" data-heading-content="--search-path=&lt;dir&gt;[:&lt;dir&gt;...]" class="anchor"></a></h4>
 <p>A list of directories under which QL packs containing upgrade recipes<br>
 may be found. Each directory can either be a QL pack (or bundle of packs<br>
 containing a <code>.codeqlmanifest.json</code> file at the root) or the immediate<br>
@@ -39,7 +39,7 @@ than one of the directory trees, the one given first wins.</p>
 <p>Pointing this at a checkout of the open-source CodeQL repository ought<br>
 to work when querying one of the languages that live there.</p>
 <p>(Note: On Windows the path separator is <code>;</code>).</p>
-<h4 id="--additional-packsdirdir"><code>--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--additional-packsdirdir" aria-label="Link to heading '--additional-packs=<dir>[:<dir>...]'" data-heading-content="--additional-packs=<dir>[:<dir>...]" class="anchor"></a></h4>
+<h4 id="--additional-packsdirdir"><code>--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--additional-packsdirdir" aria-label="Link to heading '--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]'" data-heading-content="--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] If this list of directories is given, they will be searched<br>
 for upgrades before the ones in <code>--search-path</code>. The order between these<br>
 doesn't matter; it is an error if a pack name is found in two different<br>
@@ -50,10 +50,10 @@ recommended</em> to override this option in a config file; some internal<br>
 actions will add this option on the fly, overriding any configured<br>
 value.</p>
 <p>(Note: On Windows the path separator is <code>;</code>).</p>
-<h4 id="--target-dbschemefile"><code>--target-dbscheme=&lt;file&gt;</code><a href="#--target-dbschemefile" aria-label="Link to heading '--target-dbscheme=<file>'" data-heading-content="--target-dbscheme=<file>" class="anchor"></a></h4>
+<h4 id="--target-dbschemefile"><code>--target-dbscheme=&lt;file&gt;</code><a href="#--target-dbschemefile" aria-label="Link to heading '--target-dbscheme=&lt;file&gt;'" data-heading-content="--target-dbscheme=&lt;file&gt;" class="anchor"></a></h4>
 <p>The <em>target</em> dbscheme we want to upgrade to. If this is not given, a<br>
 maximal upgrade path will be constructed</p>
-<h4 id="--target-shasha"><code>--target-sha=&lt;sha&gt;</code><a href="#--target-shasha" aria-label="Link to heading '--target-sha=<sha>'" data-heading-content="--target-sha=<sha>" class="anchor"></a></h4>
+<h4 id="--target-shasha"><code>--target-sha=&lt;sha&gt;</code><a href="#--target-shasha" aria-label="Link to heading '--target-sha=&lt;sha&gt;'" data-heading-content="--target-sha=&lt;sha&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] An alternative to <code>--target-dbscheme</code> that gives the<br>
 internal hash of the target dbscheme instead of the dbscheme file.</p>
 <h4 id="--no-allow-downgrades"><code>--[no-]allow-downgrades</code><a href="#--no-allow-downgrades" aria-label="Link to heading '--[no-]allow-downgrades'" data-heading-content="--[no-]allow-downgrades" class="anchor"></a></h4>
@@ -61,24 +61,24 @@ internal hash of the target dbscheme instead of the dbscheme file.</p>
 <h3 id="common-options">Common options<a href="#common-options" aria-label="Link to heading 'Common options'" data-heading-content="Common options" class="anchor"></a></h3>
 <h4 id="-h---help"><code>-h, --help</code><a href="#-h---help" aria-label="Link to heading '-h, --help'" data-heading-content="-h, --help" class="anchor"></a></h4>
 <p>Show this help text.</p>
-<h4 id="-jopt"><code>-J=&lt;opt&gt;</code><a href="#-jopt" aria-label="Link to heading '-J=<opt>'" data-heading-content="-J=<opt>" class="anchor"></a></h4>
+<h4 id="-jopt"><code>-J=&lt;opt&gt;</code><a href="#-jopt" aria-label="Link to heading '-J=&lt;opt&gt;'" data-heading-content="-J=&lt;opt&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Give option to the JVM running the command.</p>
 <p>(Beware that options containing spaces will not be handled correctly.)</p>
 <h4 id="-v---verbose"><code>-v, --verbose</code><a href="#-v---verbose" aria-label="Link to heading '-v, --verbose'" data-heading-content="-v, --verbose" class="anchor"></a></h4>
 <p>Incrementally increase the number of progress messages printed.</p>
 <h4 id="-q---quiet"><code>-q, --quiet</code><a href="#-q---quiet" aria-label="Link to heading '-q, --quiet'" data-heading-content="-q, --quiet" class="anchor"></a></h4>
 <p>Incrementally decrease the number of progress messages printed.</p>
-<h4 id="--verbositylevel"><code>--verbosity=&lt;level&gt;</code><a href="#--verbositylevel" aria-label="Link to heading '--verbosity=<level>'" data-heading-content="--verbosity=<level>" class="anchor"></a></h4>
+<h4 id="--verbositylevel"><code>--verbosity=&lt;level&gt;</code><a href="#--verbositylevel" aria-label="Link to heading '--verbosity=&lt;level&gt;'" data-heading-content="--verbosity=&lt;level&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Explicitly set the verbosity level to one of errors,<br>
 warnings, progress, progress+, progress++, progress+++. Overrides <code>-v</code><br>
 and <code>-q</code>.</p>
-<h4 id="--logdirdir"><code>--logdir=&lt;dir&gt;</code><a href="#--logdirdir" aria-label="Link to heading '--logdir=<dir>'" data-heading-content="--logdir=<dir>" class="anchor"></a></h4>
+<h4 id="--logdirdir"><code>--logdir=&lt;dir&gt;</code><a href="#--logdirdir" aria-label="Link to heading '--logdir=&lt;dir&gt;'" data-heading-content="--logdir=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Write detailed logs to one or more files in the given<br>
 directory, with generated names that include timestamps and the name of<br>
 the running subcommand.</p>
 <p>(To write a log file with a name you have full control over, instead<br>
 give <code>--log-to-stderr</code> and redirect stderr as desired.)</p>
-<h4 id="--common-cachesdir"><code>--common-caches=&lt;dir&gt;</code><a href="#--common-cachesdir" aria-label="Link to heading '--common-caches=<dir>'" data-heading-content="--common-caches=<dir>" class="anchor"></a></h4>
+<h4 id="--common-cachesdir"><code>--common-caches=&lt;dir&gt;</code><a href="#--common-cachesdir" aria-label="Link to heading '--common-caches=&lt;dir&gt;'" data-heading-content="--common-caches=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Controls the location of cached data on disk that will<br>
 persist between several runs of the CLI, such as downloaded QL packs and<br>
 compiled query plans. If not set explicitly, this defaults to a<br>

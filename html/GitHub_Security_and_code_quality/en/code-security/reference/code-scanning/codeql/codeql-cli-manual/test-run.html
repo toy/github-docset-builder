@@ -12,17 +12,17 @@
 <p>Run unit tests for QL queries.</p>
 <h2 id="options" title="Options" data-entry-type="Section">Options<a href="#options" aria-label="Link to heading 'Options'" data-heading-content="Options" class="anchor"></a></h2>
 <h3 id="primary-options">Primary Options<a href="#primary-options" aria-label="Link to heading 'Primary Options'" data-heading-content="Primary Options" class="anchor"></a></h3>
-<h4 id="testdir"><code>&lt;test|dir&gt;...</code><a href="#testdir" aria-label="Link to heading '<test|dir>...'" data-heading-content="<test|dir>..." class="anchor"></a></h4>
+<h4 id="testdir"><code>&lt;test|dir&gt;...</code><a href="#testdir" aria-label="Link to heading '&lt;test|dir&gt;...'" data-heading-content="&lt;test|dir&gt;..." class="anchor"></a></h4>
 <p>Each argument is one of:</p>
 <ul>
 <li>A <code>.ql</code> or <code>.qlref</code> file that defines a test to run.</li>
 <li>A directory which will be searched recursively for tests to run.</li>
 </ul>
-<h4 id="--failing-exitcodecode"><code>--failing-exitcode=&lt;code&gt;</code><a href="#--failing-exitcodecode" aria-label="Link to heading '--failing-exitcode=<code>'" data-heading-content="--failing-exitcode=<code>" class="anchor"></a></h4>
+<h4 id="--failing-exitcodecode"><code>--failing-exitcode=&lt;code&gt;</code><a href="#--failing-exitcodecode" aria-label="Link to heading '--failing-exitcode=&lt;code&gt;'" data-heading-content="--failing-exitcode=&lt;code&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Set the exit code to produce if any failures are<br>
 encountered. Usually 1, but tooling that parses the output may find it<br>
 useful to set it to 0.</p>
-<h4 id="--formatfmt"><code>--format=&lt;fmt&gt;</code><a href="#--formatfmt" aria-label="Link to heading '--format=<fmt>'" data-heading-content="--format=<fmt>" class="anchor"></a></h4>
+<h4 id="--formatfmt"><code>--format=&lt;fmt&gt;</code><a href="#--formatfmt" aria-label="Link to heading '--format=&lt;fmt&gt;'" data-heading-content="--format=&lt;fmt&gt;" class="anchor"></a></h4>
 <p>Select output format. Possible choices:</p>
 <p><code>text</code> <em>(default)</em>: A human-readable textual rendering.</p>
 <p><code>json</code>: A streamed JSON array of test result objects.</p>
@@ -45,7 +45,7 @@ when compiling test queries.</p>
 it, update its <code>.expected</code> file to match the actual output, such that it<br>
 passes. Tests can still fail in this mode, for example if creation of a<br>
 test database to query does not succeed.</p>
-<h4 id="--consistency-queriesdir"><code>--consistency-queries=&lt;dir&gt;</code><a href="#--consistency-queriesdir" aria-label="Link to heading '--consistency-queries=<dir>'" data-heading-content="--consistency-queries=<dir>" class="anchor"></a></h4>
+<h4 id="--consistency-queriesdir"><code>--consistency-queries=&lt;dir&gt;</code><a href="#--consistency-queriesdir" aria-label="Link to heading '--consistency-queries=&lt;dir&gt;'" data-heading-content="--consistency-queries=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] A directory with consistency queries that will be run for<br>
 each test database. These queries should not produce any output (except<br>
 when they find a problem) unless the test directory includes a<br>
@@ -65,9 +65,9 @@ normal. This option implies <code>--keep-databases</code>.</p>
 databases. This can be useful while developing or editing test cases.<br>
 Beware that it can cause duplicated or malformed output if you use this<br>
 with multiple threads!</p>
-<h4 id="-m---rammb"><code>-M, --ram=&lt;MB&gt;</code><a href="#-m---rammb" aria-label="Link to heading '-M, --ram=<MB>'" data-heading-content="-M, --ram=<MB>" class="anchor"></a></h4>
+<h4 id="-m---rammb"><code>-M, --ram=&lt;MB&gt;</code><a href="#-m---rammb" aria-label="Link to heading '-M, --ram=&lt;MB&gt;'" data-heading-content="-M, --ram=&lt;MB&gt;" class="anchor"></a></h4>
 <p>Set total amount of RAM the test runner should be allowed to use.</p>
-<h4 id="--slicenm"><code>--slice=&lt;N/M&gt;</code><a href="#--slicenm" aria-label="Link to heading '--slice=<N/M>'" data-heading-content="--slice=<N/M>" class="anchor"></a></h4>
+<h4 id="--slicenm"><code>--slice=&lt;N/M&gt;</code><a href="#--slicenm" aria-label="Link to heading '--slice=&lt;N/M&gt;'" data-heading-content="--slice=&lt;N/M&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Divide the test cases into <em>M</em> roughly equal-sized slices<br>
 and process only the <em>N</em>th of them. This can be used for manual<br>
 parallelization of the testing process.</p>
@@ -86,7 +86,7 @@ corresponding <code>.expected</code> file.</p>
 <p>For consistency, <code>.qlref</code> files are limited by the same rules as <code>.ql</code><br>
 files even though a <code>.qlref</code> file cannot really be a non-test.</p>
 <h3 id="options-to-find-libraries-and-extractors-used-by-the-tests">Options to find libraries and extractors used by the tests<a href="#options-to-find-libraries-and-extractors-used-by-the-tests" aria-label="Link to heading 'Options to find libraries and extractors used by the tests'" data-heading-content="Options to find libraries and extractors used by the tests" class="anchor"></a></h3>
-<h4 id="--search-pathdirdir"><code>--search-path=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--search-pathdirdir" aria-label="Link to heading '--search-path=<dir>[:<dir>...]'" data-heading-content="--search-path=<dir>[:<dir>...]" class="anchor"></a></h4>
+<h4 id="--search-pathdirdir"><code>--search-path=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--search-pathdirdir" aria-label="Link to heading '--search-path=&lt;dir&gt;[:&lt;dir&gt;...]'" data-heading-content="--search-path=&lt;dir&gt;[:&lt;dir&gt;...]" class="anchor"></a></h4>
 <p>A list of directories under which QL packs may be found. Each directory<br>
 can either be a QL pack (or bundle of packs containing a<br>
 <code>.codeqlmanifest.json</code> file at the root) or the immediate parent of one<br>
@@ -104,7 +104,7 @@ found otherwise. (If this default does not work, it is strongly<br>
 recommended to set up <code>--search-path</code> once and for all in a per-user<br>
 configuration file).</p>
 <p>(Note: On Windows the path separator is <code>;</code>).</p>
-<h4 id="--additional-packsdirdir"><code>--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--additional-packsdirdir" aria-label="Link to heading '--additional-packs=<dir>[:<dir>...]'" data-heading-content="--additional-packs=<dir>[:<dir>...]" class="anchor"></a></h4>
+<h4 id="--additional-packsdirdir"><code>--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--additional-packsdirdir" aria-label="Link to heading '--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]'" data-heading-content="--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]" class="anchor"></a></h4>
 <p>If this list of directories is given, they will be searched for packs<br>
 before the ones in <code>--search-path</code>. The order between these doesn't<br>
 matter; it is an error if a pack name is found in two different places<br>
@@ -115,16 +115,16 @@ recommended</em> to override this option in a config file; some internal<br>
 actions will add this option on the fly, overriding any configured<br>
 value.</p>
 <p>(Note: On Windows the path separator is <code>;</code>).</p>
-<h4 id="--library-pathdirdir"><code>--library-path=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--library-pathdirdir" aria-label="Link to heading '--library-path=<dir>[:<dir>...]'" data-heading-content="--library-path=<dir>[:<dir>...]" class="anchor"></a></h4>
+<h4 id="--library-pathdirdir"><code>--library-path=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--library-pathdirdir" aria-label="Link to heading '--library-path=&lt;dir&gt;[:&lt;dir&gt;...]'" data-heading-content="--library-path=&lt;dir&gt;[:&lt;dir&gt;...]" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] An optional list of directories that will be added to the<br>
 raw import search path for QL libraries. This should only be used if<br>
 you're using QL libraries that have not been packaged as QL packs.</p>
 <p>(Note: On Windows the path separator is <code>;</code>).</p>
-<h4 id="--dbschemefile"><code>--dbscheme=&lt;file&gt;</code><a href="#--dbschemefile" aria-label="Link to heading '--dbscheme=<file>'" data-heading-content="--dbscheme=<file>" class="anchor"></a></h4>
+<h4 id="--dbschemefile"><code>--dbscheme=&lt;file&gt;</code><a href="#--dbschemefile" aria-label="Link to heading '--dbscheme=&lt;file&gt;'" data-heading-content="--dbscheme=&lt;file&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Explicitly define which dbscheme queries should be compiled<br>
 against. This should only be given by callers that are extremely sure<br>
 what they're doing.</p>
-<h4 id="--compilation-cachedir"><code>--compilation-cache=&lt;dir&gt;</code><a href="#--compilation-cachedir" aria-label="Link to heading '--compilation-cache=<dir>'" data-heading-content="--compilation-cache=<dir>" class="anchor"></a></h4>
+<h4 id="--compilation-cachedir"><code>--compilation-cache=&lt;dir&gt;</code><a href="#--compilation-cachedir" aria-label="Link to heading '--compilation-cache=&lt;dir&gt;'" data-heading-content="--compilation-cache=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Specify an additional directory to use as a compilation<br>
 cache.</p>
 <h4 id="--no-default-compilation-cache"><code>--no-default-compilation-cache</code><a href="#--no-default-compilation-cache" aria-label="Link to heading '--no-default-compilation-cache'" data-heading-content="--no-default-compilation-cache" class="anchor"></a></h4>
@@ -175,7 +175,7 @@ evaluator logs. If the <code>--evaluator-log</code> option is provided, tuple<br
 counts will be included in both the text-based and structured JSON logs<br>
 produced by the command. (This can be useful for performance<br>
 optimization of complex QL code).</p>
-<h4 id="--timeoutseconds"><code>--timeout=&lt;seconds&gt;</code><a href="#--timeoutseconds" aria-label="Link to heading '--timeout=<seconds>'" data-heading-content="--timeout=<seconds>" class="anchor"></a></h4>
+<h4 id="--timeoutseconds"><code>--timeout=&lt;seconds&gt;</code><a href="#--timeoutseconds" aria-label="Link to heading '--timeout=&lt;seconds&gt;'" data-heading-content="--timeout=&lt;seconds&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Set the timeout length for query evaluation, in seconds.</p>
 <p>The timeout feature is intended to catch cases where a complex query<br>
 would take "forever" to evaluate. It is not an effective way to limit<br>
@@ -186,13 +186,13 @@ timed parts are "RA layers" of the optimized query, but that might<br>
 change in the future.</p>
 <p>If no timeout is specified, or is given as 0, no timeout will be set<br>
 (except for codeql test run, where the default timeout is 5 minutes).</p>
-<h4 id="-j---threadsnum"><code>-j, --threads=&lt;num&gt;</code><a href="#-j---threadsnum" aria-label="Link to heading '-j, --threads=<num>'" data-heading-content="-j, --threads=<num>" class="anchor"></a></h4>
+<h4 id="-j---threadsnum"><code>-j, --threads=&lt;num&gt;</code><a href="#-j---threadsnum" aria-label="Link to heading '-j, --threads=&lt;num&gt;'" data-heading-content="-j, --threads=&lt;num&gt;" class="anchor"></a></h4>
 <p>Use this many threads to evaluate queries.</p>
 <p>Defaults to 1. You can pass 0 to use one thread per core on the machine,<br>
 or -<em>N</em> to leave <em>N</em> cores unused (except still use at least one<br>
 thread).</p>
 <h3 id="options-for-controlling-outputting-of-structured-evaluator-logs">Options for controlling outputting of structured evaluator logs<a href="#options-for-controlling-outputting-of-structured-evaluator-logs" aria-label="Link to heading 'Options for controlling outputting of structured evaluator logs'" data-heading-content="Options for controlling outputting of structured evaluator logs" class="anchor"></a></h3>
-<h4 id="--evaluator-logfile"><code>--evaluator-log=&lt;file&gt;</code><a href="#--evaluator-logfile" aria-label="Link to heading '--evaluator-log=<file>'" data-heading-content="--evaluator-log=<file>" class="anchor"></a></h4>
+<h4 id="--evaluator-logfile"><code>--evaluator-log=&lt;file&gt;</code><a href="#--evaluator-logfile" aria-label="Link to heading '--evaluator-log=&lt;file&gt;'" data-heading-content="--evaluator-log=&lt;file&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Output structured logs about evaluator performance to the<br>
 given file. The format of this log file is subject to change with no<br>
 notice, but will be a stream of JSON objects separated by either two<br>
@@ -229,24 +229,24 @@ at the expense of database completeness.</p>
 <h3 id="common-options">Common options<a href="#common-options" aria-label="Link to heading 'Common options'" data-heading-content="Common options" class="anchor"></a></h3>
 <h4 id="-h---help"><code>-h, --help</code><a href="#-h---help" aria-label="Link to heading '-h, --help'" data-heading-content="-h, --help" class="anchor"></a></h4>
 <p>Show this help text.</p>
-<h4 id="-jopt"><code>-J=&lt;opt&gt;</code><a href="#-jopt" aria-label="Link to heading '-J=<opt>'" data-heading-content="-J=<opt>" class="anchor"></a></h4>
+<h4 id="-jopt"><code>-J=&lt;opt&gt;</code><a href="#-jopt" aria-label="Link to heading '-J=&lt;opt&gt;'" data-heading-content="-J=&lt;opt&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Give option to the JVM running the command.</p>
 <p>(Beware that options containing spaces will not be handled correctly.)</p>
 <h4 id="-v---verbose"><code>-v, --verbose</code><a href="#-v---verbose" aria-label="Link to heading '-v, --verbose'" data-heading-content="-v, --verbose" class="anchor"></a></h4>
 <p>Incrementally increase the number of progress messages printed.</p>
 <h4 id="-q---quiet"><code>-q, --quiet</code><a href="#-q---quiet" aria-label="Link to heading '-q, --quiet'" data-heading-content="-q, --quiet" class="anchor"></a></h4>
 <p>Incrementally decrease the number of progress messages printed.</p>
-<h4 id="--verbositylevel"><code>--verbosity=&lt;level&gt;</code><a href="#--verbositylevel" aria-label="Link to heading '--verbosity=<level>'" data-heading-content="--verbosity=<level>" class="anchor"></a></h4>
+<h4 id="--verbositylevel"><code>--verbosity=&lt;level&gt;</code><a href="#--verbositylevel" aria-label="Link to heading '--verbosity=&lt;level&gt;'" data-heading-content="--verbosity=&lt;level&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Explicitly set the verbosity level to one of errors,<br>
 warnings, progress, progress+, progress++, progress+++. Overrides <code>-v</code><br>
 and <code>-q</code>.</p>
-<h4 id="--logdirdir"><code>--logdir=&lt;dir&gt;</code><a href="#--logdirdir" aria-label="Link to heading '--logdir=<dir>'" data-heading-content="--logdir=<dir>" class="anchor"></a></h4>
+<h4 id="--logdirdir"><code>--logdir=&lt;dir&gt;</code><a href="#--logdirdir" aria-label="Link to heading '--logdir=&lt;dir&gt;'" data-heading-content="--logdir=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Write detailed logs to one or more files in the given<br>
 directory, with generated names that include timestamps and the name of<br>
 the running subcommand.</p>
 <p>(To write a log file with a name you have full control over, instead<br>
 give <code>--log-to-stderr</code> and redirect stderr as desired.)</p>
-<h4 id="--common-cachesdir"><code>--common-caches=&lt;dir&gt;</code><a href="#--common-cachesdir" aria-label="Link to heading '--common-caches=<dir>'" data-heading-content="--common-caches=<dir>" class="anchor"></a></h4>
+<h4 id="--common-cachesdir"><code>--common-caches=&lt;dir&gt;</code><a href="#--common-cachesdir" aria-label="Link to heading '--common-caches=&lt;dir&gt;'" data-heading-content="--common-caches=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Controls the location of cached data on disk that will<br>
 persist between several runs of the CLI, such as downloaded QL packs and<br>
 compiled query plans. If not set explicitly, this defaults to a<br>

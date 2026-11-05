@@ -19,9 +19,9 @@ source-code alerts, you may find <a href="database-analyze.html">codeql database
 <a href="query-run.html">codeql query run</a>, which can display human-readable output for quick inspection of results while you're debugging.</p>
 <h2 id="options" title="Options" data-entry-type="Section">Options<a href="#options" aria-label="Link to heading 'Options'" data-heading-content="Options" class="anchor"></a></h2>
 <h3 id="primary-options">Primary Options<a href="#primary-options" aria-label="Link to heading 'Primary Options'" data-heading-content="Primary Options" class="anchor"></a></h3>
-<h4 id="database"><code>&lt;database&gt;</code><a href="#database" aria-label="Link to heading '<database>'" data-heading-content="<database>" class="anchor"></a></h4>
+<h4 id="database"><code>&lt;database&gt;</code><a href="#database" aria-label="Link to heading '&lt;database&gt;'" data-heading-content="&lt;database&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Mandatory] Path to the CodeQL database to query.</p>
-<h4 id="querydirsuitepack"><code>&lt;query|dir|suite|pack&gt;...</code><a href="#querydirsuitepack" aria-label="Link to heading '<query|dir|suite|pack>...'" data-heading-content="<query|dir|suite|pack>..." class="anchor"></a></h4>
+<h4 id="querydirsuitepack"><code>&lt;query|dir|suite|pack&gt;...</code><a href="#querydirsuitepack" aria-label="Link to heading '&lt;query|dir|suite|pack&gt;...'" data-heading-content="&lt;query|dir|suite|pack&gt;..." class="anchor"></a></h4>
 <p>Queries to execute. Each argument is in the form <code>scope/name@range:path</code><br>
 where:</p>
 <ul>
@@ -58,12 +58,12 @@ codebase.</p>
 <p><span data-escaped-char="">[</span>Advanced] Omit threat model configuration stored in the database<br>
 during database creation from a Code Scanning configuration file.</p>
 <h3 id="options-to-control-the-model-packs-to-be-used">Options to control the model packs to be used<a href="#options-to-control-the-model-packs-to-be-used" aria-label="Link to heading 'Options to control the model packs to be used'" data-heading-content="Options to control the model packs to be used" class="anchor"></a></h3>
-<h4 id="--model-packsnamerange"><code>--model-packs=&lt;name@range&gt;...</code><a href="#--model-packsnamerange" aria-label="Link to heading '--model-packs=<name@range>...'" data-heading-content="--model-packs=<name@range>..." class="anchor"></a></h4>
+<h4 id="--model-packsnamerange"><code>--model-packs=&lt;name@range&gt;...</code><a href="#--model-packsnamerange" aria-label="Link to heading '--model-packs=&lt;name@range&gt;...'" data-heading-content="--model-packs=&lt;name@range&gt;..." class="anchor"></a></h4>
 <p>A list of CodeQL pack names, each with an optional version range, to be<br>
 used as model packs to customize the queries that are about to be<br>
 evaluated.</p>
 <h3 id="options-to-control-the-threat-models-to-be-used">Options to control the threat models to be used<a href="#options-to-control-the-threat-models-to-be-used" aria-label="Link to heading 'Options to control the threat models to be used'" data-heading-content="Options to control the threat models to be used" class="anchor"></a></h3>
-<h4 id="--threat-modelname"><code>--threat-model=&lt;name&gt;...</code><a href="#--threat-modelname" aria-label="Link to heading '--threat-model=<name>...'" data-heading-content="--threat-model=<name>..." class="anchor"></a></h4>
+<h4 id="--threat-modelname"><code>--threat-model=&lt;name&gt;...</code><a href="#--threat-modelname" aria-label="Link to heading '--threat-model=&lt;name&gt;...'" data-heading-content="--threat-model=&lt;name&gt;..." class="anchor"></a></h4>
 <p>A list of threat models to enable or disable.</p>
 <p>The argument is the name of a threat model, optionally preceded by a<br>
 '!'. If no '!' is present, the named threat model and all of its<br>
@@ -86,7 +86,7 @@ evaluator logs. If the <code>--evaluator-log</code> option is provided, tuple<br
 counts will be included in both the text-based and structured JSON logs<br>
 produced by the command. (This can be useful for performance<br>
 optimization of complex QL code).</p>
-<h4 id="--timeoutseconds"><code>--timeout=&lt;seconds&gt;</code><a href="#--timeoutseconds" aria-label="Link to heading '--timeout=<seconds>'" data-heading-content="--timeout=<seconds>" class="anchor"></a></h4>
+<h4 id="--timeoutseconds"><code>--timeout=&lt;seconds&gt;</code><a href="#--timeoutseconds" aria-label="Link to heading '--timeout=&lt;seconds&gt;'" data-heading-content="--timeout=&lt;seconds&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Set the timeout length for query evaluation, in seconds.</p>
 <p>The timeout feature is intended to catch cases where a complex query<br>
 would take "forever" to evaluate. It is not an effective way to limit<br>
@@ -97,7 +97,7 @@ timed parts are "RA layers" of the optimized query, but that might<br>
 change in the future.</p>
 <p>If no timeout is specified, or is given as 0, no timeout will be set<br>
 (except for <a href="test-run.html">codeql test run</a>, where the default timeout is 5 minutes).</p>
-<h4 id="-j---threadsnum"><code>-j, --threads=&lt;num&gt;</code><a href="#-j---threadsnum" aria-label="Link to heading '-j, --threads=<num>'" data-heading-content="-j, --threads=<num>" class="anchor"></a></h4>
+<h4 id="-j---threadsnum"><code>-j, --threads=&lt;num&gt;</code><a href="#-j---threadsnum" aria-label="Link to heading '-j, --threads=&lt;num&gt;'" data-heading-content="-j, --threads=&lt;num&gt;" class="anchor"></a></h4>
 <p>Use this many threads to evaluate queries.</p>
 <p>Defaults to 1. You can pass 0 to use one thread per core on the machine,<br>
 or -<em>N</em> to leave <em>N</em> cores unused (except still use at least one<br>
@@ -111,7 +111,7 @@ be discarded after the queries have been executed.</p>
 <h4 id="--no-keep-full-cache"><code>--[no-]keep-full-cache</code><a href="#--no-keep-full-cache" aria-label="Link to heading '--[no-]keep-full-cache'" data-heading-content="--[no-]keep-full-cache" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Don't clean up the disk cache after evaluation completes.<br>
 This may save time if you're going to do <a href="dataset-cleanup.html">codeql dataset cleanup</a> or <a href="database-cleanup.html">codeql database cleanup</a> afterwards anyway.</p>
-<h4 id="--max-disk-cachemb"><code>--max-disk-cache=&lt;MB&gt;</code><a href="#--max-disk-cachemb" aria-label="Link to heading '--max-disk-cache=<MB>'" data-heading-content="--max-disk-cache=<MB>" class="anchor"></a></h4>
+<h4 id="--max-disk-cachemb"><code>--max-disk-cache=&lt;MB&gt;</code><a href="#--max-disk-cachemb" aria-label="Link to heading '--max-disk-cache=&lt;MB&gt;'" data-heading-content="--max-disk-cache=&lt;MB&gt;" class="anchor"></a></h4>
 <p>Set the maximum amount of space that the disk cache for intermediate<br>
 query results can use.</p>
 <p>If this size is not configured explicitly, the evaluator will try to use<br>
@@ -119,20 +119,20 @@ a "reasonable" amount of cache space, based on the size of the dataset<br>
 and the complexity of the queries. Explicitly setting a higher limit<br>
 than this default usage will enable additional caching which can speed<br>
 up later queries.</p>
-<h4 id="--min-disk-freemb"><code>--min-disk-free=&lt;MB&gt;</code><a href="#--min-disk-freemb" aria-label="Link to heading '--min-disk-free=<MB>'" data-heading-content="--min-disk-free=<MB>" class="anchor"></a></h4>
+<h4 id="--min-disk-freemb"><code>--min-disk-free=&lt;MB&gt;</code><a href="#--min-disk-freemb" aria-label="Link to heading '--min-disk-free=&lt;MB&gt;'" data-heading-content="--min-disk-free=&lt;MB&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Set target amount of free space on file system.</p>
 <p>If <code>--max-disk-cache</code> is not given, the evaluator will try hard to<br>
 curtail disk cache usage if the free space on the file system drops<br>
 below this value.</p>
-<h4 id="--min-disk-free-pctpct"><code>--min-disk-free-pct=&lt;pct&gt;</code><a href="#--min-disk-free-pctpct" aria-label="Link to heading '--min-disk-free-pct=<pct>'" data-heading-content="--min-disk-free-pct=<pct>" class="anchor"></a></h4>
+<h4 id="--min-disk-free-pctpct"><code>--min-disk-free-pct=&lt;pct&gt;</code><a href="#--min-disk-free-pctpct" aria-label="Link to heading '--min-disk-free-pct=&lt;pct&gt;'" data-heading-content="--min-disk-free-pct=&lt;pct&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Set target fraction of free space on file system.</p>
 <p>If <code>--max-disk-cache</code> is not given, the evaluator will try hard to<br>
 curtail disk cache usage if the free space on the file system drops<br>
 below this percentage.</p>
-<h4 id="--externalpredfilecsv"><code>--external=&lt;pred&gt;=&lt;file.csv&gt;</code><a href="#--externalpredfilecsv" aria-label="Link to heading '--external=<pred>=<file.csv>'" data-heading-content="--external=<pred>=<file.csv>" class="anchor"></a></h4>
+<h4 id="--externalpredfilecsv"><code>--external=&lt;pred&gt;=&lt;file.csv&gt;</code><a href="#--externalpredfilecsv" aria-label="Link to heading '--external=&lt;pred&gt;=&lt;file.csv&gt;'" data-heading-content="--external=&lt;pred&gt;=&lt;file.csv&gt;" class="anchor"></a></h4>
 <p>A CSV file that contains rows for external predicate <em><span data-escaped-char="">&lt;</span>pred&gt;</em>.<br>
 Multiple <code>--external</code> options can be supplied.</p>
-<h4 id="--xterm-progressmode"><code>--xterm-progress=&lt;mode&gt;</code><a href="#--xterm-progressmode" aria-label="Link to heading '--xterm-progress=<mode>'" data-heading-content="--xterm-progress=<mode>" class="anchor"></a></h4>
+<h4 id="--xterm-progressmode"><code>--xterm-progress=&lt;mode&gt;</code><a href="#--xterm-progressmode" aria-label="Link to heading '--xterm-progress=&lt;mode&gt;'" data-heading-content="--xterm-progress=&lt;mode&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Controls whether to show progress tracking during QL<br>
 evaluation using xterm control sequences. Possible values are:</p>
 <p><code>no</code>: Never produce fancy progress; assume a dumb terminal.</p>
@@ -147,7 +147,7 @@ the terminal. (Unlike <code>yes</code>, this should work on Windows.)</p>
 <p><code>25x80:/dev/pts/17</code> (or similar): show fancy progress on a <em>different</em><br>
 terminal than stderr. Mostly useful for internal testing.</p>
 <h3 id="options-for-controlling-outputting-of-structured-evaluator-logs">Options for controlling outputting of structured evaluator logs<a href="#options-for-controlling-outputting-of-structured-evaluator-logs" aria-label="Link to heading 'Options for controlling outputting of structured evaluator logs'" data-heading-content="Options for controlling outputting of structured evaluator logs" class="anchor"></a></h3>
-<h4 id="--evaluator-logfile"><code>--evaluator-log=&lt;file&gt;</code><a href="#--evaluator-logfile" aria-label="Link to heading '--evaluator-log=<file>'" data-heading-content="--evaluator-log=<file>" class="anchor"></a></h4>
+<h4 id="--evaluator-logfile"><code>--evaluator-log=&lt;file&gt;</code><a href="#--evaluator-logfile" aria-label="Link to heading '--evaluator-log=&lt;file&gt;'" data-heading-content="--evaluator-log=&lt;file&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Output structured logs about evaluator performance to the<br>
 given file. The format of this log file is subject to change with no<br>
 notice, but will be a stream of JSON objects separated by either two<br>
@@ -160,7 +160,7 @@ directly. The file will be overwritten if it already exists.</p>
 this option will minimize the size of the JSON log produced, at the<br>
 expense of making it much less human readable.</p>
 <h3 id="options-to-control-ram-usage">Options to control RAM usage<a href="#options-to-control-ram-usage" aria-label="Link to heading 'Options to control RAM usage'" data-heading-content="Options to control RAM usage" class="anchor"></a></h3>
-<h4 id="-m---rammb"><code>-M, --ram=&lt;MB&gt;</code><a href="#-m---rammb" aria-label="Link to heading '-M, --ram=<MB>'" data-heading-content="-M, --ram=<MB>" class="anchor"></a></h4>
+<h4 id="-m---rammb"><code>-M, --ram=&lt;MB&gt;</code><a href="#-m---rammb" aria-label="Link to heading '-M, --ram=&lt;MB&gt;'" data-heading-content="-M, --ram=&lt;MB&gt;" class="anchor"></a></h4>
 <p>The query evaluator will try hard to keep its total memory footprint<br>
 below this value. (However, for large databases it is possible that the<br>
 threshold may be broken by file-backed memory maps, which can be swapped<br>
@@ -168,7 +168,7 @@ to disk in case of memory pressure).</p>
 <p>The value should be at least 2048 MB; smaller values will be<br>
 transparently rounded up.</p>
 <h3 id="options-to-control-ql-compilation">Options to control QL compilation<a href="#options-to-control-ql-compilation" aria-label="Link to heading 'Options to control QL compilation'" data-heading-content="Options to control QL compilation" class="anchor"></a></h3>
-<h4 id="--warningsmode"><code>--warnings=&lt;mode&gt;</code><a href="#--warningsmode" aria-label="Link to heading '--warnings=<mode>'" data-heading-content="--warnings=<mode>" class="anchor"></a></h4>
+<h4 id="--warningsmode"><code>--warnings=&lt;mode&gt;</code><a href="#--warningsmode" aria-label="Link to heading '--warnings=&lt;mode&gt;'" data-heading-content="--warnings=&lt;mode&gt;" class="anchor"></a></h4>
 <p>How to handle warnings from the QL compiler. One of:</p>
 <p><code>hide</code>: Suppress warnings.</p>
 <p><code>show</code> <em>(default)</em>: Print warnings but continue with compilation.</p>
@@ -198,14 +198,14 @@ in your global CodeQL config file.</p>
 <p>Only perform initial checks on the part of the QL source that is used.</p>
 <h4 id="--no-metadata-verification"><code>--no-metadata-verification</code><a href="#--no-metadata-verification" aria-label="Link to heading '--no-metadata-verification'" data-heading-content="--no-metadata-verification" class="anchor"></a></h4>
 <p>Don't check embedded query metadata in QLDoc comments for validity.</p>
-<h4 id="--compilation-cache-sizemb"><code>--compilation-cache-size=&lt;MB&gt;</code><a href="#--compilation-cache-sizemb" aria-label="Link to heading '--compilation-cache-size=<MB>'" data-heading-content="--compilation-cache-size=<MB>" class="anchor"></a></h4>
+<h4 id="--compilation-cache-sizemb"><code>--compilation-cache-size=&lt;MB&gt;</code><a href="#--compilation-cache-sizemb" aria-label="Link to heading '--compilation-cache-size=&lt;MB&gt;'" data-heading-content="--compilation-cache-size=&lt;MB&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Override the default maximum size for a compilation cache<br>
 directory.</p>
 <h4 id="--fail-on-ambiguous-relation-name"><code>--fail-on-ambiguous-relation-name</code><a href="#--fail-on-ambiguous-relation-name" aria-label="Link to heading '--fail-on-ambiguous-relation-name'" data-heading-content="--fail-on-ambiguous-relation-name" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Fail compilation if an ambiguous relation name is generated<br>
 during compilation.</p>
 <h3 id="options-to-set-up-compilation-environment">Options to set up compilation environment<a href="#options-to-set-up-compilation-environment" aria-label="Link to heading 'Options to set up compilation environment'" data-heading-content="Options to set up compilation environment" class="anchor"></a></h3>
-<h4 id="--search-pathdirdir"><code>--search-path=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--search-pathdirdir" aria-label="Link to heading '--search-path=<dir>[:<dir>...]'" data-heading-content="--search-path=<dir>[:<dir>...]" class="anchor"></a></h4>
+<h4 id="--search-pathdirdir"><code>--search-path=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--search-pathdirdir" aria-label="Link to heading '--search-path=&lt;dir&gt;[:&lt;dir&gt;...]'" data-heading-content="--search-path=&lt;dir&gt;[:&lt;dir&gt;...]" class="anchor"></a></h4>
 <p>A list of directories under which QL packs may be found. Each directory<br>
 can either be a QL pack (or bundle of packs containing a<br>
 <code>.codeqlmanifest.json</code> file at the root) or the immediate parent of one<br>
@@ -223,7 +223,7 @@ found otherwise. (If this default does not work, it is strongly<br>
 recommended to set up <code>--search-path</code> once and for all in a per-user<br>
 configuration file).</p>
 <p>(Note: On Windows the path separator is <code>;</code>).</p>
-<h4 id="--additional-packsdirdir"><code>--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--additional-packsdirdir" aria-label="Link to heading '--additional-packs=<dir>[:<dir>...]'" data-heading-content="--additional-packs=<dir>[:<dir>...]" class="anchor"></a></h4>
+<h4 id="--additional-packsdirdir"><code>--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--additional-packsdirdir" aria-label="Link to heading '--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]'" data-heading-content="--additional-packs=&lt;dir&gt;[:&lt;dir&gt;...]" class="anchor"></a></h4>
 <p>If this list of directories is given, they will be searched for packs<br>
 before the ones in <code>--search-path</code>. The order between these doesn't<br>
 matter; it is an error if a pack name is found in two different places<br>
@@ -234,16 +234,16 @@ recommended</em> to override this option in a config file; some internal<br>
 actions will add this option on the fly, overriding any configured<br>
 value.</p>
 <p>(Note: On Windows the path separator is <code>;</code>).</p>
-<h4 id="--library-pathdirdir"><code>--library-path=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--library-pathdirdir" aria-label="Link to heading '--library-path=<dir>[:<dir>...]'" data-heading-content="--library-path=<dir>[:<dir>...]" class="anchor"></a></h4>
+<h4 id="--library-pathdirdir"><code>--library-path=&lt;dir&gt;[:&lt;dir&gt;...]</code><a href="#--library-pathdirdir" aria-label="Link to heading '--library-path=&lt;dir&gt;[:&lt;dir&gt;...]'" data-heading-content="--library-path=&lt;dir&gt;[:&lt;dir&gt;...]" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] An optional list of directories that will be added to the<br>
 raw import search path for QL libraries. This should only be used if<br>
 you're using QL libraries that have not been packaged as QL packs.</p>
 <p>(Note: On Windows the path separator is <code>;</code>).</p>
-<h4 id="--dbschemefile"><code>--dbscheme=&lt;file&gt;</code><a href="#--dbschemefile" aria-label="Link to heading '--dbscheme=<file>'" data-heading-content="--dbscheme=<file>" class="anchor"></a></h4>
+<h4 id="--dbschemefile"><code>--dbscheme=&lt;file&gt;</code><a href="#--dbschemefile" aria-label="Link to heading '--dbscheme=&lt;file&gt;'" data-heading-content="--dbscheme=&lt;file&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Explicitly define which dbscheme queries should be compiled<br>
 against. This should only be given by callers that are extremely sure<br>
 what they're doing.</p>
-<h4 id="--compilation-cachedir"><code>--compilation-cache=&lt;dir&gt;</code><a href="#--compilation-cachedir" aria-label="Link to heading '--compilation-cache=<dir>'" data-heading-content="--compilation-cache=<dir>" class="anchor"></a></h4>
+<h4 id="--compilation-cachedir"><code>--compilation-cache=&lt;dir&gt;</code><a href="#--compilation-cachedir" aria-label="Link to heading '--compilation-cache=&lt;dir&gt;'" data-heading-content="--compilation-cache=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Specify an additional directory to use as a compilation<br>
 cache.</p>
 <h4 id="--no-default-compilation-cache"><code>--no-default-compilation-cache</code><a href="#--no-default-compilation-cache" aria-label="Link to heading '--no-default-compilation-cache'" data-heading-content="--no-default-compilation-cache" class="anchor"></a></h4>
@@ -272,24 +272,24 @@ variable.</p>
 <h3 id="common-options">Common options<a href="#common-options" aria-label="Link to heading 'Common options'" data-heading-content="Common options" class="anchor"></a></h3>
 <h4 id="-h---help"><code>-h, --help</code><a href="#-h---help" aria-label="Link to heading '-h, --help'" data-heading-content="-h, --help" class="anchor"></a></h4>
 <p>Show this help text.</p>
-<h4 id="-jopt"><code>-J=&lt;opt&gt;</code><a href="#-jopt" aria-label="Link to heading '-J=<opt>'" data-heading-content="-J=<opt>" class="anchor"></a></h4>
+<h4 id="-jopt"><code>-J=&lt;opt&gt;</code><a href="#-jopt" aria-label="Link to heading '-J=&lt;opt&gt;'" data-heading-content="-J=&lt;opt&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Give option to the JVM running the command.</p>
 <p>(Beware that options containing spaces will not be handled correctly.)</p>
 <h4 id="-v---verbose"><code>-v, --verbose</code><a href="#-v---verbose" aria-label="Link to heading '-v, --verbose'" data-heading-content="-v, --verbose" class="anchor"></a></h4>
 <p>Incrementally increase the number of progress messages printed.</p>
 <h4 id="-q---quiet"><code>-q, --quiet</code><a href="#-q---quiet" aria-label="Link to heading '-q, --quiet'" data-heading-content="-q, --quiet" class="anchor"></a></h4>
 <p>Incrementally decrease the number of progress messages printed.</p>
-<h4 id="--verbositylevel"><code>--verbosity=&lt;level&gt;</code><a href="#--verbositylevel" aria-label="Link to heading '--verbosity=<level>'" data-heading-content="--verbosity=<level>" class="anchor"></a></h4>
+<h4 id="--verbositylevel"><code>--verbosity=&lt;level&gt;</code><a href="#--verbositylevel" aria-label="Link to heading '--verbosity=&lt;level&gt;'" data-heading-content="--verbosity=&lt;level&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Explicitly set the verbosity level to one of errors,<br>
 warnings, progress, progress+, progress++, progress+++. Overrides <code>-v</code><br>
 and <code>-q</code>.</p>
-<h4 id="--logdirdir"><code>--logdir=&lt;dir&gt;</code><a href="#--logdirdir" aria-label="Link to heading '--logdir=<dir>'" data-heading-content="--logdir=<dir>" class="anchor"></a></h4>
+<h4 id="--logdirdir"><code>--logdir=&lt;dir&gt;</code><a href="#--logdirdir" aria-label="Link to heading '--logdir=&lt;dir&gt;'" data-heading-content="--logdir=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Write detailed logs to one or more files in the given<br>
 directory, with generated names that include timestamps and the name of<br>
 the running subcommand.</p>
 <p>(To write a log file with a name you have full control over, instead<br>
 give <code>--log-to-stderr</code> and redirect stderr as desired.)</p>
-<h4 id="--common-cachesdir"><code>--common-caches=&lt;dir&gt;</code><a href="#--common-cachesdir" aria-label="Link to heading '--common-caches=<dir>'" data-heading-content="--common-caches=<dir>" class="anchor"></a></h4>
+<h4 id="--common-cachesdir"><code>--common-caches=&lt;dir&gt;</code><a href="#--common-cachesdir" aria-label="Link to heading '--common-caches=&lt;dir&gt;'" data-heading-content="--common-caches=&lt;dir&gt;" class="anchor"></a></h4>
 <p><span data-escaped-char="">[</span>Advanced] Controls the location of cached data on disk that will<br>
 persist between several runs of the CLI, such as downloaded QL packs and<br>
 compiled query plans. If not set explicitly, this defaults to a<br>

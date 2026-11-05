@@ -384,6 +384,22 @@ has access to Copilot code review and AI credits.</p>
 <li><code>reviewDraftPullRequests</code> (Boolean): Copilot automatically reviews draft pull requests before they are marked as ready for review.</li>
 <li><code>reviewOnPush</code> (Boolean): Copilot automatically reviews each new push to the pull request.</li>
 </ul>
+<h2 id="copilotcodereviewsource---object" title="CopilotCodeReviewSource - object" data-entry-type="Section">CopilotCodeReviewSource - object<a href="#copilotcodereviewsource---object" aria-label="Link to heading 'CopilotCodeReviewSource - object'" data-heading-content="CopilotCodeReviewSource - object" class="anchor"></a></h2>
+<p>A validated source reported as contributing to a Copilot code review comment.</p>
+<h3 id="fields-for-copilotcodereviewsource">Fields for <code>CopilotCodeReviewSource</code><a href="#fields-for-copilotcodereviewsource" aria-label="Link to heading 'Fields for CopilotCodeReviewSource'" data-heading-content="Fields for CopilotCodeReviewSource" class="anchor"></a></h3>
+<ul>
+<li><code>kind</code> (CopilotCodeReviewSourceKind!): The kind of contributing source.</li>
+<li><code>name</code> (String!): The reported source name, or "custom instructions" for CUSTOM_INSTRUCTIONS.</li>
+<li><code>path</code> (String): The validated repository-relative source path, if available. Commit OIDs are not exposed.</li>
+</ul>
+<h2 id="copilotcodereviewsourcekind---enum" title="CopilotCodeReviewSourceKind - enum" data-entry-type="Section">CopilotCodeReviewSourceKind - enum<a href="#copilotcodereviewsourcekind---enum" aria-label="Link to heading 'CopilotCodeReviewSourceKind - enum'" data-heading-content="CopilotCodeReviewSourceKind - enum" class="anchor"></a></h2>
+<p>The kind of source reported as contributing to a Copilot code review comment.</p>
+<h3 id="values-for-copilotcodereviewsourcekind">Values for <code>CopilotCodeReviewSourceKind</code><a href="#values-for-copilotcodereviewsourcekind" aria-label="Link to heading 'Values for CopilotCodeReviewSourceKind'" data-heading-content="Values for CopilotCodeReviewSourceKind" class="anchor"></a></h3>
+<ul>
+<li><code>CUSTOM_INSTRUCTIONS</code>: Custom instructions.</li>
+<li><code>MCP</code>: An MCP server.</li>
+<li><code>SKILL</code>: A skill.</li>
+</ul>
 <h2 id="createpullrequest---mutation" title="createPullRequest - mutation" data-entry-type="Section">createPullRequest - mutation<a href="#createpullrequest---mutation" aria-label="Link to heading 'createPullRequest - mutation'" data-heading-content="createPullRequest - mutation" class="anchor"></a></h2>
 <p>Create a new pull request.</p>
 <h3 id="input-fields-for-createpullrequest">Input fields for <code>createPullRequest</code><a href="#input-fields-for-createpullrequest" aria-label="Link to heading 'Input fields for createPullRequest'" data-heading-content="Input fields for createPullRequest" class="anchor"></a></h3>
@@ -1556,6 +1572,9 @@ list of file patterns which determine the files that reviewer is required to rev
 <p><code>commit</code> (Commit): Identifies the commit associated with this pull request review.</p>
 </li>
 <li>
+<p><code>copilotCodeReviewEffort</code> (CopilotCodeReviewEffort): The persisted effective effort used to produce this Copilot code review, or null if unavailable.</p>
+</li>
+<li>
 <p><code>createdAt</code> (DateTime!): Identifies the date and time when the object was created.</p>
 </li>
 <li>
@@ -1575,6 +1594,9 @@ list of file patterns which determine the files that reviewer is required to rev
 </li>
 <li>
 <p><code>includesCreatedEdit</code> (Boolean!): Check if this comment was edited and includes an edit with the creation data.</p>
+</li>
+<li>
+<p><code>isCopilotCodeReview</code> (Boolean!): Whether this review was produced by Copilot code review. Bot authorship alone does not establish provenance.</p>
 </li>
 <li>
 <p><code>isMinimized</code> (Boolean!): Returns whether or not a comment has been minimized.</p>
@@ -1678,6 +1700,9 @@ MinimizeComment mutation.</p>
 <p><code>commit</code> (Commit): Identifies the commit associated with the comment.</p>
 </li>
 <li>
+<p><code>copilotCodeReviewSources</code> ([CopilotCodeReviewSource!]!): Sources reported as contributing to this comment; may be incomplete.</p>
+</li>
+<li>
 <p><code>createdAt</code> (DateTime!): Identifies when the comment was created.</p>
 </li>
 <li>
@@ -1703,6 +1728,9 @@ MinimizeComment mutation.</p>
 </li>
 <li>
 <p><code>includesCreatedEdit</code> (Boolean!): Check if this comment was edited and includes an edit with the creation data.</p>
+</li>
+<li>
+<p><code>isCopilotCodeReview</code> (Boolean!): Whether this comment was produced by Copilot code review.</p>
 </li>
 <li>
 <p><code>isMinimized</code> (Boolean!): Returns whether or not a comment has been minimized.</p>
@@ -2449,6 +2477,35 @@ maintainer permissions can manage the bypass list.</p>
 <ul>
 <li><code>clientMutationId</code> (String): A unique identifier for the client performing the mutation.</li>
 <li><code>pullRequestId</code> (ID!): ID of the pull request to be reopened.</li>
+</ul>
+<h2 id="requestcopilotcodereview---mutation" title="requestCopilotCodeReview - mutation" data-entry-type="Section">requestCopilotCodeReview - mutation<a href="#requestcopilotcodereview---mutation" aria-label="Link to heading 'requestCopilotCodeReview - mutation'" data-heading-content="requestCopilotCodeReview - mutation" class="anchor"></a></h2>
+<p>Requests a Copilot code review.<br>
+Every call attempts to advance the Copilot code review lifecycle for the pull<br>
+request: if no Copilot review has been requested yet, an initial request is created;<br>
+if the most recent Copilot review has already completed, a new request is created<br>
+automatically to continue the lifecycle. If a Copilot code review request is already<br>
+pending, no new request is created and failureReason is REQUEST_CONFLICT.</p>
+<h3 id="input-fields-for-requestcopilotcodereview">Input fields for <code>requestCopilotCodeReview</code><a href="#input-fields-for-requestcopilotcodereview" aria-label="Link to heading 'Input fields for requestCopilotCodeReview'" data-heading-content="Input fields for requestCopilotCodeReview" class="anchor"></a></h3>
+<ul>
+<li><code>input</code> (RequestCopilotCodeReviewInput!):</li>
+</ul>
+<h3 id="return-fields-for-requestcopilotcodereview">Return fields for <code>requestCopilotCodeReview</code><a href="#return-fields-for-requestcopilotcodereview" aria-label="Link to heading 'Return fields for requestCopilotCodeReview'" data-heading-content="Return fields for requestCopilotCodeReview" class="anchor"></a></h3>
+<ul>
+<li><code>actor</code> (Actor): Identifies the actor who performed the event.</li>
+<li><code>clientMutationId</code> (String): A unique identifier for the client performing the mutation.</li>
+<li><code>failureReason</code> (CopilotCodeReviewRequestReason): The stable reason the request was denied or conflicted with an existing request. Null when the request succeeded.</li>
+<li><code>pullRequest</code> (PullRequest): The pull request that is getting requests.</li>
+<li><code>reviewRequest</code> (ReviewRequest): The Copilot code review request that was created or is already pending. Null<br>
+when the request was denied or conflicted with an existing request.</li>
+<li><code>success</code> (Boolean): Did the operation succeed?.</li>
+</ul>
+<h2 id="requestcopilotcodereviewinput---input-object" title="RequestCopilotCodeReviewInput - input object" data-entry-type="Section">RequestCopilotCodeReviewInput - input object<a href="#requestcopilotcodereviewinput---input-object" aria-label="Link to heading 'RequestCopilotCodeReviewInput - input object'" data-heading-content="RequestCopilotCodeReviewInput - input object" class="anchor"></a></h2>
+<p>Autogenerated input type of RequestCopilotCodeReview.</p>
+<h3 id="input-fields-for-requestcopilotcodereviewinput">Input fields for <code>RequestCopilotCodeReviewInput</code><a href="#input-fields-for-requestcopilotcodereviewinput" aria-label="Link to heading 'Input fields for RequestCopilotCodeReviewInput'" data-heading-content="Input fields for RequestCopilotCodeReviewInput" class="anchor"></a></h3>
+<ul>
+<li><code>clientMutationId</code> (String): A unique identifier for the client performing the mutation.</li>
+<li><code>pullRequestId</code> (ID!): The Node ID of the pull request to modify.</li>
+<li><code>reviewEffort</code> (CopilotCodeReviewEffort): The effort level to use for the Copilot code review. Omit to use the default effort level.</li>
 </ul>
 <h2 id="requestedreviewer---union" title="RequestedReviewer - union" data-entry-type="Section">RequestedReviewer - union<a href="#requestedreviewer---union" aria-label="Link to heading 'RequestedReviewer - union'" data-heading-content="RequestedReviewer - union" class="anchor"></a></h2>
 <p>Types that can be requested reviewers.</p>
