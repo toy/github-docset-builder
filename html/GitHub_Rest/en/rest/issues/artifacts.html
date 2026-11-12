@@ -1,0 +1,475 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>REST API endpoints for issue artifacts</title><link rel="stylesheet" href="../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../index.html">REST API</a> / <a href="index.html">Issues</a> / </nav><h1 id="rest-api-endpoints-for-issue-artifacts">REST API endpoints for issue artifacts<a href="#rest-api-endpoints-for-issue-artifacts" aria-label="Link to heading 'REST API endpoints for issue artifacts'" data-heading-content="REST API endpoints for issue artifacts" class="anchor"></a></h1>
+<p>Use the REST API to manage issue artifacts.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Most endpoints use <code>Authorization: Bearer &lt;YOUR-TOKEN&gt;</code> and <code>Accept: application/vnd.github+json</code> headers, plus <code>X-GitHub-Api-Version: 2026-03-10</code>. Curl examples below omit these standard headers for brevity.</p>
+</div>
+<h2 id="list-issue-artifacts" title="GET /repos/{owner}/{repo}/issues/{issue_number}/artifacts (List issue artifacts)" data-entry-type="Resource">List issue artifacts<a href="#list-issue-artifacts" aria-label="Link to heading 'List issue artifacts'" data-heading-content="List issue artifacts" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /repos/{owner}/{repo}/issues/{issue_number}/artifacts
+</span></code></pre>
+<p>Lists artifacts attached to an issue. Results are ordered by artifact number.<br>
+The type parameter filters the response to artifacts of one type.<br>
+Results can be requested by page. The page defaults to 1; the page size<br>
+defaults to 30 and can be set from 1 to 100.<br>
+The response is a bare array and does not include pagination metadata such as<br>
+a Link header, a total count, or the service's has_next_page signal.</p>
+<h3 id="parameters">Parameters<a href="#parameters" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers">Headers<a href="#headers" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters">Path and query parameters<a href="#path-and-query-parameters" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>issue_number</code></strong> (integer) (required)<br>
+The number that identifies the issue.</p>
+</li>
+<li>
+<p><strong><code>type</code></strong> (string)<br>
+The artifact type to return.<br>
+Can be one of: <code>generic</code>, <code>link</code>, <code>plan</code>, <code>embedded_html</code></p>
+</li>
+<li>
+<p><strong><code>per_page</code></strong> (integer)<br>
+The number of results per page (max 100). For more information, see "Using pagination in the REST API."<br>
+Default: <code>30</code></p>
+</li>
+<li>
+<p><strong><code>page</code></strong> (integer)<br>
+The page number of the results to fetch. For more information, see "Using pagination in the REST API."<br>
+Default: <code>1</code></p>
+</li>
+</ul>
+<h3 id="http-response-status-codes">HTTP response status codes<a href="#http-response-status-codes" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - A list of artifacts attached to the issue.</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>410</strong> - Gone</p>
+</li>
+<li>
+<p><strong>503</strong> - Service unavailable</p>
+</li>
+</ul>
+<h3 id="code-examples">Code examples<a href="#code-examples" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example">Example<a href="#example" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X GET \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/issues/ISSUE_NUMBER/artifacts
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<p>Array of <code>Issue artifact</code>:</p>
+<ul>
+<li><code>id</code>: required, integer, format: int64</li>
+<li><code>html_url</code>: string, format: uri</li>
+<li><code>number</code>: required, integer</li>
+<li><code>type</code>: required, string</li>
+<li><code>name</code>: required, string</li>
+<li><code>body</code>: required, string</li>
+<li><code>body_html</code>: required, string or null</li>
+<li><code>description</code>: required, string</li>
+<li><code>creator</code>: required, object or null:
+<ul>
+<li><code>login</code>: required, string</li>
+<li><code>id</code>: required, integer, format: int64</li>
+</ul>
+</li>
+<li><code>updated_by_actor</code>: required, object or null:
+<ul>
+<li><code>login</code>: required, string</li>
+<li><code>id</code>: required, integer, format: int64</li>
+</ul>
+</li>
+<li><code>created_at</code>: required, string or null, format: date-time</li>
+<li><code>updated_at</code>: required, string or null, format: date-time</li>
+</ul>
+<h2 id="create-an-issue-artifact" title="POST /repos/{owner}/{repo}/issues/{issue_number}/artifacts (Create an issue artifact)" data-entry-type="Resource">Create an issue artifact<a href="#create-an-issue-artifact" aria-label="Link to heading 'Create an issue artifact'" data-heading-content="Create an issue artifact" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">POST /repos/{owner}/{repo}/issues/{issue_number}/artifacts
+</span></code></pre>
+<p>Creates an artifact attached to an issue.<br>
+The artifact type defaults to generic when omitted. Creating an artifact<br>
+requires permission to update the issue.<br>
+The request can return 403 if the repository is read-only or locked, or a<br>
+GitHub App installation has only issues: read permission.<br>
+To create an HTML artifact, set type to embedded_html and provide the HTML source<br>
+in body. Open the returned html_url to inspect the source, then select<br>
+Preview to view the rendered artifact. Select Show source to return<br>
+to the HTML source.</p>
+<h3 id="parameters-1">Parameters<a href="#parameters-1" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-1">Headers<a href="#headers-1" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-1">Path and query parameters<a href="#path-and-query-parameters-1" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>issue_number</code></strong> (integer) (required)<br>
+The number that identifies the issue.</p>
+</li>
+</ul>
+<h4 id="body-parameters">Body parameters<a href="#body-parameters" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>type</code></strong> (string)<br>
+The artifact type.<br>
+Default: <code>generic</code><br>
+Can be one of: <code>generic</code>, <code>link</code>, <code>plan</code>, <code>embedded_html</code></p>
+</li>
+<li>
+<p><strong><code>name</code></strong> (string) (required)<br>
+The human-readable name of the artifact.</p>
+</li>
+<li>
+<p><strong><code>body</code></strong> (string) (required)<br>
+The artifact content. For embedded_html artifacts, provide the HTML source.</p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-1">HTTP response status codes<a href="#http-response-status-codes-1" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>201</strong> - The created artifact.</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>410</strong> - Gone</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+<li>
+<p><strong>429</strong> - Artifact writes are temporarily throttled. Retry after the indicated delay.</p>
+</li>
+<li>
+<p><strong>500</strong> - Internal Error</p>
+</li>
+<li>
+<p><strong>503</strong> - Service unavailable</p>
+</li>
+</ul>
+<h3 id="code-examples-1">Code examples<a href="#code-examples-1" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-1">Example<a href="#example-1" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X POST \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/issues/ISSUE_NUMBER/artifacts \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "type": "generic",
+</span><span style="color:#c0c5ce;">  "name": "Research notes",
+</span><span style="color:#c0c5ce;">  "body": "## Findings\n\nThe API supports issue artifacts."
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 201):</strong></p>
+<ul>
+<li><code>id</code>: required, integer, format: int64</li>
+<li><code>html_url</code>: string, format: uri</li>
+<li><code>number</code>: required, integer</li>
+<li><code>type</code>: required, string</li>
+<li><code>name</code>: required, string</li>
+<li><code>body</code>: required, string</li>
+<li><code>body_html</code>: required, string or null</li>
+<li><code>description</code>: required, string</li>
+<li><code>creator</code>: required, object or null:
+<ul>
+<li><code>login</code>: required, string</li>
+<li><code>id</code>: required, integer, format: int64</li>
+</ul>
+</li>
+<li><code>updated_by_actor</code>: required, object or null:
+<ul>
+<li><code>login</code>: required, string</li>
+<li><code>id</code>: required, integer, format: int64</li>
+</ul>
+</li>
+<li><code>created_at</code>: required, string or null, format: date-time</li>
+<li><code>updated_at</code>: required, string or null, format: date-time</li>
+</ul>
+<h2 id="get-an-issue-artifact" title="GET /repos/{owner}/{repo}/issues/{issue_number}/artifacts/{artifact_number} (Get an issue artifact)" data-entry-type="Resource">Get an issue artifact<a href="#get-an-issue-artifact" aria-label="Link to heading 'Get an issue artifact'" data-heading-content="Get an issue artifact" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /repos/{owner}/{repo}/issues/{issue_number}/artifacts/{artifact_number}
+</span></code></pre>
+<p>Returns an artifact attached to an issue by its per-issue artifact number,<br>
+along with its version history ordered from newest to oldest.</p>
+<h3 id="parameters-2">Parameters<a href="#parameters-2" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-2">Headers<a href="#headers-2" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-2">Path and query parameters<a href="#path-and-query-parameters-2" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>issue_number</code></strong> (integer) (required)<br>
+The number that identifies the issue.</p>
+</li>
+<li>
+<p><strong><code>artifact_number</code></strong> (integer) (required)<br>
+The artifact number within the issue.</p>
+</li>
+<li>
+<p><strong><code>per_page</code></strong> (integer)<br>
+The number of results per page (max 100). For more information, see "Using pagination in the REST API."<br>
+Default: <code>30</code></p>
+</li>
+<li>
+<p><strong><code>page</code></strong> (integer)<br>
+The page number of the results to fetch. For more information, see "Using pagination in the REST API."<br>
+Default: <code>1</code></p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-2">HTTP response status codes<a href="#http-response-status-codes-2" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - The requested artifact.</p>
+</li>
+<li>
+<p><strong>301</strong> - Moved permanently</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>410</strong> - Gone</p>
+</li>
+<li>
+<p><strong>503</strong> - Service unavailable</p>
+</li>
+</ul>
+<h3 id="code-examples-2">Code examples<a href="#code-examples-2" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-2">Example<a href="#example-2" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X GET \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/issues/ISSUE_NUMBER/artifacts/ARTIFACT_NUMBER
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<ul>
+<li>one of:
+<ul>
+<li><strong>Issue artifact</strong>
+<ul>
+<li><code>id</code>: required, integer, format: int64</li>
+<li><code>html_url</code>: string, format: uri</li>
+<li><code>number</code>: required, integer</li>
+<li><code>type</code>: required, string</li>
+<li><code>name</code>: required, string</li>
+<li><code>body</code>: required, string</li>
+<li><code>body_html</code>: required, string or null</li>
+<li><code>description</code>: required, string</li>
+<li><code>creator</code>: required, object or null:
+<ul>
+<li><code>login</code>: required, string</li>
+<li><code>id</code>: required, integer, format: int64</li>
+</ul>
+</li>
+<li><code>updated_by_actor</code>: required, object or null:
+<ul>
+<li><code>login</code>: required, string</li>
+<li><code>id</code>: required, integer, format: int64</li>
+</ul>
+</li>
+<li><code>created_at</code>: required, string or null, format: date-time</li>
+<li><code>updated_at</code>: required, string or null, format: date-time</li>
+</ul>
+</li>
+<li><strong>object</strong>
+<ul>
+<li><code>artifact</code>: required, <code>Issue artifact</code> (see above)</li>
+<li><code>has_next_page</code>: required, boolean</li>
+<li><code>total_count</code>: required, integer, minimum: 0</li>
+<li><code>versions</code>: required, array of objects:
+<ul>
+<li><code>version</code>: required, integer</li>
+<li><code>name</code>: required, string</li>
+<li><code>body</code>: required, string</li>
+<li><code>body_html</code>: required, string or null</li>
+<li><code>created_at</code>: required, string or null, format: date-time</li>
+<li><code>actor</code>: required, object or null:
+<ul>
+<li><code>login</code>: required, string</li>
+<li><code>id</code>: required, integer, format: int64</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="update-an-issue-artifact" title="PATCH /repos/{owner}/{repo}/issues/{issue_number}/artifacts/{artifact_number} (Update an issue artifact)" data-entry-type="Resource">Update an issue artifact<a href="#update-an-issue-artifact" aria-label="Link to heading 'Update an issue artifact'" data-heading-content="Update an issue artifact" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PATCH /repos/{owner}/{repo}/issues/{issue_number}/artifacts/{artifact_number}
+</span></code></pre>
+<p>Updates the name, body, or both for an artifact attached to an issue.<br>
+Updating an artifact requires permission to update the issue.<br>
+The request can return 403 if the repository is read-only or locked, or a<br>
+GitHub App installation has only issues: read permission.</p>
+<h3 id="parameters-3">Parameters<a href="#parameters-3" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-3">Headers<a href="#headers-3" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-3">Path and query parameters<a href="#path-and-query-parameters-3" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>issue_number</code></strong> (integer) (required)<br>
+The number that identifies the issue.</p>
+</li>
+<li>
+<p><strong><code>artifact_number</code></strong> (integer) (required)<br>
+The artifact number within the issue.</p>
+</li>
+</ul>
+<h4 id="body-parameters-1">Body parameters<a href="#body-parameters-1" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>name</code></strong> (string)<br>
+The new human-readable name of the artifact.</p>
+</li>
+<li>
+<p><strong><code>body</code></strong> (string)<br>
+The new artifact content.</p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-3">HTTP response status codes<a href="#http-response-status-codes-3" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - The updated artifact.</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>410</strong> - Gone</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+<li>
+<p><strong>429</strong> - Artifact writes are temporarily throttled. Retry after the indicated delay.</p>
+</li>
+<li>
+<p><strong>503</strong> - Service unavailable</p>
+</li>
+</ul>
+<h3 id="code-examples-3">Code examples<a href="#code-examples-3" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-3">Example<a href="#example-3" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X PATCH \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/issues/ISSUE_NUMBER/artifacts/ARTIFACT_NUMBER \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "name": "Revised implementation plan",
+</span><span style="color:#c0c5ce;">  "body": "## Plan\n\nBuild and validate the feature."
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<p>Same response schema as <a href="#create-an-issue-artifact">Create an issue artifact</a>.</p>
+<h2 id="delete-an-issue-artifact" title="DELETE /repos/{owner}/{repo}/issues/{issue_number}/artifacts/{artifact_number} (Delete an issue artifact)" data-entry-type="Resource">Delete an issue artifact<a href="#delete-an-issue-artifact" aria-label="Link to heading 'Delete an issue artifact'" data-heading-content="Delete an issue artifact" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">DELETE /repos/{owner}/{repo}/issues/{issue_number}/artifacts/{artifact_number}
+</span></code></pre>
+<p>Permanently deletes an artifact attached to an issue.<br>
+Deleting an artifact requires permission to update the issue.<br>
+The request can return 403 if the repository is read-only or locked, or a<br>
+GitHub App installation has only issues: read permission.</p>
+<h3 id="parameters-4">Parameters<a href="#parameters-4" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-4">Headers<a href="#headers-4" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-4">Path and query parameters<a href="#path-and-query-parameters-4" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>issue_number</code></strong> (integer) (required)<br>
+The number that identifies the issue.</p>
+</li>
+<li>
+<p><strong><code>artifact_number</code></strong> (integer) (required)<br>
+The artifact number within the issue.</p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-4">HTTP response status codes<a href="#http-response-status-codes-4" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>204</strong> - The artifact was deleted successfully. No content is returned.</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>410</strong> - Gone</p>
+</li>
+<li>
+<p><strong>429</strong> - Artifact writes are temporarily throttled. Retry after the indicated delay.</p>
+</li>
+<li>
+<p><strong>503</strong> - Service unavailable</p>
+</li>
+</ul>
+<h3 id="code-examples-4">Code examples<a href="#code-examples-4" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-4">Example<a href="#example-4" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X DELETE \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/issues/ISSUE_NUMBER/artifacts/ARTIFACT_NUMBER
+</span></code></pre>
+<p><strong>Response schema (Status: 204):</strong></p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

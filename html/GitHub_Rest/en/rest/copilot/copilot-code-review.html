@@ -1,0 +1,641 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>REST API endpoints for Copilot code review</title><link rel="stylesheet" href="../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../index.html">REST API</a> / <a href="index.html">Copilot</a> / </nav><h1 id="rest-api-endpoints-for-copilot-code-review">REST API endpoints for Copilot code review<a href="#rest-api-endpoints-for-copilot-code-review" aria-label="Link to heading 'REST API endpoints for Copilot code review'" data-heading-content="REST API endpoints for Copilot code review" class="anchor"></a></h1>
+<p>Use the REST API to manage Copilot code review.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Most endpoints use <code>Authorization: Bearer &lt;YOUR-TOKEN&gt;</code> and <code>Accept: application/vnd.github+json</code> headers, plus <code>X-GitHub-Api-Version: 2026-03-10</code>. Curl examples below omit these standard headers for brevity.</p>
+</div>
+<h2 id="get-the-copilot-code-review-policy-for-an-enterprise" title="GET /enterprises/{enterprise}/copilot/policies/code-review (Get the Copilot code review policy for an enterprise)" data-entry-type="Resource">Get the Copilot code review policy for an enterprise<a href="#get-the-copilot-code-review-policy-for-an-enterprise" aria-label="Link to heading 'Get the Copilot code review policy for an enterprise'" data-heading-content="Get the Copilot code review policy for an enterprise" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /enterprises/{enterprise}/copilot/policies/code-review
+</span></code></pre>
+<p>Gets the configured Copilot code review policy for an enterprise.<br>
+This does not return a user's effective access, preview approval controls, or automatic-review rulesets.<br>
+Enterprise owners and users with the read_enterprise_ai_controls permission can use this endpoint.<br>
+OAuth app tokens and personal access tokens (classic) need the read:enterprise scope.<br>
+GitHub App tokens and fine-grained personal access tokens are not supported.</p>
+<h3 id="parameters">Parameters<a href="#parameters" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers">Headers<a href="#headers" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters">Path and query parameters<a href="#path-and-query-parameters" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li><strong><code>enterprise</code></strong> (string) (required)<br>
+The slug version of the enterprise name.</li>
+</ul>
+<h3 id="http-response-status-codes">HTTP response status codes<a href="#http-response-status-codes" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - The configured enterprise policy.</p>
+</li>
+<li>
+<p><strong>401</strong> - Requires authentication</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+</ul>
+<h3 id="code-examples">Code examples<a href="#code-examples" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example">Example<a href="#example" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X GET \
+</span><span style="color:#c0c5ce;">  https://api.github.com/enterprises/ENTERPRISE/copilot/policies/code-review
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<ul>
+<li><code>policy_state</code>: required, string or null, enum: <code>enabled_for_all_organizations</code>, <code>disabled_for_all_organizations</code>, <code>configured_by_organization_admins</code>, <code>null</code></li>
+</ul>
+<h2 id="set-the-copilot-code-review-policy-for-an-enterprise" title="PUT /enterprises/{enterprise}/copilot/policies/code-review (Set the Copilot code review policy for an enterprise)" data-entry-type="Resource">Set the Copilot code review policy for an enterprise<a href="#set-the-copilot-code-review-policy-for-an-enterprise" aria-label="Link to heading 'Set the Copilot code review policy for an enterprise'" data-heading-content="Set the Copilot code review policy for an enterprise" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PUT /enterprises/{enterprise}/copilot/policies/code-review
+</span></code></pre>
+<p>Sets the configured Copilot code review policy for an enterprise, using the same<br>
+asynchronous propagation and notifications as enterprise settings. Policies that<br>
+depend on Copilot code review keep their values.<br>
+Enterprise owners and users with the write_enterprise_ai_controls permission can use this endpoint.<br>
+OAuth app tokens and personal access tokens (classic) need the admin:enterprise scope.<br>
+GitHub App tokens and fine-grained personal access tokens are not supported.<br>
+Standalone enterprises support enabled and disabled policies, but cannot delegate<br>
+policy to organization administrators. Invalid or unsupported input does not change any policy.</p>
+<h3 id="parameters-1">Parameters<a href="#parameters-1" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-1">Headers<a href="#headers-1" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-1">Path and query parameters<a href="#path-and-query-parameters-1" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li><strong><code>enterprise</code></strong> (string) (required)<br>
+The slug version of the enterprise name.</li>
+</ul>
+<h4 id="body-parameters">Body parameters<a href="#body-parameters" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li><strong><code>policy_state</code></strong> (string) (required)<br>
+The enterprise's Copilot code review policy.<br>
+Can be one of: <code>enabled_for_all_organizations</code>, <code>disabled_for_all_organizations</code>, <code>configured_by_organization_admins</code></li>
+</ul>
+<h3 id="http-response-status-codes-1">HTTP response status codes<a href="#http-response-status-codes-1" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>204</strong> - A header with no content is returned.</p>
+</li>
+<li>
+<p><strong>400</strong> - Bad Request</p>
+</li>
+<li>
+<p><strong>401</strong> - Requires authentication</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+</ul>
+<h3 id="code-examples-1">Code examples<a href="#code-examples-1" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-1">Example<a href="#example-1" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X PUT \
+</span><span style="color:#c0c5ce;">  https://api.github.com/enterprises/ENTERPRISE/copilot/policies/code-review \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "policy_state": "enabled_for_all_organizations"
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 204):</strong></p>
+<h2 id="get-the-copilot-code-review-runner-configuration-for-an-organization" title="GET /orgs/{org}/copilot/code-review/runner (Get the Copilot code review runner configuration for an organization)" data-entry-type="Resource">Get the Copilot code review runner configuration for an organization<a href="#get-the-copilot-code-review-runner-configuration-for-an-organization" aria-label="Link to heading 'Get the Copilot code review runner configuration for an organization'" data-heading-content="Get the Copilot code review runner configuration for an organization" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /orgs/{org}/copilot/code-review/runner
+</span></code></pre>
+<p>Gets the runner configuration that Copilot code review uses for an organization.<br>
+Until the organization saves a Copilot code review runner configuration, the response reports the values<br>
+inherited from the organization's Copilot coding agent runner configuration, with configured_by set to coding_agent.<br>
+Organization owners can use this endpoint.<br>
+OAuth app tokens and personal access tokens (classic) need either the<br>
+manage_billing:copilot or read:org scope.<br>
+GitHub App tokens and fine-grained personal access tokens are not supported.</p>
+<h3 id="parameters-2">Parameters<a href="#parameters-2" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-2">Headers<a href="#headers-2" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-2">Path and query parameters<a href="#path-and-query-parameters-2" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li><strong><code>org</code></strong> (string) (required)<br>
+The organization name. The name is not case sensitive.</li>
+</ul>
+<h3 id="http-response-status-codes-2">HTTP response status codes<a href="#http-response-status-codes-2" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - The organization runner configuration.</p>
+</li>
+<li>
+<p><strong>401</strong> - Requires authentication</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>503</strong> - Service unavailable</p>
+</li>
+</ul>
+<h3 id="code-examples-2">Code examples<a href="#code-examples-2" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-2">Example<a href="#example-2" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X GET \
+</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/copilot/code-review/runner
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<ul>
+<li><code>runner_type</code>: required, string, enum: <code>standard</code>, <code>labeled</code></li>
+<li><code>runner_labels</code>: required, array of string</li>
+<li><code>runner_group_name</code>: required, string or null</li>
+<li><code>allow_repository_customization</code>: required, boolean</li>
+<li><code>configured_by</code>: required, string, enum: <code>code_review</code>, <code>coding_agent</code></li>
+</ul>
+<h2 id="set-the-copilot-code-review-runner-configuration-for-an-organization" title="PUT /orgs/{org}/copilot/code-review/runner (Set the Copilot code review runner configuration for an organization)" data-entry-type="Resource">Set the Copilot code review runner configuration for an organization<a href="#set-the-copilot-code-review-runner-configuration-for-an-organization" aria-label="Link to heading 'Set the Copilot code review runner configuration for an organization'" data-heading-content="Set the Copilot code review runner configuration for an organization" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PUT /orgs/{org}/copilot/code-review/runner
+</span></code></pre>
+<p>Sets the runner configuration that Copilot code review uses for an organization. After a successful<br>
+update, Copilot code review uses its own runner configuration and configured_by is code_review.<br>
+A labeled runner requires at least one label in runner_labels or a runner_group_name. A standard<br>
+runner does not accept labels or a runner group. When allow_repository_customization is omitted, the current<br>
+effective value is kept. The whole request is validated before any change is made, so invalid input does not<br>
+change the configuration.<br>
+Organization owners can use this endpoint.<br>
+OAuth app tokens and personal access tokens (classic) need either the<br>
+manage_billing:copilot or admin:org scope.<br>
+GitHub App tokens and fine-grained personal access tokens are not supported.</p>
+<h3 id="parameters-3">Parameters<a href="#parameters-3" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-3">Headers<a href="#headers-3" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-3">Path and query parameters<a href="#path-and-query-parameters-3" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li><strong><code>org</code></strong> (string) (required)<br>
+The organization name. The name is not case sensitive.</li>
+</ul>
+<h4 id="body-parameters-1">Body parameters<a href="#body-parameters-1" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>runner_type</code></strong> (string) (required)<br>
+The type of runner. standard uses GitHub-hosted runners. labeled uses runners that match the labels or runner group.<br>
+Can be one of: <code>standard</code>, <code>labeled</code></p>
+</li>
+<li>
+<p><strong><code>runner_labels</code></strong> (array of strings or null)<br>
+The runner labels for a labeled runner.</p>
+</li>
+<li>
+<p><strong><code>runner_group_name</code></strong> (string or null)<br>
+The runner group for a labeled runner.</p>
+</li>
+<li>
+<p><strong><code>allow_repository_customization</code></strong> (boolean)<br>
+Whether repositories can use their own runner configuration.</p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-3">HTTP response status codes<a href="#http-response-status-codes-3" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - The updated organization runner configuration.</p>
+</li>
+<li>
+<p><strong>400</strong> - Bad Request</p>
+</li>
+<li>
+<p><strong>401</strong> - Requires authentication</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+<li>
+<p><strong>503</strong> - Service unavailable</p>
+</li>
+</ul>
+<h3 id="code-examples-3">Code examples<a href="#code-examples-3" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-3">Example<a href="#example-3" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X PUT \
+</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/copilot/code-review/runner \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "runner_type": "labeled",
+</span><span style="color:#c0c5ce;">  "runner_labels": [
+</span><span style="color:#c0c5ce;">    "copilot-review"
+</span><span style="color:#c0c5ce;">  ],
+</span><span style="color:#c0c5ce;">  "runner_group_name": "copilot-runners",
+</span><span style="color:#c0c5ce;">  "allow_repository_customization": false
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<p>Same response schema as <a href="#get-the-copilot-code-review-runner-configuration-for-an-organization">Get the Copilot code review runner configuration for an organization</a>.</p>
+<h2 id="get-copilot-code-review-settings-for-an-organization" title="GET /orgs/{org}/copilot/code-review/settings (Get Copilot code review settings for an organization)" data-entry-type="Resource">Get Copilot code review settings for an organization<a href="#get-copilot-code-review-settings-for-an-organization" aria-label="Link to heading 'Get Copilot code review settings for an organization'" data-heading-content="Get Copilot code review settings for an organization" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /orgs/{org}/copilot/code-review/settings
+</span></code></pre>
+<p>Gets the Copilot code review settings for an organization. Currently this is the default review effort<br>
+that repositories in the organization use when they do not choose their own.<br>
+For each setting, the response includes the configured value, the effective value, the default inherited<br>
+when nothing is configured, whether organization administrators can edit it, and whether the enterprise<br>
+or the organization manages it.<br>
+Organization owners can use this endpoint.<br>
+OAuth app tokens and personal access tokens (classic) need either the<br>
+manage_billing:copilot or read:org scope.<br>
+GitHub App tokens and fine-grained personal access tokens are not supported.</p>
+<h3 id="parameters-4">Parameters<a href="#parameters-4" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-4">Headers<a href="#headers-4" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-4">Path and query parameters<a href="#path-and-query-parameters-4" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li><strong><code>org</code></strong> (string) (required)<br>
+The organization name. The name is not case sensitive.</li>
+</ul>
+<h3 id="http-response-status-codes-4">HTTP response status codes<a href="#http-response-status-codes-4" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - The organization settings.</p>
+</li>
+<li>
+<p><strong>401</strong> - Requires authentication</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>503</strong> - Service unavailable</p>
+</li>
+</ul>
+<h3 id="code-examples-4">Code examples<a href="#code-examples-4" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-4">Example<a href="#example-4" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X GET \
+</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/copilot/code-review/settings
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<ul>
+<li><code>default_review_effort</code>: required, object:
+<ul>
+<li><code>configured</code>: required, string or null</li>
+<li><code>effective</code>: required, string</li>
+<li><code>github_default</code>: required, string</li>
+<li><code>editable</code>: required, boolean</li>
+<li><code>managed_by</code>: required, string, enum: <code>enterprise</code>, <code>organization</code></li>
+</ul>
+</li>
+<li><code>available_review_efforts</code>: required, array of string</li>
+</ul>
+<h2 id="update-copilot-code-review-settings-for-an-organization" title="PATCH /orgs/{org}/copilot/code-review/settings (Update Copilot code review settings for an organization)" data-entry-type="Resource">Update Copilot code review settings for an organization<a href="#update-copilot-code-review-settings-for-an-organization" aria-label="Link to heading 'Update Copilot code review settings for an organization'" data-heading-content="Update Copilot code review settings for an organization" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PATCH /orgs/{org}/copilot/code-review/settings
+</span></code></pre>
+<p>Updates the Copilot code review settings for an organization. Omitted settings are not changed.<br>
+Set default_review_effort to inherit to clear the organization's value so repositories use the<br>
+inherited default again. Changes use the same audit logging and telemetry as organization settings.<br>
+Organization owners can use this endpoint.<br>
+OAuth app tokens and personal access tokens (classic) need either the<br>
+manage_billing:copilot or admin:org scope.<br>
+GitHub App tokens and fine-grained personal access tokens are not supported.<br>
+When a submitted setting cannot be changed by the organization, the request fails with 409 and the<br>
+code SETTING_NOT_EDITABLE. The whole request is validated before any change is made, so invalid input<br>
+and conflicts do not change any setting.</p>
+<h3 id="parameters-5">Parameters<a href="#parameters-5" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-5">Headers<a href="#headers-5" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-5">Path and query parameters<a href="#path-and-query-parameters-5" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li><strong><code>org</code></strong> (string) (required)<br>
+The organization name. The name is not case sensitive.</li>
+</ul>
+<h4 id="body-parameters-2">Body parameters<a href="#body-parameters-2" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li><strong><code>default_review_effort</code></strong> (string)<br>
+The default review effort for repositories that do not choose their own. Use inherit to clear the organization's value. Only efforts listed in the settings' available_review_efforts are accepted, and a rejected effort's error message lists them. For more information, see Review effort level.</li>
+</ul>
+<h3 id="http-response-status-codes-5">HTTP response status codes<a href="#http-response-status-codes-5" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - The updated organization settings.</p>
+</li>
+<li>
+<p><strong>400</strong> - Bad Request</p>
+</li>
+<li>
+<p><strong>401</strong> - Requires authentication</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>409</strong> - The organization cannot change a submitted setting.</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+<li>
+<p><strong>503</strong> - Service unavailable</p>
+</li>
+</ul>
+<h3 id="code-examples-5">Code examples<a href="#code-examples-5" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-5">Example<a href="#example-5" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X PATCH \
+</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/copilot/code-review/settings \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "default_review_effort": "balanced"
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<p>Same response schema as <a href="#get-copilot-code-review-settings-for-an-organization">Get Copilot code review settings for an organization</a>.</p>
+<h2 id="get-the-copilot-code-review-policy-for-an-organization" title="GET /orgs/{org}/copilot/policies/code-review (Get the Copilot code review policy for an organization)" data-entry-type="Resource">Get the Copilot code review policy for an organization<a href="#get-the-copilot-code-review-policy-for-an-organization" aria-label="Link to heading 'Get the Copilot code review policy for an organization'" data-heading-content="Get the Copilot code review policy for an organization" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /orgs/{org}/copilot/policies/code-review
+</span></code></pre>
+<p>Gets the configured and effective Copilot code review policy for an organization,<br>
+whether organization administrators can edit it, and whether the enterprise or the organization manages it.<br>
+This does not return review effort, repository settings, preview approval controls, or automatic-review rulesets.<br>
+Organization owners can use this endpoint.<br>
+OAuth app tokens and personal access tokens (classic) need either the<br>
+manage_billing:copilot or read:org scope.<br>
+GitHub App tokens and fine-grained personal access tokens are not supported.</p>
+<h3 id="parameters-6">Parameters<a href="#parameters-6" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-6">Headers<a href="#headers-6" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-6">Path and query parameters<a href="#path-and-query-parameters-6" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li><strong><code>org</code></strong> (string) (required)<br>
+The organization name. The name is not case sensitive.</li>
+</ul>
+<h3 id="http-response-status-codes-6">HTTP response status codes<a href="#http-response-status-codes-6" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - The organization policy.</p>
+</li>
+<li>
+<p><strong>401</strong> - Requires authentication</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+</ul>
+<h3 id="code-examples-6">Code examples<a href="#code-examples-6" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-6">Example<a href="#example-6" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X GET \
+</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/copilot/policies/code-review
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<ul>
+<li><code>configured_state</code>: required, string or null, enum: <code>enabled</code>, <code>disabled</code>, <code>null</code></li>
+<li><code>effective_state</code>: required, string, enum: <code>enabled</code>, <code>disabled</code></li>
+<li><code>editable</code>: required, boolean</li>
+<li><code>managed_by</code>: required, string, enum: <code>enterprise</code>, <code>organization</code></li>
+</ul>
+<h2 id="set-the-copilot-code-review-policy-for-an-organization" title="PUT /orgs/{org}/copilot/policies/code-review (Set the Copilot code review policy for an organization)" data-entry-type="Resource">Set the Copilot code review policy for an organization<a href="#set-the-copilot-code-review-policy-for-an-organization" aria-label="Link to heading 'Set the Copilot code review policy for an organization'" data-heading-content="Set the Copilot code review policy for an organization" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PUT /orgs/{org}/copilot/policies/code-review
+</span></code></pre>
+<p>Sets the Copilot code review policy for an organization, using the same<br>
+user settings propagation and notifications as organization settings. Policies that<br>
+depend on Copilot code review keep their values.<br>
+Organization owners can use this endpoint.<br>
+OAuth app tokens and personal access tokens (classic) need either the<br>
+manage_billing:copilot or admin:org scope.<br>
+GitHub App tokens and fine-grained personal access tokens are not supported.<br>
+When the enterprise manages the policy, the request fails with 409 and the code<br>
+POLICY_MANAGED_BY_ENTERPRISE, even if the requested state matches the effective state.<br>
+Invalid input and conflicts do not change any policy.</p>
+<h3 id="parameters-7">Parameters<a href="#parameters-7" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-7">Headers<a href="#headers-7" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-7">Path and query parameters<a href="#path-and-query-parameters-7" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li><strong><code>org</code></strong> (string) (required)<br>
+The organization name. The name is not case sensitive.</li>
+</ul>
+<h4 id="body-parameters-3">Body parameters<a href="#body-parameters-3" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li><strong><code>state</code></strong> (string) (required)<br>
+The organization's Copilot code review policy.<br>
+Can be one of: <code>enabled</code>, <code>disabled</code></li>
+</ul>
+<h3 id="http-response-status-codes-7">HTTP response status codes<a href="#http-response-status-codes-7" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>204</strong> - A header with no content is returned.</p>
+</li>
+<li>
+<p><strong>400</strong> - Bad Request</p>
+</li>
+<li>
+<p><strong>401</strong> - Requires authentication</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>409</strong> - The enterprise manages the policy.</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+</ul>
+<h3 id="code-examples-7">Code examples<a href="#code-examples-7" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-7">Example<a href="#example-7" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X PUT \
+</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/copilot/policies/code-review \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "state": "enabled"
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 204):</strong></p>
+<h2 id="get-copilot-code-review-settings-for-a-repository" title="GET /repos/{owner}/{repo}/copilot/code-review/settings (Get Copilot code review settings for a repository)" data-entry-type="Resource">Get Copilot code review settings for a repository<a href="#get-copilot-code-review-settings-for-a-repository" aria-label="Link to heading 'Get Copilot code review settings for a repository'" data-heading-content="Get Copilot code review settings for a repository" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /repos/{owner}/{repo}/copilot/code-review/settings
+</span></code></pre>
+<p>Gets the Copilot code review settings for a repository. These settings tune how Copilot code review<br>
+reviews pull requests in the repository. They do not enable Copilot code review.<br>
+review_effort.configured is null when the repository inherits its review effort from the organization,<br>
+the enterprise, or GitHub's default. review_effort.effective is the review effort that reviews use when the<br>
+requester and the pull request do not choose one. Only review efforts available for the repository are reported;<br>
+when reviews would use an unavailable effort, review_effort.effective is the review effort they would use without it.<br>
+Repository administrators can use this endpoint.<br>
+OAuth app tokens and personal access tokens (classic) need the repo scope to use this endpoint.</p>
+<h3 id="parameters-8">Parameters<a href="#parameters-8" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-8">Headers<a href="#headers-8" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-8">Path and query parameters<a href="#path-and-query-parameters-8" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-8">HTTP response status codes<a href="#http-response-status-codes-8" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - The repository settings.</p>
+</li>
+<li>
+<p><strong>401</strong> - Requires authentication</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+</ul>
+<h3 id="code-examples-8">Code examples<a href="#code-examples-8" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-8">Example<a href="#example-8" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X GET \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/copilot/code-review/settings
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<ul>
+<li><code>review_effort</code>: required, object:
+<ul>
+<li><code>configured</code>: required, string or null</li>
+<li><code>effective</code>: required, string</li>
+</ul>
+</li>
+<li><code>available_review_efforts</code>: required, array of string</li>
+<li><code>severity_filter</code>: required, string, enum: <code>no_filter</code>, <code>low</code>, <code>low_and_medium</code></li>
+<li><code>custom_instructions_enabled</code>: required, boolean</li>
+<li><code>mcp_enabled</code>: required, boolean</li>
+</ul>
+<h2 id="update-copilot-code-review-settings-for-a-repository" title="PATCH /repos/{owner}/{repo}/copilot/code-review/settings (Update Copilot code review settings for a repository)" data-entry-type="Resource">Update Copilot code review settings for a repository<a href="#update-copilot-code-review-settings-for-a-repository" aria-label="Link to heading 'Update Copilot code review settings for a repository'" data-heading-content="Update Copilot code review settings for a repository" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PATCH /repos/{owner}/{repo}/copilot/code-review/settings
+</span></code></pre>
+<p>Updates the Copilot code review settings for a repository. These settings tune how Copilot code review<br>
+reviews pull requests in the repository. They do not enable Copilot code review, and they can be stored<br>
+while an enterprise or organization policy disables Copilot code review.<br>
+Omitted settings are not changed. Set review_effort to inherit to clear the repository's review effort<br>
+so it inherits the effort from the organization, the enterprise, or GitHub's default. The whole request is<br>
+validated before any change is made, so invalid input does not change any setting. Changes use the same<br>
+audit logging and telemetry as the repository settings page.<br>
+Repository administrators can use this endpoint.<br>
+OAuth app tokens and personal access tokens (classic) need the repo scope to use this endpoint.</p>
+<h3 id="parameters-9">Parameters<a href="#parameters-9" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-9">Headers<a href="#headers-9" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-9">Path and query parameters<a href="#path-and-query-parameters-9" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+</ul>
+<h4 id="body-parameters-4">Body parameters<a href="#body-parameters-4" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>review_effort</code></strong> (string)<br>
+The review effort for the repository. Use inherit to clear the repository's value. Only efforts listed in the settings' available_review_efforts are accepted, and a rejected effort's error message lists them. For more information, see Review effort level.</p>
+</li>
+<li>
+<p><strong><code>severity_filter</code></strong> (string)<br>
+Which review comment severities Copilot code review leaves out. Can only be set when the severity filter is available for the repository.<br>
+Can be one of: <code>no_filter</code>, <code>low</code>, <code>low_and_medium</code></p>
+</li>
+<li>
+<p><strong><code>custom_instructions_enabled</code></strong> (boolean)<br>
+Whether reviews use the repository's custom instructions.</p>
+</li>
+<li>
+<p><strong><code>mcp_enabled</code></strong> (boolean)<br>
+Whether reviews can use MCP servers.</p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-9">HTTP response status codes<a href="#http-response-status-codes-9" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - The updated repository settings.</p>
+</li>
+<li>
+<p><strong>400</strong> - Bad Request</p>
+</li>
+<li>
+<p><strong>401</strong> - Requires authentication</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+</ul>
+<h3 id="code-examples-9">Code examples<a href="#code-examples-9" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-9">Example<a href="#example-9" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X PATCH \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/copilot/code-review/settings \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "review_effort": "balanced",
+</span><span style="color:#c0c5ce;">  "severity_filter": "low"
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<p>Same response schema as <a href="#get-copilot-code-review-settings-for-a-repository">Get Copilot code review settings for a repository</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

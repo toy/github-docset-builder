@@ -22,6 +22,15 @@
 <li><code>LITE</code>: Lower effort, faster review.</li>
 <li><code>MAX</code>: Highest effort, deepest review.</li>
 </ul>
+<h2 id="copilotcoderevieweffortlevel---enum" title="CopilotCodeReviewEffortLevel - enum" data-entry-type="Section">CopilotCodeReviewEffortLevel - enum<a href="#copilotcoderevieweffortlevel---enum" aria-label="Link to heading 'CopilotCodeReviewEffortLevel - enum'" data-heading-content="CopilotCodeReviewEffortLevel - enum" class="anchor"></a></h2>
+<p>A Copilot code review effort level. For more information, see Review effort level.</p>
+<h3 id="values-for-copilotcoderevieweffortlevel">Values for <code>CopilotCodeReviewEffortLevel</code><a href="#values-for-copilotcoderevieweffortlevel" aria-label="Link to heading 'Values for CopilotCodeReviewEffortLevel'" data-heading-content="Values for CopilotCodeReviewEffortLevel" class="anchor"></a></h3>
+<ul>
+<li><code>AUTO</code>: Copilot picks the effort for each pull request.</li>
+<li><code>BALANCED</code>: Balanced effort and depth.</li>
+<li><code>LITE</code>: Lower effort, faster review.</li>
+<li><code>MAX</code>: Highest effort, deepest review.</li>
+</ul>
 <h2 id="copilotcodereviewrequestreason---enum" title="CopilotCodeReviewRequestReason - enum" data-entry-type="Section">CopilotCodeReviewRequestReason - enum<a href="#copilotcodereviewrequestreason---enum" aria-label="Link to heading 'CopilotCodeReviewRequestReason - enum'" data-heading-content="CopilotCodeReviewRequestReason - enum" class="anchor"></a></h2>
 <p>The stable reason a Copilot code review request was denied or conflicted with an existing request.</p>
 <h3 id="values-for-copilotcodereviewrequestreason">Values for <code>CopilotCodeReviewRequestReason</code><a href="#values-for-copilotcodereviewrequestreason" aria-label="Link to heading 'Values for CopilotCodeReviewRequestReason'" data-heading-content="Values for CopilotCodeReviewRequestReason" class="anchor"></a></h3>
@@ -33,6 +42,28 @@
 <li><code>REPOSITORY_INELIGIBLE</code>: The repository is not eligible for Copilot code reviews.</li>
 <li><code>REQUEST_CONFLICT</code>: A Copilot code review request is already pending for this pull request.</li>
 </ul>
+<h2 id="copilotcodereviewrunnerconfiguredby---enum" title="CopilotCodeReviewRunnerConfiguredBy - enum" data-entry-type="Section">CopilotCodeReviewRunnerConfiguredBy - enum<a href="#copilotcodereviewrunnerconfiguredby---enum" aria-label="Link to heading 'CopilotCodeReviewRunnerConfiguredBy - enum'" data-heading-content="CopilotCodeReviewRunnerConfiguredBy - enum" class="anchor"></a></h2>
+<p>Which configuration an organization's Copilot code review runner values come from.</p>
+<h3 id="values-for-copilotcodereviewrunnerconfiguredby">Values for <code>CopilotCodeReviewRunnerConfiguredBy</code><a href="#values-for-copilotcodereviewrunnerconfiguredby" aria-label="Link to heading 'Values for CopilotCodeReviewRunnerConfiguredBy'" data-heading-content="Values for CopilotCodeReviewRunnerConfiguredBy" class="anchor"></a></h3>
+<ul>
+<li><code>CODE_REVIEW</code>: The organization has saved a Copilot code review runner configuration.</li>
+<li><code>CODING_AGENT</code>: The values are inherited from the organization's Copilot coding agent runner configuration.</li>
+</ul>
+<h2 id="copilotcodereviewrunnertype---enum" title="CopilotCodeReviewRunnerType - enum" data-entry-type="Section">CopilotCodeReviewRunnerType - enum<a href="#copilotcodereviewrunnertype---enum" aria-label="Link to heading 'CopilotCodeReviewRunnerType - enum'" data-heading-content="CopilotCodeReviewRunnerType - enum" class="anchor"></a></h2>
+<p>The type of runner Copilot code review uses.</p>
+<h3 id="values-for-copilotcodereviewrunnertype">Values for <code>CopilotCodeReviewRunnerType</code><a href="#values-for-copilotcodereviewrunnertype" aria-label="Link to heading 'Values for CopilotCodeReviewRunnerType'" data-heading-content="Values for CopilotCodeReviewRunnerType" class="anchor"></a></h3>
+<ul>
+<li><code>LABELED</code>: Runners that match the configured labels or runner group.</li>
+<li><code>STANDARD</code>: Standard GitHub-hosted runners.</li>
+</ul>
+<h2 id="copilotcodereviewseverityfilter---enum" title="CopilotCodeReviewSeverityFilter - enum" data-entry-type="Section">CopilotCodeReviewSeverityFilter - enum<a href="#copilotcodereviewseverityfilter---enum" aria-label="Link to heading 'CopilotCodeReviewSeverityFilter - enum'" data-heading-content="CopilotCodeReviewSeverityFilter - enum" class="anchor"></a></h2>
+<p>Which review comment severities Copilot code review leaves out.</p>
+<h3 id="values-for-copilotcodereviewseverityfilter">Values for <code>CopilotCodeReviewSeverityFilter</code><a href="#values-for-copilotcodereviewseverityfilter" aria-label="Link to heading 'Values for CopilotCodeReviewSeverityFilter'" data-heading-content="Values for CopilotCodeReviewSeverityFilter" class="anchor"></a></h3>
+<ul>
+<li><code>LOW</code>: Leave out low-severity comments.</li>
+<li><code>LOW_AND_MEDIUM</code>: Leave out low- and medium-severity comments.</li>
+<li><code>NO_FILTER</code>: Keep every comment.</li>
+</ul>
 <h2 id="copilotendpoints---object" title="CopilotEndpoints - object" data-entry-type="Section">CopilotEndpoints - object<a href="#copilotendpoints---object" aria-label="Link to heading 'CopilotEndpoints - object'" data-heading-content="CopilotEndpoints - object" class="anchor"></a></h2>
 <p>Copilot endpoint information.</p>
 <h3 id="fields-for-copilotendpoints">Fields for <code>CopilotEndpoints</code><a href="#fields-for-copilotendpoints" aria-label="Link to heading 'Fields for CopilotEndpoints'" data-heading-content="Fields for CopilotEndpoints" class="anchor"></a></h3>
@@ -42,5 +73,232 @@
 <li><code>originTracker</code> (String!): Copilot origin tracker endpoint.</li>
 <li><code>proxy</code> (String!): Copilot proxy endpoint.</li>
 <li><code>telemetry</code> (String!): Copilot telemetry endpoint.</li>
+</ul>
+<h2 id="enterprisecopilotcodereviewpolicy---object" title="EnterpriseCopilotCodeReviewPolicy - object" data-entry-type="Section">EnterpriseCopilotCodeReviewPolicy - object<a href="#enterprisecopilotcodereviewpolicy---object" aria-label="Link to heading 'EnterpriseCopilotCodeReviewPolicy - object'" data-heading-content="EnterpriseCopilotCodeReviewPolicy - object" class="anchor"></a></h2>
+<p>The enterprise's configured Copilot code review policy, not a user's effective policy.</p>
+<h3 id="fields-for-enterprisecopilotcodereviewpolicy">Fields for <code>EnterpriseCopilotCodeReviewPolicy</code><a href="#fields-for-enterprisecopilotcodereviewpolicy" aria-label="Link to heading 'Fields for EnterpriseCopilotCodeReviewPolicy'" data-heading-content="Fields for EnterpriseCopilotCodeReviewPolicy" class="anchor"></a></h3>
+<ul>
+<li><code>policyState</code> (EnterpriseCopilotCodeReviewPolicyState): The configured policy. Null if the enterprise has not configured a policy.</li>
+</ul>
+<h2 id="enterprisecopilotcodereviewpolicystate---enum" title="EnterpriseCopilotCodeReviewPolicyState - enum" data-entry-type="Section">EnterpriseCopilotCodeReviewPolicyState - enum<a href="#enterprisecopilotcodereviewpolicystate---enum" aria-label="Link to heading 'EnterpriseCopilotCodeReviewPolicyState - enum'" data-heading-content="EnterpriseCopilotCodeReviewPolicyState - enum" class="anchor"></a></h2>
+<p>The configured Copilot code review policy for an enterprise.</p>
+<h3 id="values-for-enterprisecopilotcodereviewpolicystate">Values for <code>EnterpriseCopilotCodeReviewPolicyState</code><a href="#values-for-enterprisecopilotcodereviewpolicystate" aria-label="Link to heading 'Values for EnterpriseCopilotCodeReviewPolicyState'" data-heading-content="Values for EnterpriseCopilotCodeReviewPolicyState" class="anchor"></a></h3>
+<ul>
+<li><code>CONFIGURED_BY_ORGANIZATION_ADMINS</code>: Organization administrators configure Copilot code review. Not supported for standalone enterprises.</li>
+<li><code>DISABLED_FOR_ALL_ORGANIZATIONS</code>: Copilot code review is disabled for all organizations.</li>
+<li><code>ENABLED_FOR_ALL_ORGANIZATIONS</code>: Copilot code review is enabled for all organizations.</li>
+</ul>
+<h2 id="organizationcopilotcodereviewdefaulteffort---object" title="OrganizationCopilotCodeReviewDefaultEffort - object" data-entry-type="Section">OrganizationCopilotCodeReviewDefaultEffort - object<a href="#organizationcopilotcodereviewdefaulteffort---object" aria-label="Link to heading 'OrganizationCopilotCodeReviewDefaultEffort - object'" data-heading-content="OrganizationCopilotCodeReviewDefaultEffort - object" class="anchor"></a></h2>
+<p>An organization's default Copilot code review effort.</p>
+<h3 id="fields-for-organizationcopilotcodereviewdefaulteffort">Fields for <code>OrganizationCopilotCodeReviewDefaultEffort</code><a href="#fields-for-organizationcopilotcodereviewdefaulteffort" aria-label="Link to heading 'Fields for OrganizationCopilotCodeReviewDefaultEffort'" data-heading-content="Fields for OrganizationCopilotCodeReviewDefaultEffort" class="anchor"></a></h3>
+<ul>
+<li><code>configured</code> (CopilotCodeReviewEffortLevel): The effort stored for the organization. Null if the organization inherits the<br>
+default or has stored an effort that is not currently available.</li>
+<li><code>editable</code> (Boolean!): Whether organization administrators can update the setting.</li>
+<li><code>effective</code> (CopilotCodeReviewEffortLevel!): The effort that repositories without their own setting use. When that effort<br>
+is not currently available, this reports the fallback effort instead.</li>
+<li><code>githubDefault</code> (CopilotCodeReviewEffortLevel!): The effort the organization inherits when it does not configure one: the<br>
+enterprise default when one applies, otherwise GitHub's default.</li>
+<li><code>managedBy</code> (OrganizationCopilotCodeReviewPolicyManager!): Whether the enterprise or the organization controls the setting.</li>
+</ul>
+<h2 id="organizationcopilotcoderevieweffortsetting---enum" title="OrganizationCopilotCodeReviewEffortSetting - enum" data-entry-type="Section">OrganizationCopilotCodeReviewEffortSetting - enum<a href="#organizationcopilotcoderevieweffortsetting---enum" aria-label="Link to heading 'OrganizationCopilotCodeReviewEffortSetting - enum'" data-heading-content="OrganizationCopilotCodeReviewEffortSetting - enum" class="anchor"></a></h2>
+<p>The default Copilot code review effort to set for an organization. For more<br>
+information, see Review effort level.</p>
+<h3 id="values-for-organizationcopilotcoderevieweffortsetting">Values for <code>OrganizationCopilotCodeReviewEffortSetting</code><a href="#values-for-organizationcopilotcoderevieweffortsetting" aria-label="Link to heading 'Values for OrganizationCopilotCodeReviewEffortSetting'" data-heading-content="Values for OrganizationCopilotCodeReviewEffortSetting" class="anchor"></a></h3>
+<ul>
+<li><code>AUTO</code>: Copilot picks the effort for each pull request.</li>
+<li><code>BALANCED</code>: Balanced effort and depth.</li>
+<li><code>INHERIT</code>: Clear the organization's value so repositories inherit the default.</li>
+<li><code>LITE</code>: Lower effort, faster review.</li>
+<li><code>MAX</code>: Highest effort, deepest review.</li>
+</ul>
+<h2 id="organizationcopilotcodereviewpolicy---object" title="OrganizationCopilotCodeReviewPolicy - object" data-entry-type="Section">OrganizationCopilotCodeReviewPolicy - object<a href="#organizationcopilotcodereviewpolicy---object" aria-label="Link to heading 'OrganizationCopilotCodeReviewPolicy - object'" data-heading-content="OrganizationCopilotCodeReviewPolicy - object" class="anchor"></a></h2>
+<p>The organization's configured and effective Copilot code review policy.</p>
+<h3 id="fields-for-organizationcopilotcodereviewpolicy">Fields for <code>OrganizationCopilotCodeReviewPolicy</code><a href="#fields-for-organizationcopilotcodereviewpolicy" aria-label="Link to heading 'Fields for OrganizationCopilotCodeReviewPolicy'" data-heading-content="Fields for OrganizationCopilotCodeReviewPolicy" class="anchor"></a></h3>
+<ul>
+<li><code>configuredState</code> (OrganizationCopilotCodeReviewPolicyState): The policy stored for the organization. Null if the organization has not configured a policy.</li>
+<li><code>editable</code> (Boolean!): Whether organization administrators can update the policy.</li>
+<li><code>effectiveState</code> (OrganizationCopilotCodeReviewPolicyState!): The policy that applies to the organization after enterprise policy is considered.</li>
+<li><code>managedBy</code> (OrganizationCopilotCodeReviewPolicyManager!): Whether the enterprise or the organization controls the policy.</li>
+</ul>
+<h2 id="organizationcopilotcodereviewpolicyconflict---enum" title="OrganizationCopilotCodeReviewPolicyConflict - enum" data-entry-type="Section">OrganizationCopilotCodeReviewPolicyConflict - enum<a href="#organizationcopilotcodereviewpolicyconflict---enum" aria-label="Link to heading 'OrganizationCopilotCodeReviewPolicyConflict - enum'" data-heading-content="OrganizationCopilotCodeReviewPolicyConflict - enum" class="anchor"></a></h2>
+<p>Why an organization's Copilot code review policy was not updated.</p>
+<h3 id="values-for-organizationcopilotcodereviewpolicyconflict">Values for <code>OrganizationCopilotCodeReviewPolicyConflict</code><a href="#values-for-organizationcopilotcodereviewpolicyconflict" aria-label="Link to heading 'Values for OrganizationCopilotCodeReviewPolicyConflict'" data-heading-content="Values for OrganizationCopilotCodeReviewPolicyConflict" class="anchor"></a></h3>
+<ul>
+<li><code>POLICY_MANAGED_BY_ENTERPRISE</code>: The enterprise policy controls the organization's policy.</li>
+</ul>
+<h2 id="organizationcopilotcodereviewpolicymanager---enum" title="OrganizationCopilotCodeReviewPolicyManager - enum" data-entry-type="Section">OrganizationCopilotCodeReviewPolicyManager - enum<a href="#organizationcopilotcodereviewpolicymanager---enum" aria-label="Link to heading 'OrganizationCopilotCodeReviewPolicyManager - enum'" data-heading-content="OrganizationCopilotCodeReviewPolicyManager - enum" class="anchor"></a></h2>
+<p>The scope that controls an organization's Copilot code review policy.</p>
+<h3 id="values-for-organizationcopilotcodereviewpolicymanager">Values for <code>OrganizationCopilotCodeReviewPolicyManager</code><a href="#values-for-organizationcopilotcodereviewpolicymanager" aria-label="Link to heading 'Values for OrganizationCopilotCodeReviewPolicyManager'" data-heading-content="Values for OrganizationCopilotCodeReviewPolicyManager" class="anchor"></a></h3>
+<ul>
+<li><code>ENTERPRISE</code>: The enterprise policy controls the organization's policy.</li>
+<li><code>ORGANIZATION</code>: Organization administrators control the policy.</li>
+</ul>
+<h2 id="organizationcopilotcodereviewpolicystate---enum" title="OrganizationCopilotCodeReviewPolicyState - enum" data-entry-type="Section">OrganizationCopilotCodeReviewPolicyState - enum<a href="#organizationcopilotcodereviewpolicystate---enum" aria-label="Link to heading 'OrganizationCopilotCodeReviewPolicyState - enum'" data-heading-content="OrganizationCopilotCodeReviewPolicyState - enum" class="anchor"></a></h2>
+<p>The Copilot code review policy state for an organization.</p>
+<h3 id="values-for-organizationcopilotcodereviewpolicystate">Values for <code>OrganizationCopilotCodeReviewPolicyState</code><a href="#values-for-organizationcopilotcodereviewpolicystate" aria-label="Link to heading 'Values for OrganizationCopilotCodeReviewPolicyState'" data-heading-content="Values for OrganizationCopilotCodeReviewPolicyState" class="anchor"></a></h3>
+<ul>
+<li><code>DISABLED</code>: Copilot code review is disabled.</li>
+<li><code>ENABLED</code>: Copilot code review is enabled.</li>
+</ul>
+<h2 id="organizationcopilotcodereviewrunnerconfiguration---object" title="OrganizationCopilotCodeReviewRunnerConfiguration - object" data-entry-type="Section">OrganizationCopilotCodeReviewRunnerConfiguration - object<a href="#organizationcopilotcodereviewrunnerconfiguration---object" aria-label="Link to heading 'OrganizationCopilotCodeReviewRunnerConfiguration - object'" data-heading-content="OrganizationCopilotCodeReviewRunnerConfiguration - object" class="anchor"></a></h2>
+<p>The effective runner configuration that Copilot code review uses for an organization.</p>
+<h3 id="fields-for-organizationcopilotcodereviewrunnerconfiguration">Fields for <code>OrganizationCopilotCodeReviewRunnerConfiguration</code><a href="#fields-for-organizationcopilotcodereviewrunnerconfiguration" aria-label="Link to heading 'Fields for OrganizationCopilotCodeReviewRunnerConfiguration'" data-heading-content="Fields for OrganizationCopilotCodeReviewRunnerConfiguration" class="anchor"></a></h3>
+<ul>
+<li><code>allowRepositoryCustomization</code> (Boolean!): Whether repositories can use their own runner configuration.</li>
+<li><code>configuredBy</code> (CopilotCodeReviewRunnerConfiguredBy!): Which configuration the values come from. CODING_AGENT means they are<br>
+inherited from the organization's Copilot coding agent runner configuration.</li>
+<li><code>runnerGroupName</code> (String): The runner group used for a labeled runner, if any.</li>
+<li><code>runnerLabels</code> ([String!]!): The runner labels used for a labeled runner.</li>
+<li><code>runnerType</code> (CopilotCodeReviewRunnerType!): The type of runner.</li>
+</ul>
+<h2 id="organizationcopilotcodereviewsettings---object" title="OrganizationCopilotCodeReviewSettings - object" data-entry-type="Section">OrganizationCopilotCodeReviewSettings - object<a href="#organizationcopilotcodereviewsettings---object" aria-label="Link to heading 'OrganizationCopilotCodeReviewSettings - object'" data-heading-content="OrganizationCopilotCodeReviewSettings - object" class="anchor"></a></h2>
+<p>An organization's Copilot code review settings.</p>
+<h3 id="fields-for-organizationcopilotcodereviewsettings">Fields for <code>OrganizationCopilotCodeReviewSettings</code><a href="#fields-for-organizationcopilotcodereviewsettings" aria-label="Link to heading 'Fields for OrganizationCopilotCodeReviewSettings'" data-heading-content="Fields for OrganizationCopilotCodeReviewSettings" class="anchor"></a></h3>
+<ul>
+<li><code>availableReviewEfforts</code> ([CopilotCodeReviewEffortLevel!]!): The review efforts that can currently be set for this organization, in display order.</li>
+<li><code>defaultReviewEffort</code> (OrganizationCopilotCodeReviewDefaultEffort!): The default review effort for repositories that do not choose their own.</li>
+</ul>
+<h2 id="organizationcopilotcodereviewsettingsconflict---enum" title="OrganizationCopilotCodeReviewSettingsConflict - enum" data-entry-type="Section">OrganizationCopilotCodeReviewSettingsConflict - enum<a href="#organizationcopilotcodereviewsettingsconflict---enum" aria-label="Link to heading 'OrganizationCopilotCodeReviewSettingsConflict - enum'" data-heading-content="OrganizationCopilotCodeReviewSettingsConflict - enum" class="anchor"></a></h2>
+<p>Why an organization's Copilot code review settings were not updated.</p>
+<h3 id="values-for-organizationcopilotcodereviewsettingsconflict">Values for <code>OrganizationCopilotCodeReviewSettingsConflict</code><a href="#values-for-organizationcopilotcodereviewsettingsconflict" aria-label="Link to heading 'Values for OrganizationCopilotCodeReviewSettingsConflict'" data-heading-content="Values for OrganizationCopilotCodeReviewSettingsConflict" class="anchor"></a></h3>
+<ul>
+<li><code>SETTING_NOT_EDITABLE</code>: The organization cannot change a submitted setting.</li>
+</ul>
+<h2 id="repositorycopilotcoderevieweffort---object" title="RepositoryCopilotCodeReviewEffort - object" data-entry-type="Section">RepositoryCopilotCodeReviewEffort - object<a href="#repositorycopilotcoderevieweffort---object" aria-label="Link to heading 'RepositoryCopilotCodeReviewEffort - object'" data-heading-content="RepositoryCopilotCodeReviewEffort - object" class="anchor"></a></h2>
+<p>A repository's Copilot code review effort.</p>
+<h3 id="fields-for-repositorycopilotcoderevieweffort">Fields for <code>RepositoryCopilotCodeReviewEffort</code><a href="#fields-for-repositorycopilotcoderevieweffort" aria-label="Link to heading 'Fields for RepositoryCopilotCodeReviewEffort'" data-heading-content="Fields for RepositoryCopilotCodeReviewEffort" class="anchor"></a></h3>
+<ul>
+<li><code>configured</code> (CopilotCodeReviewEffortLevel): The effort stored for the repository. Null if the repository inherits its<br>
+effort or has stored an effort that is not currently available.</li>
+<li><code>effective</code> (CopilotCodeReviewEffortLevel!): The effort reviews use when the requester and the pull request do not choose<br>
+one. When that effort is not currently available, this reports the effort<br>
+reviews would use without it.</li>
+</ul>
+<h2 id="repositorycopilotcoderevieweffortsetting---enum" title="RepositoryCopilotCodeReviewEffortSetting - enum" data-entry-type="Section">RepositoryCopilotCodeReviewEffortSetting - enum<a href="#repositorycopilotcoderevieweffortsetting---enum" aria-label="Link to heading 'RepositoryCopilotCodeReviewEffortSetting - enum'" data-heading-content="RepositoryCopilotCodeReviewEffortSetting - enum" class="anchor"></a></h2>
+<p>The Copilot code review effort to set for a repository. For more information,<br>
+see Review effort level.</p>
+<h3 id="values-for-repositorycopilotcoderevieweffortsetting">Values for <code>RepositoryCopilotCodeReviewEffortSetting</code><a href="#values-for-repositorycopilotcoderevieweffortsetting" aria-label="Link to heading 'Values for RepositoryCopilotCodeReviewEffortSetting'" data-heading-content="Values for RepositoryCopilotCodeReviewEffortSetting" class="anchor"></a></h3>
+<ul>
+<li><code>AUTO</code>: Copilot picks the effort for each pull request.</li>
+<li><code>BALANCED</code>: Balanced effort and depth.</li>
+<li><code>INHERIT</code>: Clear the repository's value so it inherits the effort from its organization, enterprise, or GitHub's default.</li>
+<li><code>LITE</code>: Lower effort, faster review.</li>
+<li><code>MAX</code>: Highest effort, deepest review.</li>
+</ul>
+<h2 id="repositorycopilotcodereviewsettings---object" title="RepositoryCopilotCodeReviewSettings - object" data-entry-type="Section">RepositoryCopilotCodeReviewSettings - object<a href="#repositorycopilotcodereviewsettings---object" aria-label="Link to heading 'RepositoryCopilotCodeReviewSettings - object'" data-heading-content="RepositoryCopilotCodeReviewSettings - object" class="anchor"></a></h2>
+<p>A repository's Copilot code review settings. These settings tune reviews; they do not enable Copilot code review.</p>
+<h3 id="fields-for-repositorycopilotcodereviewsettings">Fields for <code>RepositoryCopilotCodeReviewSettings</code><a href="#fields-for-repositorycopilotcodereviewsettings" aria-label="Link to heading 'Fields for RepositoryCopilotCodeReviewSettings'" data-heading-content="Fields for RepositoryCopilotCodeReviewSettings" class="anchor"></a></h3>
+<ul>
+<li><code>availableReviewEfforts</code> ([CopilotCodeReviewEffortLevel!]!): The review efforts that can currently be set for this repository, in display order.</li>
+<li><code>customInstructionsEnabled</code> (Boolean!): Whether reviews use the repository's custom instructions.</li>
+<li><code>mcpEnabled</code> (Boolean!): Whether reviews can use MCP servers.</li>
+<li><code>reviewEffort</code> (RepositoryCopilotCodeReviewEffort!): The repository's review effort.</li>
+<li><code>severityFilter</code> (CopilotCodeReviewSeverityFilter!): Which review comment severities Copilot code review leaves out.</li>
+</ul>
+<h2 id="updateenterprisecopilotcodereviewpolicy---mutation" title="updateEnterpriseCopilotCodeReviewPolicy - mutation" data-entry-type="Section">updateEnterpriseCopilotCodeReviewPolicy - mutation<a href="#updateenterprisecopilotcodereviewpolicy---mutation" aria-label="Link to heading 'updateEnterpriseCopilotCodeReviewPolicy - mutation'" data-heading-content="updateEnterpriseCopilotCodeReviewPolicy - mutation" class="anchor"></a></h2>
+<p>Updates an enterprise's Copilot code review policy using the existing policy propagation and notification behavior.</p>
+<h3 id="input-fields-for-updateenterprisecopilotcodereviewpolicy">Input fields for <code>updateEnterpriseCopilotCodeReviewPolicy</code><a href="#input-fields-for-updateenterprisecopilotcodereviewpolicy" aria-label="Link to heading 'Input fields for updateEnterpriseCopilotCodeReviewPolicy'" data-heading-content="Input fields for updateEnterpriseCopilotCodeReviewPolicy" class="anchor"></a></h3>
+<ul>
+<li><code>input</code> (UpdateEnterpriseCopilotCodeReviewPolicyInput!):</li>
+</ul>
+<h3 id="return-fields-for-updateenterprisecopilotcodereviewpolicy">Return fields for <code>updateEnterpriseCopilotCodeReviewPolicy</code><a href="#return-fields-for-updateenterprisecopilotcodereviewpolicy" aria-label="Link to heading 'Return fields for updateEnterpriseCopilotCodeReviewPolicy'" data-heading-content="Return fields for updateEnterpriseCopilotCodeReviewPolicy" class="anchor"></a></h3>
+<ul>
+<li><code>clientMutationId</code> (String): A unique identifier for the client performing the mutation.</li>
+<li><code>policy</code> (EnterpriseCopilotCodeReviewPolicy): The updated enterprise policy.</li>
+</ul>
+<h2 id="updateenterprisecopilotcodereviewpolicyinput---input-object" title="UpdateEnterpriseCopilotCodeReviewPolicyInput - input object" data-entry-type="Section">UpdateEnterpriseCopilotCodeReviewPolicyInput - input object<a href="#updateenterprisecopilotcodereviewpolicyinput---input-object" aria-label="Link to heading 'UpdateEnterpriseCopilotCodeReviewPolicyInput - input object'" data-heading-content="UpdateEnterpriseCopilotCodeReviewPolicyInput - input object" class="anchor"></a></h2>
+<p>Autogenerated input type of UpdateEnterpriseCopilotCodeReviewPolicy.</p>
+<h3 id="input-fields-for-updateenterprisecopilotcodereviewpolicyinput">Input fields for <code>UpdateEnterpriseCopilotCodeReviewPolicyInput</code><a href="#input-fields-for-updateenterprisecopilotcodereviewpolicyinput" aria-label="Link to heading 'Input fields for UpdateEnterpriseCopilotCodeReviewPolicyInput'" data-heading-content="Input fields for UpdateEnterpriseCopilotCodeReviewPolicyInput" class="anchor"></a></h3>
+<ul>
+<li><code>clientMutationId</code> (String): A unique identifier for the client performing the mutation.</li>
+<li><code>enterpriseId</code> (ID!): The ID of the enterprise whose policy to update.</li>
+<li><code>policyState</code> (EnterpriseCopilotCodeReviewPolicyState!): The policy to set. Standalone enterprises cannot delegate to organization administrators.</li>
+</ul>
+<h2 id="updateorganizationcopilotcodereviewpolicy---mutation" title="updateOrganizationCopilotCodeReviewPolicy - mutation" data-entry-type="Section">updateOrganizationCopilotCodeReviewPolicy - mutation<a href="#updateorganizationcopilotcodereviewpolicy---mutation" aria-label="Link to heading 'updateOrganizationCopilotCodeReviewPolicy - mutation'" data-heading-content="updateOrganizationCopilotCodeReviewPolicy - mutation" class="anchor"></a></h2>
+<p>Updates an organization's Copilot code review policy when the enterprise delegates control to organization administrators.</p>
+<h3 id="input-fields-for-updateorganizationcopilotcodereviewpolicy">Input fields for <code>updateOrganizationCopilotCodeReviewPolicy</code><a href="#input-fields-for-updateorganizationcopilotcodereviewpolicy" aria-label="Link to heading 'Input fields for updateOrganizationCopilotCodeReviewPolicy'" data-heading-content="Input fields for updateOrganizationCopilotCodeReviewPolicy" class="anchor"></a></h3>
+<ul>
+<li><code>input</code> (UpdateOrganizationCopilotCodeReviewPolicyInput!):</li>
+</ul>
+<h3 id="return-fields-for-updateorganizationcopilotcodereviewpolicy">Return fields for <code>updateOrganizationCopilotCodeReviewPolicy</code><a href="#return-fields-for-updateorganizationcopilotcodereviewpolicy" aria-label="Link to heading 'Return fields for updateOrganizationCopilotCodeReviewPolicy'" data-heading-content="Return fields for updateOrganizationCopilotCodeReviewPolicy" class="anchor"></a></h3>
+<ul>
+<li><code>clientMutationId</code> (String): A unique identifier for the client performing the mutation.</li>
+<li><code>conflict</code> (OrganizationCopilotCodeReviewPolicyConflict): Why the policy was not updated. Null if the update succeeded.</li>
+<li><code>policy</code> (OrganizationCopilotCodeReviewPolicy): The organization's current policy.</li>
+</ul>
+<h2 id="updateorganizationcopilotcodereviewpolicyinput---input-object" title="UpdateOrganizationCopilotCodeReviewPolicyInput - input object" data-entry-type="Section">UpdateOrganizationCopilotCodeReviewPolicyInput - input object<a href="#updateorganizationcopilotcodereviewpolicyinput---input-object" aria-label="Link to heading 'UpdateOrganizationCopilotCodeReviewPolicyInput - input object'" data-heading-content="UpdateOrganizationCopilotCodeReviewPolicyInput - input object" class="anchor"></a></h2>
+<p>Autogenerated input type of UpdateOrganizationCopilotCodeReviewPolicy.</p>
+<h3 id="input-fields-for-updateorganizationcopilotcodereviewpolicyinput">Input fields for <code>UpdateOrganizationCopilotCodeReviewPolicyInput</code><a href="#input-fields-for-updateorganizationcopilotcodereviewpolicyinput" aria-label="Link to heading 'Input fields for UpdateOrganizationCopilotCodeReviewPolicyInput'" data-heading-content="Input fields for UpdateOrganizationCopilotCodeReviewPolicyInput" class="anchor"></a></h3>
+<ul>
+<li><code>clientMutationId</code> (String): A unique identifier for the client performing the mutation.</li>
+<li><code>organizationId</code> (ID!): The ID of the organization whose policy to update.</li>
+<li><code>state</code> (OrganizationCopilotCodeReviewPolicyState!): The policy to set.</li>
+</ul>
+<h2 id="updateorganizationcopilotcodereviewrunnerconfiguration---mutation" title="updateOrganizationCopilotCodeReviewRunnerConfiguration - mutation" data-entry-type="Section">updateOrganizationCopilotCodeReviewRunnerConfiguration - mutation<a href="#updateorganizationcopilotcodereviewrunnerconfiguration---mutation" aria-label="Link to heading 'updateOrganizationCopilotCodeReviewRunnerConfiguration - mutation'" data-heading-content="updateOrganizationCopilotCodeReviewRunnerConfiguration - mutation" class="anchor"></a></h2>
+<p>Sets the runner configuration that Copilot code review uses for an<br>
+organization. A LABELED runner requires at least one label or a runner group.<br>
+Invalid input does not change the configuration.</p>
+<h3 id="input-fields-for-updateorganizationcopilotcodereviewrunnerconfiguration">Input fields for <code>updateOrganizationCopilotCodeReviewRunnerConfiguration</code><a href="#input-fields-for-updateorganizationcopilotcodereviewrunnerconfiguration" aria-label="Link to heading 'Input fields for updateOrganizationCopilotCodeReviewRunnerConfiguration'" data-heading-content="Input fields for updateOrganizationCopilotCodeReviewRunnerConfiguration" class="anchor"></a></h3>
+<ul>
+<li><code>input</code> (UpdateOrganizationCopilotCodeReviewRunnerConfigurationInput!):</li>
+</ul>
+<h3 id="return-fields-for-updateorganizationcopilotcodereviewrunnerconfiguration">Return fields for <code>updateOrganizationCopilotCodeReviewRunnerConfiguration</code><a href="#return-fields-for-updateorganizationcopilotcodereviewrunnerconfiguration" aria-label="Link to heading 'Return fields for updateOrganizationCopilotCodeReviewRunnerConfiguration'" data-heading-content="Return fields for updateOrganizationCopilotCodeReviewRunnerConfiguration" class="anchor"></a></h3>
+<ul>
+<li><code>clientMutationId</code> (String): A unique identifier for the client performing the mutation.</li>
+<li><code>runnerConfiguration</code> (OrganizationCopilotCodeReviewRunnerConfiguration): The organization's updated runner configuration.</li>
+</ul>
+<h2 id="updateorganizationcopilotcodereviewrunnerconfigurationinput---input-object" title="UpdateOrganizationCopilotCodeReviewRunnerConfigurationInput - input object" data-entry-type="Section">UpdateOrganizationCopilotCodeReviewRunnerConfigurationInput - input object<a href="#updateorganizationcopilotcodereviewrunnerconfigurationinput---input-object" aria-label="Link to heading 'UpdateOrganizationCopilotCodeReviewRunnerConfigurationInput - input object'" data-heading-content="UpdateOrganizationCopilotCodeReviewRunnerConfigurationInput - input object" class="anchor"></a></h2>
+<p>Autogenerated input type of UpdateOrganizationCopilotCodeReviewRunnerConfiguration.</p>
+<h3 id="input-fields-for-updateorganizationcopilotcodereviewrunnerconfigurationinput">Input fields for <code>UpdateOrganizationCopilotCodeReviewRunnerConfigurationInput</code><a href="#input-fields-for-updateorganizationcopilotcodereviewrunnerconfigurationinput" aria-label="Link to heading 'Input fields for UpdateOrganizationCopilotCodeReviewRunnerConfigurationInput'" data-heading-content="Input fields for UpdateOrganizationCopilotCodeReviewRunnerConfigurationInput" class="anchor"></a></h3>
+<ul>
+<li><code>allowRepositoryCustomization</code> (Boolean): Whether repositories can use their own runner configuration. When omitted, the current effective value is kept.</li>
+<li><code>clientMutationId</code> (String): A unique identifier for the client performing the mutation.</li>
+<li><code>organizationId</code> (ID!): The ID of the organization whose runner configuration to set.</li>
+<li><code>runnerGroupName</code> (String): The runner group for a labeled runner.</li>
+<li><code>runnerLabels</code> ([String!]): The runner labels for a labeled runner.</li>
+<li><code>runnerType</code> (CopilotCodeReviewRunnerType!): The type of runner.</li>
+</ul>
+<h2 id="updateorganizationcopilotcodereviewsettings---mutation" title="updateOrganizationCopilotCodeReviewSettings - mutation" data-entry-type="Section">updateOrganizationCopilotCodeReviewSettings - mutation<a href="#updateorganizationcopilotcodereviewsettings---mutation" aria-label="Link to heading 'updateOrganizationCopilotCodeReviewSettings - mutation'" data-heading-content="updateOrganizationCopilotCodeReviewSettings - mutation" class="anchor"></a></h2>
+<p>Updates an organization's Copilot code review settings. Omitted settings are not changed.</p>
+<h3 id="input-fields-for-updateorganizationcopilotcodereviewsettings">Input fields for <code>updateOrganizationCopilotCodeReviewSettings</code><a href="#input-fields-for-updateorganizationcopilotcodereviewsettings" aria-label="Link to heading 'Input fields for updateOrganizationCopilotCodeReviewSettings'" data-heading-content="Input fields for updateOrganizationCopilotCodeReviewSettings" class="anchor"></a></h3>
+<ul>
+<li><code>input</code> (UpdateOrganizationCopilotCodeReviewSettingsInput!):</li>
+</ul>
+<h3 id="return-fields-for-updateorganizationcopilotcodereviewsettings">Return fields for <code>updateOrganizationCopilotCodeReviewSettings</code><a href="#return-fields-for-updateorganizationcopilotcodereviewsettings" aria-label="Link to heading 'Return fields for updateOrganizationCopilotCodeReviewSettings'" data-heading-content="Return fields for updateOrganizationCopilotCodeReviewSettings" class="anchor"></a></h3>
+<ul>
+<li><code>clientMutationId</code> (String): A unique identifier for the client performing the mutation.</li>
+<li><code>conflict</code> (OrganizationCopilotCodeReviewSettingsConflict): Why the settings were not updated. Null if the update succeeded.</li>
+<li><code>settings</code> (OrganizationCopilotCodeReviewSettings): The organization's current settings.</li>
+</ul>
+<h2 id="updateorganizationcopilotcodereviewsettingsinput---input-object" title="UpdateOrganizationCopilotCodeReviewSettingsInput - input object" data-entry-type="Section">UpdateOrganizationCopilotCodeReviewSettingsInput - input object<a href="#updateorganizationcopilotcodereviewsettingsinput---input-object" aria-label="Link to heading 'UpdateOrganizationCopilotCodeReviewSettingsInput - input object'" data-heading-content="UpdateOrganizationCopilotCodeReviewSettingsInput - input object" class="anchor"></a></h2>
+<p>Autogenerated input type of UpdateOrganizationCopilotCodeReviewSettings.</p>
+<h3 id="input-fields-for-updateorganizationcopilotcodereviewsettingsinput">Input fields for <code>UpdateOrganizationCopilotCodeReviewSettingsInput</code><a href="#input-fields-for-updateorganizationcopilotcodereviewsettingsinput" aria-label="Link to heading 'Input fields for UpdateOrganizationCopilotCodeReviewSettingsInput'" data-heading-content="Input fields for UpdateOrganizationCopilotCodeReviewSettingsInput" class="anchor"></a></h3>
+<ul>
+<li><code>clientMutationId</code> (String): A unique identifier for the client performing the mutation.</li>
+<li><code>defaultReviewEffort</code> (OrganizationCopilotCodeReviewEffortSetting): The default review effort for repositories that do not choose their own. INHERIT clears the organization's value.</li>
+<li><code>organizationId</code> (ID!): The ID of the organization whose settings to update.</li>
+</ul>
+<h2 id="updaterepositorycopilotcodereviewsettings---mutation" title="updateRepositoryCopilotCodeReviewSettings - mutation" data-entry-type="Section">updateRepositoryCopilotCodeReviewSettings - mutation<a href="#updaterepositorycopilotcodereviewsettings---mutation" aria-label="Link to heading 'updateRepositoryCopilotCodeReviewSettings - mutation'" data-heading-content="updateRepositoryCopilotCodeReviewSettings - mutation" class="anchor"></a></h2>
+<p>Updates a repository's Copilot code review settings. Omitted settings are not changed.</p>
+<h3 id="input-fields-for-updaterepositorycopilotcodereviewsettings">Input fields for <code>updateRepositoryCopilotCodeReviewSettings</code><a href="#input-fields-for-updaterepositorycopilotcodereviewsettings" aria-label="Link to heading 'Input fields for updateRepositoryCopilotCodeReviewSettings'" data-heading-content="Input fields for updateRepositoryCopilotCodeReviewSettings" class="anchor"></a></h3>
+<ul>
+<li><code>input</code> (UpdateRepositoryCopilotCodeReviewSettingsInput!):</li>
+</ul>
+<h3 id="return-fields-for-updaterepositorycopilotcodereviewsettings">Return fields for <code>updateRepositoryCopilotCodeReviewSettings</code><a href="#return-fields-for-updaterepositorycopilotcodereviewsettings" aria-label="Link to heading 'Return fields for updateRepositoryCopilotCodeReviewSettings'" data-heading-content="Return fields for updateRepositoryCopilotCodeReviewSettings" class="anchor"></a></h3>
+<ul>
+<li><code>clientMutationId</code> (String): A unique identifier for the client performing the mutation.</li>
+<li><code>settings</code> (RepositoryCopilotCodeReviewSettings): The repository's current settings.</li>
+</ul>
+<h2 id="updaterepositorycopilotcodereviewsettingsinput---input-object" title="UpdateRepositoryCopilotCodeReviewSettingsInput - input object" data-entry-type="Section">UpdateRepositoryCopilotCodeReviewSettingsInput - input object<a href="#updaterepositorycopilotcodereviewsettingsinput---input-object" aria-label="Link to heading 'UpdateRepositoryCopilotCodeReviewSettingsInput - input object'" data-heading-content="UpdateRepositoryCopilotCodeReviewSettingsInput - input object" class="anchor"></a></h2>
+<p>Autogenerated input type of UpdateRepositoryCopilotCodeReviewSettings.</p>
+<h3 id="input-fields-for-updaterepositorycopilotcodereviewsettingsinput">Input fields for <code>UpdateRepositoryCopilotCodeReviewSettingsInput</code><a href="#input-fields-for-updaterepositorycopilotcodereviewsettingsinput" aria-label="Link to heading 'Input fields for UpdateRepositoryCopilotCodeReviewSettingsInput'" data-heading-content="Input fields for UpdateRepositoryCopilotCodeReviewSettingsInput" class="anchor"></a></h3>
+<ul>
+<li><code>clientMutationId</code> (String): A unique identifier for the client performing the mutation.</li>
+<li><code>customInstructionsEnabled</code> (Boolean): Whether reviews use the repository's custom instructions.</li>
+<li><code>mcpEnabled</code> (Boolean): Whether reviews can use MCP servers.</li>
+<li><code>repositoryId</code> (ID!): The ID of the repository whose settings to update.</li>
+<li><code>reviewEffort</code> (RepositoryCopilotCodeReviewEffortSetting): The review effort for the repository. INHERIT clears the repository's value.</li>
+<li><code>severityFilter</code> (CopilotCodeReviewSeverityFilter): Which review comment severities Copilot code review leaves out.</li>
 </ul>
 <footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

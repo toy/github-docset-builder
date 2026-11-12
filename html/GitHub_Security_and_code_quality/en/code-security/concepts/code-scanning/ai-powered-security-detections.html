@@ -2,7 +2,7 @@
 <p>AI Scan uses an AI-based scanning engine to find security vulnerabilities in pull requests for languages and frameworks not covered by CodeQL.</p>
 <p>AI Scan for pull requests produces additional security findings with an AI-based scanning engine that runs on pull requests and complements CodeQL.</p>
 <p>AI Scan expands code scanning coverage for pull requests without requiring a separate scanning tool or build configuration.</p>
-<p>AI Scan for pull requests is one of the independently controlled features grouped under <strong>AI Scan</strong> in GitHub settings. See <a href="/en/code-security/concepts/code-scanning/ai-scan">About AI Scan</a>.</p>
+<p>AI Scan for pull requests is one of the independently controlled features grouped under <strong>AI Scan</strong> in GitHub settings. See <a href="ai-scan.html">About AI Scan</a>.</p>
 <h2 id="availability" title="Availability" data-entry-type="Section">Availability<a href="#availability" aria-label="Link to heading 'Availability'" data-heading-content="Availability" class="anchor"></a></h2>
 <p>Availability depends on who owns the repository and its visibility.</p>
 <table>
@@ -64,6 +64,7 @@
 <ul>
 <li>AI Scan findings cannot yet be used in rulesets to enforce merge requirements.</li>
 <li>AI Scan does not run on pull requests from forks or pull requests created by Dependabot.</li>
+<li>Self-hosted runners are not supported.</li>
 <li>Detection categories and supported languages may change as the feature evolves.</li>
 <li>As with any AI-based tool, AI Scan findings may include false positives. Use the feedback mechanism to report inaccurate results.</li>
 </ul>
@@ -84,7 +85,7 @@
 <li><strong>Supply chain risks</strong> — Unpinned third-party actions, packages, or images, or downloads without integrity checks.</li>
 </ul>
 <h2 id="enabling-ai-scan" title="Enabling AI Scan" data-entry-type="Section">Enabling AI Scan<a href="#enabling-ai-scan" aria-label="Link to heading 'Enabling AI Scan'" data-heading-content="Enabling AI Scan" class="anchor"></a></h2>
-<p>AI Scan for pull requests and AI applications scanning are separate features under AI Scan. AI applications scanning has its own <strong>Scan for AI applications</strong> control and detects risks such as indirect prompt injection in AI applications and agents. Enabling either feature doesn't enable the other. For more information about AI applications scanning, see <a href="/en/code-security/concepts/code-scanning/ai-applications-scanning-for-pull-requests">AI applications scanning for pull requests</a>.</p>
+<p>AI Scan for pull requests and AI applications scanning are separate features under AI Scan. AI applications scanning has its own <strong>Scan for AI applications</strong> control and detects risks such as indirect prompt injection in AI applications and agents. Enabling either feature doesn't enable the other. For more information about AI applications scanning, see <a href="ai-applications-scanning-for-pull-requests.html">AI applications scanning for pull requests</a>.</p>
 <p>Before enabling AI Scan on pull requests for an organization, confirm repository eligibility, review the billing account's included AI credits, and configure budgets for metered usage.</p>
 <p>Enabling the organization setting enables AI Scan immediately for all eligible repositories where code scanning is enabled. Repository administrators can then opt out, but qualifying pull requests can consume Code Security AI Credits before they do.</p>
 <p>You do not need to select a model to enable AI Scan.</p>

@@ -1,0 +1,79 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>AI Scan for a repository's backlog</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Code scanning</a> / </nav><h1 id="ai-scan-for-a-repositorys-backlog">AI Scan for a repository's backlog<a href="#ai-scan-for-a-repositorys-backlog" aria-label="Link to heading 'AI Scan for a repository's backlog'" data-heading-content="AI Scan for a repository's backlog" class="anchor"></a></h1>
+<p>Find additional security vulnerabilities across languages and manage the results in your existing code scanning backlog.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>AI Scan for repositories is in public preview and subject to change.</p>
+</div>
+<p>AI Scan for repositories uses a proprietary harness that leverages multiple models, when available, to find security vulnerabilities on your repository's default branch. It supports all languages, extending coverage beyond CodeQL-supported languages and finding additional vulnerabilities in languages CodeQL already analyzes. You run scans on demand, independently of CodeQL.</p>
+<p>AI Scan for repositories adds findings to your code scanning backlog alongside CodeQL alerts. You can use existing workflows to assign alerts, apply agentic autofix, include alerts in security campaigns, and link them to issues.</p>
+<h2 id="availability" title="Availability" data-entry-type="Section">Availability<a href="#availability" aria-label="Link to heading 'Availability'" data-heading-content="Availability" class="anchor"></a></h2>
+<p>Availability depends on who owns the repository and its visibility.</p>
+<table>
+<thead>
+<tr>
+<th>Repository owner</th>
+<th>Visibility</th>
+<th>Availability and requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Organization</td>
+<td>Public</td>
+<td>Available without an active-committer license</td>
+</tr>
+<tr>
+<td>Organization</td>
+<td>Private or internal</td>
+<td>Available with GitHub Code Security or GitHub Advanced Security</td>
+</tr>
+<tr>
+<td>Personal account</td>
+<td>Public</td>
+<td>Available</td>
+</tr>
+<tr>
+<td>Personal account</td>
+<td>Private</td>
+<td>Not available</td>
+</tr>
+</tbody>
+</table>
+<p>You do not need a GitHub Copilot license.</p>
+<h2 id="billing" title="Billing" data-entry-type="Section">Billing<a href="#billing" aria-label="Link to heading 'Billing'" data-heading-content="Billing" class="anchor"></a></h2>
+<p>You run AI Scan for repositories on demand, and each scan consumes <strong>Code Security AI credits</strong>. This usage is separate from active-committer licensing.</p>
+<p>Usage is billed to the account responsible for the organization's billing.</p>
+<p>For public repositories owned by a personal account, usage is billed to that personal account unless the repository owner has a GitHub Copilot license provided by an organization or enterprise. In that case, usage is billed to the organization or enterprise that provides the license.</p>
+<p>If the billing account receives included AI credits through a GitHub Copilot entitlement, AI Scan uses those credits first. After the included credits are exhausted, or if the account has no included credits, usage is metered and governed by the applicable budgets. If a hard budget leaves no Code Security AI credits available, AI Scan cannot produce findings. Scanning resumes when an administrator increases the limiting budget or a new billing cycle begins.</p>
+<p>AI scan for repositories has some limits to prevent it from consuming very high amounts of budget. Detection steps are limited to 30 minutes and 150,000 AI credits.</p>
+<p>For more information, see <a href="https://docs.github.com/en/billing/concepts/product-billing/github-advanced-security#how-ai-feature-usage-is-billed" class="external">GitHub Advanced Security license billing</a>.</p>
+<h2 id="how-ai-scan-works" title="How AI Scan works" data-entry-type="Section">How AI Scan works<a href="#how-ai-scan-works" aria-label="Link to heading 'How AI Scan works'" data-heading-content="How AI Scan works" class="anchor"></a></h2>
+<p>Users with <strong>write access</strong> to a repository manually trigger a scan of the repository's default branch. The AI agent searches across the repository to identify files and functions to examine. It selects code for further analysis rather than reading every file in full. The agent runs within a time budget. When that budget is exhausted, it stops searching and reports its findings.</p>
+<p>AI Scan runs independently of CodeQL. If the repository already has CodeQL alerts, AI Scan uses those alerts to suppress matching findings.</p>
+<h2 id="how-ai-scan-findings-appear-in-the-code-scanning-backlog" title="How AI Scan findings appear in the code scanning backlog" data-entry-type="Section">How AI Scan findings appear in the code scanning backlog<a href="#how-ai-scan-findings-appear-in-the-code-scanning-backlog" aria-label="Link to heading 'How AI Scan findings appear in the code scanning backlog'" data-heading-content="How AI Scan findings appear in the code scanning backlog" class="anchor"></a></h2>
+<p>When a scan finishes, its findings appear as alerts in the repository's code scanning alert list, under the <strong>Security and quality</strong> tab, alongside alerts from CodeQL. You can filter the list by the <strong>AI Scan</strong> tool to focus on these findings.</p>
+<p>Use the existing alert severity filters to prioritize findings for assessment. You can assign alerts, link them to issues, include them in security campaigns, or use agentic autofix to help remediate them. See <a href="../../how-tos/manage-security-alerts/manage-code-scanning-alerts/assess-alerts.html">Assessing code scanning alerts for your repository</a>.</p>
+<p>During public preview, merging a potential fix does not automatically trigger another AI Scan. You must manually trigger a new scan to check for resolved alerts.</p>
+<p>The alert will only close automatically if the applied fix changes the exact line of code that triggered the alert. Otherwise, you must manually close the alert.</p>
+<h2 id="limitations" title="Limitations" data-entry-type="Section">Limitations<a href="#limitations" aria-label="Link to heading 'Limitations'" data-heading-content="Limitations" class="anchor"></a></h2>
+<ul>
+<li>Scans analyze the default branch only.</li>
+<li>Self-hosted runners are not supported.</li>
+<li>Scans are manually triggered. Scheduled scans and automatic scans on push are not supported.</li>
+<li>The agent selects which code to examine within a time budget. A scan does not exhaustively analyze every file or guarantee that it finds every vulnerability.</li>
+<li>Matching against existing CodeQL alerts is best effort, so duplicate alerts can occur.</li>
+<li>AI-generated findings can be inaccurate. Review each finding before deciding how to address it.</li>
+</ul>
+<p>For guidance on using AI-powered security features responsibly, see <a href="../../responsible-use/security-and-quality-ai-features.html">Application card: GitHub security and quality AI features</a>.</p>
+<h2 id="supported-languages" title="Supported languages" data-entry-type="Section">Supported languages<a href="#supported-languages" aria-label="Link to heading 'Supported languages'" data-heading-content="Supported languages" class="anchor"></a></h2>
+<p>AI Scan for repositories supports all languages, including languages already supported by CodeQL. Use it alongside CodeQL to find additional vulnerabilities, or to extend scanning coverage to languages that CodeQL does not support.</p>
+<h2 id="enabling-ai-scan-for-repositories" title="Enabling AI Scan for repositories" data-entry-type="Section">Enabling AI Scan for repositories<a href="#enabling-ai-scan-for-repositories" aria-label="Link to heading 'Enabling AI Scan for repositories'" data-heading-content="Enabling AI Scan for repositories" class="anchor"></a></h2>
+<p>Before enabling AI Scan for repositories, confirm repository eligibility, review the billing account's included AI credits, and configure budgets for metered usage.</p>
+<ul>
+<li><strong>Enterprise</strong>: Enterprise owners can allow or prevent organizations from enabling AI Scan for repositories. This policy controls both AI Scan on pull requests and AI Scan for a repository's backlog. The policy is set to "Not allowed" by default. Allowing AI Scan does not enable it automatically. See <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-code-security-and-analysis-for-your-enterprise#enforcing-a-policy-to-manage-ai-scan-in-your-enterprises-repositories" class="external">Enforcing policies for code security and analysis for your enterprise</a>.</li>
+<li><strong>Organization</strong>: Organization owners and security managers can enable AI Scan for repositories for eligible repositories. Repositories inherit the organization setting. See <a href="../../how-tos/secure-at-scale/configure-organization-security/establish-complete-coverage/configure-global-settings.html#enabling-ai-scan-for-repositories">Configuring global security settings for your organization</a>.</li>
+<li><strong>Organization-owned repository</strong>: People with admin access to the repository can opt out when the organization has enabled AI Scan. They cannot opt in when the organization setting is disabled. To disable the feature, go to the repository's "Settings" page, under "Advanced Security", then under "Code Security", toggle off <strong>AI Scan for repositories</strong>.</li>
+</ul>
+<h2 id="next-steps" title="Next steps" data-entry-type="Section">Next steps<a href="#next-steps" aria-label="Link to heading 'Next steps'" data-heading-content="Next steps" class="anchor"></a></h2>
+<p>To run a scan and manage the resulting alerts, see <a href="../../how-tos/manage-security-alerts/manage-code-scanning-alerts/viewing-and-managing-ai-scan-alerts.html">Viewing and managing AI Scan alerts on your repository''s default branch</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

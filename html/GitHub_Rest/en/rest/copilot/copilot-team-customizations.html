@@ -1,0 +1,235 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>REST API endpoints for Copilot team customizations</title><link rel="stylesheet" href="../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../index.html">REST API</a> / <a href="index.html">Copilot</a> / </nav><h1 id="rest-api-endpoints-for-copilot-team-customizations">REST API endpoints for Copilot team customizations<a href="#rest-api-endpoints-for-copilot-team-customizations" aria-label="Link to heading 'REST API endpoints for Copilot team customizations'" data-heading-content="REST API endpoints for Copilot team customizations" class="anchor"></a></h1>
+<p>Use the REST API to manage Copilot customizations for a team.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Most endpoints use <code>Authorization: Bearer &lt;YOUR-TOKEN&gt;</code> and <code>Accept: application/vnd.github+json</code> headers, plus <code>X-GitHub-Api-Version: 2026-03-10</code>. Curl examples below omit these standard headers for brevity.</p>
+</div>
+<h2 id="get-copilot-customizations-for-a-team" title="GET /orgs/{org}/teams/{team_slug}/copilot/customizations (Get Copilot customizations for a team)" data-entry-type="Resource">Get Copilot customizations for a team<a href="#get-copilot-customizations-for-a-team" aria-label="Link to heading 'Get Copilot customizations for a team'" data-heading-content="Get Copilot customizations for a team" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /orgs/{org}/teams/{team_slug}/copilot/customizations
+</span></code></pre>
+<p>Note</p>
+<p>This endpoint is in public preview and is subject to change.</p>
+<p>Gets the GitHub-managed Copilot customizations of a team.<br>
+The authenticated user must be an organization owner or a team maintainer. Teams that keep their<br>
+customizations in a repository return 409.<br>
+OAuth app tokens and personal access tokens (classic) need the admin:org or read:org scope to use this endpoint.</p>
+<h3 id="parameters">Parameters<a href="#parameters" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers">Headers<a href="#headers" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters">Path and query parameters<a href="#path-and-query-parameters" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>org</code></strong> (string) (required)<br>
+The organization name. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>team_slug</code></strong> (string) (required)<br>
+The slug of the team name.</p>
+</li>
+</ul>
+<h3 id="http-response-status-codes">HTTP response status codes<a href="#http-response-status-codes" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - OK</p>
+</li>
+<li>
+<p><strong>401</strong> - Requires authentication</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>409</strong> - Conflict</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+<li>
+<p><strong>500</strong> - Internal Error</p>
+</li>
+<li>
+<p><strong>503</strong> - Service unavailable</p>
+</li>
+</ul>
+<h3 id="code-examples">Code examples<a href="#code-examples" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example">Example<a href="#example" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X GET \
+</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/teams/TEAM_SLUG/copilot/customizations
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<ul>
+<li><code>pluginAssignments</code>: object, additional properties: object</li>
+<li><code>extraKnownMarketplaces</code>: object, additional properties: object</li>
+</ul>
+<h2 id="set-copilot-customizations-for-a-team" title="PUT /orgs/{org}/teams/{team_slug}/copilot/customizations (Set Copilot customizations for a team)" data-entry-type="Resource">Set Copilot customizations for a team<a href="#set-copilot-customizations-for-a-team" aria-label="Link to heading 'Set Copilot customizations for a team'" data-heading-content="Set Copilot customizations for a team" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PUT /orgs/{org}/teams/{team_slug}/copilot/customizations
+</span></code></pre>
+<p>Note</p>
+<p>This endpoint is in public preview and is subject to change.</p>
+<p>Replaces the GitHub-managed Copilot customizations of a team, creating them on the first write.<br>
+The authenticated user must be an organization owner or a team maintainer. Teams that keep their<br>
+customizations in a repository return 409. Documents that fail validation return 422 with the reason.<br>
+OAuth app tokens and personal access tokens (classic) need the admin:org scope to use this endpoint.</p>
+<h3 id="parameters-1">Parameters<a href="#parameters-1" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-1">Headers<a href="#headers-1" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-1">Path and query parameters<a href="#path-and-query-parameters-1" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>org</code></strong> (string) (required)<br>
+The organization name. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>team_slug</code></strong> (string) (required)<br>
+The slug of the team name.</p>
+</li>
+</ul>
+<h4 id="body-parameters">Body parameters<a href="#body-parameters" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>pluginAssignments</code></strong> (object)<br>
+Plugins assigned to the team, keyed by PLUGIN@MARKETPLACE.</p>
+<ul>
+<li><strong><code>key</code></strong> (object)<br>
+A user-defined key to represent an item in pluginAssignments.
+<ul>
+<li><strong><code>state</code></strong> (string)<br>
+The assignment state.<br>
+Can be one of: <code>defaultEnabled</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>extraKnownMarketplaces</code></strong> (object)<br>
+Additional plugin marketplaces available to the team, keyed by marketplace name.</p>
+<ul>
+<li><strong><code>key</code></strong> (object)<br>
+A user-defined key to represent an item in extraKnownMarketplaces.</li>
+</ul>
+</li>
+</ul>
+<h3 id="http-response-status-codes-1">HTTP response status codes<a href="#http-response-status-codes-1" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - OK</p>
+</li>
+<li>
+<p><strong>401</strong> - Requires authentication</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>409</strong> - Conflict</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+<li>
+<p><strong>500</strong> - Internal Error</p>
+</li>
+<li>
+<p><strong>503</strong> - Service unavailable</p>
+</li>
+</ul>
+<h3 id="code-examples-1">Code examples<a href="#code-examples-1" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-1">Example<a href="#example-1" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X PUT \
+</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/teams/TEAM_SLUG/copilot/customizations \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "pluginAssignments": {
+</span><span style="color:#c0c5ce;">    "code-review@acme-marketplace": {
+</span><span style="color:#c0c5ce;">      "state": "defaultEnabled"
+</span><span style="color:#c0c5ce;">    }
+</span><span style="color:#c0c5ce;">  },
+</span><span style="color:#c0c5ce;">  "extraKnownMarketplaces": {
+</span><span style="color:#c0c5ce;">    "acme-marketplace": {
+</span><span style="color:#c0c5ce;">      "source": {
+</span><span style="color:#c0c5ce;">        "source": "github",
+</span><span style="color:#c0c5ce;">        "repo": "acme/copilot-marketplace"
+</span><span style="color:#c0c5ce;">      }
+</span><span style="color:#c0c5ce;">    }
+</span><span style="color:#c0c5ce;">  }
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<p>Same response schema as <a href="#get-copilot-customizations-for-a-team">Get Copilot customizations for a team</a>.</p>
+<h2 id="delete-copilot-customizations-for-a-team" title="DELETE /orgs/{org}/teams/{team_slug}/copilot/customizations (Delete Copilot customizations for a team)" data-entry-type="Resource">Delete Copilot customizations for a team<a href="#delete-copilot-customizations-for-a-team" aria-label="Link to heading 'Delete Copilot customizations for a team'" data-heading-content="Delete Copilot customizations for a team" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">DELETE /orgs/{org}/teams/{team_slug}/copilot/customizations
+</span></code></pre>
+<p>Note</p>
+<p>This endpoint is in public preview and is subject to change.</p>
+<p>Deletes the GitHub-managed Copilot customizations of a team. Deleting customizations that don't exist succeeds.<br>
+The authenticated user must be an organization owner or a team maintainer. Teams that keep their<br>
+customizations in a repository return 409.<br>
+OAuth app tokens and personal access tokens (classic) need the admin:org scope to use this endpoint.</p>
+<h3 id="parameters-2">Parameters<a href="#parameters-2" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-2">Headers<a href="#headers-2" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-2">Path and query parameters<a href="#path-and-query-parameters-2" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>org</code></strong> (string) (required)<br>
+The organization name. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>team_slug</code></strong> (string) (required)<br>
+The slug of the team name.</p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-2">HTTP response status codes<a href="#http-response-status-codes-2" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>204</strong> - No Content</p>
+</li>
+<li>
+<p><strong>401</strong> - Requires authentication</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>409</strong> - Conflict</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+<li>
+<p><strong>500</strong> - Internal Error</p>
+</li>
+<li>
+<p><strong>503</strong> - Service unavailable</p>
+</li>
+</ul>
+<h3 id="code-examples-2">Code examples<a href="#code-examples-2" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-2">Example<a href="#example-2" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X DELETE \
+</span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/teams/TEAM_SLUG/copilot/customizations
+</span></code></pre>
+<p><strong>Response schema (Status: 204):</strong></p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

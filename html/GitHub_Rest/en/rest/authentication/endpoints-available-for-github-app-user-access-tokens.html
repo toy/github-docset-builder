@@ -1410,6 +1410,15 @@
 <p><a href="../copilot/copilot-usage-metrics.html#get-copilot-users-usage-metrics"><code>GET /enterprises/{enterprise}/copilot/metrics/reports/users-28-day/latest</code></a></p>
 </li>
 <li>
+<p><a href="../copilot/copilot-coding-agent-management.html#set-the-coding-agent-policy-for-an-enterprise"><code>PUT /enterprises/{enterprise}/copilot/policies/coding_agent</code></a></p>
+</li>
+<li>
+<p><a href="../copilot/copilot-coding-agent-management.html#add-organizations-to-the-enterprise-coding-agent-policy"><code>POST /enterprises/{enterprise}/copilot/policies/coding_agent/organizations</code></a></p>
+</li>
+<li>
+<p><a href="../copilot/copilot-coding-agent-management.html#remove-organizations-from-the-enterprise-coding-agent-policy"><code>DELETE /enterprises/{enterprise}/copilot/policies/coding_agent/organizations</code></a></p>
+</li>
+<li>
 <p><a href="../copilot/copilot-user-management.html#get-copilot-seat-information-and-settings-for-an-organization"><code>GET /orgs/{org}/copilot/billing</code></a></p>
 </li>
 <li>
@@ -1473,16 +1482,22 @@
 <p><a href="../copilot/copilot-user-management.html#get-copilot-seat-assignment-details-for-a-user"><code>GET /orgs/{org}/members/{username}/copilot</code></a></p>
 </li>
 <li>
-<p><a href="/en/rest/copilot/copilot-team-customizations#get-copilot-customizations-for-a-team"><code>GET /orgs/{org}/teams/{team_slug}/copilot/customizations</code></a></p>
+<p><a href="../copilot/copilot-team-customizations.html#get-copilot-customizations-for-a-team"><code>GET /orgs/{org}/teams/{team_slug}/copilot/customizations</code></a></p>
 </li>
 <li>
-<p><a href="/en/rest/copilot/copilot-team-customizations#set-copilot-customizations-for-a-team"><code>PUT /orgs/{org}/teams/{team_slug}/copilot/customizations</code></a></p>
+<p><a href="../copilot/copilot-team-customizations.html#set-copilot-customizations-for-a-team"><code>PUT /orgs/{org}/teams/{team_slug}/copilot/customizations</code></a></p>
 </li>
 <li>
-<p><a href="/en/rest/copilot/copilot-team-customizations#delete-copilot-customizations-for-a-team"><code>DELETE /orgs/{org}/teams/{team_slug}/copilot/customizations</code></a></p>
+<p><a href="../copilot/copilot-team-customizations.html#delete-copilot-customizations-for-a-team"><code>DELETE /orgs/{org}/teams/{team_slug}/copilot/customizations</code></a></p>
 </li>
 <li>
 <p><a href="../copilot/copilot-cloud-agent-management.html#get-copilot-cloud-agent-configuration-for-a-repository"><code>GET /repos/{owner}/{repo}/copilot/cloud-agent/configuration</code></a></p>
+</li>
+<li>
+<p><a href="../copilot/copilot-code-review.html#get-copilot-code-review-settings-for-a-repository"><code>GET /repos/{owner}/{repo}/copilot/code-review/settings</code></a></p>
+</li>
+<li>
+<p><a href="../copilot/copilot-code-review.html#update-copilot-code-review-settings-for-a-repository"><code>PATCH /repos/{owner}/{repo}/copilot/code-review/settings</code></a></p>
 </li>
 </ul>
 <h2 id="copilot-spaces" title="copilot-spaces" data-entry-type="Section">copilot-spaces<a href="#copilot-spaces" aria-label="Link to heading 'copilot-spaces'" data-heading-content="copilot-spaces" class="anchor"></a></h2>
@@ -1588,6 +1603,12 @@
 </li>
 <li>
 <p><a href="../dependabot/alerts.html#update-a-dependabot-alert"><code>PATCH /repos/{owner}/{repo}/dependabot/alerts/{alert_number}</code></a></p>
+</li>
+<li>
+<p><a href="../dependabot/runner-settings.html#get-repository-dependabot-runner-settings"><code>GET /repos/{owner}/{repo}/dependabot/runner-settings</code></a></p>
+</li>
+<li>
+<p><a href="../dependabot/runner-settings.html#set-repository-dependabot-runner-settings"><code>PUT /repos/{owner}/{repo}/dependabot/runner-settings</code></a></p>
 </li>
 <li>
 <p><a href="../dependabot/secrets.html#list-repository-secrets"><code>GET /repos/{owner}/{repo}/dependabot/secrets</code></a></p>
@@ -1924,19 +1945,19 @@
 <p><a href="../issues/issues.html#update-an-issue"><code>PATCH /repos/{owner}/{repo}/issues/{issue_number}</code></a></p>
 </li>
 <li>
-<p><a href="/en/rest/issues/artifacts#list-issue-artifacts"><code>GET /repos/{owner}/{repo}/issues/{issue_number}/artifacts</code></a></p>
+<p><a href="../issues/artifacts.html#list-issue-artifacts"><code>GET /repos/{owner}/{repo}/issues/{issue_number}/artifacts</code></a></p>
 </li>
 <li>
-<p><a href="/en/rest/issues/artifacts#create-an-issue-artifact"><code>POST /repos/{owner}/{repo}/issues/{issue_number}/artifacts</code></a></p>
+<p><a href="../issues/artifacts.html#create-an-issue-artifact"><code>POST /repos/{owner}/{repo}/issues/{issue_number}/artifacts</code></a></p>
 </li>
 <li>
-<p><a href="/en/rest/issues/artifacts#get-an-issue-artifact"><code>GET /repos/{owner}/{repo}/issues/{issue_number}/artifacts/{artifact_number}</code></a></p>
+<p><a href="../issues/artifacts.html#get-an-issue-artifact"><code>GET /repos/{owner}/{repo}/issues/{issue_number}/artifacts/{artifact_number}</code></a></p>
 </li>
 <li>
-<p><a href="/en/rest/issues/artifacts#update-an-issue-artifact"><code>PATCH /repos/{owner}/{repo}/issues/{issue_number}/artifacts/{artifact_number}</code></a></p>
+<p><a href="../issues/artifacts.html#update-an-issue-artifact"><code>PATCH /repos/{owner}/{repo}/issues/{issue_number}/artifacts/{artifact_number}</code></a></p>
 </li>
 <li>
-<p><a href="/en/rest/issues/artifacts#delete-an-issue-artifact"><code>DELETE /repos/{owner}/{repo}/issues/{issue_number}/artifacts/{artifact_number}</code></a></p>
+<p><a href="../issues/artifacts.html#delete-an-issue-artifact"><code>DELETE /repos/{owner}/{repo}/issues/{issue_number}/artifacts/{artifact_number}</code></a></p>
 </li>
 <li>
 <p><a href="../issues/assignees.html#add-assignees-to-an-issue"><code>POST /repos/{owner}/{repo}/issues/{issue_number}/assignees</code></a></p>
@@ -2749,6 +2770,9 @@
 <p><a href="../pulls/pulls.html#list-commits-on-a-pull-request"><code>GET /repos/{owner}/{repo}/pulls/{pull_number}/commits</code></a></p>
 </li>
 <li>
+<p><a href="../pulls/copilot-code-review.html#request-a-copilot-code-review-for-a-pull-request"><code>POST /repos/{owner}/{repo}/pulls/{pull_number}/copilot-code-review</code></a></p>
+</li>
+<li>
 <p><a href="../pulls/pulls.html#list-pull-requests-files"><code>GET /repos/{owner}/{repo}/pulls/{pull_number}/files</code></a></p>
 </li>
 <li>
@@ -3411,6 +3435,30 @@
 </li>
 <li>
 <p><a href="../users/gpg-keys.html#delete-a-gpg-key-for-the-authenticated-user"><code>DELETE /user/gpg_keys/{gpg_key_id}</code></a></p>
+</li>
+<li>
+<p><a href="../users/issue-fields.html#list-issue-fields"><code>GET /user/issue-fields</code></a></p>
+</li>
+<li>
+<p><a href="../users/issue-fields.html#create-an-issue-field"><code>POST /user/issue-fields</code></a></p>
+</li>
+<li>
+<p><a href="../users/issue-fields.html#update-an-issue-field"><code>PATCH /user/issue-fields/{issue_field_id}</code></a></p>
+</li>
+<li>
+<p><a href="../users/issue-fields.html#delete-an-issue-field"><code>DELETE /user/issue-fields/{issue_field_id}</code></a></p>
+</li>
+<li>
+<p><a href="../users/issue-types.html#list-issue-types"><code>GET /user/issue-types</code></a></p>
+</li>
+<li>
+<p><a href="../users/issue-types.html#create-an-issue-type"><code>POST /user/issue-types</code></a></p>
+</li>
+<li>
+<p><a href="../users/issue-types.html#update-an-issue-type"><code>PUT /user/issue-types/{issue_type_id}</code></a></p>
+</li>
+<li>
+<p><a href="../users/issue-types.html#delete-an-issue-type"><code>DELETE /user/issue-types/{issue_type_id}</code></a></p>
 </li>
 <li>
 <p><a href="../users/keys.html#list-public-ssh-keys-for-the-authenticated-user"><code>GET /user/keys</code></a></p>

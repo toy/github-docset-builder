@@ -1,0 +1,74 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>About reachability analysis for Dependabot alerts</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Supply chain security</a> / </nav><h1 id="about-reachability-analysis-for-dependabot-alerts">About reachability analysis for Dependabot alerts<a href="#about-reachability-analysis-for-dependabot-alerts" aria-label="Link to heading 'About reachability analysis for Dependabot alerts'" data-heading-content="About reachability analysis for Dependabot alerts" class="anchor"></a></h1>
+<p>Reachability analysis helps prioritize Dependabot alerts by identifying whether your application can reach vulnerable dependency code.</p>
+<p>Having a vulnerable dependency does not always mean your application calls the affected function. Reachability analysis adds a verdict to each Dependabot alert to help you prioritize fixes based on how your code uses the dependency.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Reachability analysis for Dependabot alerts is in public preview and subject to change.</p>
+</div>
+<h2 id="how-reachability-analysis-works" title="How reachability analysis works" data-entry-type="Section">How reachability analysis works<a href="#how-reachability-analysis-works" aria-label="Link to heading 'How reachability analysis works'" data-heading-content="How reachability analysis works" class="anchor"></a></h2>
+<p>Reachability analysis analyzes your open Dependabot alerts to determine whether your application can call the vulnerable functions. It uses CodeQL static analysis and curated data identifying the affected functions to look for call paths from your code to those functions.</p>
+<p>Each analyzed Dependabot alert receives a <strong>verdict</strong> that helps you decide its priority. Where available, <strong>call-path evidence</strong> shows how your code can reach a vulnerable function, so you can understand why an alert matters to your application.</p>
+<h2 id="requirements-and-supported-ecosystems" title="Requirements and supported ecosystems" data-entry-type="Section">Requirements and supported ecosystems<a href="#requirements-and-supported-ecosystems" aria-label="Link to heading 'Requirements and supported ecosystems'" data-heading-content="Requirements and supported ecosystems" class="anchor"></a></h2>
+<p>Reachability analysis supports JavaScript repositories that use npm, pnpm, or Yarn, and TypeScript repositories. Your repository must have a lock file, such as <code>package-lock.json</code>, <code>pnpm-lock.yaml</code>, or <code>yarn.lock</code>.</p>
+<p>Dependabot alerts must be enabled for reachability analysis to work.</p>
+<p>The analysis runs on GitHub-hosted runners. Self-hosted runners are not supported.</p>
+<h2 id="understanding-reachability-verdicts" title="Understanding reachability verdicts" data-entry-type="Section">Understanding reachability verdicts<a href="#understanding-reachability-verdicts" aria-label="Link to heading 'Understanding reachability verdicts'" data-heading-content="Understanding reachability verdicts" class="anchor"></a></h2>
+<p>Use reachability alongside severity, Exploit Prediction Scoring System (EPSS) scores, dependency scope, and dependency relationship to decide which alerts to address first.</p>
+<table>
+<thead>
+<tr>
+<th align="left">Verdict</th>
+<th align="left">Meaning</th>
+<th align="left">Recommended response</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Reachable</td>
+<td align="left">Analysis found at least one call path from your repository's code to a vulnerable function.</td>
+<td align="left">Prioritize remediation and review the call-path evidence.</td>
+</tr>
+<tr>
+<td align="left">Potentially reachable</td>
+<td align="left">Analysis could not rule out a call to a vulnerable function. This uncertainty is not caused by an unsupported ecosystem or a failed scan. In repositories with multiple manifests, calls found only outside a manifest’s directory are considered potentially reachable.</td>
+<td align="left">Prioritize remediation alongside reachable alerts.</td>
+</tr>
+<tr>
+<td align="left">Unreachable</td>
+<td align="left">Analysis completed and did not find a call from your application's code to a vulnerable function.</td>
+<td align="left">Give the alert a lower priority, but do not dismiss or close it solely because of this verdict.</td>
+</tr>
+<tr>
+<td align="left">Reachability unavailable</td>
+<td align="left">Analysis could not provide a verdict, for example because the alert is for an unsupported ecosystem or the scan failed or timed out.</td>
+<td align="left">Triage the alert using the other prioritization signals.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="use-reachability-to-prioritize-not-close-alerts">Use reachability to prioritize, not close, alerts<a href="#use-reachability-to-prioritize-not-close-alerts" aria-label="Link to heading 'Use reachability to prioritize, not close, alerts'" data-heading-content="Use reachability to prioritize, not close, alerts" class="anchor"></a></h3>
+<p>Reachability analysis adds information to existing open alerts to help you prioritize remediation. It does not find new vulnerabilities or automatically close or dismiss alerts.</p>
+<p>A verdict is a point-in-time assessment. You shouldn't close or dismiss an alert solely based on its reachability verdict; while a function may not be reachable from your code today, code changes or updates to an advisory can change the result of a later scan.</p>
+<h3 id="reachability-is-not-exploitability">Reachability is not exploitability<a href="#reachability-is-not-exploitability" aria-label="Link to heading 'Reachability is not exploitability'" data-heading-content="Reachability is not exploitability" class="anchor"></a></h3>
+<p>A reachable function is not necessarily exploitable. Reachability shows that a call path exists, not that an attacker can use it to exploit the vulnerability.</p>
+<p>Similarly, an "Unreachable" verdict is not a guarantee that a dependency is safe. Continue to review these alerts and keep dependencies up to date.</p>
+<h3 id="call-path-evidence">Call-path evidence<a href="#call-path-evidence" aria-label="Link to heading 'Call-path evidence'" data-heading-content="Call-path evidence" class="anchor"></a></h3>
+<p>For reachable alerts, call-path evidence shows how a call from your code can lead to a vulnerable function. Use this evidence to understand where your application uses the affected dependency and plan remediation.</p>
+<p>An alert can show up to five sample paths. These samples are not an exhaustive list of every possible call path.</p>
+<h2 id="understanding-when-results-are-updated" title="Understanding when results are updated" data-entry-type="Section">Understanding when results are updated<a href="#understanding-when-results-are-updated" aria-label="Link to heading 'Understanding when results are updated'" data-heading-content="Understanding when results are updated" class="anchor"></a></h2>
+<p>Enabling reachability analysis starts an initial scan of your repository's open alerts. After that, scans run once every 24 hours while the repository has open alerts. Each scan covers all open alerts.</p>
+<p>Pushing code changes does not trigger a scan. After you change your code, the verdict will not reflect those changes until a subsequent scan completes.</p>
+<p>During public preview, you cannot schedule or trigger on-demand scans.</p>
+<p>Scan duration depends on repository size and dependencies. Scans can complete in a few minutes, but larger scans take longer. During the public preview, scans have a three-hour time limit.</p>
+<h2 id="billing-and-usage-during-the-public-preview" title="Billing and usage during the public preview" data-entry-type="Section">Billing and usage during the public preview<a href="#billing-and-usage-during-the-public-preview" aria-label="Link to heading 'Billing and usage during the public preview'" data-heading-content="Billing and usage during the public preview" class="anchor"></a></h2>
+<p>Reachability analysis is <strong>free</strong> during the public preview. Its scans do not consume billed GitHub Actions minutes.</p>
+<h2 id="known-limitations" title="Known limitations" data-entry-type="Section">Known limitations<a href="#known-limitations" aria-label="Link to heading 'Known limitations'" data-heading-content="Known limitations" class="anchor"></a></h2>
+<p>Reachability analysis has the following limitations during the public preview:</p>
+<ul>
+<li><strong>Ecosystem support</strong>: Alerts outside the supported JavaScript and TypeScript ecosystems are not supported.</li>
+<li><strong>Large repositories and monorepos</strong>: Some repositories can reach the three-hour scan limit or encounter resource limits, leaving results unavailable.</li>
+</ul>
+<h2 id="using-verdicts-through-the-rest-api" title="Using verdicts through the REST API" data-entry-type="Section">Using verdicts through the REST API<a href="#using-verdicts-through-the-rest-api" aria-label="Link to heading 'Using verdicts through the REST API'" data-heading-content="Using verdicts through the REST API" class="anchor"></a></h2>
+<p>The Dependabot alerts REST API exposes verdicts for reachability analysis. You can retrieve verdicts through the repository, organization, and enterprise alert endpoints. See <a href="https://docs.github.com/en/rest/dependabot/alerts" class="external">REST API endpoints for Dependabot alerts</a>.</p>
+<h2 id="next-steps" title="Next steps" data-entry-type="Section">Next steps<a href="#next-steps" aria-label="Link to heading 'Next steps'" data-heading-content="Next steps" class="anchor"></a></h2>
+<p>To enable reachability analysis for your repository, see <a href="../../how-tos/secure-your-supply-chain/secure-your-dependencies/configure-reachability-analysis.html">Configuring reachability analysis for Dependabot alerts</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -3336,6 +3336,18 @@
 <td>✗</td>
 </tr>
 <tr>
+<td><code>PATCH /repos/{owner}/{repo}/copilot/code-review/settings</code></td>
+<td>write</td>
+<td>PAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>PUT /repos/{owner}/{repo}/dependabot/runner-settings</code></td>
+<td>write</td>
+<td>PAT</td>
+<td>✗</td>
+</tr>
+<tr>
 <td><code>PUT /repos/{owner}/{repo}/environments/{environment_name}</code></td>
 <td>write</td>
 <td>PAT</td>
@@ -3769,6 +3781,18 @@
 </tr>
 <tr>
 <td><code>GET /repos/{owner}/{repo}/code-security-configuration</code></td>
+<td>read</td>
+<td>PAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>GET /repos/{owner}/{repo}/copilot/code-review/settings</code></td>
+<td>read</td>
+<td>PAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>GET /repos/{owner}/{repo}/dependabot/runner-settings</code></td>
 <td>read</td>
 <td>PAT</td>
 <td>✗</td>
@@ -6191,6 +6215,12 @@
 <td>✗</td>
 </tr>
 <tr>
+<td><code>POST /repos/{owner}/{repo}/pulls/{pull_number}/copilot-code-review</code></td>
+<td>write</td>
+<td>PAT</td>
+<td>✗</td>
+</tr>
+<tr>
 <td><code>POST /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers</code></td>
 <td>write</td>
 <td>PAT</td>
@@ -7233,6 +7263,80 @@
 </tr>
 <tr>
 <td><code>GET /user/interaction-limits</code></td>
+<td>read</td>
+<td>PAT</td>
+<td>✗</td>
+</tr>
+</tbody>
+</table>
+<h2 id="user-permissions-for-issue-fields" title="User permissions for &quot;Issue Fields&quot;" data-entry-type="Section">User permissions for "Issue Fields"<a href="#user-permissions-for-issue-fields" aria-label="Link to heading 'User permissions for &quot;Issue Fields&quot;'" data-heading-content="User permissions for &quot;Issue Fields&quot;" class="anchor"></a></h2>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Access</th>
+<th>Tokens</th>
+<th>Additional Permissions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST /user/issue-fields</code></td>
+<td>write</td>
+<td>PAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>PATCH /user/issue-fields/{issue_field_id}</code></td>
+<td>write</td>
+<td>PAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>DELETE /user/issue-fields/{issue_field_id}</code></td>
+<td>write</td>
+<td>PAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>GET /user/issue-fields</code></td>
+<td>read</td>
+<td>PAT</td>
+<td>✗</td>
+</tr>
+</tbody>
+</table>
+<h2 id="user-permissions-for-issue-types" title="User permissions for &quot;Issue Types&quot;" data-entry-type="Section">User permissions for "Issue Types"<a href="#user-permissions-for-issue-types" aria-label="Link to heading 'User permissions for &quot;Issue Types&quot;'" data-heading-content="User permissions for &quot;Issue Types&quot;" class="anchor"></a></h2>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Access</th>
+<th>Tokens</th>
+<th>Additional Permissions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST /user/issue-types</code></td>
+<td>write</td>
+<td>PAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>PUT /user/issue-types/{issue_type_id}</code></td>
+<td>write</td>
+<td>PAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>DELETE /user/issue-types/{issue_type_id}</code></td>
+<td>write</td>
+<td>PAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>GET /user/issue-types</code></td>
 <td>read</td>
 <td>PAT</td>
 <td>✗</td>

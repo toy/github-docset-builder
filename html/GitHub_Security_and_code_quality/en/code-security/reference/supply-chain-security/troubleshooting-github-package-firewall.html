@@ -1,0 +1,38 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Troubleshooting GitHub package firewall</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Reference</a> / <a href="index.html">Supply chain security</a> / </nav><h1 id="troubleshooting-github-package-firewall">Troubleshooting GitHub package firewall<a href="#troubleshooting-github-package-firewall" aria-label="Link to heading 'Troubleshooting GitHub package firewall'" data-heading-content="Troubleshooting GitHub package firewall" class="anchor"></a></h1>
+<p>Check whether cached packages or configuration issues explain unexpected installation results with GitHub package firewall.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This feature is currently in public preview and is subject to change.</p>
+</div>
+<h2 id="a-package-still-installs-after-a-policy-change" title="A package still installs after a policy change" data-entry-type="Section">A package still installs after a policy change<a href="#a-package-still-installs-after-a-policy-change" aria-label="Link to heading 'A package still installs after a policy change'" data-heading-content="A package still installs after a policy change" class="anchor"></a></h2>
+<p>Package managers and registry proxies can reuse previously downloaded packages from their local caches. If no new request reaches GitHub package firewall, the firewall cannot evaluate the package against your updated policy. This can let a package install after you change a policy or remove an exception.</p>
+<h3 id="check-the-local-npm-cache">Check the local npm cache<a href="#check-the-local-npm-cache" aria-label="Link to heading 'Check the local npm cache'" data-heading-content="Check the local npm cache" class="anchor"></a></h3>
+<p><strong>Check:</strong> Does the package still install with an empty npm cache, in a separate test environment, through the same firewall endpoint?</p>
+<ol>
+<li>
+<p>Note the exact package name, version, and scope, if applicable. Check whether the enterprise's policy or an exception allows that version.</p>
+</li>
+<li>
+<p>In a temporary project outside the original one, configure npm to use the same enterprise's GitHub package firewall endpoint and authentication, including default and scope-specific registry settings. Keep the original project and lockfile unchanged, and do not clear a shared npm cache. See <a href="../../how-tos/secure-your-supply-chain/secure-your-dependencies/protecting-endpoints-with-package-firewall.html#configuring-npm">Protecting endpoints with GitHub package firewall</a>.</p>
+</li>
+<li>
+<p>Install the exact version using a new, empty cache directory. Replace <code>PACKAGE-NAME</code>, <code>EXACT-VERSION</code>, and <code>EMPTY-CACHE-DIRECTORY</code> with the package name, version, and cache directory path. The <code>--ignore-scripts</code> option prevents package lifecycle scripts from running.</p>
+<pre lang="shell" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">npm install PACKAGE-NAME@EXACT-VERSION \
+</span><span style="color:#c0c5ce;">  --cache EMPTY-CACHE-DIRECTORY --ignore-scripts
+</span></code></pre>
+</li>
+<li>
+<p>Compare the result with the original project:</p>
+<ul>
+<li>If the firewall blocks the test, check the original project's installed packages, cache, registry configuration, and lockfile for differences. The blocked test alone does not identify which difference allowed the original installation.</li>
+<li>If the test succeeds, verify that requests for that version reached the same enterprise's firewall endpoint, then recheck the policy and exceptions. Do not assume npm used cached content.</li>
+</ul>
+</li>
+</ol>
+<h3 id="artifactory-caching">Artifactory caching<a href="#artifactory-caching" aria-label="Link to heading 'Artifactory caching'" data-heading-content="Artifactory caching" class="anchor"></a></h3>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This guidance applies only to the experimental Artifactory integration for npm packages. Even with an empty local npm cache, Artifactory can serve cached content without sending a new request through the firewall.</p>
+</div>
+<p>If npm retrieves the package from Artifactory, check whether Artifactory served cached content. Also check that the virtual npm repository uses the firewall-backed remote and does not include a remote that retrieves the package directly from the public npm registry. See <a href="../../how-tos/secure-your-supply-chain/secure-your-dependencies/protecting-endpoints-with-package-firewall.html#configuring-artifactory">Protecting endpoints with GitHub package firewall</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

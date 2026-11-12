@@ -1,0 +1,276 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>REST API endpoints for issue fields</title><link rel="stylesheet" href="../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../index.html">REST API</a> / <a href="index.html">Users</a> / </nav><h1 id="rest-api-endpoints-for-issue-fields">REST API endpoints for issue fields<a href="#rest-api-endpoints-for-issue-fields" aria-label="Link to heading 'REST API endpoints for issue fields'" data-heading-content="REST API endpoints for issue fields" class="anchor"></a></h1>
+<p>Use the REST API to create and manage issue fields for the authenticated user.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Most endpoints use <code>Authorization: Bearer &lt;YOUR-TOKEN&gt;</code> and <code>Accept: application/vnd.github+json</code> headers, plus <code>X-GitHub-Api-Version: 2026-03-10</code>. Curl examples below omit these standard headers for brevity.</p>
+</div>
+<h2 id="list-issue-fields" title="GET /user/issue-fields (List issue fields)" data-entry-type="Resource">List issue fields<a href="#list-issue-fields" aria-label="Link to heading 'List issue fields'" data-heading-content="List issue fields" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /user/issue-fields
+</span></code></pre>
+<p>Lists all issue fields for the authenticated user. OAuth app tokens and personal access tokens (classic) need the read:user scope to use this endpoint.</p>
+<h3 id="http-response-status-codes">HTTP response status codes<a href="#http-response-status-codes" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - OK</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+</ul>
+<h3 id="code-examples">Code examples<a href="#code-examples" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example">Example<a href="#example" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X GET \
+</span><span style="color:#c0c5ce;">  https://api.github.com/user/issue-fields
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<p>Array of <code>User Issue Field</code>:</p>
+<ul>
+<li><code>id</code>: required, integer</li>
+<li><code>node_id</code>: required, string</li>
+<li><code>name</code>: required, string</li>
+<li><code>description</code>: string or null</li>
+<li><code>data_type</code>: required, string, enum: <code>text</code>, <code>date</code>, <code>single_select</code>, <code>multi_select</code>, <code>number</code></li>
+<li><code>visibility</code>: string, enum: <code>restricted</code>, <code>all</code></li>
+<li><code>options</code>: array of objects or null:
+<ul>
+<li><code>id</code>: required, integer</li>
+<li><code>name</code>: required, string</li>
+<li><code>description</code>: string or null</li>
+<li><code>color</code>: string or null, enum: <code>gray</code>, <code>blue</code>, <code>green</code>, <code>yellow</code>, <code>orange</code>, <code>red</code>, <code>pink</code>, <code>purple</code>, <code>null</code></li>
+<li><code>priority</code>: integer or null</li>
+<li><code>created_at</code>: string, format: date-time</li>
+<li><code>updated_at</code>: string, format: date-time</li>
+</ul>
+</li>
+<li><code>created_at</code>: string, format: date-time</li>
+<li><code>updated_at</code>: string, format: date-time</li>
+</ul>
+<h2 id="create-an-issue-field" title="POST /user/issue-fields (Create an issue field)" data-entry-type="Resource">Create an issue field<a href="#create-an-issue-field" aria-label="Link to heading 'Create an issue field'" data-heading-content="Create an issue field" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">POST /user/issue-fields
+</span></code></pre>
+<p>Creates a new issue field for the authenticated user's personal account.<br>
+OAuth app tokens and personal access tokens (classic) need the user scope to use this endpoint.</p>
+<h3 id="parameters">Parameters<a href="#parameters" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers">Headers<a href="#headers" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="body-parameters">Body parameters<a href="#body-parameters" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>name</code></strong> (string) (required)<br>
+Name of the issue field.</p>
+</li>
+<li>
+<p><strong><code>description</code></strong> (string or null)<br>
+Description of the issue field.</p>
+</li>
+<li>
+<p><strong><code>data_type</code></strong> (string) (required)<br>
+The data type of the issue field.<br>
+Can be one of: <code>text</code>, <code>date</code>, <code>single_select</code>, <code>multi_select</code>, <code>number</code></p>
+</li>
+<li>
+<p><strong><code>visibility</code></strong> (string)<br>
+The visibility of the issue field. Can be restricted (visible only to the owner and to collaborators on the repository the field is read through) or all (visible to all users who can see issues). Defaults to restricted.<br>
+Can be one of: <code>restricted</code>, <code>all</code></p>
+</li>
+<li>
+<p><strong><code>options</code></strong> (array of objects or null)<br>
+Options for select fields. Required when data_type is 'single_select' or 'multi_select'.</p>
+<ul>
+<li><strong><code>name</code></strong> (string) (required)<br>
+Name of the option.</li>
+<li><strong><code>description</code></strong> (string or null)<br>
+Description of the option.</li>
+<li><strong><code>color</code></strong> (string) (required)<br>
+Color for the option.<br>
+Can be one of: <code>gray</code>, <code>blue</code>, <code>green</code>, <code>yellow</code>, <code>orange</code>, <code>red</code>, <code>pink</code>, <code>purple</code></li>
+<li><strong><code>priority</code></strong> (integer) (required)<br>
+Priority of the option for ordering.</li>
+</ul>
+</li>
+</ul>
+<h3 id="http-response-status-codes-1">HTTP response status codes<a href="#http-response-status-codes-1" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - OK</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+</ul>
+<h3 id="code-examples-1">Code examples<a href="#code-examples-1" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-1">Example<a href="#example-1" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X POST \
+</span><span style="color:#c0c5ce;">  https://api.github.com/user/issue-fields \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "name": "Priority",
+</span><span style="color:#c0c5ce;">  "description": "Level of importance for the issue",
+</span><span style="color:#c0c5ce;">  "data_type": "single_select",
+</span><span style="color:#c0c5ce;">  "visibility": "restricted",
+</span><span style="color:#c0c5ce;">  "options": [
+</span><span style="color:#c0c5ce;">    {
+</span><span style="color:#c0c5ce;">      "name": "High",
+</span><span style="color:#c0c5ce;">      "description": "High priority",
+</span><span style="color:#c0c5ce;">      "color": "red",
+</span><span style="color:#c0c5ce;">      "priority": 1
+</span><span style="color:#c0c5ce;">    },
+</span><span style="color:#c0c5ce;">    {
+</span><span style="color:#c0c5ce;">      "name": "Medium",
+</span><span style="color:#c0c5ce;">      "description": "Medium priority",
+</span><span style="color:#c0c5ce;">      "color": "yellow",
+</span><span style="color:#c0c5ce;">      "priority": 2
+</span><span style="color:#c0c5ce;">    },
+</span><span style="color:#c0c5ce;">    {
+</span><span style="color:#c0c5ce;">      "name": "Low",
+</span><span style="color:#c0c5ce;">      "description": "Low priority",
+</span><span style="color:#c0c5ce;">      "color": "green",
+</span><span style="color:#c0c5ce;">      "priority": 3
+</span><span style="color:#c0c5ce;">    }
+</span><span style="color:#c0c5ce;">  ]
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<ul>
+<li><code>id</code>: required, integer</li>
+<li><code>node_id</code>: required, string</li>
+<li><code>name</code>: required, string</li>
+<li><code>description</code>: string or null</li>
+<li><code>data_type</code>: required, string, enum: <code>text</code>, <code>date</code>, <code>single_select</code>, <code>multi_select</code>, <code>number</code></li>
+<li><code>visibility</code>: string, enum: <code>restricted</code>, <code>all</code></li>
+<li><code>options</code>: array of objects or null:
+<ul>
+<li><code>id</code>: required, integer</li>
+<li><code>name</code>: required, string</li>
+<li><code>description</code>: string or null</li>
+<li><code>color</code>: string or null, enum: <code>gray</code>, <code>blue</code>, <code>green</code>, <code>yellow</code>, <code>orange</code>, <code>red</code>, <code>pink</code>, <code>purple</code>, <code>null</code></li>
+<li><code>priority</code>: integer or null</li>
+<li><code>created_at</code>: string, format: date-time</li>
+<li><code>updated_at</code>: string, format: date-time</li>
+</ul>
+</li>
+<li><code>created_at</code>: string, format: date-time</li>
+<li><code>updated_at</code>: string, format: date-time</li>
+</ul>
+<h2 id="update-an-issue-field" title="PATCH /user/issue-fields/{issue_field_id} (Update an issue field)" data-entry-type="Resource">Update an issue field<a href="#update-an-issue-field" aria-label="Link to heading 'Update an issue field'" data-heading-content="Update an issue field" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PATCH /user/issue-fields/{issue_field_id}
+</span></code></pre>
+<p>Updates an issue field for the authenticated user.<br>
+The authenticated user must own the issue field. OAuth app tokens and personal access tokens (classic)<br>
+need the user scope to use this endpoint.</p>
+<h3 id="parameters-1">Parameters<a href="#parameters-1" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-1">Headers<a href="#headers-1" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters">Path and query parameters<a href="#path-and-query-parameters" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li><strong><code>issue_field_id</code></strong> (integer) (required)<br>
+The unique identifier of the issue field.</li>
+</ul>
+<h4 id="body-parameters-1">Body parameters<a href="#body-parameters-1" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>name</code></strong> (string)<br>
+Name of the issue field.</p>
+</li>
+<li>
+<p><strong><code>description</code></strong> (string or null)<br>
+Description of the issue field.</p>
+</li>
+<li>
+<p><strong><code>visibility</code></strong> (string)<br>
+The visibility of the issue field. Can be restricted (visible only to the owner and to collaborators on the repository the field is read through) or all (visible to all users who can see issues).<br>
+Can be one of: <code>restricted</code>, <code>all</code></p>
+</li>
+<li>
+<p><strong><code>options</code></strong> (array of objects)<br>
+Options for select fields. Only applicable when updating single_select or multi_select fields. When provided, this array replaces the entire existing set of options rather than adding to or updating individual options. To retain or update an existing option, include it in the array with its id. Options sent without an id are treated as new options and may cause existing options to be deleted and recreated.</p>
+<ul>
+<li><strong><code>id</code></strong> (integer)<br>
+The id of an existing option to retain or update. Omit this when creating a new option.</li>
+<li><strong><code>name</code></strong> (string) (required)<br>
+Name of the option.</li>
+<li><strong><code>description</code></strong> (string or null)<br>
+Description of the option.</li>
+<li><strong><code>color</code></strong> (string) (required)<br>
+Color for the option.<br>
+Can be one of: <code>gray</code>, <code>blue</code>, <code>green</code>, <code>yellow</code>, <code>orange</code>, <code>red</code>, <code>pink</code>, <code>purple</code></li>
+<li><strong><code>priority</code></strong> (integer) (required)<br>
+Priority of the option for ordering.</li>
+</ul>
+</li>
+</ul>
+<h3 id="http-response-status-codes-2">HTTP response status codes<a href="#http-response-status-codes-2" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - OK</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+</ul>
+<h3 id="code-examples-2">Code examples<a href="#code-examples-2" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="update-name-and-description">Update name and description<a href="#update-name-and-description" aria-label="Link to heading 'Update name and description'" data-heading-content="Update name and description" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X PATCH \
+</span><span style="color:#c0c5ce;">  https://api.github.com/user/issue-fields/ISSUE_FIELD_ID \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "name": "Priority",
+</span><span style="color:#c0c5ce;">  "description": "Level of importance for the issue"
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<p>Same response schema as <a href="#create-an-issue-field">Create an issue field</a>.</p>
+<h2 id="delete-an-issue-field" title="DELETE /user/issue-fields/{issue_field_id} (Delete an issue field)" data-entry-type="Resource">Delete an issue field<a href="#delete-an-issue-field" aria-label="Link to heading 'Delete an issue field'" data-heading-content="Delete an issue field" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">DELETE /user/issue-fields/{issue_field_id}
+</span></code></pre>
+<p>Deletes an issue field for the authenticated user.<br>
+The authenticated user must own the issue field. OAuth app tokens and personal access tokens (classic)<br>
+need the user scope to use this endpoint.</p>
+<h3 id="parameters-2">Parameters<a href="#parameters-2" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-2">Headers<a href="#headers-2" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-1">Path and query parameters<a href="#path-and-query-parameters-1" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li><strong><code>issue_field_id</code></strong> (integer) (required)<br>
+The unique identifier of the issue field.</li>
+</ul>
+<h3 id="http-response-status-codes-3">HTTP response status codes<a href="#http-response-status-codes-3" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>204</strong> - A header with no content is returned.</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+</ul>
+<h3 id="code-examples-3">Code examples<a href="#code-examples-3" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-2">Example<a href="#example-2" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X DELETE \
+</span><span style="color:#c0c5ce;">  https://api.github.com/user/issue-fields/ISSUE_FIELD_ID
+</span></code></pre>
+<p><strong>Response schema (Status: 204):</strong></p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

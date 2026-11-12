@@ -499,7 +499,7 @@ stores the addition as a pending suggestion. Mutually exclusive with labelIds.</
 <li><code>description</code> (String): A description of the issue field.</li>
 <li><code>name</code> (String!): The name of the issue field.</li>
 <li><code>options</code> ([IssueFieldSingleSelectOptionInput!]): The options for the issue field if applicable.</li>
-<li><code>ownerId</code> (ID!): The ID of the organization where the issue field will be created.</li>
+<li><code>ownerId</code> (ID!): The ID of the organization or user where the issue field will be created.</li>
 <li><code>visibility</code> (IssueFieldVisibility): The visibility of the issue field.</li>
 </ul>
 <h2 id="createissuefieldvalue---mutation" title="createIssueFieldValue - mutation" data-entry-type="Section">createIssueFieldValue - mutation<a href="#createissuefieldvalue---mutation" aria-label="Link to heading 'createIssueFieldValue - mutation'" data-heading-content="createIssueFieldValue - mutation" class="anchor"></a></h2>
@@ -559,9 +559,9 @@ stores the addition as a pending suggestion. Mutually exclusive with labelIds.</
 <li><code>clientMutationId</code> (String): A unique identifier for the client performing the mutation.</li>
 <li><code>color</code> (IssueTypeColor): Color for the issue type.</li>
 <li><code>description</code> (String): Description of the new issue type.</li>
-<li><code>isEnabled</code> (Boolean!): Whether or not the issue type is enabled on the org level.</li>
+<li><code>isEnabled</code> (Boolean!): Whether or not the issue type is enabled.</li>
 <li><code>name</code> (String!): Name of the new issue type.</li>
-<li><code>ownerId</code> (ID!): The ID for the organization on which the issue type is created.</li>
+<li><code>ownerId</code> (ID!): The ID of the owner on which the issue type is created.</li>
 </ul>
 <h2 id="createlabel---mutation" title="createLabel - mutation" data-entry-type="Section">createLabel - mutation<a href="#createlabel---mutation" aria-label="Link to heading 'createLabel - mutation'" data-heading-content="createLabel - mutation" class="anchor"></a></h2>
 <p>Creates a new label.</p>
@@ -1775,8 +1775,9 @@ pull request.</p>
 <p>The visibility of an issue field.</p>
 <h3 id="values-for-issuefieldvisibility">Values for <code>IssueFieldVisibility</code><a href="#values-for-issuefieldvisibility" aria-label="Link to heading 'Values for IssueFieldVisibility'" data-heading-content="Values for IssueFieldVisibility" class="anchor"></a></h3>
 <ul>
-<li><code>ALL</code>: All.</li>
-<li><code>ORG_ONLY</code>: Org Only.</li>
+<li><code>ALL</code>: Visible to everyone who can see the issue.</li>
+<li><code>ORG_ONLY</code>: Visible to members of the owning organization and, where repository context is supplied, collaborators on that repository. <strong>Deprecated:</strong> ORG_ONLY will be removed. Use RESTRICTED instead. Removal on 2027-04-01 UTC.</li>
+<li><code>RESTRICTED</code>: Visible to the owner and to collaborators on the repository the field is read through.</li>
 </ul>
 <h2 id="issuefilters---input-object" title="IssueFilters - input object" data-entry-type="Section">IssueFilters - input object<a href="#issuefilters---input-object" aria-label="Link to heading 'IssueFilters - input object'" data-heading-content="IssueFilters - input object" class="anchor"></a></h2>
 <p>Ways in which to filter lists of issues.</p>
@@ -2847,6 +2848,19 @@ duplicate of. Only set when stateReason is DUPLICATE.</li>
 <li><code>cursor</code> (String!): A cursor for use in pagination.</li>
 <li><code>node</code> (PinnedIssue): The item at the end of the edge.</li>
 </ul>
+<h2 id="pinnedissuefieldorder---input-object" title="PinnedIssueFieldOrder - input object" data-entry-type="Section">PinnedIssueFieldOrder - input object<a href="#pinnedissuefieldorder---input-object" aria-label="Link to heading 'PinnedIssueFieldOrder - input object'" data-heading-content="PinnedIssueFieldOrder - input object" class="anchor"></a></h2>
+<p>Ordering options for pinned issue field connections.</p>
+<h3 id="input-fields-for-pinnedissuefieldorder">Input fields for <code>PinnedIssueFieldOrder</code><a href="#input-fields-for-pinnedissuefieldorder" aria-label="Link to heading 'Input fields for PinnedIssueFieldOrder'" data-heading-content="Input fields for PinnedIssueFieldOrder" class="anchor"></a></h3>
+<ul>
+<li><code>direction</code> (OrderDirection!): The ordering direction.</li>
+<li><code>field</code> (PinnedIssueFieldOrderField!): The field to order pinned issue fields by.</li>
+</ul>
+<h2 id="pinnedissuefieldorderfield---enum" title="PinnedIssueFieldOrderField - enum" data-entry-type="Section">PinnedIssueFieldOrderField - enum<a href="#pinnedissuefieldorderfield---enum" aria-label="Link to heading 'PinnedIssueFieldOrderField - enum'" data-heading-content="PinnedIssueFieldOrderField - enum" class="anchor"></a></h2>
+<p>Properties by which pinned issue fields can be ordered.</p>
+<h3 id="values-for-pinnedissuefieldorderfield">Values for <code>PinnedIssueFieldOrderField</code><a href="#values-for-pinnedissuefieldorderfield" aria-label="Link to heading 'Values for PinnedIssueFieldOrderField'" data-heading-content="Values for PinnedIssueFieldOrderField" class="anchor"></a></h3>
+<ul>
+<li><code>POSITION</code>: Order pinned issue fields by their configured pinned position.</li>
+</ul>
 <h2 id="referencedevent---object" title="ReferencedEvent - object" data-entry-type="Section">ReferencedEvent - object<a href="#referencedevent---object" aria-label="Link to heading 'ReferencedEvent - object'" data-heading-content="ReferencedEvent - object" class="anchor"></a></h2>
 <p>Represents a referenced event on a given ReferencedSubject.</p>
 <p><strong>Implements:</strong> Node</p>
@@ -3528,7 +3542,7 @@ suggest flag. Mutually exclusive with assigneeIds.</li>
 <li><code>clientMutationId</code> (String): A unique identifier for the client performing the mutation.</li>
 <li><code>color</code> (IssueTypeColor): Color for the issue type.</li>
 <li><code>description</code> (String): The description of the issue type.</li>
-<li><code>isEnabled</code> (Boolean): Whether or not the issue type is enabled for the organization.</li>
+<li><code>isEnabled</code> (Boolean): Whether or not the issue type is enabled.</li>
 <li><code>issueTypeId</code> (ID!): The ID of the issue type to update.</li>
 <li><code>name</code> (String): The name of the issue type.</li>
 </ul>

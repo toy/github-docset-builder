@@ -424,7 +424,7 @@ iteration and milestone fields are supported.</p>
 <li><code>projectId</code> (ID!): The ID of the Project to mark as a template.</li>
 </ul>
 <h2 id="organizationoruser---union" title="OrganizationOrUser - union" data-entry-type="Section">OrganizationOrUser - union<a href="#organizationoruser---union" aria-label="Link to heading 'OrganizationOrUser - union'" data-heading-content="OrganizationOrUser - union" class="anchor"></a></h2>
-<p>Used for argument of CreateProjectV2 mutation.</p>
+<p>An organization or user that can own resources.</p>
 <h3 id="possible-types-for-organizationoruser">Possible types for <code>OrganizationOrUser</code><a href="#possible-types-for-organizationoruser" aria-label="Link to heading 'Possible types for OrganizationOrUser'" data-heading-content="Possible types for OrganizationOrUser" class="anchor"></a></h3>
 <ul>
 <li>Organization</li>
@@ -667,8 +667,8 @@ iteration and milestone fields are supported.</p>
 <li><code>dataType</code> (ProjectV2FieldType!): The field's type.</li>
 <li><code>databaseId</code> (Int): Identifies the primary key from the database.</li>
 <li><code>id</code> (ID!): The Node ID of the ProjectV2Field object.</li>
-<li><code>isIssueField</code> (Boolean!): Returns true if this field is associated with an organization issue field.</li>
-<li><code>issueField</code> (IssueFields): The organization issue field associated with this project field, if any.</li>
+<li><code>isIssueField</code> (Boolean!): Returns true if this field is associated with an issue field.</li>
+<li><code>issueField</code> (IssueFields): The issue field associated with this project field, if any.</li>
 <li><code>name</code> (String!): The project field's name.</li>
 <li><code>project</code> (ProjectV2!): The project that contains this field.</li>
 <li><code>updatedAt</code> (DateTime!): Identifies the date and time when the object was last updated.</li>
@@ -681,7 +681,7 @@ iteration and milestone fields are supported.</p>
 <li><code>dataType</code> (ProjectV2FieldType!): The field's type.</li>
 <li><code>databaseId</code> (Int): Identifies the primary key from the database.</li>
 <li><code>id</code> (ID!): The Node ID of the ProjectV2FieldCommon object.</li>
-<li><code>isIssueField</code> (Boolean!): Returns true if this field is associated with an organization issue field.</li>
+<li><code>isIssueField</code> (Boolean!): Returns true if this field is associated with an issue field.</li>
 <li><code>name</code> (String!): The project field's name.</li>
 <li><code>project</code> (ProjectV2!): The project that contains this field.</li>
 <li><code>updatedAt</code> (DateTime!): Identifies the date and time when the object was last updated.</li>
@@ -1158,7 +1158,7 @@ iteration and milestone fields are supported.</p>
 <li><code>dataType</code> (ProjectV2FieldType!): The field's type.</li>
 <li><code>databaseId</code> (Int): Identifies the primary key from the database.</li>
 <li><code>id</code> (ID!): The Node ID of the ProjectV2IterationField object.</li>
-<li><code>isIssueField</code> (Boolean!): Returns true if this field is associated with an organization issue field.</li>
+<li><code>isIssueField</code> (Boolean!): Returns true if this field is associated with an issue field.</li>
 <li><code>name</code> (String!): The project field's name.</li>
 <li><code>project</code> (ProjectV2!): The project that contains this field.</li>
 <li><code>updatedAt</code> (DateTime!): Identifies the date and time when the object was last updated.</li>
@@ -1208,10 +1208,10 @@ iteration and milestone fields are supported.</p>
 <p><code>id</code> (ID!): The Node ID of the ProjectV2MultiSelectField object.</p>
 </li>
 <li>
-<p><code>isIssueField</code> (Boolean!): Returns true if this field is associated with an organization issue field.</p>
+<p><code>isIssueField</code> (Boolean!): Returns true if this field is associated with an issue field.</p>
 </li>
 <li>
-<p><code>issueField</code> (IssueFields): The organization issue field associated with this project field, if any.</p>
+<p><code>issueField</code> (IssueFields): The issue field associated with this project field, if any.</p>
 </li>
 <li>
 <p><code>multiSelectOptions</code> ([ProjectV2MultiSelectFieldOption!]!): Options for the multi select field.</p>
@@ -1346,10 +1346,10 @@ option's identity during updates, preventing item field values from being cleare
 <p><code>id</code> (ID!): The Node ID of the ProjectV2SingleSelectField object.</p>
 </li>
 <li>
-<p><code>isIssueField</code> (Boolean!): Returns true if this field is associated with an organization issue field.</p>
+<p><code>isIssueField</code> (Boolean!): Returns true if this field is associated with an issue field.</p>
 </li>
 <li>
-<p><code>issueField</code> (IssueFields): The organization issue field associated with this project field, if any.</p>
+<p><code>issueField</code> (IssueFields): The issue field associated with this project field, if any.</p>
 </li>
 <li>
 <p><code>name</code> (String!): The project field's name.</p>

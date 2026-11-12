@@ -1,0 +1,149 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>REST API endpoints for Dependabot runner settings</title><link rel="stylesheet" href="../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../index.html">REST API</a> / <a href="index.html">Dependabot</a> / </nav><h1 id="rest-api-endpoints-for-dependabot-runner-settings">REST API endpoints for Dependabot runner settings<a href="#rest-api-endpoints-for-dependabot-runner-settings" aria-label="Link to heading 'REST API endpoints for Dependabot runner settings'" data-heading-content="REST API endpoints for Dependabot runner settings" class="anchor"></a></h1>
+<p>Use the REST API to get and set Dependabot runner settings.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Most endpoints use <code>Authorization: Bearer &lt;YOUR-TOKEN&gt;</code> and <code>Accept: application/vnd.github+json</code> headers, plus <code>X-GitHub-Api-Version: 2026-03-10</code>. Curl examples below omit these standard headers for brevity.</p>
+</div>
+<h2 id="get-repository-dependabot-runner-settings" title="GET /repos/{owner}/{repo}/dependabot/runner-settings (Get repository Dependabot runner settings)" data-entry-type="Resource">Get repository Dependabot runner settings<a href="#get-repository-dependabot-runner-settings" aria-label="Link to heading 'Get repository Dependabot runner settings'" data-heading-content="Get repository Dependabot runner settings" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /repos/{owner}/{repo}/dependabot/runner-settings
+</span></code></pre>
+<p>Gets the runner Dependabot uses for this repository: standard GitHub-hosted<br>
+runners, or labeled runners with their labels and optional runner group. The<br>
+response matches the repository's code security settings page.<br>
+Labeled runners take effect only for private and internal repositories with<br>
+GitHub Actions enabled. Otherwise, the response shows standard.<br>
+Repository administrators and users who can manage security products for the<br>
+repository can use this endpoint. OAuth app tokens and personal access tokens<br>
+(classic) require the repo scope for both public and private repositories.<br>
+GitHub App tokens and fine-grained personal access tokens require repository<br>
+Administration read permission. Workflow GITHUB_TOKEN access is not supported.</p>
+<h3 id="parameters">Parameters<a href="#parameters" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers">Headers<a href="#headers" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters">Path and query parameters<a href="#path-and-query-parameters" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+</ul>
+<h3 id="http-response-status-codes">HTTP response status codes<a href="#http-response-status-codes" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - OK</p>
+</li>
+<li>
+<p><strong>401</strong> - Requires authentication</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+</ul>
+<h3 id="code-examples">Code examples<a href="#code-examples" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example">Example<a href="#example" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X GET \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/dependabot/runner-settings
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<ul>
+<li><code>runner_type</code>: required, string, enum: <code>standard</code>, <code>labeled</code></li>
+<li><code>runner_labels</code>: required, array of string</li>
+<li><code>runner_group</code>: required, string or null</li>
+</ul>
+<h2 id="set-repository-dependabot-runner-settings" title="PUT /repos/{owner}/{repo}/dependabot/runner-settings (Set repository Dependabot runner settings)" data-entry-type="Resource">Set repository Dependabot runner settings<a href="#set-repository-dependabot-runner-settings" aria-label="Link to heading 'Set repository Dependabot runner settings'" data-heading-content="Set repository Dependabot runner settings" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PUT /repos/{owner}/{repo}/dependabot/runner-settings
+</span></code></pre>
+<p>Sets the runner Dependabot uses for this repository. This is the same setting<br>
+as on the repository's code security settings page.<br>
+labeled turns on labeled runners with exactly one runner label and an optional<br>
+runner group. standard turns them off and clears the label and group.<br>
+Labeled runners are only available for private and internal repositories with<br>
+GitHub Actions enabled. The response returns the settings after the change.<br>
+Repository administrators and users who can manage security products for the<br>
+repository can use this endpoint, subject to enterprise policy. OAuth app tokens<br>
+and personal access tokens (classic) require the repo scope. GitHub App tokens<br>
+and fine-grained personal access tokens require repository Administration write<br>
+permission. Workflow GITHUB_TOKEN access is not supported.</p>
+<h3 id="parameters-1">Parameters<a href="#parameters-1" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-1">Headers<a href="#headers-1" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-1">Path and query parameters<a href="#path-and-query-parameters-1" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository without the .git extension. The name is not case sensitive.</p>
+</li>
+</ul>
+<h4 id="body-parameters">Body parameters<a href="#body-parameters" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>runner_type</code></strong> (string) (required)<br>
+labeled for labeled runners, standard for standard GitHub-hosted runners.<br>
+Can be one of: <code>standard</code>, <code>labeled</code></p>
+</li>
+<li>
+<p><strong><code>runner_labels</code></strong> (array of strings)<br>
+Required for labeled. Exactly one non-blank runner label. Not allowed for standard.</p>
+</li>
+<li>
+<p><strong><code>runner_group</code></strong> (string or null)<br>
+Optional for labeled. Omitted, null or blank means no group. Not allowed for standard.</p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-1">HTTP response status codes<a href="#http-response-status-codes-1" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - OK</p>
+</li>
+<li>
+<p><strong>400</strong> - Bad Request</p>
+</li>
+<li>
+<p><strong>401</strong> - Requires authentication</p>
+</li>
+<li>
+<p><strong>403</strong> - Forbidden</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+</ul>
+<h3 id="code-examples-1">Code examples<a href="#code-examples-1" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="select-labeled-runners-in-a-runner-group">Select labeled runners in a runner group<a href="#select-labeled-runners-in-a-runner-group" aria-label="Link to heading 'Select labeled runners in a runner group'" data-heading-content="Select labeled runners in a runner group" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X PUT \
+</span><span style="color:#c0c5ce;">  https://api.github.com/repos/OWNER/REPO/dependabot/runner-settings \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "runner_type": "labeled",
+</span><span style="color:#c0c5ce;">  "runner_labels": [
+</span><span style="color:#c0c5ce;">    "dependabot"
+</span><span style="color:#c0c5ce;">  ],
+</span><span style="color:#c0c5ce;">  "runner_group": "dependabot-runners"
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<p>Same response schema as <a href="#get-repository-dependabot-runner-settings">Get repository Dependabot runner settings</a>.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

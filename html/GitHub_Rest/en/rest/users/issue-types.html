@@ -1,0 +1,207 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>REST API endpoints for issue types</title><link rel="stylesheet" href="../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../index.html">REST API</a> / <a href="index.html">Users</a> / </nav><h1 id="rest-api-endpoints-for-issue-types">REST API endpoints for issue types<a href="#rest-api-endpoints-for-issue-types" aria-label="Link to heading 'REST API endpoints for issue types'" data-heading-content="REST API endpoints for issue types" class="anchor"></a></h1>
+<p>Use the REST API to create and manage issue types for the authenticated user.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Most endpoints use <code>Authorization: Bearer &lt;YOUR-TOKEN&gt;</code> and <code>Accept: application/vnd.github+json</code> headers, plus <code>X-GitHub-Api-Version: 2026-03-10</code>. Curl examples below omit these standard headers for brevity.</p>
+</div>
+<h2 id="list-issue-types" title="GET /user/issue-types (List issue types)" data-entry-type="Resource">List issue types<a href="#list-issue-types" aria-label="Link to heading 'List issue types'" data-heading-content="List issue types" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /user/issue-types
+</span></code></pre>
+<p>Lists all issue types for the authenticated user. OAuth app tokens and personal access tokens (classic) need the read:user scope to use this endpoint.</p>
+<h3 id="http-response-status-codes">HTTP response status codes<a href="#http-response-status-codes" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - OK</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+</ul>
+<h3 id="code-examples">Code examples<a href="#code-examples" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example">Example<a href="#example" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X GET \
+</span><span style="color:#c0c5ce;">  https://api.github.com/user/issue-types
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<p>Array of <code>Issue Type</code>:</p>
+<ul>
+<li><code>id</code>: required, integer</li>
+<li><code>node_id</code>: required, string</li>
+<li><code>name</code>: required, string</li>
+<li><code>description</code>: required, string or null</li>
+<li><code>color</code>: string or null, enum: <code>gray</code>, <code>blue</code>, <code>green</code>, <code>yellow</code>, <code>orange</code>, <code>red</code>, <code>pink</code>, <code>purple</code>, <code>null</code></li>
+<li><code>created_at</code>: string, format: date-time</li>
+<li><code>updated_at</code>: string, format: date-time</li>
+<li><code>is_enabled</code>: boolean</li>
+</ul>
+<h2 id="create-an-issue-type" title="POST /user/issue-types (Create an issue type)" data-entry-type="Resource">Create an issue type<a href="#create-an-issue-type" aria-label="Link to heading 'Create an issue type'" data-heading-content="Create an issue type" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">POST /user/issue-types
+</span></code></pre>
+<p>Creates a new issue type for the authenticated user's personal account.<br>
+OAuth app tokens and personal access tokens (classic) need the user scope to use this endpoint.</p>
+<h3 id="parameters">Parameters<a href="#parameters" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers">Headers<a href="#headers" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="body-parameters">Body parameters<a href="#body-parameters" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>name</code></strong> (string) (required)<br>
+Name of the issue type.</p>
+</li>
+<li>
+<p><strong><code>is_enabled</code></strong> (boolean) (required)<br>
+Whether or not the issue type is enabled.</p>
+</li>
+<li>
+<p><strong><code>description</code></strong> (string or null)<br>
+Description of the issue type.</p>
+</li>
+<li>
+<p><strong><code>color</code></strong> (string or null)<br>
+Color for the issue type.<br>
+Can be one of: <code>gray</code>, <code>blue</code>, <code>green</code>, <code>yellow</code>, <code>orange</code>, <code>red</code>, <code>pink</code>, <code>purple</code>, <code>null</code></p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-1">HTTP response status codes<a href="#http-response-status-codes-1" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - OK</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+</ul>
+<h3 id="code-examples-1">Code examples<a href="#code-examples-1" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-1">Example<a href="#example-1" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X POST \
+</span><span style="color:#c0c5ce;">  https://api.github.com/user/issue-types \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "name": "Epic",
+</span><span style="color:#c0c5ce;">  "description": "An issue type for a multi-week tracking of work",
+</span><span style="color:#c0c5ce;">  "is_enabled": true,
+</span><span style="color:#c0c5ce;">  "color": "green"
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<ul>
+<li><code>id</code>: required, integer</li>
+<li><code>node_id</code>: required, string</li>
+<li><code>name</code>: required, string</li>
+<li><code>description</code>: required, string or null</li>
+<li><code>color</code>: string or null, enum: <code>gray</code>, <code>blue</code>, <code>green</code>, <code>yellow</code>, <code>orange</code>, <code>red</code>, <code>pink</code>, <code>purple</code>, <code>null</code></li>
+<li><code>created_at</code>: string, format: date-time</li>
+<li><code>updated_at</code>: string, format: date-time</li>
+<li><code>is_enabled</code>: boolean</li>
+</ul>
+<h2 id="update-an-issue-type" title="PUT /user/issue-types/{issue_type_id} (Update an issue type)" data-entry-type="Resource">Update an issue type<a href="#update-an-issue-type" aria-label="Link to heading 'Update an issue type'" data-heading-content="Update an issue type" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PUT /user/issue-types/{issue_type_id}
+</span></code></pre>
+<p>Updates an issue type for the authenticated user.<br>
+The authenticated user must own the issue type. OAuth app tokens and personal access tokens (classic)<br>
+need the user scope to use this endpoint.</p>
+<h3 id="parameters-1">Parameters<a href="#parameters-1" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-1">Headers<a href="#headers-1" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters">Path and query parameters<a href="#path-and-query-parameters" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li><strong><code>issue_type_id</code></strong> (integer) (required)<br>
+The unique identifier of the issue type.</li>
+</ul>
+<h4 id="body-parameters-1">Body parameters<a href="#body-parameters-1" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>name</code></strong> (string) (required)<br>
+Name of the issue type.</p>
+</li>
+<li>
+<p><strong><code>is_enabled</code></strong> (boolean) (required)<br>
+Whether or not the issue type is enabled.</p>
+</li>
+<li>
+<p><strong><code>description</code></strong> (string or null)<br>
+Description of the issue type.</p>
+</li>
+<li>
+<p><strong><code>color</code></strong> (string or null)<br>
+Color for the issue type.<br>
+Can be one of: <code>gray</code>, <code>blue</code>, <code>green</code>, <code>yellow</code>, <code>orange</code>, <code>red</code>, <code>pink</code>, <code>purple</code>, <code>null</code></p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-2">HTTP response status codes<a href="#http-response-status-codes-2" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - OK</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+</ul>
+<h3 id="code-examples-2">Code examples<a href="#code-examples-2" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-2">Example<a href="#example-2" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X PUT \
+</span><span style="color:#c0c5ce;">  https://api.github.com/user/issue-types/ISSUE_TYPE_ID \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "name": "Epic",
+</span><span style="color:#c0c5ce;">  "description": "An issue type for a multi-week tracking of work",
+</span><span style="color:#c0c5ce;">  "is_enabled": true,
+</span><span style="color:#c0c5ce;">  "color": "green"
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<p>Same response schema as <a href="#create-an-issue-type">Create an issue type</a>.</p>
+<h2 id="delete-an-issue-type" title="DELETE /user/issue-types/{issue_type_id} (Delete an issue type)" data-entry-type="Resource">Delete an issue type<a href="#delete-an-issue-type" aria-label="Link to heading 'Delete an issue type'" data-heading-content="Delete an issue type" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">DELETE /user/issue-types/{issue_type_id}
+</span></code></pre>
+<p>Deletes an issue type for the authenticated user.<br>
+The authenticated user must own the issue type. OAuth app tokens and personal access tokens (classic)<br>
+need the user scope to use this endpoint.</p>
+<h3 id="parameters-2">Parameters<a href="#parameters-2" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-2">Headers<a href="#headers-2" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-1">Path and query parameters<a href="#path-and-query-parameters-1" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li><strong><code>issue_type_id</code></strong> (integer) (required)<br>
+The unique identifier of the issue type.</li>
+</ul>
+<h3 id="http-response-status-codes-3">HTTP response status codes<a href="#http-response-status-codes-3" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>204</strong> - No Content</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource not found</p>
+</li>
+<li>
+<p><strong>422</strong> - Validation failed, or the endpoint has been spammed.</p>
+</li>
+</ul>
+<h3 id="code-examples-3">Code examples<a href="#code-examples-3" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-3">Example<a href="#example-3" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X DELETE \
+</span><span style="color:#c0c5ce;">  https://api.github.com/user/issue-types/ISSUE_TYPE_ID
+</span></code></pre>
+<p><strong>Response schema (Status: 204):</strong></p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1352,6 +1352,26 @@ provided from argument.</li>
 </ul>
 </li>
 <li>
+<p><code>issueFields</code> (IssueFieldsConnection): A list of the user's issue fields.</p>
+<ul>
+<li><code>after</code> (String): Returns the elements in the list that come after the specified cursor.</li>
+<li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
+<li><code>first</code> (Int): Returns the first n elements from the list.</li>
+<li><code>last</code> (Int): Returns the last n elements from the list.</li>
+<li><code>orderBy</code> (IssueFieldOrder): Ordering options for issue fields returned from the connection. Default: <code>{field: CREATED_AT, direction: ASC}</code>.</li>
+</ul>
+</li>
+<li>
+<p><code>issueTypes</code> (IssueTypeConnection): A list of the user's issue types.</p>
+<ul>
+<li><code>after</code> (String): Returns the elements in the list that come after the specified cursor.</li>
+<li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
+<li><code>first</code> (Int): Returns the first n elements from the list.</li>
+<li><code>last</code> (Int): Returns the last n elements from the list.</li>
+<li><code>orderBy</code> (IssueTypeOrder): Ordering options for issue types returned from the connection. Default: <code>{field: CREATED_AT, direction: ASC}</code>.</li>
+</ul>
+</li>
+<li>
 <p><code>issues</code> (IssueConnection!): A list of issues associated with this user.</p>
 <ul>
 <li><code>after</code> (String): Returns the elements in the list that come after the specified cursor.</li>
@@ -1437,6 +1457,16 @@ GitHub Sponsors. Does not include sponsorships paid via Patreon.</p>
 <li><code>first</code> (Int): Returns the first n elements from the list.</li>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
 <li><code>types</code> ([PinnableItemType!]): Filter the types of pinnable items that are returned.</li>
+</ul>
+</li>
+<li>
+<p><code>pinnedIssueFields</code> (IssueFieldsConnection): An ordered list of issue fields pinned to issues when no type is selected.</p>
+<ul>
+<li><code>after</code> (String): Returns the elements in the list that come after the specified cursor.</li>
+<li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
+<li><code>first</code> (Int): Returns the first n elements from the list.</li>
+<li><code>last</code> (Int): Returns the last n elements from the list.</li>
+<li><code>orderBy</code> (PinnedIssueFieldOrder): The order in which to return pinned issue fields. Default: <code>{field: POSITION, direction: ASC}</code>.</li>
 </ul>
 </li>
 <li>

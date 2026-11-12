@@ -43,7 +43,7 @@ The organization name. The name is not case sensitive.</li>
 <li><code>name</code>: required, string</li>
 <li><code>description</code>: string or null</li>
 <li><code>data_type</code>: required, string, enum: <code>text</code>, <code>date</code>, <code>single_select</code>, <code>multi_select</code>, <code>number</code></li>
-<li><code>visibility</code>: string, enum: <code>organization_members_only</code>, <code>all</code></li>
+<li><code>visibility</code>: string, enum: <code>organization_members_only</code>, <code>all</code>, <code>restricted</code></li>
 <li><code>options</code>: array of objects or null:
 <ul>
 <li><code>id</code>: required, integer</li>
@@ -93,8 +93,8 @@ Can be one of: <code>text</code>, <code>date</code>, <code>single_select</code>,
 </li>
 <li>
 <p><strong><code>visibility</code></strong> (string)<br>
-The visibility of the issue field. Can be organization_members_only (visible only within the organization) or all (visible to all users who can see issues). Only used when the visibility settings feature is enabled. Defaults to organization_members_only.<br>
-Can be one of: <code>organization_members_only</code>, <code>all</code></p>
+The visibility of the issue field. Can be restricted (visible to organization members and to collaborators on the repository the field is read through) or all (visible to all users who can see issues). organization_members_only is deprecated. Use restricted instead. Removal will be announced for a future REST API version; existing REST API versions will continue to support this value. Only used when the visibility settings feature is enabled. Defaults to organization_members_only.<br>
+Can be one of: <code>organization_members_only</code>, <code>all</code>, <code>restricted</code></p>
 </li>
 <li>
 <p><strong><code>options</code></strong> (array of objects or null)<br>
@@ -160,7 +160,7 @@ Priority of the option for ordering.</li>
 <li><code>name</code>: required, string</li>
 <li><code>description</code>: string or null</li>
 <li><code>data_type</code>: required, string, enum: <code>text</code>, <code>date</code>, <code>single_select</code>, <code>multi_select</code>, <code>number</code></li>
-<li><code>visibility</code>: string, enum: <code>organization_members_only</code>, <code>all</code></li>
+<li><code>visibility</code>: string, enum: <code>organization_members_only</code>, <code>all</code>, <code>restricted</code></li>
 <li><code>options</code>: array of objects or null:
 <ul>
 <li><code>id</code>: required, integer</li>
@@ -211,8 +211,8 @@ Description of the issue field.</p>
 </li>
 <li>
 <p><strong><code>visibility</code></strong> (string)<br>
-The visibility of the issue field. Can be organization_members_only (visible only within the organization) or all (visible to all users who can see issues). Only used when the visibility settings feature is enabled.<br>
-Can be one of: <code>organization_members_only</code>, <code>all</code></p>
+The visibility of the issue field. Can be restricted (visible to organization members and to collaborators on the repository the field is read through) or all (visible to all users who can see issues). organization_members_only is deprecated. Use restricted instead. Removal will be announced for a future REST API version; existing REST API versions will continue to support this value. Only used when the visibility settings feature is enabled.<br>
+Can be one of: <code>organization_members_only</code>, <code>all</code>, <code>restricted</code></p>
 </li>
 <li>
 <p><strong><code>options</code></strong> (array of objects)<br>

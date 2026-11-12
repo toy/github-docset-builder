@@ -1,0 +1,27 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>About AI Scan</title><link rel="stylesheet" href="../../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../../index.html">Security and code quality</a> / <a href="../index.html">Concepts</a> / <a href="index.html">Code scanning</a> / </nav><h1 id="about-ai-scan">About AI Scan<a href="#about-ai-scan" aria-label="Link to heading 'About AI Scan'" data-heading-content="About AI Scan" class="anchor"></a></h1>
+<p>AI Scan extends code scanning with AI-based detection to help find security vulnerabilities.</p>
+<p>AI Scan is a set of AI-powered scanning capabilities that complement CodeQL. The capabilities differ in their scope:</p>
+<ul>
+<li><strong>AI Scan for repositories</strong> scans a repository’s default branch on demand across all languages, including languages already supported by CodeQL.</li>
+<li><strong>AI Scan for pull requests</strong> currently finds general security vulnerabilities in selected languages and frameworks not covered by CodeQL.</li>
+<li><strong>Scan for AI applications</strong> finds risks specific to AI applications and agents, such as indirect prompt injection, independently of CodeQL language coverage.</li>
+</ul>
+<p>Each feature has its own coverage, availability, and billing requirements.</p>
+<h2 id="ai-scan-for-repositories" title="AI Scan for repositories" data-entry-type="Section">AI Scan for repositories<a href="#ai-scan-for-repositories" aria-label="Link to heading 'AI Scan for repositories'" data-heading-content="AI Scan for repositories" class="anchor"></a></h2>
+<p>AI Scan for repositories is in public preview and subject to change.</p>
+<p>AI Scan for repositories finds security vulnerabilities across your repository's default branch, in any language. It extends coverage beyond CodeQL-supported languages and can find additional vulnerabilities in languages CodeQL already analyzes.</p>
+<p>Users with write access run scans on demand. Findings are added to your code scanning backlog alongside CodeQL alerts, where you can assign them, link them to issues, include them in security campaigns, or use agentic autofix to help fix them.</p>
+<p>For more information, including availability, billing, limitations, and enablement guidance, see <a href="ai-scan-for-repositories.html">AI Scan for a repository's backlog</a>.</p>
+<h2 id="ai-scanning-on-pull-requests" title="AI scanning on pull requests" data-entry-type="Section">AI scanning on pull requests<a href="#ai-scanning-on-pull-requests" aria-label="Link to heading 'AI scanning on pull requests'" data-heading-content="AI scanning on pull requests" class="anchor"></a></h2>
+<h3 id="general-code-security-vulnerabilities">General code security vulnerabilities<a href="#general-code-security-vulnerabilities" aria-label="Link to heading 'General code security vulnerabilities'" data-heading-content="General code security vulnerabilities" class="anchor"></a></h3>
+<p><strong>AI Scan for pull requests</strong> finds security vulnerabilities in pull request changes for selected languages and frameworks not covered by CodeQL. Examples include PHP and Terraform configuration (HCL).</p>
+<p>When enabled, it scans eligible pull requests when they are created and after each new commit. Findings appear alongside CodeQL alerts with an "AI" label.</p>
+<p>For more information, including coverage, availability, billing, and enablement guidance, see <a href="ai-powered-security-detections.html">AI Scan for pull requests</a>.</p>
+<h3 id="ai-application-and-agent-risks">AI application and agent risks<a href="#ai-application-and-agent-risks" aria-label="Link to heading 'AI application and agent risks'" data-heading-content="AI application and agent risks" class="anchor"></a></h3>
+<p><strong>Scan for AI applications</strong> finds security risks in AI applications and agents in pull requests, initially focusing on indirect prompt injection.</p>
+<p>When enabled, the detector scans eligible pull requests when they are created and after each new commit. Findings appear as comments on the pull request.</p>
+<p>For more information, including coverage, availability, billing, and enablement guidance, see <a href="ai-applications-scanning-for-pull-requests.html">AI applications scanning for pull requests</a>.</p>
+<h2 id="managing-ai-scan" title="Managing AI Scan" data-entry-type="Section">Managing AI Scan<a href="#managing-ai-scan" aria-label="Link to heading 'Managing AI Scan'" data-heading-content="Managing AI Scan" class="anchor"></a></h2>
+<p>For enterprises, a shared <strong>AI Scan</strong> policy controls whether organizations can enable these features. Allowing AI Scan does not automatically enable any feature. See <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-code-security-and-analysis-for-your-enterprise#enforcing-a-policy-to-manage-ai-scan-in-your-enterprises-repositories" class="external">Enforcing policies for code security and analysis for your enterprise</a>.</p>
+<p>Organizations enable each feature separately, and repository administrators can opt out for each feature independently. For permissions and setup instructions, see the dedicated article for each feature.</p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>REST API endpoints for Agent Merge</title><link rel="stylesheet" href="../../../assets/style.css"></head><body class="markdown-body"><nav><a href="../index.html">REST API</a> / <a href="index.html">Pull requests</a> / </nav><h1 id="rest-api-endpoints-for-agent-merge">REST API endpoints for Agent Merge<a href="#rest-api-endpoints-for-agent-merge" aria-label="Link to heading 'REST API endpoints for Agent Merge'" data-heading-content="REST API endpoints for Agent Merge" class="anchor"></a></h1>
+<p>Use the REST API to get, update, and disable Agent Merge for pull requests.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Most endpoints use <code>Authorization: Bearer &lt;YOUR-TOKEN&gt;</code> and <code>Accept: application/vnd.github+json</code> headers, plus <code>X-GitHub-Api-Version: 2026-03-10</code>. Curl examples below omit these standard headers for brevity.</p>
+</div>
+<h2 id="get-agent-merge-configuration-for-a-pull-request" title="GET /agents/repos/{owner}/{repo}/pulls/{pull_number}/agent-merge (Get Agent Merge configuration for a pull request)" data-entry-type="Resource">Get Agent Merge configuration for a pull request<a href="#get-agent-merge-configuration-for-a-pull-request" aria-label="Link to heading 'Get Agent Merge configuration for a pull request'" data-heading-content="Get Agent Merge configuration for a pull request" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /agents/repos/{owner}/{repo}/pulls/{pull_number}/agent-merge
+</span></code></pre>
+<p>Gets the Agent Merge configuration for a pull request.<br>
+You must have write access to the repository.<br>
+OAuth app tokens and personal access tokens (classic) need the repo scope for private or internal repositories, or the public_repo scope for public repositories.</p>
+<h3 id="parameters">Parameters<a href="#parameters" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers">Headers<a href="#headers" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters">Path and query parameters<a href="#path-and-query-parameters" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>pull_number</code></strong> (integer) (required)<br>
+The number that identifies the pull request.</p>
+</li>
+</ul>
+<h3 id="http-response-status-codes">HTTP response status codes<a href="#http-response-status-codes" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - Stored configuration retrieved successfully</p>
+</li>
+<li>
+<p><strong>401</strong> - Authentication required</p>
+</li>
+<li>
+<p><strong>403</strong> - Caller is not permitted to read this enrollment</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource or enrollment is absent, enrollment is disabled, or access is masked as not found</p>
+</li>
+<li>
+<p><strong>422</strong> - Invalid request parameters</p>
+</li>
+<li>
+<p><strong>429</strong> - Rate limit exceeded</p>
+</li>
+<li>
+<p><strong>503</strong> - Enrollment storage or an authorization dependency is unavailable</p>
+</li>
+</ul>
+<h3 id="code-examples">Code examples<a href="#code-examples" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example">Example<a href="#example" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X GET \
+</span><span style="color:#c0c5ce;">  https://api.github.com/agents/repos/OWNER/REPO/pulls/PULL_NUMBER/agent-merge
+</span></code></pre>
+<p><strong>Response schema (Status: 200):</strong></p>
+<ul>
+<li><code>allowed_actions</code>: required, array of string, enum: <code>fix_ci</code>, <code>resolve_merge_conflicts</code></li>
+<li><code>created_at</code>: required, string, format: date-time</li>
+<li><code>updated_at</code>: required, string, format: date-time</li>
+<li><code>user</code>: required, object:
+<ul>
+<li><code>id</code>: required, integer, format: int64, minimum: 1</li>
+</ul>
+</li>
+</ul>
+<h2 id="update-agent-merge-configuration-for-a-pull-request" title="PUT /agents/repos/{owner}/{repo}/pulls/{pull_number}/agent-merge (Update Agent Merge configuration for a pull request)" data-entry-type="Resource">Update Agent Merge configuration for a pull request<a href="#update-agent-merge-configuration-for-a-pull-request" aria-label="Link to heading 'Update Agent Merge configuration for a pull request'" data-heading-content="Update Agent Merge configuration for a pull request" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PUT /agents/repos/{owner}/{repo}/pulls/{pull_number}/agent-merge
+</span></code></pre>
+<p>Updates the Agent Merge configuration for a pull request, enabling Agent Merge<br>
+or changing the allowed actions that Copilot is allowed to take on the pull<br>
+request.<br>
+If Agent Merge is currently enabled for the pull request, only the user<br>
+who most recently enabled it may change its allowed actions.<br>
+If enrollment eligibility cannot be determined, the operation returns 503.<br>
+This endpoint is only available to users with a Copilot subscription,<br>
+excluding Copilot Free users. You must have write access to the repository,<br>
+the pull request must not be from a fork or part of a stack, and the repository<br>
+must have the "Allow automations" setting enabled.<br>
+OAuth app tokens and personal access tokens (classic) need the repo scope for private or internal repositories, or the public_repo scope for public repositories.</p>
+<h3 id="parameters-1">Parameters<a href="#parameters-1" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-1">Headers<a href="#headers-1" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-1">Path and query parameters<a href="#path-and-query-parameters-1" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>pull_number</code></strong> (integer) (required)<br>
+The number that identifies the pull request.</p>
+</li>
+</ul>
+<h4 id="body-parameters">Body parameters<a href="#body-parameters" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
+<ul>
+<li><strong><code>allowed_actions</code></strong> (array of strings) (required)<br>
+The set of actions that Copilot may perform on the pull request.<br>
+Supported values are: fix_ci, resolve_merge_conflicts</li>
+</ul>
+<h3 id="http-response-status-codes-1">HTTP response status codes<a href="#http-response-status-codes-1" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>200</strong> - Existing Agent Merge enrollment updated</p>
+</li>
+<li>
+<p><strong>201</strong> - Pull request enrolled for Agent Merge</p>
+</li>
+<li>
+<p><strong>400</strong> - Malformed JSON request body</p>
+</li>
+<li>
+<p><strong>401</strong> - Authentication required</p>
+</li>
+<li>
+<p><strong>403</strong> - Caller lacks the permissions or eligibility to enroll the pull request for Agent Merge</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource is absent or masked as not found</p>
+</li>
+<li>
+<p><strong>409</strong> - Enrollment changed during the write; no replacement was committed</p>
+</li>
+<li>
+<p><strong>422</strong> - Ineligible pull request, invalid action selection, or unknown body properties</p>
+</li>
+<li>
+<p><strong>429</strong> - Rate limit exceeded</p>
+</li>
+<li>
+<p><strong>503</strong> - Enrollment storage or an authorization dependency is unavailable, or eligibility is unknown</p>
+</li>
+</ul>
+<h3 id="code-examples-1">Code examples<a href="#code-examples-1" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="only-ask-copilot-to-fix-failing-actions-workflows">Only ask Copilot to fix failing Actions workflows<a href="#only-ask-copilot-to-fix-failing-actions-workflows" aria-label="Link to heading 'Only ask Copilot to fix failing Actions workflows'" data-heading-content="Only ask Copilot to fix failing Actions workflows" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X PUT \
+</span><span style="color:#c0c5ce;">  https://api.github.com/agents/repos/OWNER/REPO/pulls/PULL_NUMBER/agent-merge \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "allowed_actions": [
+</span><span style="color:#c0c5ce;">    "fix_ci"
+</span><span style="color:#c0c5ce;">  ]
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 201):</strong></p>
+<p>Same response schema as <a href="#get-agent-merge-configuration-for-a-pull-request">Get Agent Merge configuration for a pull request</a>.</p>
+<h4 id="ask-copilot-to-fix-failing-actions-workflows-and-resolve-merge-conflicts">Ask Copilot to fix failing Actions workflows and resolve merge conflicts<a href="#ask-copilot-to-fix-failing-actions-workflows-and-resolve-merge-conflicts" aria-label="Link to heading 'Ask Copilot to fix failing Actions workflows and resolve merge conflicts'" data-heading-content="Ask Copilot to fix failing Actions workflows and resolve merge conflicts" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X PUT \
+</span><span style="color:#c0c5ce;">  https://api.github.com/agents/repos/OWNER/REPO/pulls/PULL_NUMBER/agent-merge \
+</span><span style="color:#c0c5ce;">  -d '{
+</span><span style="color:#c0c5ce;">  "allowed_actions": [
+</span><span style="color:#c0c5ce;">    "fix_ci",
+</span><span style="color:#c0c5ce;">    "resolve_merge_conflicts"
+</span><span style="color:#c0c5ce;">  ]
+</span><span style="color:#c0c5ce;">}'
+</span></code></pre>
+<p><strong>Response schema (Status: 201):</strong></p>
+<p>Same response schema as <a href="#get-agent-merge-configuration-for-a-pull-request">Get Agent Merge configuration for a pull request</a>.</p>
+<h2 id="disable-agent-merge-for-a-pull-request" title="DELETE /agents/repos/{owner}/{repo}/pulls/{pull_number}/agent-merge (Disable Agent Merge for a pull request)" data-entry-type="Resource">Disable Agent Merge for a pull request<a href="#disable-agent-merge-for-a-pull-request" aria-label="Link to heading 'Disable Agent Merge for a pull request'" data-heading-content="Disable Agent Merge for a pull request" class="anchor"></a></h2>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">DELETE /agents/repos/{owner}/{repo}/pulls/{pull_number}/agent-merge
+</span></code></pre>
+<p>Disables Agent Merge for a pull request.<br>
+You must have write access to the repository. Disabling does not require<br>
+enrollment eligibility: your Copilot subscription, coding-agent and Automations<br>
+policies, the Agent Merge execution flag, pull request state, stack membership,<br>
+and repository archive state do not prevent cleanup. Authentication, token<br>
+repository selection, and "Agent tasks" write permission remain required.<br>
+OAuth app tokens and personal access tokens (classic) need the repo scope for private or internal repositories, or the public_repo scope for public repositories.</p>
+<h3 id="parameters-2">Parameters<a href="#parameters-2" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
+<h4 id="headers-2">Headers<a href="#headers-2" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
+<ul>
+<li><strong><code>accept</code></strong> (string)<br>
+Setting to <code>application/vnd.github+json</code> is recommended.</li>
+</ul>
+<h4 id="path-and-query-parameters-2">Path and query parameters<a href="#path-and-query-parameters-2" aria-label="Link to heading 'Path and query parameters'" data-heading-content="Path and query parameters" class="anchor"></a></h4>
+<ul>
+<li>
+<p><strong><code>owner</code></strong> (string) (required)<br>
+The account owner of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>repo</code></strong> (string) (required)<br>
+The name of the repository. The name is not case sensitive.</p>
+</li>
+<li>
+<p><strong><code>pull_number</code></strong> (integer) (required)<br>
+The number that identifies the pull request.</p>
+</li>
+</ul>
+<h3 id="http-response-status-codes-2">HTTP response status codes<a href="#http-response-status-codes-2" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
+<ul>
+<li>
+<p><strong>204</strong> - Agent Merge successfully disabled for the pull request</p>
+</li>
+<li>
+<p><strong>401</strong> - Authentication required</p>
+</li>
+<li>
+<p><strong>403</strong> - Caller lacks write permission</p>
+</li>
+<li>
+<p><strong>404</strong> - Resource or enrollment is absent or masked as not found</p>
+</li>
+<li>
+<p><strong>409</strong> - Enrollment changed during the write; no replacement was committed</p>
+</li>
+<li>
+<p><strong>422</strong> - Invalid request parameters</p>
+</li>
+<li>
+<p><strong>429</strong> - Rate limit exceeded</p>
+</li>
+<li>
+<p><strong>503</strong> - Enrollment storage, authorization, or required publication is unavailable</p>
+</li>
+</ul>
+<h3 id="code-examples-2">Code examples<a href="#code-examples-2" aria-label="Link to heading 'Code examples'" data-heading-content="Code examples" class="anchor"></a></h3>
+<h4 id="example-1">Example<a href="#example-1" aria-label="Link to heading 'Example'" data-heading-content="Example" class="anchor"></a></h4>
+<p><strong>Request:</strong></p>
+<pre lang="curl" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">curl -L \
+</span><span style="color:#c0c5ce;">  -X DELETE \
+</span><span style="color:#c0c5ce;">  https://api.github.com/agents/repos/OWNER/REPO/pulls/PULL_NUMBER/agent-merge
+</span></code></pre>
+<p><strong>Response schema (Status: 204):</strong></p>
+<footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>

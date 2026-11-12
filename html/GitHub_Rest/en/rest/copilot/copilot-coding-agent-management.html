@@ -195,9 +195,11 @@ The values of the custom property to match.</li>
 <p>This endpoint is in public preview and is subject to change.</p>
 <p>Gets information about which repositories in an organization have been enabled<br>
 or disabled for the Copilot cloud agent.<br>
-Organization owners can configure whether Copilot cloud agent is enabled for<br>
-all repositories, selected repositories, or no repositories owned by organization.<br>
-OAuth app tokens and personal access tokens (classic) need the admin:org scope to use this endpoint.</p>
+Organization owners and members with a custom organization role that includes<br>
+either the View organization Copilot cloud agent settings or Manage organization Copilot cloud agent settings permission can use this endpoint to view whether<br>
+Copilot cloud agent is enabled for all repositories, selected repositories, or<br>
+no repositories owned by the organization.<br>
+OAuth app tokens and personal access tokens (classic) need the read:org scope to use this endpoint.</p>
 <h3 id="parameters-3">Parameters<a href="#parameters-3" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-3">Headers<a href="#headers-3" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
@@ -325,9 +327,10 @@ Can be one of: <code>all</code>, <code>selected</code>, <code>none</code></li>
 <p>Note</p>
 <p>This endpoint is in public preview and is subject to change.</p>
 <p>Lists the selected repositories that are enabled for Copilot cloud agent in an organization.<br>
-Organization owners can use this endpoint when the coding agent repository policy<br>
-is set to selected to see which repositories have been enabled.<br>
-OAuth app tokens and personal access tokens (classic) need the admin:org scope to use this endpoint.</p>
+Organization owners and members with a custom organization role that includes<br>
+either the View organization Copilot cloud agent settings or Manage organization Copilot cloud agent settings permission can use this endpoint when the coding agent<br>
+repository policy is set to selected to see which repositories have been enabled.<br>
+OAuth app tokens and personal access tokens (classic) need the read:org scope to use this endpoint.</p>
 <h3 id="parameters-5">Parameters<a href="#parameters-5" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-5">Headers<a href="#headers-5" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>

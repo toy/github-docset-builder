@@ -46,6 +46,7 @@ The organization name. The name is not case sensitive.</li>
 <p><strong>Response schema (Status: 200):</strong></p>
 <ul>
 <li><code>pr_scan</code>: required, string, enum: <code>enabled</code>, <code>disabled</code></li>
+<li><code>repository_scan</code>: string, enum: <code>enabled</code>, <code>disabled</code></li>
 </ul>
 <h2 id="update-the-ai-scan-setting-for-an-organization" title="PATCH /orgs/{org}/code-scanning/ai-scan (Update the AI Scan setting for an organization)" data-entry-type="Resource">Update the AI Scan setting for an organization<a href="#update-the-ai-scan-setting-for-an-organization" aria-label="Link to heading 'Update the AI Scan setting for an organization'" data-heading-content="Update the AI Scan setting for an organization" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PATCH /orgs/{org}/code-scanning/ai-scan
@@ -66,9 +67,16 @@ The organization name. The name is not case sensitive.</li>
 </ul>
 <h4 id="body-parameters">Body parameters<a href="#body-parameters" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
 <ul>
-<li><strong><code>pr_scan</code></strong> (string)<br>
-Whether AI Scan is enabled for the organization. Organization respects enterprise policy. Disabled organizations prevent repositories from enabling AI Scan. Enabled organizations enable AI Scan for their repositories, but individual repositories can opt out.<br>
-Can be one of: <code>enabled</code>, <code>disabled</code></li>
+<li>
+<p><strong><code>pr_scan</code></strong> (string)<br>
+Whether AI Scan on pull requests is enabled for the organization. Organization respects enterprise policy. Disabled organizations prevent repositories from enabling AI Scan. Enabled organizations enable AI Scan for their repositories, but individual repositories can opt out.<br>
+Can be one of: <code>enabled</code>, <code>disabled</code></p>
+</li>
+<li>
+<p><strong><code>repository_scan</code></strong> (string)<br>
+Whether the full repository AI Scan is enabled for the organization. Organization respects enterprise policy. Disabled organizations prevent repositories from enabling the full repository AI Scan. Enabled organizations enable it for their repositories, but individual repositories can opt out.<br>
+Can be one of: <code>enabled</code>, <code>disabled</code></p>
+</li>
 </ul>
 <h3 id="http-response-status-codes-1">HTTP response status codes<a href="#http-response-status-codes-1" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
@@ -92,7 +100,8 @@ Can be one of: <code>enabled</code>, <code>disabled</code></li>
 </span><span style="color:#c0c5ce;">  -X PATCH \
 </span><span style="color:#c0c5ce;">  https://api.github.com/orgs/ORG/code-scanning/ai-scan \
 </span><span style="color:#c0c5ce;">  -d '{
-</span><span style="color:#c0c5ce;">  "pr_scan": "enabled"
+</span><span style="color:#c0c5ce;">  "pr_scan": "enabled",
+</span><span style="color:#c0c5ce;">  "repository_scan": "enabled"
 </span><span style="color:#c0c5ce;">}'
 </span></code></pre>
 <p><strong>Response schema (Status: 200):</strong></p>
@@ -405,9 +414,16 @@ The name of the repository without the .git extension. The name is not case sens
 </ul>
 <h4 id="body-parameters-1">Body parameters<a href="#body-parameters-1" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
 <ul>
-<li><strong><code>pr_scan</code></strong> (string)<br>
-Whether to enable or disable AI Scan for the repository.<br>
-Can be one of: <code>enabled</code>, <code>disabled</code></li>
+<li>
+<p><strong><code>pr_scan</code></strong> (string)<br>
+Whether to enable or disable AI Scan on pull requests for the repository.<br>
+Can be one of: <code>enabled</code>, <code>disabled</code></p>
+</li>
+<li>
+<p><strong><code>repository_scan</code></strong> (string)<br>
+Whether to enable or disable the full repository AI Scan for the repository.<br>
+Can be one of: <code>enabled</code>, <code>disabled</code></p>
+</li>
 </ul>
 <h3 id="http-response-status-codes-4">HTTP response status codes<a href="#http-response-status-codes-4" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
@@ -646,6 +662,90 @@ Use <span data-escaped-char="">*</span> to list alerts with at least one assigne
 </ul>
 </li>
 <li><code>assignees</code>: array of <code>Simple User</code> (see above)</li>
+<li><code>linked_pull_requests</code>: array of <code>Pull Requests on Alerts</code>:
+<ul>
+<li><code>number</code>: required, integer</li>
+<li><code>id</code>: required, integer, format: int64</li>
+<li><code>repository</code>: required, <code>Simple Repository</code>:
+<ul>
+<li><code>id</code>: required, integer, format: int64</li>
+<li><code>node_id</code>: required, string</li>
+<li><code>name</code>: required, string</li>
+<li><code>full_name</code>: required, string</li>
+<li><code>owner</code>: required, <code>Simple User</code> (see above)</li>
+<li><code>private</code>: required, boolean</li>
+<li><code>html_url</code>: required, string, format: uri</li>
+<li><code>description</code>: required, string or null</li>
+<li><code>fork</code>: required, boolean</li>
+<li><code>url</code>: required, string, format: uri</li>
+<li><code>archive_url</code>: required, string</li>
+<li><code>assignees_url</code>: required, string</li>
+<li><code>blobs_url</code>: required, string</li>
+<li><code>branches_url</code>: required, string</li>
+<li><code>collaborators_url</code>: required, string</li>
+<li><code>comments_url</code>: required, string</li>
+<li><code>commits_url</code>: required, string</li>
+<li><code>compare_url</code>: required, string</li>
+<li><code>contents_url</code>: required, string</li>
+<li><code>contributors_url</code>: required, string, format: uri</li>
+<li><code>deployments_url</code>: required, string, format: uri</li>
+<li><code>downloads_url</code>: required, string, format: uri</li>
+<li><code>events_url</code>: required, string, format: uri</li>
+<li><code>forks_url</code>: required, string, format: uri</li>
+<li><code>git_commits_url</code>: required, string</li>
+<li><code>git_refs_url</code>: required, string</li>
+<li><code>git_tags_url</code>: required, string</li>
+<li><code>issue_comment_url</code>: required, string</li>
+<li><code>issue_events_url</code>: required, string</li>
+<li><code>issues_url</code>: required, string</li>
+<li><code>keys_url</code>: required, string</li>
+<li><code>labels_url</code>: required, string</li>
+<li><code>languages_url</code>: required, string, format: uri</li>
+<li><code>merges_url</code>: required, string, format: uri</li>
+<li><code>milestones_url</code>: required, string</li>
+<li><code>notifications_url</code>: required, string</li>
+<li><code>pulls_url</code>: required, string</li>
+<li><code>releases_url</code>: required, string</li>
+<li><code>stargazers_url</code>: required, string, format: uri</li>
+<li><code>statuses_url</code>: required, string</li>
+<li><code>subscribers_url</code>: required, string, format: uri</li>
+<li><code>subscription_url</code>: required, string, format: uri</li>
+<li><code>tags_url</code>: required, string, format: uri</li>
+<li><code>teams_url</code>: required, string, format: uri</li>
+<li><code>trees_url</code>: required, string</li>
+<li><code>hooks_url</code>: required, string, format: uri</li>
+</ul>
+</li>
+<li><code>title</code>: required, string</li>
+<li><code>state</code>: required, string, enum: <code>open</code>, <code>closed</code>, <code>merged</code></li>
+<li><code>merged_at</code>: required, string or null, format: date-time</li>
+<li><code>html_url</code>: required, string, format: uri</li>
+<li><code>url</code>: required, string, format: uri</li>
+<li><code>draft</code>: required, boolean</li>
+</ul>
+</li>
+<li><code>linked_issues</code>: array of objects:
+<ul>
+<li><code>number</code>: required, integer</li>
+<li><code>title</code>: required, string</li>
+<li><code>state</code>: required, string</li>
+<li><code>url</code>: required, string, format: uri</li>
+<li><code>html_url</code>: required, string, format: uri</li>
+<li><code>repository</code>: required, <code>Simple Repository</code> (see above)</li>
+<li><code>issue_type</code>: required, <code>Issue Type</code>:
+<ul>
+<li><code>id</code>: required, integer</li>
+<li><code>node_id</code>: required, string</li>
+<li><code>name</code>: required, string</li>
+<li><code>description</code>: required, string or null</li>
+<li><code>color</code>: string or null, enum: <code>gray</code>, <code>blue</code>, <code>green</code>, <code>yellow</code>, <code>orange</code>, <code>red</code>, <code>pink</code>, <code>purple</code>, <code>null</code></li>
+<li><code>created_at</code>: string, format: date-time</li>
+<li><code>updated_at</code>: string, format: date-time</li>
+<li><code>is_enabled</code>: boolean</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 <h2 id="get-a-code-scanning-alert" title="GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number} (Get a code scanning alert)" data-entry-type="Resource">Get a code scanning alert<a href="#get-a-code-scanning-alert" aria-label="Link to heading 'Get a code scanning alert'" data-heading-content="Get a code scanning alert" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}
@@ -1121,6 +1221,77 @@ The number that identifies an alert. You can find this at the end of the URL for
 </ul>
 </li>
 <li><code>draft</code>: boolean</li>
+</ul>
+</li>
+<li><code>linked_issues</code>: array of objects:
+<ul>
+<li><code>number</code>: required, integer</li>
+<li><code>title</code>: required, string</li>
+<li><code>state</code>: required, string</li>
+<li><code>url</code>: required, string, format: uri</li>
+<li><code>html_url</code>: required, string, format: uri</li>
+<li><code>repository</code>: required, <code>Simple Repository</code>:
+<ul>
+<li><code>id</code>: required, integer, format: int64</li>
+<li><code>node_id</code>: required, string</li>
+<li><code>name</code>: required, string</li>
+<li><code>full_name</code>: required, string</li>
+<li><code>owner</code>: required, <code>Simple User</code> (see above)</li>
+<li><code>private</code>: required, boolean</li>
+<li><code>html_url</code>: required, string, format: uri</li>
+<li><code>description</code>: required, string or null</li>
+<li><code>fork</code>: required, boolean</li>
+<li><code>url</code>: required, string, format: uri</li>
+<li><code>archive_url</code>: required, string</li>
+<li><code>assignees_url</code>: required, string</li>
+<li><code>blobs_url</code>: required, string</li>
+<li><code>branches_url</code>: required, string</li>
+<li><code>collaborators_url</code>: required, string</li>
+<li><code>comments_url</code>: required, string</li>
+<li><code>commits_url</code>: required, string</li>
+<li><code>compare_url</code>: required, string</li>
+<li><code>contents_url</code>: required, string</li>
+<li><code>contributors_url</code>: required, string, format: uri</li>
+<li><code>deployments_url</code>: required, string, format: uri</li>
+<li><code>downloads_url</code>: required, string, format: uri</li>
+<li><code>events_url</code>: required, string, format: uri</li>
+<li><code>forks_url</code>: required, string, format: uri</li>
+<li><code>git_commits_url</code>: required, string</li>
+<li><code>git_refs_url</code>: required, string</li>
+<li><code>git_tags_url</code>: required, string</li>
+<li><code>issue_comment_url</code>: required, string</li>
+<li><code>issue_events_url</code>: required, string</li>
+<li><code>issues_url</code>: required, string</li>
+<li><code>keys_url</code>: required, string</li>
+<li><code>labels_url</code>: required, string</li>
+<li><code>languages_url</code>: required, string, format: uri</li>
+<li><code>merges_url</code>: required, string, format: uri</li>
+<li><code>milestones_url</code>: required, string</li>
+<li><code>notifications_url</code>: required, string</li>
+<li><code>pulls_url</code>: required, string</li>
+<li><code>releases_url</code>: required, string</li>
+<li><code>stargazers_url</code>: required, string, format: uri</li>
+<li><code>statuses_url</code>: required, string</li>
+<li><code>subscribers_url</code>: required, string, format: uri</li>
+<li><code>subscription_url</code>: required, string, format: uri</li>
+<li><code>tags_url</code>: required, string, format: uri</li>
+<li><code>teams_url</code>: required, string, format: uri</li>
+<li><code>trees_url</code>: required, string</li>
+<li><code>hooks_url</code>: required, string, format: uri</li>
+</ul>
+</li>
+<li><code>issue_type</code>: required, <code>Issue Type</code>:
+<ul>
+<li><code>id</code>: required, integer</li>
+<li><code>node_id</code>: required, string</li>
+<li><code>name</code>: required, string</li>
+<li><code>description</code>: required, string or null</li>
+<li><code>color</code>: string or null, enum: <code>gray</code>, <code>blue</code>, <code>green</code>, <code>yellow</code>, <code>orange</code>, <code>red</code>, <code>pink</code>, <code>purple</code>, <code>null</code></li>
+<li><code>created_at</code>: string, format: date-time</li>
+<li><code>updated_at</code>: string, format: date-time</li>
+<li><code>is_enabled</code>: boolean</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

@@ -411,6 +411,7 @@ The organization name. The name is not case sensitive.</li>
 <li><code>description</code>: string or null</li>
 <li><code>allowed_values</code>: array of string or null</li>
 <li><code>values_editable_by</code>: string or null, enum: <code>org_actors</code>, <code>org_and_repo_actors</code>, <code>null</code></li>
+<li><code>regex</code>: string or null</li>
 <li><code>require_explicit_values</code>: boolean</li>
 </ul>
 <h2 id="create-or-update-custom-properties-for-an-organization" title="PATCH /orgs/{org}/properties/schema (Create or update custom properties for an organization)" data-entry-type="Resource">Create or update custom properties for an organization<a href="#create-or-update-custom-properties-for-an-organization" aria-label="Link to heading 'Create or update custom properties for an organization'" data-heading-content="Create or update custom properties for an organization" class="anchor"></a></h2>
@@ -441,11 +442,6 @@ The array of custom properties to create or update.
 <ul>
 <li><strong><code>property_name</code></strong> (string) (required)<br>
 The name of the property</li>
-<li><strong><code>url</code></strong> (string)<br>
-The URL that can be used to fetch, update, or delete info about this property via the API.</li>
-<li><strong><code>source_type</code></strong> (string)<br>
-The source type of the property<br>
-Can be one of: <code>organization</code>, <code>enterprise</code></li>
 <li><strong><code>value_type</code></strong> (string) (required)<br>
 The type of the value for the property<br>
 Can be one of: <code>string</code>, <code>single_select</code>, <code>multi_select</code>, <code>true_false</code>, <code>url</code></li>
@@ -461,6 +457,9 @@ The property can have up to 200 allowed values.</li>
 <li><strong><code>values_editable_by</code></strong> (string or null)<br>
 Who can edit the values of the property<br>
 Can be one of: <code>org_actors</code>, <code>org_and_repo_actors</code>, <code>null</code></li>
+<li><strong><code>regex</code></strong> (string or null)<br>
+A regular expression (RE2 syntax) that values of the property must match.<br>
+Only supported for properties with a value<span data-escaped-char="">_</span>type of string.</li>
 <li><strong><code>require_explicit_values</code></strong> (boolean)<br>
 Whether setting properties values is mandatory</li>
 </ul>
@@ -569,6 +568,7 @@ The custom property name</p>
 <li><code>description</code>: string or null</li>
 <li><code>allowed_values</code>: array of string or null</li>
 <li><code>values_editable_by</code>: string or null, enum: <code>org_actors</code>, <code>org_and_repo_actors</code>, <code>null</code></li>
+<li><code>regex</code>: string or null</li>
 <li><code>require_explicit_values</code>: boolean</li>
 </ul>
 <h2 id="create-or-update-a-custom-property-for-an-organization" title="PUT /orgs/{org}/properties/schema/{custom_property_name} (Create or update a custom property for an organization)" data-entry-type="Resource">Create or update a custom property for an organization<a href="#create-or-update-a-custom-property-for-an-organization" aria-label="Link to heading 'Create or update a custom property for an organization'" data-heading-content="Create or update a custom property for an organization" class="anchor"></a></h2>
@@ -623,6 +623,11 @@ The property can have up to 200 allowed values.</p>
 <p><strong><code>values_editable_by</code></strong> (string or null)<br>
 Who can edit the values of the property<br>
 Can be one of: <code>org_actors</code>, <code>org_and_repo_actors</code>, <code>null</code></p>
+</li>
+<li>
+<p><strong><code>regex</code></strong> (string or null)<br>
+A regular expression (RE2 syntax) that values of the property must match.<br>
+Only supported for properties with a value<span data-escaped-char="">_</span>type of string.</p>
 </li>
 <li>
 <p><strong><code>require_explicit_values</code></strong> (boolean)<br>

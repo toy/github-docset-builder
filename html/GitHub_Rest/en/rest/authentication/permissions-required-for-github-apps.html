@@ -6,6 +6,37 @@
 <p>These permissions are required to access private resources. Some endpoints can also be used to access public resources without these permissions. To see whether an endpoint can access public resources without a permission, see the documentation for that endpoint.</p>
 <p>Some endpoints require more than one permission. Other endpoints work with any one permission from a set of permissions. In these cases, the "Additional permissions" column will include a checkmark. For full details about the permissions that are required to use the endpoint, see the documentation for that endpoint.</p>
 <p><strong>Token types:</strong> UAT = user access token, IAT = installation access token</p>
+<h2 id="enterprise-permissions-for-enterprise-ai-controls" title="Enterprise permissions for &quot;Enterprise AI controls&quot;" data-entry-type="Section">Enterprise permissions for "Enterprise AI controls"<a href="#enterprise-permissions-for-enterprise-ai-controls" aria-label="Link to heading 'Enterprise permissions for &quot;Enterprise AI controls&quot;'" data-heading-content="Enterprise permissions for &quot;Enterprise AI controls&quot;" class="anchor"></a></h2>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Access</th>
+<th>Tokens</th>
+<th>Additional Permissions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PUT /enterprises/{enterprise}/copilot/policies/coding_agent</code></td>
+<td>write</td>
+<td>UAT, IAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>POST /enterprises/{enterprise}/copilot/policies/coding_agent/organizations</code></td>
+<td>write</td>
+<td>UAT, IAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>DELETE /enterprises/{enterprise}/copilot/policies/coding_agent/organizations</code></td>
+<td>write</td>
+<td>UAT, IAT</td>
+<td>✗</td>
+</tr>
+</tbody>
+</table>
 <h2 id="enterprise-permissions-for-enterprise-copilot-metrics" title="Enterprise permissions for &quot;Enterprise Copilot metrics&quot;" data-entry-type="Section">Enterprise permissions for "Enterprise Copilot metrics"<a href="#enterprise-permissions-for-enterprise-copilot-metrics" aria-label="Link to heading 'Enterprise permissions for &quot;Enterprise Copilot metrics&quot;'" data-heading-content="Enterprise permissions for &quot;Enterprise Copilot metrics&quot;" class="anchor"></a></h2>
 <table>
 <thead>
@@ -3515,6 +3546,18 @@
 <td>✗</td>
 </tr>
 <tr>
+<td><code>PATCH /repos/{owner}/{repo}/copilot/code-review/settings</code></td>
+<td>write</td>
+<td>UAT, IAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>PUT /repos/{owner}/{repo}/dependabot/runner-settings</code></td>
+<td>write</td>
+<td>UAT, IAT</td>
+<td>✗</td>
+</tr>
+<tr>
 <td><code>PUT /repos/{owner}/{repo}/environments/{environment_name}</code></td>
 <td>write</td>
 <td>UAT, IAT</td>
@@ -3960,6 +4003,18 @@
 </tr>
 <tr>
 <td><code>GET /repos/{owner}/{repo}/code-security-configuration</code></td>
+<td>read</td>
+<td>UAT, IAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>GET /repos/{owner}/{repo}/copilot/code-review/settings</code></td>
+<td>read</td>
+<td>UAT, IAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>GET /repos/{owner}/{repo}/dependabot/runner-settings</code></td>
 <td>read</td>
 <td>UAT, IAT</td>
 <td>✗</td>
@@ -6479,6 +6534,12 @@
 <td>✗</td>
 </tr>
 <tr>
+<td><code>POST /repos/{owner}/{repo}/pulls/{pull_number}/copilot-code-review</code></td>
+<td>write</td>
+<td>UAT, IAT</td>
+<td>✗</td>
+</tr>
+<tr>
 <td><code>POST /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers</code></td>
 <td>write</td>
 <td>UAT, IAT</td>
@@ -7521,6 +7582,80 @@
 </tr>
 <tr>
 <td><code>GET /user/interaction-limits</code></td>
+<td>read</td>
+<td>UAT</td>
+<td>✗</td>
+</tr>
+</tbody>
+</table>
+<h2 id="user-permissions-for-issue-fields" title="User permissions for &quot;Issue Fields&quot;" data-entry-type="Section">User permissions for "Issue Fields"<a href="#user-permissions-for-issue-fields" aria-label="Link to heading 'User permissions for &quot;Issue Fields&quot;'" data-heading-content="User permissions for &quot;Issue Fields&quot;" class="anchor"></a></h2>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Access</th>
+<th>Tokens</th>
+<th>Additional Permissions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST /user/issue-fields</code></td>
+<td>write</td>
+<td>UAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>PATCH /user/issue-fields/{issue_field_id}</code></td>
+<td>write</td>
+<td>UAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>DELETE /user/issue-fields/{issue_field_id}</code></td>
+<td>write</td>
+<td>UAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>GET /user/issue-fields</code></td>
+<td>read</td>
+<td>UAT</td>
+<td>✗</td>
+</tr>
+</tbody>
+</table>
+<h2 id="user-permissions-for-issue-types" title="User permissions for &quot;Issue Types&quot;" data-entry-type="Section">User permissions for "Issue Types"<a href="#user-permissions-for-issue-types" aria-label="Link to heading 'User permissions for &quot;Issue Types&quot;'" data-heading-content="User permissions for &quot;Issue Types&quot;" class="anchor"></a></h2>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Access</th>
+<th>Tokens</th>
+<th>Additional Permissions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST /user/issue-types</code></td>
+<td>write</td>
+<td>UAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>PUT /user/issue-types/{issue_type_id}</code></td>
+<td>write</td>
+<td>UAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>DELETE /user/issue-types/{issue_type_id}</code></td>
+<td>write</td>
+<td>UAT</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>GET /user/issue-types</code></td>
 <td>read</td>
 <td>UAT</td>
 <td>✗</td>

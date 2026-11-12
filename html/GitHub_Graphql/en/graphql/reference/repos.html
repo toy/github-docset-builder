@@ -1088,7 +1088,7 @@ visibility argument.</li>
 <p><code>issueCreationPolicy</code> (IssueCreationPolicy): The policy controlling who can create issues in this repository.</p>
 </li>
 <li>
-<p><code>issueFields</code> (IssueFieldsConnection): A list of the repository's issue fields, inherited from the organization.</p>
+<p><code>issueFields</code> (IssueFieldsConnection): A list of the repository's issue fields, inherited from the repository's owner.</p>
 <ul>
 <li><code>after</code> (String): Returns the elements in the list that come after the specified cursor.</li>
 <li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
@@ -1266,6 +1266,16 @@ visibility argument.</li>
 </ul>
 </li>
 <li>
+<p><code>pinnedIssueFields</code> (IssueFieldsConnection): An ordered list of the repository owner's issue fields pinned to issues when no type is selected.</p>
+<ul>
+<li><code>after</code> (String): Returns the elements in the list that come after the specified cursor.</li>
+<li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
+<li><code>first</code> (Int): Returns the first n elements from the list.</li>
+<li><code>last</code> (Int): Returns the last n elements from the list.</li>
+<li><code>orderBy</code> (PinnedIssueFieldOrder): The order in which to return pinned issue fields. Default: <code>{field: POSITION, direction: ASC}</code>.</li>
+</ul>
+</li>
+<li>
 <p><code>pinnedIssues</code> (PinnedIssueConnection): A list of pinned issues for this repository. <em>(Pagination: <code>after</code>, <code>before</code>, <code>first</code>, <code>last</code>)</em></p>
 </li>
 <li>
@@ -1390,6 +1400,9 @@ to repository maintainers and administrators.</p>
 <li><code>last</code> (Int): Returns the last n elements from the list.</li>
 <li><code>orderBy</code> (ReleaseOrder): Order for connection.</li>
 </ul>
+</li>
+<li>
+<p><code>repositoryCopilotCodeReviewSettings</code> (RepositoryCopilotCodeReviewSettings): The repository's Copilot code review settings. Requires repository administration access.</p>
 </li>
 <li>
 <p><code>repositoryCustomPropertyValue</code> (RepositoryCustomPropertyValue): A custom property value for the repository.</p>

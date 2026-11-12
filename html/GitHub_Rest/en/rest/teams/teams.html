@@ -788,7 +788,7 @@ The name of the repository without the .git extension. The name is not case sens
 <p><strong>200</strong> - Alternative response with repository permissions</p>
 </li>
 <li>
-<p><strong>204</strong> - Response if team has permission for the repository. This is the response when the repository media type hasn't been provded in the Accept header.</p>
+<p><strong>204</strong> - Response if team has permission for the repository. This is the response when the repository media type hasn't been provided in the Accept header.</p>
 </li>
 <li>
 <p><strong>404</strong> - Not Found if team does not have permission for the repository</p>
@@ -979,7 +979,7 @@ The name of the repository without the .git extension. The name is not case sens
 <h4 id="body-parameters-2">Body parameters<a href="#body-parameters-2" aria-label="Link to heading 'Body parameters'" data-heading-content="Body parameters" class="anchor"></a></h4>
 <ul>
 <li><strong><code>permission</code></strong> (string)<br>
-The permission to grant the team on this repository. We accept the following permissions to be set: pull, triage, push, maintain, admin and you can also specify a custom repository role name, if the owning organization has defined any. If no permission is specified, the team's permission attribute will be used to determine what permission to grant the team on this repository.</li>
+The permission to grant the team on this repository. We accept the following permissions to be set: pull, triage, moderate, push, maintain, admin and you can also specify a custom repository role name, if the owning organization has defined any. If no permission is specified, the team's permission attribute will be used to determine what permission to grant the team on this repository.</li>
 </ul>
 <h3 id="http-response-status-codes-7">HTTP response status codes<a href="#http-response-status-codes-7" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>
@@ -1393,7 +1393,7 @@ The name of the repository without the .git extension. The name is not case sens
 <ul>
 <li><strong><code>permission</code></strong> (string)<br>
 The permission to grant the team on this repository. If no permission is specified, the team's permission attribute will be used to determine what permission to grant the team on this repository.<br>
-Can be one of: <code>pull</code>, <code>push</code>, <code>admin</code></li>
+Can be one of: <code>pull</code>, <code>moderate</code>, <code>push</code>, <code>admin</code></li>
 </ul>
 <h3 id="http-response-status-codes-15">HTTP response status codes<a href="#http-response-status-codes-15" aria-label="Link to heading 'HTTP response status codes'" data-heading-content="HTTP response status codes" class="anchor"></a></h3>
 <ul>

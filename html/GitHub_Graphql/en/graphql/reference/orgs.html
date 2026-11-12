@@ -242,6 +242,12 @@
 </ul>
 </li>
 <li>
+<p><code>copilotCodeReviewRunnerConfiguration</code> (OrganizationCopilotCodeReviewRunnerConfiguration): The effective runner configuration that Copilot code review uses. Requires organization Copilot read permissions.</p>
+</li>
+<li>
+<p><code>copilotCodeReviewSettings</code> (OrganizationCopilotCodeReviewSettings): The organization's Copilot code review settings. Requires organization Copilot read permissions.</p>
+</li>
+<li>
 <p><code>createdAt</code> (DateTime!): Identifies the date and time when the object was created.</p>
 </li>
 <li>
@@ -420,6 +426,9 @@ GitHub Sponsors. Does not include sponsorships paid via Patreon.</p>
 <p><code>organizationBillingEmail</code> (String): The billing email for the organization.</p>
 </li>
 <li>
+<p><code>organizationCopilotCodeReviewPolicy</code> (OrganizationCopilotCodeReviewPolicy): The configured and effective Copilot code review policy. Requires organization Copilot read permissions.</p>
+</li>
+<li>
 <p><code>packages</code> (PackageConnection!): A list of packages under the owner.</p>
 <ul>
 <li><code>after</code> (String): Returns the elements in the list that come after the specified cursor.</li>
@@ -446,7 +455,14 @@ GitHub Sponsors. Does not include sponsorships paid via Patreon.</p>
 </ul>
 </li>
 <li>
-<p><code>pinnedIssueFields</code> (IssueFieldsConnection): An ordered list of issue fields pinned to issues when no type is selected. <em>(Pagination: <code>after</code>, <code>before</code>, <code>first</code>, <code>last</code>)</em></p>
+<p><code>pinnedIssueFields</code> (IssueFieldsConnection): An ordered list of issue fields pinned to issues when no type is selected.</p>
+<ul>
+<li><code>after</code> (String): Returns the elements in the list that come after the specified cursor.</li>
+<li><code>before</code> (String): Returns the elements in the list that come before the specified cursor.</li>
+<li><code>first</code> (Int): Returns the first n elements from the list.</li>
+<li><code>last</code> (Int): Returns the last n elements from the list.</li>
+<li><code>orderBy</code> (PinnedIssueFieldOrder): The order in which to return pinned issue fields. Default: <code>{field: POSITION, direction: ASC}</code>.</li>
+</ul>
 </li>
 <li>
 <p><code>pinnedItems</code> (PinnableItemConnection!): A list of repositories and gists this profile owner has pinned to their profile.</p>
