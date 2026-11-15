@@ -1483,6 +1483,12 @@ GitHub Sponsors. Does not include sponsorships paid via Patreon.</p>
 <p><code>pinnedItemsRemaining</code> (Int!): Returns how many more items this profile owner can pin to their profile.</p>
 </li>
 <li>
+<p><code>planningStatuses</code> (PlanningStatusConnection): The planning statuses issues in the user's repositories can be in, or null<br>
+when issue statuses aren't available. Planning statuses are returned in<br>
+display order. Issue statuses are in preview and only available to accounts<br>
+enrolled in the preview. <em>(Pagination: <code>after</code>, <code>before</code>, <code>first</code>, <code>last</code>)</em></p>
+</li>
+<li>
 <p><code>project</code> (Project): Find project by number. <strong>Deprecated:</strong> Projects (classic) is being deprecated in favor of the new Projects experience, see: <a href="https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/" class="external">https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/</a>. Removal on 2025-04-01 UTC.</p>
 <ul>
 <li><code>number</code> (Int!): The project number to find.</li>

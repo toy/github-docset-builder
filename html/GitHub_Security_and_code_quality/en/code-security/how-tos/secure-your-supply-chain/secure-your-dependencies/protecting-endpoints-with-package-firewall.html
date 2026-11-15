@@ -70,6 +70,8 @@
 <p>By default, enterprise administrators and enterprise security managers can modify the firewall policy. To grant other users access to view and change the policy, add the "Edit enterprise-level package firewall policy" fine-grained permission to a custom role, then assign that role to a team or individual.</p>
 <h2 id="managing-exceptions" title="Managing exceptions" data-entry-type="Section">Managing exceptions<a href="#managing-exceptions" aria-label="Link to heading 'Managing exceptions'" data-heading-content="Managing exceptions" class="anchor"></a></h2>
 <p>If the firewall blocks a package you need, you can request an exception to the policy. For example, a new package version that includes a security fix could be blocked by the minimum package age policy.</p>
+<p>For npm overrides, specify an exact version such as <code>1.2.3</code> or use <code>*</code> as a wildcard. For example, <code>1.*</code> matches version text beginning with <code>1.</code>, <code>1.2.*</code> matches version text beginning with <code>1.2.</code>, and <code>*</code> matches all versions.</p>
+<p>Every character other than <code>*</code> is matched literally. Semantic version ranges such as <code>^1.2.3</code>, <code>~1.2.3</code>, <code>1.x</code>, and <code>&gt;=1.0.0 &lt;2.0.0</code> are not evaluated as ranges. The same version matching applies to manually added exceptions and approved bypass requests.</p>
 <h3 id="requesting-an-exception">Requesting an exception<a href="#requesting-an-exception" aria-label="Link to heading 'Requesting an exception'" data-heading-content="Requesting an exception" class="anchor"></a></h3>
 <p>When the firewall blocks a package, the npm output or CI/CD log includes a URL for requesting an exception. For example:</p>
 <pre lang="text" style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">npm notice testcontainers: 1 version blocked by package-firewall due to security policies (version cooldown). Request an override: https://github.com/enterprises/octocats/security/bypass-requests/package-firewall/new?ecosystem=npm&amp;package=testcontainers
@@ -84,7 +86,7 @@
 <li>"Repository": The repository where the block occurred</li>
 <li>"Ecosystem": The package ecosystem (currently, only npm is supported)</li>
 <li>"Package name": The package name, including the <code>@scope</code> prefix if applicable</li>
-<li>"Version": The version you attempted to install</li>
+<li>"Version": The version you attempted to install. If the field is editable, you can request a version pattern instead.</li>
 <li>"Reason": Why the package should be unblocked</li>
 <li>"Add a comment": Additional context for reviewers</li>
 </ul>
@@ -101,7 +103,7 @@
 <li>In the sidebar, click <strong>Package firewall bypass</strong>.</li>
 <li>In the "Package firewall bypass requests" list, use the search bar to find a request, then click the request.</li>
 <li>In the "Review package allow override" dialog, review the requested exception.</li>
-<li>Optionally, to allow all versions of the package, replace the requested version in the "Version or range to allow" field with <code>*</code>. This broadens the exception beyond the requested version.</li>
+<li>Optionally, to allow all versions of the package, replace the requested version in the "Version or pattern to allow" field with <code>*</code>. This broadens the exception beyond the requested version.</li>
 <li>Add a comment explaining your decision, then click <strong>Approve request</strong>.</li>
 </ol>
 <p>For example, you might allow all versions of an enterprise-owned package rather than require a separate exception each time the minimum package age policy blocks a new version.</p>

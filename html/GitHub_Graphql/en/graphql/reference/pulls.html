@@ -509,6 +509,8 @@ in the same network, namespace head_ref_name with a user like this: username:bra
 <h3 id="input-fields-for-disablepullrequestautomergeinput">Input fields for <code>DisablePullRequestAutoMergeInput</code><a href="#input-fields-for-disablepullrequestautomergeinput" aria-label="Link to heading 'Input fields for DisablePullRequestAutoMergeInput'" data-heading-content="Input fields for DisablePullRequestAutoMergeInput" class="anchor"></a></h3>
 <ul>
 <li><code>clientMutationId</code> (String): A unique identifier for the client performing the mutation.</li>
+<li><code>includeStack</code> (Boolean): Disable the stack auto-merge request covering this pull request. This disables<br>
+auto-merge for all pull requests covered by that request.</li>
 <li><code>pullRequestId</code> (ID!): ID of the pull request to disable auto merge on.</li>
 </ul>
 <h2 id="dismissalrestriction---object" title="DismissalRestriction - object" data-entry-type="Section">DismissalRestriction - object<a href="#dismissalrestriction---object" aria-label="Link to heading 'DismissalRestriction - object'" data-heading-content="DismissalRestriction - object" class="anchor"></a></h2>
@@ -589,6 +591,7 @@ value for commit message is ignored.</li>
 default message will be used. NOTE: when merging with a merge queue any input<br>
 value for commit headline is ignored.</li>
 <li><code>expectedHeadOid</code> (GitObjectID): The expected head OID of the pull request.</li>
+<li><code>includeStack</code> (Boolean): Enable auto-merge for this pull request and any eligible pull requests below it in the stack.</li>
 <li><code>mergeMethod</code> (PullRequestMergeMethod): The merge method to use. If omitted, defaults to MERGE. NOTE: when merging<br>
 with a merge queue any input value for merge method is ignored.</li>
 <li><code>pullRequestId</code> (ID!): ID of the pull request to enable auto-merge on.</li>
@@ -925,6 +928,9 @@ group size will be ignored and a smaller group will be merged.</li>
 </li>
 <li>
 <p><code>autoMergeRequest</code> (AutoMergeRequest): Returns the auto-merge request object if one exists for this pull request.</p>
+<ul>
+<li><code>includeStack</code> (Boolean): Return the stack auto-merge request covering this pull request. Default: <code>false</code>.</li>
+</ul>
 </li>
 <li>
 <p><code>baseRef</code> (Ref): Identifies the base Ref associated with the pull request.</p>
@@ -1303,12 +1309,19 @@ mergeable field for more details on the mergeability of the pull request.</p>
 </li>
 <li>
 <p><code>viewerCanDisableAutoMerge</code> (Boolean!): Whether or not the viewer can disable auto-merge.</p>
+<ul>
+<li><code>includeStack</code> (Boolean): Check permission to disable the stack auto-merge request covering this pull request. Default: <code>false</code>.</li>
+</ul>
 </li>
 <li>
 <p><code>viewerCanEditFiles</code> (Boolean!): Can the viewer edit files within this pull request.</p>
 </li>
 <li>
 <p><code>viewerCanEnableAutoMerge</code> (Boolean!): Whether or not the viewer can enable auto-merge.</p>
+<ul>
+<li><code>includeStack</code> (Boolean): Check permission to request stacked auto-merge from this pull request. The<br>
+client evaluates stack-wide blockers and readiness. Default: <code>false</code>.</li>
+</ul>
 </li>
 <li>
 <p><code>viewerCanLabel</code> (Boolean!): Indicates if the viewer can edit labels for this object.</p>

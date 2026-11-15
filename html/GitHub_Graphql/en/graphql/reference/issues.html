@@ -539,6 +539,10 @@ stores the addition as a pending suggestion. Mutually exclusive with labelIds.</
 <li><code>projectIds</code> ([ID!]): An array of Node IDs for projects associated with this issue.</li>
 <li><code>projectV2Ids</code> ([ID!]): An array of Node IDs for Projects V2 associated with this issue.</li>
 <li><code>repositoryId</code> (ID!): The Node ID of the repository.</li>
+<li><code>statusId</code> (ID): The Node ID of the planning status the issue starts in. It must be an open one<br>
+listed in the owner's planningStatuses. If you don't have permission to set<br>
+the status, it's ignored and the issue starts in Backlog. Issue statuses are<br>
+in preview and only available to accounts enrolled in the preview.</li>
 <li><code>title</code> (String!): The title for the issue.</li>
 </ul>
 <h2 id="createissuetype---mutation" title="createIssueType - mutation" data-entry-type="Section">createIssueType - mutation<a href="#createissuetype---mutation" aria-label="Link to heading 'createIssueType - mutation'" data-heading-content="createIssueType - mutation" class="anchor"></a></h2>
@@ -1038,6 +1042,11 @@ Reason: The state reason for duplicate issue is now returned by default. Default
 </ul>
 </li>
 <li>
+<p><code>status</code> (PlanningStatus): The status of this issue, or null when it has none or issue statuses aren't<br>
+available in the repository. Issue statuses are in preview and only available<br>
+to accounts enrolled in the preview.</p>
+</li>
+<li>
 <p><code>subIssues</code> (IssueConnection!): A list of sub-issues associated with the Issue. <em>(Pagination: <code>after</code>, <code>before</code>, <code>first</code>, <code>last</code>)</em></p>
 </li>
 <li>
@@ -1125,6 +1134,10 @@ Reason: The state reason for duplicate issue is now returned by default. Default
 </li>
 <li>
 <p><code>viewerCanSetMilestone</code> (Boolean!): Indicates if the viewer can edit the milestone of the issue.</p>
+</li>
+<li>
+<p><code>viewerCanSetStatus</code> (Boolean!): Whether the viewer can set this issue's status. Issue statuses are in preview<br>
+and only available to accounts enrolled in the preview.</p>
 </li>
 <li>
 <p><code>viewerCanSubscribe</code> (Boolean!): Check if the viewer is able to change their subscription status for the repository.</p>
@@ -2861,6 +2874,43 @@ duplicate of. Only set when stateReason is DUPLICATE.</li>
 <ul>
 <li><code>POSITION</code>: Order pinned issue fields by their configured pinned position.</li>
 </ul>
+<h2 id="planningstatus---object" title="PlanningStatus - object" data-entry-type="Section">PlanningStatus - object<a href="#planningstatus---object" aria-label="Link to heading 'PlanningStatus - object'" data-heading-content="PlanningStatus - object" class="anchor"></a></h2>
+<p>A planning status an issue can be in. Issue statuses are in preview and only available to accounts enrolled in the preview.</p>
+<p><strong>Implements:</strong> Node</p>
+<h3 id="fields-for-planningstatus">Fields for <code>PlanningStatus</code><a href="#fields-for-planningstatus" aria-label="Link to heading 'Fields for PlanningStatus'" data-heading-content="Fields for PlanningStatus" class="anchor"></a></h3>
+<ul>
+<li><code>category</code> (PlanningStatusCategory!): The category of the planning status, which decides whether the issue is open or closed.</li>
+<li><code>id</code> (ID!): The Node ID of the PlanningStatus object.</li>
+<li><code>name</code> (String!): The display name of the planning status.</li>
+</ul>
+<h2 id="planningstatuscategory---object" title="PlanningStatusCategory - object" data-entry-type="Section">PlanningStatusCategory - object<a href="#planningstatuscategory---object" aria-label="Link to heading 'PlanningStatusCategory - object'" data-heading-content="PlanningStatusCategory - object" class="anchor"></a></h2>
+<p>The category of a planning status, which decides whether the issue is open or<br>
+closed. Issue statuses are in preview and only available to accounts enrolled in the preview.</p>
+<h3 id="fields-for-planningstatuscategory">Fields for <code>PlanningStatusCategory</code><a href="#fields-for-planningstatuscategory" aria-label="Link to heading 'Fields for PlanningStatusCategory'" data-heading-content="Fields for PlanningStatusCategory" class="anchor"></a></h3>
+<ul>
+<li><code>key</code> (String!): A stable identifier for the category, such as new, backlog, planned,<br>
+started, completed, not_planned or duplicate. Clients should expect<br>
+new keys to be added.</li>
+<li><code>name</code> (String!): The display name of the category.</li>
+<li><code>state</code> (IssueState!): The state an issue in this category has.</li>
+<li><code>stateReason</code> (IssueStateReason): The reason a closed issue in this category was closed, or null when the category is open.</li>
+</ul>
+<h2 id="planningstatusconnection---object" title="PlanningStatusConnection - object" data-entry-type="Section">PlanningStatusConnection - object<a href="#planningstatusconnection---object" aria-label="Link to heading 'PlanningStatusConnection - object'" data-heading-content="PlanningStatusConnection - object" class="anchor"></a></h2>
+<p>The connection type for PlanningStatus.</p>
+<h3 id="fields-for-planningstatusconnection">Fields for <code>PlanningStatusConnection</code><a href="#fields-for-planningstatusconnection" aria-label="Link to heading 'Fields for PlanningStatusConnection'" data-heading-content="Fields for PlanningStatusConnection" class="anchor"></a></h3>
+<ul>
+<li><code>edges</code> ([PlanningStatusEdge]): A list of edges.</li>
+<li><code>nodes</code> ([PlanningStatus]): A list of nodes.</li>
+<li><code>pageInfo</code> (PageInfo!): Information to aid in pagination.</li>
+<li><code>totalCount</code> (Int!): Identifies the total count of items in the connection.</li>
+</ul>
+<h2 id="planningstatusedge---object" title="PlanningStatusEdge - object" data-entry-type="Section">PlanningStatusEdge - object<a href="#planningstatusedge---object" aria-label="Link to heading 'PlanningStatusEdge - object'" data-heading-content="PlanningStatusEdge - object" class="anchor"></a></h2>
+<p>An edge in a connection.</p>
+<h3 id="fields-for-planningstatusedge">Fields for <code>PlanningStatusEdge</code><a href="#fields-for-planningstatusedge" aria-label="Link to heading 'Fields for PlanningStatusEdge'" data-heading-content="Fields for PlanningStatusEdge" class="anchor"></a></h3>
+<ul>
+<li><code>cursor</code> (String!): A cursor for use in pagination.</li>
+<li><code>node</code> (PlanningStatus): The item at the end of the edge.</li>
+</ul>
 <h2 id="referencedevent---object" title="ReferencedEvent - object" data-entry-type="Section">ReferencedEvent - object<a href="#referencedevent---object" aria-label="Link to heading 'ReferencedEvent - object'" data-heading-content="ReferencedEvent - object" class="anchor"></a></h2>
 <p>Represents a referenced event on a given ReferencedSubject.</p>
 <p><strong>Implements:</strong> Node</p>
@@ -3135,6 +3185,27 @@ suggest flag. Mutually exclusive with actorIds and actorLogins.</li>
 <li><code>clientMutationId</code> (String): A unique identifier for the client performing the mutation.</li>
 <li><code>issueFields</code> ([IssueFieldCreateOrUpdateInput!]!): The issue fields to set on the issue.</li>
 <li><code>issueId</code> (ID!): The ID of the Issue to set the field value on.</li>
+</ul>
+<h2 id="setissuestatus---mutation" title="setIssueStatus - mutation" data-entry-type="Section">setIssueStatus - mutation<a href="#setissuestatus---mutation" aria-label="Link to heading 'setIssueStatus - mutation'" data-heading-content="setIssueStatus - mutation" class="anchor"></a></h2>
+<p>Sets the status of an issue, closing or reopening it when the status calls for<br>
+it. Issue statuses are in preview and only available to accounts enrolled in the preview.</p>
+<h3 id="input-fields-for-setissuestatus">Input fields for <code>setIssueStatus</code><a href="#input-fields-for-setissuestatus" aria-label="Link to heading 'Input fields for setIssueStatus'" data-heading-content="Input fields for setIssueStatus" class="anchor"></a></h3>
+<ul>
+<li><code>input</code> (SetIssueStatusInput!):</li>
+</ul>
+<h3 id="return-fields-for-setissuestatus">Return fields for <code>setIssueStatus</code><a href="#return-fields-for-setissuestatus" aria-label="Link to heading 'Return fields for setIssueStatus'" data-heading-content="Return fields for setIssueStatus" class="anchor"></a></h3>
+<ul>
+<li><code>clientMutationId</code> (String): A unique identifier for the client performing the mutation.</li>
+<li><code>issue</code> (Issue): The updated issue.</li>
+</ul>
+<h2 id="setissuestatusinput---input-object" title="SetIssueStatusInput - input object" data-entry-type="Section">SetIssueStatusInput - input object<a href="#setissuestatusinput---input-object" aria-label="Link to heading 'SetIssueStatusInput - input object'" data-heading-content="SetIssueStatusInput - input object" class="anchor"></a></h2>
+<p>Autogenerated input type of SetIssueStatus.</p>
+<h3 id="input-fields-for-setissuestatusinput">Input fields for <code>SetIssueStatusInput</code><a href="#input-fields-for-setissuestatusinput" aria-label="Link to heading 'Input fields for SetIssueStatusInput'" data-heading-content="Input fields for SetIssueStatusInput" class="anchor"></a></h3>
+<ul>
+<li><code>clientMutationId</code> (String): A unique identifier for the client performing the mutation.</li>
+<li><code>duplicateIssueId</code> (ID): The ID of the issue this issue duplicates. Required when closing an issue as a duplicate.</li>
+<li><code>issueId</code> (ID!): The ID of the issue to update.</li>
+<li><code>statusId</code> (ID!): The ID of the planning status to set.</li>
 </ul>
 <h2 id="subissueaddedevent---object" title="SubIssueAddedEvent - object" data-entry-type="Section">SubIssueAddedEvent - object<a href="#subissueaddedevent---object" aria-label="Link to heading 'SubIssueAddedEvent - object'" data-heading-content="SubIssueAddedEvent - object" class="anchor"></a></h2>
 <p>Represents a sub_issue_added event on a given issue.</p>
@@ -3503,6 +3574,15 @@ suggest flag. Mutually exclusive with assigneeIds.</li>
 <li><code>projectIds</code> ([ID!]): An array of Node IDs for projects associated with this issue.</li>
 <li><code>state</code> (IssueState): The desired issue state.</li>
 <li><code>stateInput</code> (IssueStateUpdateInput): The desired issue state, with optional rationale, state reason, or duplicate reference. Mutually exclusive with state.</li>
+<li><code>statusId</code> (ID): The Node ID of the planning status to move the issue into. It must be one<br>
+listed in the owner's planningStatuses. The planning status decides whether<br>
+the issue is open or closed and why, so the issue is closed or reopened if<br>
+needed. state or stateInput can also be sent, but only with the same state<br>
+and close reason as the planning status, and without suggest: true. When the<br>
+planning status closes the issue, stateInput.rationale is used as the close<br>
+rationale, and a Duplicate planning status takes the issue it duplicates from<br>
+stateInput.duplicateIssueId. The issue's status can't be cleared. Issue<br>
+statuses are in preview and only available to accounts enrolled in the preview.</li>
 <li><code>title</code> (String): The title for the issue.</li>
 </ul>
 <h2 id="updateissueissuetype---mutation" title="updateIssueIssueType - mutation" data-entry-type="Section">updateIssueIssueType - mutation<a href="#updateissueissuetype---mutation" aria-label="Link to heading 'updateIssueIssueType - mutation'" data-heading-content="updateIssueIssueType - mutation" class="anchor"></a></h2>

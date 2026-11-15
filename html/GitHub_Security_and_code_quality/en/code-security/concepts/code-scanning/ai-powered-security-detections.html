@@ -39,7 +39,7 @@
 <p>AI Scan for pull requests is not available for repositories in a managed user account's personal namespace, even if code scanning is enabled for the repository.</p>
 <p>You do not need a GitHub Copilot license to use AI Scan.</p>
 <h2 id="billing" title="Billing" data-entry-type="Section">Billing<a href="#billing" aria-label="Link to heading 'Billing'" data-heading-content="Billing" class="anchor"></a></h2>
-<p>AI Scan usage is separate from active-committer licensing and is reported under the <strong>Code Security AI creditss</strong> SKU. Usage begins only when a qualifying pull request is scanned.</p>
+<p>AI Scan usage is separate from active-committer licensing and is reported under the <strong>Code Security AI credits</strong> SKU. Usage begins only when a qualifying pull request is scanned.</p>
 <p>For organization-owned repositories, usage is billed to the account responsible for the organization's billing.</p>
 <p>For public repositories owned by a personal account, usage is billed to that personal account unless the repository owner has a GitHub Copilot license provided by an organization or enterprise. In that case, usage is billed to the organization or enterprise that provides the license.</p>
 <p>If the billing account receives included AI credits through a GitHub Copilot entitlement, AI Scan uses those credits first. After the included credits are exhausted, or if the account has no included credits, usage is metered and governed by the applicable budgets. If a hard budget leaves no Code Security AI credits available, AI Scan cannot produce findings. Scanning resumes when an administrator increases the limiting budget or a new billing cycle begins.</p>
@@ -102,5 +102,5 @@
 <li>The <strong>AI Scan</strong> tab in the "Code scanning on pull requests" report shows findings over time, the availability of Copilot Autofix suggestions, and the outcomes of findings with and without suggestions.</li>
 </ul>
 <p>For more information, see <a href="code-scanning-on-pull-requests.html">Code scanning on pull requests</a>.</p>
-<p>You can use the REST API to manage the organization or repository <code>ai-scan</code> setting. See <a href="https://docs.github.com/en/rest/code-scanning/code-scanning#get-the-ai-scan-setting-for-an-organization" class="external">REST API endpoints for code scanning</a>.</p>
+<p>You can use the REST API to manage the organization or repository AI Scan setting. Use the <code>pr_scan</code> property to enable or disable AI Scan for pull requests. The same endpoints manage AI Scan for repositories through the <code>repository_scan</code> property. See <a href="ai-scan-for-repositories.html#managing-ai-scan-for-repositories-with-the-rest-api">AI Scan for a repository's backlog</a> and  <a href="https://docs.github.com/en/rest/code-scanning/code-scanning#get-the-ai-scan-setting-for-an-organization" class="external">REST API endpoints for code scanning</a>.</p>
 <footer>Documentation is licensed under Creative Commons Attribution 4.0 (see <a href="../../../../GitHub documentation LICENSE.txt">GitHub documentation LICENSE</a>)</footer></body></html>
