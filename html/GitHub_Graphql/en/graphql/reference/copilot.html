@@ -17,8 +17,8 @@
 <p>The effort level for a Copilot code review. For more information, see Review effort level.</p>
 <h3 id="values-for-copilotcoderevieweffort">Values for <code>CopilotCodeReviewEffort</code><a href="#values-for-copilotcoderevieweffort" aria-label="Link to heading 'Values for CopilotCodeReviewEffort'" data-heading-content="Values for CopilotCodeReviewEffort" class="anchor"></a></h3>
 <ul>
+<li><code>ADAPTIVE</code>: Copilot picks the effort for each pull request.</li>
 <li><code>BALANCED</code>: Balanced effort and depth.</li>
-<li><code>DYNAMIC</code>: Copilot picks the effort for each pull request.</li>
 <li><code>LITE</code>: Lower effort, faster review.</li>
 <li><code>MAX</code>: Highest effort, deepest review.</li>
 </ul>
@@ -26,8 +26,8 @@
 <p>A Copilot code review effort level. For more information, see Review effort level.</p>
 <h3 id="values-for-copilotcoderevieweffortlevel">Values for <code>CopilotCodeReviewEffortLevel</code><a href="#values-for-copilotcoderevieweffortlevel" aria-label="Link to heading 'Values for CopilotCodeReviewEffortLevel'" data-heading-content="Values for CopilotCodeReviewEffortLevel" class="anchor"></a></h3>
 <ul>
+<li><code>ADAPTIVE</code>: Copilot picks the effort for each pull request.</li>
 <li><code>BALANCED</code>: Balanced effort and depth.</li>
-<li><code>DYNAMIC</code>: Copilot picks the effort for each pull request.</li>
 <li><code>LITE</code>: Lower effort, faster review.</li>
 <li><code>MAX</code>: Highest effort, deepest review.</li>
 </ul>
@@ -106,8 +106,8 @@ enterprise default when one applies, otherwise GitHub's default.</li>
 information, see Review effort level.</p>
 <h3 id="values-for-organizationcopilotcoderevieweffortsetting">Values for <code>OrganizationCopilotCodeReviewEffortSetting</code><a href="#values-for-organizationcopilotcoderevieweffortsetting" aria-label="Link to heading 'Values for OrganizationCopilotCodeReviewEffortSetting'" data-heading-content="Values for OrganizationCopilotCodeReviewEffortSetting" class="anchor"></a></h3>
 <ul>
+<li><code>ADAPTIVE</code>: Copilot picks the effort for each pull request.</li>
 <li><code>BALANCED</code>: Balanced effort and depth.</li>
-<li><code>DYNAMIC</code>: Copilot picks the effort for each pull request.</li>
 <li><code>INHERIT</code>: Clear the organization's value so repositories inherit the default.</li>
 <li><code>LITE</code>: Lower effort, faster review.</li>
 <li><code>MAX</code>: Highest effort, deepest review.</li>
@@ -180,8 +180,8 @@ reviews would use without it.</li>
 see Review effort level.</p>
 <h3 id="values-for-repositorycopilotcoderevieweffortsetting">Values for <code>RepositoryCopilotCodeReviewEffortSetting</code><a href="#values-for-repositorycopilotcoderevieweffortsetting" aria-label="Link to heading 'Values for RepositoryCopilotCodeReviewEffortSetting'" data-heading-content="Values for RepositoryCopilotCodeReviewEffortSetting" class="anchor"></a></h3>
 <ul>
+<li><code>ADAPTIVE</code>: Copilot picks the effort for each pull request.</li>
 <li><code>BALANCED</code>: Balanced effort and depth.</li>
-<li><code>DYNAMIC</code>: Copilot picks the effort for each pull request.</li>
 <li><code>INHERIT</code>: Clear the repository's value so it inherits the effort from its organization, enterprise, or GitHub's default.</li>
 <li><code>LITE</code>: Lower effort, faster review.</li>
 <li><code>MAX</code>: Highest effort, deepest review.</li>
@@ -191,6 +191,7 @@ see Review effort level.</p>
 <h3 id="fields-for-repositorycopilotcodereviewsettings">Fields for <code>RepositoryCopilotCodeReviewSettings</code><a href="#fields-for-repositorycopilotcodereviewsettings" aria-label="Link to heading 'Fields for RepositoryCopilotCodeReviewSettings'" data-heading-content="Fields for RepositoryCopilotCodeReviewSettings" class="anchor"></a></h3>
 <ul>
 <li><code>availableReviewEfforts</code> ([CopilotCodeReviewEffortLevel!]!): The review efforts that can currently be set for this repository, in display order.</li>
+<li><code>crossRepoContextEnabled</code> (Boolean!): Whether reviews can use public repository search.</li>
 <li><code>customInstructionsEnabled</code> (Boolean!): Whether reviews use the repository's custom instructions.</li>
 <li><code>mcpEnabled</code> (Boolean!): Whether reviews can use MCP servers.</li>
 <li><code>reviewEffort</code> (RepositoryCopilotCodeReviewEffort!): The repository's review effort.</li>
@@ -295,6 +296,8 @@ Invalid input does not change the configuration.</p>
 <h3 id="input-fields-for-updaterepositorycopilotcodereviewsettingsinput">Input fields for <code>UpdateRepositoryCopilotCodeReviewSettingsInput</code><a href="#input-fields-for-updaterepositorycopilotcodereviewsettingsinput" aria-label="Link to heading 'Input fields for UpdateRepositoryCopilotCodeReviewSettingsInput'" data-heading-content="Input fields for UpdateRepositoryCopilotCodeReviewSettingsInput" class="anchor"></a></h3>
 <ul>
 <li><code>clientMutationId</code> (String): A unique identifier for the client performing the mutation.</li>
+<li><code>crossRepoContextEnabled</code> (Boolean): Whether reviews can use public repository search. Can only be set when the<br>
+public repository search setting is available for the repository.</li>
 <li><code>customInstructionsEnabled</code> (Boolean): Whether reviews use the repository's custom instructions.</li>
 <li><code>mcpEnabled</code> (Boolean): Whether reviews can use MCP servers.</li>
 <li><code>repositoryId</code> (ID!): The ID of the repository whose settings to update.</li>

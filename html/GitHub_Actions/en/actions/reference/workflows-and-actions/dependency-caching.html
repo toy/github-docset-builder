@@ -303,6 +303,10 @@ Workflow runs can restore caches created in either the current branch or the def
 </table>
 <p>For the trusted-versus-low-trust trigger breakdown, see <a href="#cache-access-for-low-trust-workflow-triggers">Cache access for low-trust workflow triggers</a>.</p>
 <p>The runner exposes the effective mode in the <code>ACTIONS_CACHE_MODE</code> environment variable, and the <code>actions/cache</code> action and the <code>@actions/cache</code> toolkit honor it. Restore is skipped when the mode does not allow reads (<code>none</code> or <code>write-only</code>), and save is skipped when the mode does not allow writes (<code>none</code> or <code>read</code>). When a cache operation is skipped because of the mode, the action logs an informational message and the step and run continue without failing. A skipped restore is treated as a cache miss; a skipped save is simply not performed.</p>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p><code>ACTIONS_CACHE_MODE</code> is only set in the environment of JavaScript and Docker container actions. It is not available to <code>run</code> steps, including <code>run</code> steps in composite actions.</p>
+</div>
 <h3 id="cache-access-in-reusable-workflows">Cache access in reusable workflows<a href="#cache-access-in-reusable-workflows" aria-label="Link to heading 'Cache access in reusable workflows'" data-heading-content="Cache access in reusable workflows" class="anchor"></a></h3>
 <p><code>cache-mode</code> propagates from a caller workflow to the reusable workflows it calls. An explicit <code>cache-mode</code> on the calling job, or inherited from the caller workflow, limits the cache access the called workflow can request.</p>
 <p>If the calling job neither sets nor inherits an explicit <code>cache-mode</code>, the called workflow can explicitly request <code>write</code> even when the caller's low-trust trigger defaults to <code>read</code>. To cap a called workflow at read-only access, set <code>cache-mode: read</code> on the job that calls it.</p>

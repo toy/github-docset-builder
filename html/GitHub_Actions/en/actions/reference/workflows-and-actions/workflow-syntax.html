@@ -551,6 +551,12 @@
 <p>A boolean specifying whether the input must be supplied.</p>
 <h2 id="onworkflow_dispatchinputsinput_idtype" title="on.workflow_dispatch.inputs.&lt;input_id&gt;.type" data-entry-type="Section"><code>on.workflow_dispatch.inputs.&lt;input_id&gt;.type</code><a href="#onworkflow_dispatchinputsinput_idtype" aria-label="Link to heading 'on.workflow_dispatch.inputs.&lt;input_id&gt;.type'" data-heading-content="on.workflow_dispatch.inputs.&lt;input_id&gt;.type" class="anchor"></a></h2>
 <p>The value of this parameter is a string specifying the data type of the input. This must be one of: <code>boolean</code>, <code>choice</code>, <code>number</code>, <code>environment</code> or <code>string</code>.</p>
+<h2 id="onworkflow_dispatchinputsinput_iddescription" title="on.workflow_dispatch.inputs.&lt;input_id&gt;.description" data-entry-type="Section"><code>on.workflow_dispatch.inputs.&lt;input_id&gt;.description</code><a href="#onworkflow_dispatchinputsinput_iddescription" aria-label="Link to heading 'on.workflow_dispatch.inputs.&lt;input_id&gt;.description'" data-heading-content="on.workflow_dispatch.inputs.&lt;input_id&gt;.description" class="anchor"></a></h2>
+<p>A string description of the input parameter.</p>
+<h2 id="onworkflow_dispatchinputsinput_iddefault" title="on.workflow_dispatch.inputs.&lt;input_id&gt;.default" data-entry-type="Section"><code>on.workflow_dispatch.inputs.&lt;input_id&gt;.default</code><a href="#onworkflow_dispatchinputsinput_iddefault" aria-label="Link to heading 'on.workflow_dispatch.inputs.&lt;input_id&gt;.default'" data-heading-content="on.workflow_dispatch.inputs.&lt;input_id&gt;.default" class="anchor"></a></h2>
+<p>The default value used when the input is not specified when the workflow is triggered manually. For inputs with <code>type: choice</code>, the default must be one of the values listed in <code>options</code>.</p>
+<h2 id="onworkflow_dispatchinputsinput_idoptions" title="on.workflow_dispatch.inputs.&lt;input_id&gt;.options" data-entry-type="Section"><code>on.workflow_dispatch.inputs.&lt;input_id&gt;.options</code><a href="#onworkflow_dispatchinputsinput_idoptions" aria-label="Link to heading 'on.workflow_dispatch.inputs.&lt;input_id&gt;.options'" data-heading-content="on.workflow_dispatch.inputs.&lt;input_id&gt;.options" class="anchor"></a></h2>
+<p>A sequence of strings that sets the options of the dropdown list for an input with <code>type: choice</code>. <code>options</code> is valid only for <code>choice</code> inputs: a workflow that defines <code>options</code> on an input of any other type is invalid and fails to run.</p>
 <h2 id="permissions" title="permissions" data-entry-type="Section"><code>permissions</code><a href="#permissions" aria-label="Link to heading 'permissions'" data-heading-content="permissions" class="anchor"></a></h2>
 <p>You can use <code>permissions</code> to modify the default permissions granted to the <code>GITHUB_TOKEN</code>, adding or removing access as required, so that you only allow the minimum required access. For more information, see <a href="../../tutorials/authenticate-with-github_token.html#modifying-the-permissions-for-the-github_token">Use GITHUB<span data-escaped-char="">_</span>TOKEN for authentication in workflows</a>.</p>
 <p>You can use <code>permissions</code> either as a top-level key, to apply to all jobs in the workflow, or within specific jobs. When you add the <code>permissions</code> key within a specific job, all actions and run commands within that job that use the <code>GITHUB_TOKEN</code> gain the access rights you specify. For more information, see <a href="#jobsjob_idpermissions"><code>jobs.&lt;job_id&gt;.permissions</code></a>.</p>
@@ -1332,8 +1338,8 @@ When more than one default setting is defined with the same name, GitHub uses th
       <td>14 GB</td>
       <td> x64 </td>
       <td>
-        <code><a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows2025-Readme.md" class="external">windows-latest</a></code>,
-         <code><a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows2025-Readme.md" class="external">windows-2025</a></code>,
+        <code><a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows2025-VS2026-Readme.md" class="external">windows-latest</a></code>,
+         <code><a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows2025-VS2026-Readme.md" class="external">windows-2025</a></code>,
         <code><a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows2025-VS2026-Readme.md" class="external">windows-2025-vs2026</a></code>,
         <code><a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md" class="external">windows-2022</a></code>
       </td>
@@ -1357,7 +1363,7 @@ When more than one default setting is defined with the same name, GitHub uses th
       <td>14 GB</td>
       <td>arm64</td>
       <td>
-        <code><a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows11-Arm64-Readme.md" class="external">windows-11-arm</a></code>,
+        <code><a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows11-VS2026-Arm64-Readme.md" class="external">windows-11-arm</a></code>,
         <code><a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows11-VS2026-Arm64-Readme.md" class="external">windows-11-vs2026-arm</a></code>
       </td>
     </tr>
@@ -1431,8 +1437,9 @@ When more than one default setting is defined with the same name, GitHub uses th
       <td>14 GB</td>
       <td> x64 </td>
       <td>
-        <code><a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows2025-Readme.md" class="external">windows-latest</a></code>,
-        <code><a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows2025-Readme.md" class="external">windows-2025</a></code>,
+        <code><a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows2025-VS2026-Readme.md" class="external">windows-latest</a></code>,
+        <code><a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows2025-VS2026-Readme.md" class="external">windows-2025</a></code>,
+        <code><a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows2025-VS2026-Readme.md" class="external">windows-2025-vs2026</a></code>,
         <code><a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md" class="external">windows-2022</a></code>
       </td>
     </tr>
@@ -1455,8 +1462,8 @@ When more than one default setting is defined with the same name, GitHub uses th
       <td>14 GB</td>
       <td> arm64 </td>
       <td>
-        <code><a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows11-Arm64-Readme.md" class="external">windows-11-arm</a></code>,
-        <code><a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows11-Arm64-VS2026-Readme.md" class="external">windows-11-vs2026-arm</a></code>
+        <code><a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows11-VS2026-Arm64-Readme.md" class="external">windows-11-arm</a></code>,
+        <code><a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows11-VS2026-Arm64-Readme.md" class="external">windows-11-vs2026-arm</a></code>
       </td>
     </tr>
     <tr>
@@ -2799,7 +2806,7 @@ When more than one default setting is defined with the same name, GitHub uses th
 </span></code></pre>
 <h2 id="jobsjob_idwithinput_id" title="jobs.&lt;job_id&gt;.with.&lt;input_id&gt;" data-entry-type="Section"><code>jobs.&lt;job_id&gt;.with.&lt;input_id&gt;</code><a href="#jobsjob_idwithinput_id" aria-label="Link to heading 'jobs.&lt;job_id&gt;.with.&lt;input_id&gt;'" data-heading-content="jobs.&lt;job_id&gt;.with.&lt;input_id&gt;" class="anchor"></a></h2>
 <p>A pair consisting of a string identifier for the input and the value of the input. The identifier must match the name of an input defined by <a href="metadata-syntax.html#inputsinput_id"><code>on.workflow_call.inputs.&lt;inputs_id&gt;</code></a> in the called workflow. The data type of the value must match the type defined by <a href="#onworkflow_callinputsinput_idtype"><code>on.workflow_call.inputs.&lt;input_id&gt;.type</code></a> in the called workflow.</p>
-<p>Allowed expression contexts: <code>github</code>, and <code>needs</code>.</p>
+<p>Allowed expression contexts: <code>github</code>, <code>needs</code>, <code>strategy</code>, <code>matrix</code>, <code>inputs</code>, and <code>vars</code>.</p>
 <h2 id="jobsjob_idsecrets" title="jobs.&lt;job_id&gt;.secrets" data-entry-type="Section"><code>jobs.&lt;job_id&gt;.secrets</code><a href="#jobsjob_idsecrets" aria-label="Link to heading 'jobs.&lt;job_id&gt;.secrets'" data-heading-content="jobs.&lt;job_id&gt;.secrets" class="anchor"></a></h2>
 <p>When a job is used to call a reusable workflow, you can use <code>secrets</code> to provide a map of secrets that are passed to the called workflow.</p>
 <p>Any secrets that you pass must match the names defined in the called workflow.</p>
@@ -2833,7 +2840,7 @@ When more than one default setting is defined with the same name, GitHub uses th
 </span></code></pre>
 <h2 id="jobsjob_idsecretssecret_id" title="jobs.&lt;job_id&gt;.secrets.&lt;secret_id&gt;" data-entry-type="Section"><code>jobs.&lt;job_id&gt;.secrets.&lt;secret_id&gt;</code><a href="#jobsjob_idsecretssecret_id" aria-label="Link to heading 'jobs.&lt;job_id&gt;.secrets.&lt;secret_id&gt;'" data-heading-content="jobs.&lt;job_id&gt;.secrets.&lt;secret_id&gt;" class="anchor"></a></h2>
 <p>A pair consisting of a string identifier for the secret and the value of the secret. The identifier must match the name of a secret defined by <a href="#onworkflow_callsecretssecret_id"><code>on.workflow_call.secrets.&lt;secret_id&gt;</code></a> in the called workflow.</p>
-<p>Allowed expression contexts: <code>github</code>, <code>needs</code>, and <code>secrets</code>.</p>
+<p>Allowed expression contexts: <code>github</code>, <code>needs</code>, <code>strategy</code>, <code>matrix</code>, <code>secrets</code>, <code>inputs</code>, and <code>vars</code>.</p>
 <h2 id="filter-pattern-cheat-sheet" title="Filter pattern cheat sheet" data-entry-type="Section">Filter pattern cheat sheet<a href="#filter-pattern-cheat-sheet" aria-label="Link to heading 'Filter pattern cheat sheet'" data-heading-content="Filter pattern cheat sheet" class="anchor"></a></h2>
 <p>You can use special characters in path, branch, tag, and workflow name filters.</p>
 <ul>

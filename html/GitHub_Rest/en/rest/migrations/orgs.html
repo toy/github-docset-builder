@@ -94,6 +94,12 @@ Exclude attributes from the API response to improve performance</p>
 <li><code>exclude_releases</code>: required, boolean</li>
 <li><code>exclude_owner_projects</code>: required, boolean</li>
 <li><code>org_metadata_only</code>: required, boolean</li>
+<li><code>url</code>: required, string, format: uri</li>
+<li><code>created_at</code>: required, string, format: date-time</li>
+<li><code>updated_at</code>: required, string, format: date-time</li>
+<li><code>node_id</code>: required, string</li>
+<li><code>archive_url</code>: string, format: uri</li>
+<li><code>exclude</code>: array of string</li>
 <li><code>repositories</code>: required, array of <code>Simple Repository</code>:
 <ul>
 <li><code>id</code>: required, integer, format: int64</li>
@@ -144,12 +150,6 @@ Exclude attributes from the API response to improve performance</p>
 <li><code>hooks_url</code>: required, string, format: uri</li>
 </ul>
 </li>
-<li><code>url</code>: required, string, format: uri</li>
-<li><code>created_at</code>: required, string, format: date-time</li>
-<li><code>updated_at</code>: required, string, format: date-time</li>
-<li><code>node_id</code>: required, string</li>
-<li><code>archive_url</code>: string, format: uri</li>
-<li><code>exclude</code>: array of string</li>
 </ul>
 <h2 id="start-an-organization-migration" title="POST /orgs/{org}/migrations (Start an organization migration)" data-entry-type="Resource">Start an organization migration<a href="#start-an-organization-migration" aria-label="Link to heading 'Start an organization migration'" data-heading-content="Start an organization migration" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">POST /orgs/{org}/migrations
@@ -281,6 +281,12 @@ Supported values are: repositories</p>
 <li><code>exclude_releases</code>: required, boolean</li>
 <li><code>exclude_owner_projects</code>: required, boolean</li>
 <li><code>org_metadata_only</code>: required, boolean</li>
+<li><code>url</code>: required, string, format: uri</li>
+<li><code>created_at</code>: required, string, format: date-time</li>
+<li><code>updated_at</code>: required, string, format: date-time</li>
+<li><code>node_id</code>: required, string</li>
+<li><code>archive_url</code>: string, format: uri</li>
+<li><code>exclude</code>: array of string</li>
 <li><code>repositories</code>: required, array of <code>Simple Repository</code>:
 <ul>
 <li><code>id</code>: required, integer, format: int64</li>
@@ -331,12 +337,6 @@ Supported values are: repositories</p>
 <li><code>hooks_url</code>: required, string, format: uri</li>
 </ul>
 </li>
-<li><code>url</code>: required, string, format: uri</li>
-<li><code>created_at</code>: required, string, format: date-time</li>
-<li><code>updated_at</code>: required, string, format: date-time</li>
-<li><code>node_id</code>: required, string</li>
-<li><code>archive_url</code>: string, format: uri</li>
-<li><code>exclude</code>: array of string</li>
 </ul>
 <h2 id="get-an-organization-migration-status" title="GET /orgs/{org}/migrations/{migration_id} (Get an organization migration status)" data-entry-type="Resource">Get an organization migration status<a href="#get-an-organization-migration-status" aria-label="Link to heading 'Get an organization migration status'" data-heading-content="Get an organization migration status" class="anchor"></a></h2>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /orgs/{org}/migrations/{migration_id}

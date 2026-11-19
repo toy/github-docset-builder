@@ -442,7 +442,7 @@
 <tbody>
 <tr>
 <td><a href="https://docs.github.com/en/webhooks/webhook-events-and-payloads#issues" class="external"><code>issues</code></a></td>
-<td>- <code>opened</code><br>- <code>edited</code><br>- <code>deleted</code><br>- <code>transferred</code><br>- <code>pinned</code><br>- <code>unpinned</code><br>- <code>closed</code><br>- <code>reopened</code><br>- <code>assigned</code><br>- <code>unassigned</code><br>- <code>labeled</code><br>- <code>unlabeled</code><br>- <code>locked</code><br>- <code>unlocked</code><br>- <code>milestoned</code><br> - <code>demilestoned</code><br> - <code>typed</code><br> - <code>untyped</code><br> - <code>field_added</code><br> - <code>field_removed</code></td>
+<td>- <code>opened</code><br>- <code>edited</code><br>- <code>deleted</code><br>- <code>transferred</code><br>- <code>pinned</code><br>- <code>unpinned</code><br>- <code>closed</code><br>- <code>reopened</code><br>- <code>assigned</code><br>- <code>unassigned</code><br>- <code>labeled</code><br>- <code>unlabeled</code><br>- <code>locked</code><br>- <code>unlocked</code><br>- <code>milestoned</code><br> - <code>demilestoned</code><br> - <code>typed</code><br> - <code>untyped</code><br> - <code>field_added</code><br> - <code>field_removed</code><br> - <code>status_changed</code></td>
 <td>Last commit on default branch</td>
 <td>Default branch</td>
 </tr>
@@ -465,6 +465,56 @@
 <pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">issues</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">field_added</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">field_removed</span><span style="color:#c0c5ce;">]
+</span></code></pre>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Issue statuses are in preview and only available to accounts enrolled in the preview. Webhook payloads and the <code>status_changed</code> activity type are subject to change.</p>
+</div>
+<p>You can also run a workflow when the status of an issue changes. A workflow that uses the <code>status_changed</code> activity type runs whenever an issue's status changes, including when an issue is created, closed, or reopened. In the workflow, the following properties of the <code>github.event</code> context describe the change.</p>
+<ul>
+<li><code>github.event.status</code> contains the status the issue changed to.</li>
+<li><code>github.event.changes.status.from</code> contains the previous status, or <code>null</code> if the issue didn't have one.</li>
+<li><code>github.event.issue.status</code> contains the status of the issue when the payload was built. Payloads for every <code>issues</code> activity type include this property.</li>
+</ul>
+<p>For more information, see <a href="https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/issue-status-webhooks-and-workflows" class="external">Issue status webhooks and workflows</a>.</p>
+<div class="markdown-alert markdown-alert-important">
+<p class="markdown-alert-title">Important</p>
+<p>Workflows that use the <code>issues</code> event without <code>types</code> also run for <code>status_changed</code>. These workflows run whenever someone changes the status of an issue, and run an extra time when an issue is created, closed, or reopened, because GitHub sends <code>status_changed</code> as well as <code>opened</code>, <code>closed</code>, or <code>reopened</code>. To avoid unexpected runs, list the activity types that your workflow needs.</p>
+</div>
+<p>During the preview, editors that validate workflow files, such as the workflow editor on GitHub, may report <code>status_changed</code> as an invalid activity type. You can ignore this error.</p>
+<p>To match one status, use its ID. You can find the ID of a status in the <code>status</code> object of a <code>status_changed</code> payload. For example, if the ID of the In review status is <code>8</code>, the following workflow runs when an issue moves to In review.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">issues</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">status_changed</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">in-review</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ github.event.status.id == 8 }}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          echo "Issue #$NUMBER moved to $STATUS"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">NUMBER</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ github.event.issue.number }}
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">STATUS</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ github.event.status.name }}
+</span></code></pre>
+<p>To match every status in a category, use the status's <code>category</code>. For example, the following workflow runs when an issue moves into the <code>started</code> category from a status in another category, or from no status. It doesn't run again when the issue moves between two statuses in the <code>started</code> category, such as from In progress to In review.</p>
+<pre lang="yaml" style="background-color:#2b303b;"><code><span style="color:#d08770;">on</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">issues</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">types</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">status_changed</span><span style="color:#c0c5ce;">]
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#bf616a;">jobs</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">work-started</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">if</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">&gt;-
+</span><span style="color:#a3be8c;">      ${{ github.event.status.category == 'started' &amp;&amp;
+</span><span style="color:#a3be8c;">      (github.event.changes.status.from == null ||
+</span><span style="color:#a3be8c;">      github.event.changes.status.from.category != 'started') }}
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">runs-on</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">steps</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">      - </span><span style="color:#bf616a;">run</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">          echo "Work started on issue #$NUMBER"
+</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">:
+</span><span style="color:#c0c5ce;">          </span><span style="color:#bf616a;">NUMBER</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">${{ github.event.issue.number }}
 </span></code></pre>
 <h2 id="label" title="label" data-entry-type="Section"><code>label</code><a href="#label" aria-label="Link to heading 'label'" data-heading-content="label" class="anchor"></a></h2>
 <table>

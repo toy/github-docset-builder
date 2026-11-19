@@ -596,7 +596,7 @@ Default: <code>1</code></p>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /orgs/{org}/settings/immutable-releases
 </span></code></pre>
 <p>Gets the immutable releases policy for repositories in an organization.<br>
-OAuth tokens and personal access tokens (classic) need the admin:org scope to use this endpoint.</p>
+OAuth tokens and personal access tokens (classic) need the admin:org or repo scope to use this endpoint.</p>
 <h3 id="parameters-5">Parameters<a href="#parameters-5" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-5">Headers<a href="#headers-5" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
@@ -628,7 +628,7 @@ The organization name. The name is not case sensitive.</li>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PUT /orgs/{org}/settings/immutable-releases
 </span></code></pre>
 <p>Sets the immutable releases policy for repositories in an organization.<br>
-OAuth tokens and personal access tokens (classic) need the admin:org scope to use this endpoint.</p>
+OAuth tokens and personal access tokens (classic) need the admin:org or repo scope to use this endpoint.</p>
 <h3 id="parameters-6">Parameters<a href="#parameters-6" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-6">Headers<a href="#headers-6" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
@@ -671,7 +671,7 @@ An array of repository ids for which immutable releases enforcement should be ap
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">GET /orgs/{org}/settings/immutable-releases/repositories
 </span></code></pre>
 <p>List all of the repositories that have been selected for immutable releases enforcement in an organization.<br>
-OAuth tokens and personal access tokens (classic) need the admin:org scope to use this endpoint.</p>
+OAuth tokens and personal access tokens (classic) need the admin:org or repo scope to use this endpoint.</p>
 <h3 id="parameters-7">Parameters<a href="#parameters-7" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-7">Headers<a href="#headers-7" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
@@ -915,7 +915,7 @@ Default: <code>30</code></p>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PUT /orgs/{org}/settings/immutable-releases/repositories
 </span></code></pre>
 <p>Replaces all repositories that have been selected for immutable releases enforcement in an organization. To use this endpoint, the organization immutable releases policy for enforced_repositories must be configured to selected.<br>
-OAuth tokens and personal access tokens (classic) need the admin:org scope to use this endpoint.</p>
+OAuth tokens and personal access tokens (classic) need the admin:org or repo scope to use this endpoint.</p>
 <h3 id="parameters-8">Parameters<a href="#parameters-8" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-8">Headers<a href="#headers-8" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
@@ -953,7 +953,7 @@ An array of repository ids for which immutable releases enforcement should be ap
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">PUT /orgs/{org}/settings/immutable-releases/repositories/{repository_id}
 </span></code></pre>
 <p>Adds a repository to the list of selected repositories that are enforced for immutable releases in an organization. To use this endpoint, the organization immutable releases policy for enforced_repositories must be configured to selected.<br>
-OAuth tokens and personal access tokens (classic) need the admin:org scope to use this endpoint.</p>
+OAuth tokens and personal access tokens (classic) need the admin:org or repo scope to use this endpoint.</p>
 <h3 id="parameters-9">Parameters<a href="#parameters-9" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-9">Headers<a href="#headers-9" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>
@@ -987,7 +987,7 @@ The unique identifier of the repository.</p>
 <pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">DELETE /orgs/{org}/settings/immutable-releases/repositories/{repository_id}
 </span></code></pre>
 <p>Removes a repository from the list of selected repositories that are enforced for immutable releases in an organization. To use this endpoint, the organization immutable releases policy for enforced_repositories must be configured to selected.<br>
-OAuth tokens and personal access tokens (classic) need the admin:org scope to use this endpoint.</p>
+OAuth tokens and personal access tokens (classic) need the admin:org or repo scope to use this endpoint.</p>
 <h3 id="parameters-10">Parameters<a href="#parameters-10" aria-label="Link to heading 'Parameters'" data-heading-content="Parameters" class="anchor"></a></h3>
 <h4 id="headers-10">Headers<a href="#headers-10" aria-label="Link to heading 'Headers'" data-heading-content="Headers" class="anchor"></a></h4>
 <ul>

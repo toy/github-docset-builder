@@ -115,6 +115,13 @@ Default: <code>1</code></p>
 <li><code>html_url</code>: required, string, format: uri</li>
 <li><code>number</code>: required, integer</li>
 <li><code>state</code>: required, string</li>
+<li><code>status</code>: object or null:
+<ul>
+<li><code>id</code>: required, integer, format: int64</li>
+<li><code>name</code>: required, string</li>
+<li><code>category</code>: required, string</li>
+</ul>
+</li>
 <li><code>state_reason</code>: string or null, enum: <code>completed</code>, <code>reopened</code>, <code>not_planned</code>, <code>duplicate</code>, <code>null</code></li>
 <li><code>title</code>: required, string</li>
 <li><code>body</code>: string or null</li>
@@ -783,6 +790,10 @@ The title of the issue.</p>
 The contents of the issue.</p>
 </li>
 <li>
+<p><strong><code>status</code></strong> (string)<br>
+The initial status of the issue. Can be Backlog, Todo, In progress, or In review. If omitted, the issue starts in Backlog. If you do not have permission to set the status, the supplied value is ignored and the issue starts in Backlog. Cannot be null or an empty string. Ignored when issue statuses aren't available in the repository. Issue statuses are in preview and only available to accounts enrolled in the preview.</p>
+</li>
+<li>
 <p><strong><code>milestone</code></strong> (null or string or integer)<br>
 The number of the milestone to associate this issue with. NOTE: Only users with push access can set the milestone for new issues. The milestone is silently dropped otherwise.</p>
 </li>
@@ -867,6 +878,13 @@ The id of the parent issue to add this issue to as a sub-issue. NOTE: Only users
 <li><code>html_url</code>: required, string, format: uri</li>
 <li><code>number</code>: required, integer</li>
 <li><code>state</code>: required, string</li>
+<li><code>status</code>: object or null:
+<ul>
+<li><code>id</code>: required, integer, format: int64</li>
+<li><code>name</code>: required, string</li>
+<li><code>category</code>: required, string</li>
+</ul>
+</li>
 <li><code>state_reason</code>: string or null, enum: <code>completed</code>, <code>reopened</code>, <code>not_planned</code>, <code>duplicate</code>, <code>null</code></li>
 <li><code>title</code>: required, string</li>
 <li><code>body</code>: string or null</li>
@@ -1407,6 +1425,10 @@ The open or closed state of the issue.<br>
 Can be one of: <code>open</code>, <code>closed</code></p>
 </li>
 <li>
+<p><strong><code>status</code></strong> (string)<br>
+The status to give the issue. Can be Backlog, Todo, In progress, In review, Done, Not planned, or Duplicate. If omitted, the current status is preserved unless state or state_reason changes. Setting a status also updates state and state_reason as needed. If provided, state and state_reason must be consistent with the requested status. Changing the status to Duplicate requires duplicate_issue_id. Cannot be null or an empty string. The status and other applied field changes are saved together. If the status cannot be saved, those field changes are rolled back. Ignored when issue statuses aren't available in the repository. Issue statuses are in preview and only available to accounts enrolled in the preview.</p>
+</li>
+<li>
 <p><strong><code>state_reason</code></strong> (string or null)<br>
 The reason for the state change. Ignored unless state is changed.<br>
 Can be one of: <code>completed</code>, <code>not_planned</code>, <code>duplicate</code>, <code>reopened</code>, <code>null</code></p>
@@ -1508,6 +1530,13 @@ The issue type to associate with this issue. Only users with push access can set
 <li><code>html_url</code>: required, string, format: uri</li>
 <li><code>number</code>: required, integer</li>
 <li><code>state</code>: required, string</li>
+<li><code>status</code>: object or null:
+<ul>
+<li><code>id</code>: required, integer, format: int64</li>
+<li><code>name</code>: required, string</li>
+<li><code>category</code>: required, string</li>
+</ul>
+</li>
 <li><code>state_reason</code>: string or null, enum: <code>completed</code>, <code>reopened</code>, <code>not_planned</code>, <code>duplicate</code>, <code>null</code></li>
 <li><code>title</code>: required, string</li>
 <li><code>body</code>: string or null</li>
